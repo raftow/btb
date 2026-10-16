@@ -1,0 +1,198 @@
+.content_big_title {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 35px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid #c0c0c0ba;
+}
+
+.content_container {
+    width: 60%;
+    margin: 70px 20%;
+    float: right;
+    font-size: 17px;
+    line-height: 24px;
+}
+
+.content_title {
+        font-weight: bold;
+        margin-top: 22px;
+        margin-bottom: 10px;
+}
+
+.bulles{
+        margin-right: 45px;  
+        line-height: 30px;
+}
+
+.bulles>div.bulle01 
+{
+        margin-right: -40px;
+        margin-top: 4px;
+}
+
+img.cfigure {
+        width: 980px;
+        height: auto;
+        /* border: 3px solid #999;*/
+        margin: 25px;
+        padding: 15px;
+        /* background-color: #f1f2f2; */
+}
+
+a.crm {
+        float: right;
+        padding: 10px;
+        min-width: 150px;
+        text-align: center;
+        margin-bottom: 10px;
+}
+
+a.crm.complaint {
+        background-color: red;
+        color: white;
+        margin-left: 10px;
+}
+
+a.crm.question {
+        background-color: #2388f0;
+        color: white;
+        margin-left: 10px;
+}
+
+a.crm.suggestion {
+        background-color: #449d44;
+        color: white;
+        margin-left: 10px;
+}
+
+a.crm.support {
+        background-color: #fc6703;
+        color: white;
+        margin-left: 10px;
+}
+
+.content_container.contact {
+        min-height: 550px;
+}
+
+.content_remak {
+        color: #0063c9;
+        font-size: 15px;
+}
+
+
+.content_form_bg {
+        width: 100%;
+        background-color: #ffffffeb;
+        min-height: 850px;
+        float: right;
+        padding-bottom: 80px;
+}
+
+.content_form {
+        width: 24%;
+        min-width: 198px;
+        margin: 0 20% 33px 0;
+        position: relative;
+        max-width: 100%;
+        min-height: 989px;
+        padding: 0;
+        background-color: #fff;
+        /* border-right: 1px solid #c0c0c024; */
+        /* border-left: 1px solid #c0c0c024; */
+        float: right;
+}
+
+div.content_form>form>.in-group-customer_data {
+        min-height: 987px !important;
+}
+
+.content_big_title.registration {
+        text-align: center;
+        margin-top: 35px;
+        width: 60%;
+        margin-right: 20%;
+        margin-left: 20%;
+}
+
+.register_pic {
+        width: 36%;
+        min-width: 198px;
+        margin: 0 0 33px 20%;
+        position: relative;
+        max-width: 100%;
+        min-height: 1577px;
+        padding: 0;
+        background-color: #fff;
+        float: right;
+        background-image: url(../pic/saudi-bus-goals-vertical.png);
+        background-size: 95%;
+        background-repeat: no-repeat;
+        background-position-x: right;
+        border: 1px solid #c0c0c0d9;
+}
+
+@media (max-width: 507px) {
+        .content_form {
+                width: 96% !important;  
+                margin: 0 2% 33px 2% !important; 
+        }
+
+        .register_pic {
+                width: 96% !important;  
+                margin: 0 2% 33px 2% !important; 
+        }
+}
+
+
+@media (max-width: 1107px) {
+        .content_form {
+                width: 80%;  
+                margin: 0 10% 33px 10%; 
+        }
+
+        .register_pic {
+                width: 80%;  
+                margin: 0 10% 33px 10%; 
+        }
+}
+
+div#fg-warn {
+        padding: 15px;
+        font-size: 20px;
+        background-color: #bed80e;
+        min-height: 80px;
+}
+
+.register_success {
+        float: left;
+        width: 40%;
+        min-height: 350px;
+        min-width: 420px;
+        background-image: url(../pic/bus-sa-slogo.png);
+        background-repeat: no-repeat;
+}
+
+.register_success_message {
+        float: left;
+        width: 40%;
+        min-height: 350px;
+        font-size: 24px;
+        padding: 25px;
+        border: 3px solid #92a416;
+        background-color: #bed80e;
+}
+
+@media (max-width: 1177px) {
+        .register_success {
+                width: 0;   
+                height: 0;
+                visibility: hidden;
+                display: none;
+        }
+
+        .register_success_message {
+                width: 100%;   
+        }
+}

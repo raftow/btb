@@ -1,0 +1,330 @@
+
+<?php 
+        class BtbBusAfwStructure
+        {
+                public static $DB_STRUCTURE = array(
+
+                        
+			'id' => array('SHOW' => true,  'RETRIEVE' => true,  'EDIT' => false,  
+				'TYPE' => 'PK',  'SEARCH-BY-ONE' => '',  'DISPLAY' => true,  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+			'example' => array('SHOW' => false,  'RETRIEVE' => false,  'EDIT' => false,  'QEDIT' => false,  'READONLY' => true,  'MINIBOX' => false,  'DEFAUT' => 'Y',  
+				'TYPE' => 'YN',  
+				'CSS' => 'width_pct_50',  'SEARCH-BY-ONE' => '',  'DISPLAY' => false,  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
+
+			'reel' => array('SHOW' => false,  'RETRIEVE' => false,  'EDIT' => false,  'QEDIT' => false,  'READONLY' => true,  'MINIBOX' => false,  'DEFAUT' => 'N',  
+				'TYPE' => 'YN',  
+				'CSS' => 'width_pct_50',  'SEARCH-BY-ONE' => '',  'DISPLAY' => false,  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
+
+		'owner_parent_id' => array('SHORTNAME' => 'owner_parent',  
+				'TYPE' => 'FK',  'ANSWER' => 'work_branch',  'ANSMODULE' => 'btb',  
+				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'tcompany_id.parent_id',  'SEARCH-BY-ONE' => '',  'DISPLAY' => '',  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+			'tcompany_id' => array('SHORTNAME' => 'owner',  'SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  'MINIBOX' => false,  
+				'CSS' => 'width_pct_50',  'SIZE' => 40,  'REQUIRED' => true,  'UTF8' => false,  
+				'TYPE' => 'FK',  'ANSWER' => 'work_branch',  'ANSMODULE' => 'btb',  'AUTOCOMPLETE' => false,  
+				'WHERE' => "parent_id = §MY_COMPANY§ or id = §MY_COMPANY§", 
+				 
+				'RELATION' => 'OneToMany',  'READONLY' => true,  'SEARCH-BY-ONE' => true,  'DISPLAY' => true,  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'MANDATORY' => true,  'ERROR-CHECK' => true, ),
+
+			'owner_type_id' => array('SHORTNAME' => 'owner_type',  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'AUDIT' => false,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 32,  'MAXLENGTH' => 32,  'MANDATORY' => true,  'UTF8' => false,  
+				'TYPE' => 'FK',  'ANSWER' => 'owner_type',  'ANSMODULE' => 'btb',  
+				'RELATION' => 'ManyToOne',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, 
+				'CSS' => 'width_pct_100',),
+
+			'parent_bus_id' => array('SHORTNAME' => 'myparent',  'SEARCH' => false,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'EDIT' => false,  'QEDIT' => true,  
+				'CSS' => 'width_pct_25',  'SIZE' => 32,  'MAXLENGTH' => 32,  'UTF8' => false,  'MANDATORY' => true,  
+				'TYPE' => 'FK',  'ANSWER' => 'bus',  'ANSMODULE' => 'btb',  'AUTOCOMPLETE' => true,  
+				'RELATION' => 'OneToMany',  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, ),
+
+			'bus_num' => array('SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => false,  'MINIBOX' => false,  'EDIT' => true,  'QEDIT' => true,  
+				'CSS' => 'width_pct_25',  'SIZE' => 48,  'MIN-SIZE' => 1,  'CHAR_TEMPLATE' => 'ARABIC-CHARS,SPACE',  'MANDATORY' => true,  'UTF8' => true,  
+				'TYPE' => 'TEXT',  'READONLY' => true,  'SEARCH-BY-ONE' => true,  'DISPLAY' => true,  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, ),
+
+			'bus_brand_id' => array('SHORTNAME' => 'brand',  'SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  'MINIBOX' => true,  
+				'CSS' => 'width_pct_50',  'SIZE' => 32,  'MANDATORY' => true,  'UTF8' => false,  
+				'TYPE' => 'FK',  'ANSWER' => 'bus_brand',  'ANSMODULE' => 'btb',  
+				'RELATION' => 'ManyToOne',  'READONLY' => false,  'SEARCH-BY-ONE' => true,  'DISPLAY' => true,  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, ),
+
+			'bus_model_id' => array('SHORTNAME' => 'model',  'SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  'MINIBOX' => true,  
+				'CSS' => 'width_pct_50',  'SIZE' => 32,  'MANDATORY' => true,  'UTF8' => false,  
+				'TYPE' => 'FK',  'ANSWER' => 'bus_model',  'ANSMODULE' => 'btb',  'AUTOCOMPLETE' => false,  
+				'RELATION' => 'ManyToOne',  'READONLY' => false,  'SEARCH-BY-ONE' => true,  'DISPLAY' => true,  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, ),
+
+			'factory_year' => array('SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => false,  
+				'CSS' => 'width_pct_50',  'SIZE' => 32,  'MAXLENGTH' => 32,  'MANDATORY' => true,  'UTF8' => false,  
+				'TYPE' => 'INT',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, ),
+
+			'bus_template_id' => array('SHORTNAME' => 'template',  'SEARCH' => false,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 32,  'MANDATORY' => true,  'UTF8' => false,  
+				'TYPE' => 'FK',  'ANSWER' => 'bus_template',  'ANSMODULE' => 'btb',  'AUTOCOMPLETE' => false,  
+				'CSS' => 'width_pct_50',  
+				'RELATION' => 'OneToMany',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, ),
+
+		'nb_seats' => array('STEP' => 99,  'SHOW' => true,  'EDIT' => true,  'READONLY' => true,  'MANDATORY' => false,  
+				'CATEGORY' => 'FORMULA',  
+				'TYPE' => 'INT',  'SEARCH-BY-ONE' => '',  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+			'active' => array('SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => false,  'MINIBOX' => true,  'DEFAUT' => 'Y',  
+				'TYPE' => 'YN',  
+				'CSS' => 'width_pct_25',  'SEARCH-BY-ONE' => '',  'DISPLAY' => true,  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
+
+			'instance_nb' => array('SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => true,  'MINIBOX' => false,  'EDIT' => true,  'QEDIT' => true,  
+				'CSS' => 'width_pct_25',  'SIZE' => 48,  'MANDATORY' => true,  'UTF8' => false,  
+				'TYPE' => 'INT',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, ),
+
+		'category' => array('STEP' => 1,  
+				'TYPE' => 'TEXT',  
+				'CATEGORY' => 'FORMULA',  'SHOW' => true,  'EDIT' => true,  'READONLY' => true,  'CAN-BE-SETTED' => false,  'SIZE' => 64,  
+				'CSS' => 'width_pct_25',  'SEARCH-BY-ONE' => '',  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
+
+		'dragDropDiv' => array('STEP' => 2,  
+				'TYPE' => 'TEXT',  
+				'CATEGORY' => 'FORMULA',  'SHOW' => true,  'EDIT' => true,  'READONLY' => true,  'CAN-BE-SETTED' => false,  'SIZE' => 255,  'NO-LABEL' => true,  'SEARCH-BY-ONE' => '',  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+		'busFileList' => array('STEP' => 3,  'SHORTNAME' => 'files',  'SHOW' => true,  'FORMAT' => 'retrieve',  'ICONS' => true,  'DELETE-ICON' => true,  'BUTTONS' => true,  'SEARCH' => false,  'QSEARCH' => false,  'RETRIEVE' => false,  'EDIT' => true,  'INPUT_WIDE' => true,  'QEDIT' => false,  'SIZE' => 32,  'MANDATORY' => false,  'UTF8' => false,  
+				'TYPE' => 'FK',  'EMPTY-ITEMS-MESSAGE' => 'no-bus-file',  'OPTIMIZE' => true,  
+				'CATEGORY' => 'ITEMS',  'ANSWER' => 'bus_file',  'ANSMODULE' => 'btb',  'ITEM' => 'bus_id',  'READONLY' => true,  'CAN-BE-SETTED' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+		'ul_cl_files' => array('STEP' => 3,  'SIZE' => 255,  'SHOW' => false,  
+				'CATEGORY' => 'FORMULA',  
+				'TYPE' => 'TEXT',  'NO-LABEL' => true,  'SEARCH-BY-ONE' => '',  'DISPLAY' => false,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+		'photo' => array('STEP' => 99,  'SHOW' => false,  'EDIT' => false,  'READONLY' => true,  'MINIBOX' => false,  
+				'CSS' => 'width_pct_50',  'MANDATORY' => false,  
+				'CATEGORY' => 'FORMULA',  
+				'TYPE' => 'FK',  'ANSWER' => 'bus_file',  'ANSMODULE' => 'btb',  'SEARCH-BY-ONE' => '',  'DISPLAY' => false,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
+
+		'photo_path' => array('STEP' => 3,  
+				'TYPE' => 'TEXT',  
+				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'photo.afile_id.file_path',  'DEFAUT' => 'pic/default_bus_photo.png',  'CAN-BE-SETTED' => false,  'NO-COTE' => true,  'SEARCH-BY-ONE' => '',  'DISPLAY' => '',  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+		'internal_photo' => array('STEP' => 99,  'SHOW' => false,  'EDIT' => false,  'READONLY' => true,  'MINIBOX' => false,  
+				'CSS' => 'width_pct_50',  'MANDATORY' => false,  
+				'CATEGORY' => 'FORMULA',  
+				'TYPE' => 'FK',  'ANSWER' => 'bus_file',  'ANSMODULE' => 'btb',  'SEARCH-BY-ONE' => '',  'DISPLAY' => false,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
+
+		'internal_photo_path' => array('STEP' => 3,  
+				'TYPE' => 'TEXT',  
+				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'internal_photo.afile_id.file_path',  'DEFAUT' => 'pic/default_bus_photo.png',  'CAN-BE-SETTED' => false,  'NO-COTE' => true,  'SEARCH-BY-ONE' => '',  'DISPLAY' => '',  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+			'custom_prices' => array('STEP' => 4,  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'MINIBOX' => false,  'EDIT' => true,  'QEDIT' => false,  
+				'CSS' => 'width_pct_25',  'SHORTNAME' => 'customized',  'SIZE' => 32,  'MAXLENGTH' => 32,  'UTF8' => false,  
+				'TYPE' => 'YN',  'READONLY' => false,  'DEFAUT' => 'N',  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
+
+			'bus_level' => array('STEP' => 4,  'SHORTNAME' => 'level',  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => true,  'MINIBOX' => true,  
+				'CSS' => 'width_pct_25',  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 32,  'REQUIRED' => true,  'UTF8' => false,  
+				'TYPE' => 'ENUM',  'ANSWER' => 'FUNCTION',  'DEFAUT' => 1,  'READONLY' => false,  'ANSMODULE' => 'btb',  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'MANDATORY' => true,  'ERROR-CHECK' => true, ),
+
+			'prices_expiry_date' => array('STEP' => 4,  'SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 10,  'MANDATORY' => true,  'UTF8' => false,  
+				'CSS' => 'width_pct_25',  
+				'TYPE' => 'DATE',  'FORMAT' => 'HIJRI_UNIT',  'READONLY' => false,  'SEARCH-BY-ONE' => true,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, ),
+
+			'account_company_id' => array('STEP' => 4,  'SHORTNAME' => 'account',  'SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => true,  'MINIBOX' => false,  
+				'CSS' => 'width_pct_50',  'SIZE' => 40,  'REQUIRED' => false,  'UTF8' => false,  
+				'TYPE' => 'FK',  'ANSWER' => 'work_branch',  'ANSMODULE' => 'btb',  'AUTOCOMPLETE' => false,  
+				'WHERE' => "parent_id = §owner_parent_id§ or parent_id = §tcompany_id§ or parent_id = §tcompany_id§ or id = §tcompany_id§", 
+				 
+				'RELATION' => 'OneToMany',  'READONLY' => false,  'SEARCH-BY-ONE' => true,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
+
+		'the_account_company' => array('STEP' => 99,  'SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  
+				'CSS' => 'width_pct_50',  'SIZE' => 40,  'REQUIRED' => true,  'UTF8' => false,  
+				'TYPE' => 'FK',  'ANSWER' => 'work_branch',  'ANSMODULE' => 'btb',  
+				'CATEGORY' => 'FORMULA',  'READONLY' => true,  
+				'RELATION' => 'OneToMany',  'OTM-SHOW' => false,  'OTM-TITLE' => true,  'OTM-NO-LABEL' => true,  'SEARCH-BY-ONE' => true,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'MANDATORY' => true,  'ERROR-CHECK' => true, ),
+
+		'busPricingList' => array('STEP' => 4,  
+				'TYPE' => 'FK',  'ANSWER' => 'bus_pricing',  'ANSMODULE' => 'btb',  
+				'CATEGORY' => 'ITEMS',  'ITEM' => 'bus_id',  'FORMAT' => 'crossed',  'CROSS_COL' => 'program_title',  'CROSSED_FIELD_COL' => 'period_title',  'CROSSED_VALUE_COL' => 'price',  
+				'WHERE' => "", 
+				 'SHOW' => true,  'EDIT' => true,  'READONLY' => true,  'ICONS' => true,  'DELETE-ICON' => true,  'BUTTONS' => true,  'NO-LABEL' => false,  'SEARCH-BY-ONE' => '',  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+		'pricing_help' => array('STEP' => 4,  
+				'TYPE' => 'TEXT',  
+				'CATEGORY' => 'FORMULA',  'SHOW' => true,  'EDIT' => true,  'READONLY' => true,  'RETRIEVE' => false,  'SIZE' => 255,  'NO-LABEL' => true,  'SEARCH-BY-ONE' => '',  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+		'busSeatCategoryList' => array('STEP' => 5,  'SHOW' => true,  'FORMAT' => 'retrieve',  'ICONS' => true,  'DELETE-ICON' => true,  'BUTTONS' => true,  'SEARCH' => false,  'QSEARCH' => false,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => false,  'SIZE' => 32,  'MAXLENGTH' => 32,  'MANDATORY' => false,  'UTF8' => false,  
+				'TYPE' => 'FK',  
+				'CATEGORY' => 'ITEMS',  'ANSWER' => 'bus_seat_category',  'ANSMODULE' => 'btb',  'ITEM' => 'bus_id',  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+		'seatsCategDiv' => array('STEP' => 5,  
+				'TYPE' => 'TEXT',  
+				'CATEGORY' => 'FORMULA',  'SHOW' => true,  'EDIT' => true,  'READONLY' => true,  'RETRIEVE' => false,  'SIZE' => 255,  'NO-LABEL' => true,  'SEARCH-BY-ONE' => '',  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_50',),
+
+        'seatsCategReelDiv' => array('STEP' => 5,  
+				'TYPE' => 'TEXT',  
+				'CATEGORY' => 'FORMULA',  'SHOW' => true,  'EDIT' => true,  'READONLY' => true,  'RETRIEVE' => false,  'SIZE' => 255,  'NO-LABEL' => true,  'SEARCH-BY-ONE' => '',  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_50',),                
+
+			'responsible_id' => array('STEP' => 6,  'SHORTNAME' => 'responsible',  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'MINIBOX' => true,  'EDIT' => true,  'QEDIT' => false,  
+				'CSS' => 'width_pct_25',  'SIZE' => 32,  'MAXLENGTH' => 32,  'MANDATORY' => false,  'UTF8' => false,  
+				'TYPE' => 'FK',  'ANSWER' => 'employee',  'ANSMODULE' => 'hrm',  'AUTOCOMPLETE' => false,  
+				'WHERE' => "id_sh_org = §tcompany_id§ or id_sh_div = §tcompany_id§ ", 
+				 
+				'RELATION' => 'ManyToOne',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
+
+			'mine' => array('STEP' => 6,  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'MINIBOX' => false,  'EDIT' => true,  'QEDIT' => false,  
+				'CSS' => 'width_pct_25',  'SIZE' => 32,  'MAXLENGTH' => 32,  'UTF8' => false,  
+				'TYPE' => 'YN',  'DEFAUT' => 'N',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
+
+			'publish' => array('STEP' => 6,  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'MINIBOX' => false,  'EDIT' => true,  'QEDIT' => false,  
+				'CSS' => 'width_pct_25',  'SIZE' => 32,  'MAXLENGTH' => 32,  'UTF8' => false,  
+				'TYPE' => 'YN',  'DEFAUT' => 'Y',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
+
+			'nb_days_anticipate' => array('STEP' => 6,  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  
+				'CSS' => 'width_pct_25',  'SIZE' => 64,  'MANDATORY' => true,  'UTF8' => false,  'DEFAUT' => 30,  
+				'TYPE' => 'INT',  'UNIT' => 'يوم',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, ),
+
+			'booking_infos' => array('STEP' => 6,  'SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => false,  
+				'SIZE' => 'AREA',  'ROWS' => 3,  'MIN-SIZE' => 3,  'CHAR_TEMPLATE' => 'ARABIC-CHARS,SPACE',  'MANDATORY' => true,  'UTF8' => true,  'DEFAUT' => 'من منصة باص السعودية',  
+				'TYPE' => 'TEXT',  'READONLY' => false,  'SEARCH-BY-ONE' => true,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, 
+				'CSS' => 'width_pct_100',),
+
+			'bus_code' => array('STEP' => 7,  'SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  'MINIBOX' => false,  
+				'CSS' => 'width_pct_25',  'MANDATORY' => true,  'DEFAUT' => '',  'SIZE' => 16,  'MIN-SIZE' => 3,  'CHAR_TEMPLATE' => 'ALPHABETIC,NUMERIC,UNDERSCORE',  'UTF8' => true,  
+				'TYPE' => 'TEXT',  'READONLY' => false,  'SEARCH-BY-ONE' => true,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, ),
+
+			'bus_color' => array('STEP' => 7,  'SHORTNAME' => 'color',  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  'MINIBOX' => false,  
+				'CSS' => 'width_pct_25',  'SIZE' => 32,  'MANDATORY' => true,  'UTF8' => false,  
+				'TYPE' => 'ENUM',  'ANSWER' => 'FUNCTION',  'READONLY' => false,  'DEFAUT' => 0,  'ANSMODULE' => 'btb',  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, ),
+
+			'driver_id' => array('STEP' => 7,  'SHORTNAME' => 'driver',  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'MINIBOX' => false,  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 32,  'UTF8' => false,  
+				'TYPE' => 'FK',  'ANSWER' => 'employee',  'ANSMODULE' => 'hrm',  
+				'WHERE' => "id_sh_org = §tcompany_id§ or id_sh_div = §tcompany_id§ ", 
+				 
+				'RELATION' => 'ManyToOne',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+		'busList' => array('STEP' => 8,  'SHORTNAME' => 'ostool',  'SHOW' => true,  'FORMAT' => 'retrieve',  'ICONS' => true,  'DELETE-ICON' => true,  'BUTTONS' => true,  'SEARCH' => false,  'QSEARCH' => false,  'RETRIEVE' => false,  'EDIT' => true,  'INPUT_WIDE' => true,  'QEDIT' => false,  'SIZE' => 32,  'MANDATORY' => false,  'UTF8' => false,  
+				'TYPE' => 'FK',  'EMPTY-ITEMS-MESSAGE' => 'no-ostool-generated',  'OPTIMIZE' => true,  
+				'CATEGORY' => 'ITEMS',  'ANSWER' => 'bus',  'ANSMODULE' => 'btb',  'ITEM' => 'parent_bus_id',  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+		'travelTemplateBusList' => array('STEP' => 9,  'SHORTNAME' => 'ttbList',  'SHOW' => true,  'FORMAT' => 'retrieve',  'ICONS' => true,  'DELETE-ICON' => true,  'BUTTONS' => true,  'SEARCH' => false,  'QSEARCH' => false,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => false,  'SIZE' => 32,  'MAXLENGTH' => 32,  'MANDATORY' => false,  'UTF8' => false,  
+				'TYPE' => 'FK',  'POLE' => true,  
+				'CATEGORY' => 'ITEMS',  'ANSWER' => 'travel_template_bus',  'ANSMODULE' => 'btb',  'ITEM' => 'bus_id',  'WHERE' => 1,  'OPTIMIZE' => true,  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, 
+				'CSS' => 'width_pct_100',),
+
+		'travelBusList' => array('STEP' => 10,  'SHORTNAME' => 'tbList',  'SHOW' => true,  'FORMAT' => 'retrieve',  'ICONS' => true,  'DELETE-ICON' => true,  'BUTTONS' => true,  'SEARCH' => false,  'QSEARCH' => false,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => false,  'SIZE' => 32,  'MAXLENGTH' => 32,  'MANDATORY' => false,  'UTF8' => false,  
+				'RETRIEVE_GROUPS' => array (
+  0 => 'display',
+  1 => 'bbooking',
+  2 => 'bbapproval',
+),  
+				'TYPE' => 'FK',  'POLE' => false,  
+				'CATEGORY' => 'ITEMS',  'ANSWER' => 'travel_bus',  'ANSMODULE' => 'btb',  'ITEM' => 'bus_id',  
+				'WHERE' => "1 and opened != 'Z'", 
+				 'OPTIMIZE' => true,  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+		'definition' => array('STEP' => 99,  'SHOW' => false,  'EDIT' => false,  'READONLY' => true,  'MANDATORY' => false,  
+				'CATEGORY' => 'FORMULA',  
+				'TYPE' => 'TEXT',  'SEARCH-BY-ONE' => '',  'DISPLAY' => false,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+		'photoGalery' => array('STEP' => 99,  'SHOW' => true,  'EDIT' => true,  'READONLY' => true,  'MINIBOX' => true,  'MANDATORY' => false,  
+				'CATEGORY' => 'FORMULA',  
+				'TYPE' => 'TEXT',  'INPUT_WIDE' => true,  'SEARCH-BY-ONE' => '',  'DISPLAY' => true,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
+				'CSS' => 'width_pct_100',),
+
+                        'created_by'         => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'TECH_FIELDS-RETRIEVE' => true, 'RETRIEVE' => false, 
+                                                                'QEDIT' => false, 'TYPE' => 'FK', 'ANSWER' => 'auser', 'ANSMODULE' => 'ums', 'FGROUP' => 'tech_fields'),
+
+                        'created_at'            => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'TECH_FIELDS-RETRIEVE' => true, 'RETRIEVE' => false, 
+                                                                'QEDIT' => false, 'TYPE' => 'DATETIME', 'FGROUP' => 'tech_fields'),
+
+                        'updated_by'           => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'TECH_FIELDS-RETRIEVE' => true, 'RETRIEVE' => false, 
+                                                                'QEDIT' => false, 'TYPE' => 'FK', 'ANSWER' => 'auser', 'ANSMODULE' => 'ums', 'FGROUP' => 'tech_fields'),
+
+                        'updated_at'              => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'TECH_FIELDS-RETRIEVE' => true, 'RETRIEVE' => false, 
+                                                                'QEDIT' => false, 'TYPE' => 'DATETIME', 'FGROUP' => 'tech_fields'),
+
+                        'validated_by'       => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 
+                                                                'QEDIT' => false, 'TYPE' => 'FK', 'ANSWER' => 'auser', 'ANSMODULE' => 'ums', 'FGROUP' => 'tech_fields'),
+
+                        'validated_at'          => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 'QEDIT' => false, 
+                                                                'TYPE' => 'DATETIME', 'FGROUP' => 'tech_fields'),
+
+                        /* 'active'                   => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 'EDIT' => false, 
+                                                                'QEDIT' => false, "DEFAULT" => 'Y', 'TYPE' => 'YN', 'FGROUP' => 'tech_fields'),*/
+
+                        'version'                  => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 
+                                                                'QEDIT' => false, 'TYPE' => 'INT', 'FGROUP' => 'tech_fields'),
+
+                        // 'draft'                         => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 'EDIT' => false, 
+                        //                                        'QEDIT' => false, "DEFAULT" => 'Y', 'TYPE' => 'YN', 'FGROUP' => 'tech_fields'),
+
+                        'update_groups_mfk'             => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 
+                                                                'QEDIT' => false, 'ANSWER' => 'ugroup', 'ANSMODULE' => 'ums', 'TYPE' => 'MFK', 'FGROUP' => 'tech_fields'),
+
+                        'delete_groups_mfk'             => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 
+                                                                'QEDIT' => false, 'ANSWER' => 'ugroup', 'ANSMODULE' => 'ums', 'TYPE' => 'MFK', 'FGROUP' => 'tech_fields'),
+
+                        'display_groups_mfk'            => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 
+                                                                'QEDIT' => false, 'ANSWER' => 'ugroup', 'ANSMODULE' => 'ums', 'TYPE' => 'MFK', 'FGROUP' => 'tech_fields'),
+
+                        'sci_id'                        => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 'QEDIT' => false, 
+                                                                'TYPE' => 'FK', 'ANSWER' => 'scenario_item', 'ANSMODULE' => 'pag', 'FGROUP' => 'tech_fields'),
+
+                        'tech_notes' 	                => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'TYPE' => 'TEXT', 'CATEGORY' => 'FORMULA', "SHOW-ADMIN" => true, 
+                                                                'TOKEN_SEP'=>"§", 'READONLY'=>true, "NO-ERROR-CHECK"=>true, 'FGROUP' => 'tech_fields'),
+                ); 
+        } 
+?>
