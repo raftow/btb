@@ -2,7 +2,7 @@
 	$trad["travel"]["travel.single"] = "رحلة";
 	$trad["travel"]["travel.new"] = "جديد(ة)";
 	$trad["travel"]["travel"] = "الرحلات";
-	$trad["travel"]["tcompany_id"] = "شركة الأسفار";
+	$trad["travel"]["orgunit_id"] = "شركة الأسفار";
 	$trad["travel"]["travel_name"] = "مسمى الرحلة";
 	$trad["travel"]["travel_date"] = "تاريخ المغادرة";
 	$trad["travel"]["travel_gdate"] = "الموافق بالنصراني";

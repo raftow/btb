@@ -47,7 +47,7 @@
 			'bus_id' => array('FGROUP' => 'tbus',  'SHORTNAME' => 'bus',  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  
 				'CSS' => 'width_pct_100',  'SIZE' => 128,  'UTF8' => false,  
 				'TYPE' => 'FK',  'ANSWER' => 'bus',  'ANSMODULE' => 'btb',  'AUTOCOMPLETE' => false,  
-				'WHERE' => "tcompany_id = §bus_company_id§", 
+				'WHERE' => "orgunit_id = §bus_company_id§", 
 				 'DEPENDENCY' => 'bus_company_id',  
 				'RELATION' => 'OneToMany',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  'STEP' => 1,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),

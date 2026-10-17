@@ -2,7 +2,7 @@
 	$trad["travel"]["travel.single"] = "Travel";
 	$trad["travel"]["travel.new"] = "new";
 	$trad["travel"]["travel"] = "Travels";
-	$trad["travel"]["tcompany_id"] = "Orgunit";
+	$trad["travel"]["orgunit_id"] = "Orgunit";
 	$trad["travel"]["travel_name"] = "Travel name";
 	$trad["travel"]["travel_date"] = "Travel date";
 	$trad["travel"]["travel_gdate"] = "Travel gdate";

@@ -8,7 +8,7 @@ class TravelTemplateEnTranslator{
 		$trad["travel_template"]["traveltemplate.single"] = "Travel template";
 		$trad["travel_template"]["traveltemplate.new"] = "new";
 		$trad["travel_template"]["travel_template"] = "Travel templates";
-		$trad["travel_template"]["tcompany_id"] = "Orgunit";
+		$trad["travel_template"]["orgunit_id"] = "Orgunit";
 		$trad["travel_template"]["travel_template_name"] = "Travel template name";
 		$trad["travel_template"]["full_residence"] = "Full residence";
 		$trad["travel_template"]["travelers_nb"] = "Travelers nb";

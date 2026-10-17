@@ -66,7 +66,7 @@ class Travel extends BtbObject{
 	public static $DATABASE		= ""; public static $MODULE		    = "btb"; public static $TABLE			= ""; public static $DB_STRUCTURE = null; /* = array(
                 id => array(FGROUP=>data, SHOW => true, RETRIEVE => true, EDIT => true, TYPE => PK),
 
-		tcompany_id => array(FGROUP=>data, SHORTNAME => company,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
+		orgunit_id => array(FGROUP=>data, SHORTNAME => company,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
 				EDIT => true,  QEDIT => true,  
 				SIZE => 32,  MANDATORY => true,  UTF8 => false,  
 				TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb,  AUTOCOMPLETE => true,  
@@ -249,7 +249,7 @@ class Travel extends BtbObject{
                 $this->ORDER_BY_FIELDS = "travel_template_id, travel_date";
                  
                 
-                $this->UNIQUE_KEY = array('tcompany_id','travel_name', 'travel_date');
+                $this->UNIQUE_KEY = array('orgunit_id','travel_name', 'travel_date');
                 
                 $this->showQeditErrors = true;
                 $this->showRetrieveErrors = true;
@@ -271,19 +271,19 @@ class Travel extends BtbObject{
         
         
         
-        public static function loadByMainIndex($tcompany_id, $travel_name, $travel_date, 
+        public static function loadByMainIndex($orgunit_id, $travel_name, $travel_date, 
                                                          $travel_gdate, $planned_start_time,
                                                          $return_date, $return_gdate, $planned_end_time, 
                                                          $travel_template_id, $travel_status_id,  
                                                          $create_obj_if_not_found=false)
         {
            $obj = new Travel();
-           if(!$tcompany_id) throw new AfwRuntimeException("loadByMainIndex : tcompany_id is mandatory field");
+           if(!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
            if(!$travel_name) throw new AfwRuntimeException("loadByMainIndex : travel_name is mandatory field");
            if(!$travel_date) throw new AfwRuntimeException("loadByMainIndex : travel_date is mandatory field");
 
 
-           $obj->select("tcompany_id",$tcompany_id);
+           $obj->select("orgunit_id",$orgunit_id);
            $obj->select("travel_name",$travel_name);
            $obj->select("travel_date",$travel_date);
 
@@ -293,7 +293,7 @@ class Travel extends BtbObject{
            }
            elseif($create_obj_if_not_found)
            {
-                $obj->set("tcompany_id",$tcompany_id);
+                $obj->set("orgunit_id",$orgunit_id);
                 $obj->set("travel_name",$travel_name);
                 $obj->set("travel_date",$travel_date);
                 $obj->is_new = true;
@@ -935,7 +935,7 @@ class Travel extends BtbObject{
                 
                 
                 
-                $travel_company_id = $this->getVal("tcompany_id");
+                $travel_company_id = $this->getVal("orgunit_id");
                 $companyObj = $this->hetCompany();
                 if(!$companyObj) return array("اعدادات عمل الشركة المنظمة لهذه الرحلة غير متوفرة","");
                 
@@ -1038,7 +1038,7 @@ class Travel extends BtbObject{
                                 
                                 if($cBus and ($cBus->id>0))
                                 {
-                                        $bus_company_id = $cBus->getVal("tcompany_id");
+                                        $bus_company_id = $cBus->getVal("orgunit_id");
                                         $bus_id = $cBus->getId();
                                         $report_arr[] = "تم اختيار الباص :  ".$cBus."  كباص رقم ".$bnum;
                                         $tbObj = TravelBus::createTravelBusNum($travel_company_id, $travel_id, $bus_company_id, $cBus->id, $bnum);
@@ -1918,7 +1918,7 @@ class Travel extends BtbObject{
                {
                        $this->arrRoomsPrices = array();
                        $travel_id = $this->getId();
-                       $work_branch_id = $this->getVal("tcompany_id"); 
+                       $work_branch_id = $this->getVal("orgunit_id"); 
                        // boucle on cities of travel trips
                        $skan_details_arr = $this->getSakanCitiesDetails();
                        //dd("skan_details_arr", $skan_details_arr);
@@ -2919,7 +2919,7 @@ class Travel extends BtbObject{
 
         public function isObjectEasyAttribute($attribute)
         {
-            if($attribute=="tcompany_id")    return true;
+            if($attribute=="orgunit_id")    return true;
             if($attribute=="travel_status_id")    return true;
             if($attribute=="travel_template_id")    return true;
             if($attribute=="depart_city_id")    return true;

@@ -10,11 +10,11 @@ class BtbTravelTemplateAfwStructure
 			$obj->DISPLAY_FIELD = "travel_template_name";
 
 			// $obj->ENABLE_DISPLAY_MODE_IN_QEDIT=true;
-			$obj->ORDER_BY_FIELDS = "tcompany_id, travel_template_name";
+			$obj->ORDER_BY_FIELDS = "orgunit_id, travel_template_name";
 
 			$obj->horizontalTabs = true;
 
-			$obj->UNIQUE_KEY = array('tcompany_id', 'travel_template_name');
+			$obj->UNIQUE_KEY = array('orgunit_id', 'travel_template_name');
 			$obj->editByStep = true;
 			$obj->editNbSteps = 11;
 			$obj->showQeditErrors = true;
@@ -50,7 +50,7 @@ class BtbTravelTemplateAfwStructure
 			'CSS' => 'width_pct_100',
 		),
 
-		'tcompany_id' => array(
+		'orgunit_id' => array(
 			'FGROUP' => 'travel_props',
 			'SHORTNAME' => 'tcompany',
 			'SEARCH' => true,
@@ -85,7 +85,7 @@ class BtbTravelTemplateAfwStructure
 			'ANSWER' => 'work_branch',
 			'ANSMODULE' => 'btb',
 			'CATEGORY' => 'SHORTCUT',
-			'SHORTCUT' => 'tcompany_id.parent_id',
+			'SHORTCUT' => 'orgunit_id.parent_id',
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => '',
 			'STEP' => 1,
@@ -1212,7 +1212,7 @@ class BtbTravelTemplateAfwStructure
 			'TYPE' => 'FK',
 			'ANSWER' => 'bus',
 			'ANSMODULE' => 'btb',
-			'WHERE' => "tcompany_id in (0§list_bus_company_mfk§0) and bus_template_id=§bus_template_id§ and example='Y' and bus_level = §travel_level§",
+			'WHERE' => "orgunit_id in (0§list_bus_company_mfk§0) and bus_template_id=§bus_template_id§ and example='Y' and bus_level = §travel_level§",
 
 			'DEPENDENCIES' => array(
 				0 => 'bus_template_id',
@@ -1357,7 +1357,7 @@ class BtbTravelTemplateAfwStructure
 			'HIDE_COLS' => array(
 				0 => 'template_name',
 				1 => 'travel_level',
-				2 => 'tcompany_id',
+				2 => 'orgunit_id',
 			),
 			'DELETE-ICON' => true,
 			'BUTTONS' => true,
@@ -1369,7 +1369,7 @@ class BtbTravelTemplateAfwStructure
 			'DO-NOT-RETRIEVE-COLS' => array(
 				0 => 'template_name',
 				1 => 'travel_level',
-				2 => 'tcompany_id',
+				2 => 'orgunit_id',
 			),
 			'CSS' => 'width_pct_100',
 		),
@@ -1392,7 +1392,7 @@ class BtbTravelTemplateAfwStructure
 			'HIDE_COLS' => array(
 				0 => 'template_name',
 				1 => 'travel_level',
-				2 => 'tcompany_id',
+				2 => 'orgunit_id',
 			),
 			'DELETE-ICON' => true,
 			'BUTTONS' => true,
@@ -1404,7 +1404,7 @@ class BtbTravelTemplateAfwStructure
 			'DO-NOT-RETRIEVE-COLS' => array(
 				0 => 'template_name',
 				1 => 'travel_level',
-				2 => 'tcompany_id',
+				2 => 'orgunit_id',
 			),
 			'CSS' => 'width_pct_100',
 		),

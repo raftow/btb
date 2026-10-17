@@ -21,7 +21,7 @@ class TravelTemplateArTranslator
                 $trad["travel_template"]["traveltemplate.single"] = "برنامج رحلة";
                 $trad["travel_template"]["traveltemplate.new"] = "جديد(ة)";
                 $trad["travel_template"]["travel_template"] = "برامج الرحلات";
-                $trad["travel_template"]["tcompany_id"] = "شركة الأسفار";
+                $trad["travel_template"]["orgunit_id"] = "شركة الأسفار";
                 $trad["travel_template"]["travel_template_name"] = "مسمى برنامج الرحلة";
                 $trad["travel_template"]["tfrequency_enum"] = "تكرار الرحلة";
                 //   ;"تاريخ أخر رحلة تم توليدها "

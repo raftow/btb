@@ -2,7 +2,7 @@
 	$trad["bus"]["bus.single"] = "Bus";
 	$trad["bus"]["bus.new"] = "new";
 	$trad["bus"]["bus"] = "Buss";
-	$trad["bus"]["tcompany_id"] = "Orgunit";
+	$trad["bus"]["orgunit_id"] = "Orgunit";
 	$trad["bus"]["bus_brand_id"] = "Bus brand";
 	$trad["bus"]["bus_model_id"] = "Bus model";
 	$trad["bus"]["bus_num"] = "Bus name";

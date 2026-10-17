@@ -2,7 +2,7 @@
 	$trad["bus_convention"]["busconvention.single"] = "اتفاقية حجز باص";
 	$trad["bus_convention"]["busconvention.new"] = "جديد(ة)";
 	$trad["bus_convention"]["bus_convention"] = "اتفاقيات حجز الباصات";
-	$trad["bus_convention"]["tcompany_id"] = "مؤسسة الأسفار";
+	$trad["bus_convention"]["orgunit_id"] = "مؤسسة الأسفار";
 	$trad["bus_convention"]["tbranch_id"] = "شركة الأسفار أو فرعها";
 	$trad["bus_convention"]["condition_num"] = "ترقيم الاتفاقية";
 	$trad["bus_convention"]["bus_company_id"] = "مؤسسة الباص";

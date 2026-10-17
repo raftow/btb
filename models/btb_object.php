@@ -1,6 +1,24 @@
 <?php
 
-class BtbObject extends   AFWObject{
+class BtbObject extends AfwMomkenObject {
+
+    public static function userIsSuperAdmin($objme = null)
+    {
+        if (!$objme)
+            $objme = AfwSession::getUserConnected();
+        if (!$objme)
+            return false;
+        return $objme->isSuperAdmin();
+    }
+
+    public static function userIsAdmin($objme = null)
+    {
+        if (!$objme)
+            $objme = AfwSession::getUserConnected();
+        if (!$objme)
+            return false;
+        return $objme->isAdmin();
+    }    
 
     public static function userConnectedIsSupervisor($objme=null)
     {

@@ -77,10 +77,10 @@ class Bus extends BtbObject{
                 reel    => array(SHOW => false, RETRIEVE => false, EDIT => false, QEDIT => false,  READONLY => true,  MINIBOX =>false, "DEFAULT" => N, 
                                         TYPE => YN, CSS => width_pct_50),
 
-                owner_parent_id => array(SHORTNAME => owner_parent, TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb, CATEGORY=>SHORTCUT, SHORTCUT=>"tcompany_id.parent_id", ),
-                // here below we should call it bocompany_id and not tcompany_id
+                owner_parent_id => array(SHORTNAME => owner_parent, TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb, CATEGORY=>SHORTCUT, SHORTCUT=>"orgunit_id.parent_id", ),
+                // here below we should call it bocompany_id and not orgunit_id
                 // as this is the bus owner company not the travel company, this why I added shortname owner
-		tcompany_id => array(SHORTNAME => owner,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
+		orgunit_id => array(SHORTNAME => owner,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
 				EDIT => true,  QEDIT => true,  MINIBOX =>false, CSS => width_pct_50,  
 				SIZE => 40, REQUIRED => true,  UTF8 => false,  
 				TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb,  AUTOCOMPLETE => false,  
@@ -190,7 +190,7 @@ class Bus extends BtbObject{
 				EDIT => true,  QEDIT => true,  MINIBOX =>false, CSS => width_pct_50,  
 				SIZE => 40, REQUIRED => false,  UTF8 => false,  
 				TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb,  AUTOCOMPLETE => false,  
-                                WHERE=>"parent_id = §owner_parent_id§ or parent_id = §tcompany_id§ or parent_id = §tcompany_id§ or id = §tcompany_id§",  
+                                WHERE=>"parent_id = §owner_parent_id§ or parent_id = §orgunit_id§ or parent_id = §orgunit_id§ or id = §orgunit_id§",  
                                 RELATION => OneToMany,  READONLY => false, ),
                                 
                                 // each bus not owned by the travel company should have account company that will be paid for the bus rental 
@@ -220,7 +220,7 @@ class Bus extends BtbObject{
                                 EDIT => true,  QEDIT => false,  MINIBOX =>true,  CSS => width_pct_25,  
                                 SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,  
                                 TYPE => FK,  ANSWER => employee,  ANSMODULE => hrm,  AUTOCOMPLETE => false,
-                                WHERE => "id_sh_org = §tcompany_id§ or id_sh_div = §tcompany_id§ ",  
+                                WHERE => "id_sh_org = §orgunit_id§ or id_sh_div = §orgunit_id§ ",  
 				                RELATION => ManyToOne,  READONLY => false, ),
 
                 mine => array('STEP' =>6, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  MINIBOX =>false,  
@@ -258,7 +258,7 @@ class Bus extends BtbObject{
 				EDIT => true,  QEDIT => true,  
 				SIZE => 32,  UTF8 => false,  
 				TYPE => FK,  ANSWER => employee,  ANSMODULE => hrm,
-                                WHERE=>"id_sh_org = §tcompany_id§ or id_sh_div = §tcompany_id§ ",   
+                                WHERE=>"id_sh_org = §orgunit_id§ or id_sh_div = §orgunit_id§ ",   
 				RELATION => ManyToOne,  READONLY => false, ),
 
                 busList => array('STEP' => 8,  SHORTNAME => ostool,  SHOW => true,  FORMAT => retrieve,  ICONS => true,  "DELETE-ICON" => true,  BUTTONS => true,  SEARCH => false,  QSEARCH => false,  RETRIEVE => false,  
@@ -316,9 +316,9 @@ class Bus extends BtbObject{
 		parent::__construct("bus","id","btb");
                 $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
                 $this->DISPLAY_FIELD = "id";
-                $this->ORDER_BY_FIELDS = "tcompany_id, bus_code";
+                $this->ORDER_BY_FIELDS = "orgunit_id, bus_code";
                 $this->horizontalTabs = true;
-                $this->UNIQUE_KEY = array('tcompany_id','bus_code');
+                $this->UNIQUE_KEY = array('orgunit_id','bus_code');
                 
                 $this->editByStep = true;
                 $this->editNbSteps = 10;
@@ -327,7 +327,7 @@ class Bus extends BtbObject{
                 $this->showRetrieveErrors = true;
                 $this->general_check_errors = true;
                 $this->public_display = true;
-                $this->after_save_edit = array("class"=> 'WorkBranch',"attribute"=> 'tcompany_id', "currmod"=> 'btb',"currstep"=>5);
+                $this->after_save_edit = array("class"=> 'WorkBranch',"attribute"=> 'orgunit_id', "currmod"=> 'btb',"currstep"=>5);
 	}
         
         public static function loadById($id)
@@ -463,13 +463,13 @@ class Bus extends BtbObject{
                 return array($total_price, $errors_arr, $report_arr, $this->prices_expiry_date, $bp);
         }
         
-        public static function loadByBusNum($tcompany_id, $parent_bus_id, $bus_num,$create_obj_if_not_found=false)
+        public static function loadByBusNum($orgunit_id, $parent_bus_id, $bus_num,$create_obj_if_not_found=false)
         {
            $obj = new Bus();
-           if(!$tcompany_id) throw new AfwRuntimeException("loadByMainIndex : tcompany_id is mandatory field");
+           if(!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
  
  
-           $obj->select("tcompany_id",$tcompany_id);
+           $obj->select("orgunit_id",$orgunit_id);
            $obj->select("parent_bus_id",$parent_bus_id);
            $obj->select("bus_num",$bus_num);
  
@@ -480,7 +480,7 @@ class Bus extends BtbObject{
            }
            elseif($create_obj_if_not_found)
            {
-                $obj->set("tcompany_id",$tcompany_id);
+                $obj->set("orgunit_id",$orgunit_id);
                 $obj->set("parent_bus_id",$parent_bus_id);
                 $obj->set("bus_num",$bus_num);
  
@@ -496,12 +496,12 @@ class Bus extends BtbObject{
         rafik : what to put in $bus_code because it is not unique if the bus is an example ?
         response : $this->set("bus_code", "EXAMPLE-".$this->getId());        
         */
-        public static function loadByMainIndex($tcompany_id, $bus_code,$create_obj_if_not_found=false)
+        public static function loadByMainIndex($orgunit_id, $bus_code,$create_obj_if_not_found=false)
         {
            $obj = new Bus();
  
  
-           $obj->select("tcompany_id",$tcompany_id);
+           $obj->select("orgunit_id",$orgunit_id);
            $obj->select("bus_code",$bus_code);
  
            if($obj->load())
@@ -511,7 +511,7 @@ class Bus extends BtbObject{
            }
            elseif($create_obj_if_not_found)
            {
-                $obj->set("tcompany_id",$tcompany_id);
+                $obj->set("orgunit_id",$orgunit_id);
                 $obj->set("bus_code",$bus_code);
  
                 $obj->insert();
@@ -576,7 +576,7 @@ class Bus extends BtbObject{
                $data[0] = $this->calcCategory($translate=true,$short=true);
                list($data[1],$link[1]) = $this->displayAttribute("bus_brand_id",false, $lang);
                list($data[2],$link[2]) = $this->displayAttribute("bus_model_id",false, $lang);
-               list($data[3],$link[3]) = $this->displayAttribute("tcompany_id",false, $lang);
+               list($data[3],$link[3]) = $this->displayAttribute("orgunit_id",false, $lang);
                
                
                
@@ -589,7 +589,7 @@ class Bus extends BtbObject{
                $link = array();
                
 
-               list($data[0],$link[0]) = $this->displayAttribute("tcompany_id",false, $lang);
+               list($data[0],$link[0]) = $this->displayAttribute("orgunit_id",false, $lang);
                list($data[1],$link[1]) = $this->displayAttribute("bus_brand_id",false, $lang);
                list($data[2],$link[2]) = $this->displayAttribute("bus_model_id",false, $lang);
                $data[3] = $this->calcCategory($translate=true,$short=true);
@@ -942,7 +942,7 @@ class Bus extends BtbObject{
              {
                    for($bus_num=1; $bus_num<=$nb_buses; $bus_num++)
                    {
-                       $busObj = self::loadByBusNum($this->getVal("tcompany_id"), $this->getId(), $bus_num);
+                       $busObj = self::loadByBusNum($this->getVal("orgunit_id"), $this->getId(), $bus_num);
                        if(!$busObj)
                        {
                             $params["bus_code"] = "EX-".$this->getId()."-".$bus_num;

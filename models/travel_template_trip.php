@@ -314,7 +314,7 @@ class TravelTemplateTrip extends BtbObject{
              $this->set("trip_num",$order);
              $ttObj = $this->het("travel_template_id");
              if(!$ttObj) return array("travel template not defined","");
-             $compObj = $ttObj->het("tcompany_id");
+             $compObj = $ttObj->het("orgunit_id");
              $trips_nb = intval($ttObj->getVal("trips_nb"));
              $log_arr = array();
              $log_arr[] = "----------------------------------------------------"; 

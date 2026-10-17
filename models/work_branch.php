@@ -20,15 +20,7 @@ class WorkBranch extends BtbObject
     public function __construct()
     {
         parent::__construct("work_branch", "id", "btb");
-        $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-        $this->DISPLAY_FIELD = "name_ar";
-        $this->ORDER_BY_FIELDS = "parent_id, name_ar";
-        $this->horizontalTabs = true;
-        $this->UNIQUE_KEY = array('parent_id', 'company_code');
-        $this->editByStep = true;
-        $this->editNbSteps = 11;
-        $this->showQeditErrors = true;
-        $this->showRetrieveErrors = true;
+        BtbWorkBranchAfwStructure::initInstance($this);   
     }
 
     public static function loadById($id)
@@ -105,28 +97,29 @@ class WorkBranch extends BtbObject
         
         $crm_code = $this->getVal("company_code");
 
-        $comp = Orgunit::loadByCRMCode($crm_code, $create_obj_if_not_found = true);
-        if ($comp->is_new) {
+        $orgunitObj = Orgunit::loadByCRMCode($crm_code, $create_obj_if_not_found = true);
+        if(!$orgunitObj) return null;
+        if ($orgunitObj->is_new) {
             if ($parent_id) $id_sh_type = 8;
             else $id_sh_type = 6;
-            $comp->set("id_sh_parent", $parent_id);
-            $comp->set("id_sh_type", $id_sh_type);
-            $comp->set("titre_short_en", $this->getVal("name_en"));
-            $comp->set("titre_short", $this->getVal("name_ar"));
-            $comp->set("titre_en", $this->getVal("name_en"));
-            $comp->set("titre", $this->getVal("name_ar"));
-            $comp->set("id_domain", 15);
-            $comp->commit();
-            if (!$comp->getId()) $this->throwError("failed to insert orgunit (crm_code = $crm_code) ");
+            $orgunitObj->set("id_sh_parent", $parent_id);
+            $orgunitObj->set("id_sh_type", $id_sh_type);
+            $orgunitObj->set("titre_short_en", $this->getVal("name_en"));
+            $orgunitObj->set("titre_short", $this->getVal("name_ar"));
+            $orgunitObj->set("titre_en", $this->getVal("name_en"));
+            $orgunitObj->set("titre", $this->getVal("name_ar"));
+            $orgunitObj->set("id_domain", 15);
+            $orgunitObj->commit();
+            if (!$orgunitObj->getId()) $this->throwError("failed to insert orgunit (crm_code = $crm_code) ");
         }
 
-        if ($this->getVal("tcompany_id") != $comp->getId()) {
-            $this->set("tcompany_id", $comp->getId());
+        if ($this->getVal("orgunit_id") != $orgunitObj->getId()) {
+            $this->set("orgunit_id", $orgunitObj->getId());
         }
 
         if($commit) $this->commit();
 
-        return $comp;
+        return $orgunitObj;
     }
     
     /**
@@ -163,6 +156,33 @@ class WorkBranch extends BtbObject
             $obj->insertNew();
             if(!$obj->id) return null; // means beforeInsert rejected insert operation
             $obj->is_new = true;
+            return $obj;
+        }
+        else return null;
+        
+    }
+
+    /**
+     * @param int $orgunit_id
+     */
+    public static function OrunitIdToMyId($orgunit_id) {
+        $wbObj = self::loadByOrgunitId($orgunit_id);
+        return $wbObj->id;
+    }
+
+    /**
+     * @param int $orgunit_id
+     */
+    public static function loadByOrgunitId($orgunit_id)
+    {
+        if(!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
+
+
+        $obj = new WorkBranch();
+        $obj->select("orgunit_id",$orgunit_id);
+
+        if($obj->load())
+        {
             return $obj;
         }
         else return null;
@@ -208,6 +228,7 @@ class WorkBranch extends BtbObject
         $otherLinksArray = $this->getOtherLinksArrayStandard($mode);
         $my_id = $this->getId();
         $parent_id = $this->getVal("parent_id");
+        $orgunit_id = $this->getVal("orgunit_id");
         if (!$parent_id) $parent_id = $my_id;
         $displ = $this->getDisplay($lang);
 
@@ -253,7 +274,7 @@ class WorkBranch extends BtbObject
             $link = array();
             $title = "إضافة موظف جديد للفرع";
             $title_detailed = $title . "لـ : " . $displ;
-            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=Employee&currmod=hrm&sel_id_sh_div=$my_id&sel_id_sh_org=$parent_id";
+            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=WbranchEmployee&currmod=btb&sel_orgunit_id=$orgunit_id";
             $link["TITLE"] = $title;
             $link["BF-ID"] = 104071;
             $otherLinksArray[] = $link;
@@ -420,7 +441,7 @@ class WorkBranch extends BtbObject
         if ($parentObj) {
 
 
-            $except_fields = array("tcompany_id" => true, "parent_id" => true, "name_ar" => true);
+            $except_fields = array("orgunit_id" => true, "parent_id" => true, "name_ar" => true);
             $except_if_filled_fields = array("city_id" => true,);
             $this->copyDataFrom($parentObj, $except_fields, $except_if_filled_fields);
             if ($commit) $this->commit();
@@ -587,7 +608,7 @@ class WorkBranch extends BtbObject
                                 if($travelTemplateUnique)
                                 {
                                         $travelTemplateList = array();
-                                        if($travelTemplateUnique->getVal("tcompany_id") == $travelCompanyItem->id)
+                                        if($travelTemplateUnique->getVal("orgunit_id") == $travelCompanyItem->id)
                                         {
                                                 $travelTemplateList[] = $travelTemplateUnique;
                                         }
@@ -840,16 +861,16 @@ class WorkBranch extends BtbObject
         if ($id) {
             if ($id_replace == 0) {
                 // FK part of me - not deletable 
-                // btb.bus-الشركة المالكة للباص	tcompany_id  أنا تفاصيل لها-OneToMany
+                // btb.bus-الشركة المالكة للباص	orgunit_id  أنا تفاصيل لها-OneToMany
 
                 $obj = new Bus();
-                $obj->where("tcompany_id = '$id' and active='Y' ");
+                $obj->where("orgunit_id = '$id' and active='Y' ");
                 $nbRecords = $obj->count();
                 if ($nbRecords > 0) {
                     $this->deleteNotAllowedReason = "Used in some Buss(s) as Orgunit";
                     return false;
                 }
-                $this->execQuery("delete from ${server_db_prefix}btb.bus where tcompany_id = '$id' and active='N'");
+                $this->execQuery("delete from ${server_db_prefix}btb.bus where orgunit_id = '$id' and active='N'");
 
                 // btb.work_branch-الشركة الأم	parent_id  أنا تفاصيل لها-OneToMany
                 $obj = new WorkBranch();
@@ -861,16 +882,16 @@ class WorkBranch extends BtbObject
                 }
                 $this->execQuery("delete from ${server_db_prefix}btb.work_branch where parent_id = '$id' and active='N'");
 
-                // btb.bus_convention-المؤسسة	tcompany_id  أنا تفاصيل لها-OneToMany
+                // btb.bus_convention-المؤسسة	orgunit_id  أنا تفاصيل لها-OneToMany
 
                 $obj = new BusConvention();
-                $obj->where("tcompany_id = '$id' and active='Y' ");
+                $obj->where("orgunit_id = '$id' and active='Y' ");
                 $nbRecords = $obj->count();
                 if ($nbRecords > 0) {
                     $this->deleteNotAllowedReason = "Used in some Bus conditions(s) as company";
                     return false;
                 }
-                $this->execQuery("delete from ${server_db_prefix}btb.bus_convention where tcompany_id = '$id' and active='N'");
+                $this->execQuery("delete from ${server_db_prefix}btb.bus_convention where orgunit_id = '$id' and active='N'");
 
                 // btb.bus_convention-الفرع	tbranch_id  أنا تفاصيل لها-OneToMany
 
@@ -919,16 +940,16 @@ class WorkBranch extends BtbObject
 
             } else {
                 // FK on me 
-                // btb.bus_convention-المؤسسة	tcompany_id  أنا تفاصيل لها-OneToMany
-                $this->execQuery("update ${server_db_prefix}btb.bus_convention set tcompany_id='$id_replace' where tcompany_id='$id' ");
+                // btb.bus_convention-المؤسسة	orgunit_id  أنا تفاصيل لها-OneToMany
+                $this->execQuery("update ${server_db_prefix}btb.bus_convention set orgunit_id='$id_replace' where orgunit_id='$id' ");
                 // btb.bus_convention-الفرع	tbranch_id  أنا تفاصيل لها-OneToMany
                 $this->execQuery("update ${server_db_prefix}btb.bus_convention set tbranch_id='$id_replace' where tbranch_id='$id' ");
                 // btb.bus_convention-مؤسسة الباص	bus_company_id  أنا تفاصيل لها-OneToMany
                 $this->execQuery("update ${server_db_prefix}btb.bus_convention set bus_company_id='$id_replace' where bus_company_id='$id' ");
                 // btb.bus_convention-فرع مؤسسة الباص	bus_branch_id  أنا تفاصيل لها-OneToMany
                 $this->execQuery("update ${server_db_prefix}btb.bus_convention set bus_branch_id='$id_replace' where bus_branch_id='$id' ");
-                // btb.bus-الشركة المالكة للباص	tcompany_id  أنا تفاصيل لها-OneToMany
-                $this->execQuery("update ${server_db_prefix}btb.bus set tcompany_id='$id_replace' where tcompany_id='$id' ");
+                // btb.bus-الشركة المالكة للباص	orgunit_id  أنا تفاصيل لها-OneToMany
+                $this->execQuery("update ${server_db_prefix}btb.bus set orgunit_id='$id_replace' where orgunit_id='$id' ");
                 // btb.work_branch-الشركة الأم	parent_id  أنا تفاصيل لها-OneToMany
                 $this->execQuery("update ${server_db_prefix}btb.work_branch set parent_id='$id_replace' where parent_id='$id' ");
 
@@ -1006,11 +1027,6 @@ class WorkBranch extends BtbObject
 
     public function attributeIsApplicable($attribute)
     {
-
-        if ($attribute == "allEmployeeList") {
-            return $this->isCompany();
-        }
-
         if ($attribute == "employeeList") {
             return true; //(!$this->isCompany()); 
         }

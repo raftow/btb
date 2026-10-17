@@ -16,7 +16,7 @@ class BusConvention extends BtbObject{
 	public static $DATABASE		= ""; public static $MODULE		    = "btb"; public static $TABLE			= ""; public static $DB_STRUCTURE = null; /* = array(
                 id => array(SHOW => true, RETRIEVE => true, EDIT => true, TYPE => PK),
 
-		tcompany_id => array(SHORTNAME => tcompany,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
+		orgunit_id => array(SHORTNAME => tcompany,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
 				EDIT => true,  QEDIT => true,  
 				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
 				TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb,  AUTOCOMPLETE => true,  
@@ -26,7 +26,7 @@ class BusConvention extends BtbObject{
 				EDIT => true,  QEDIT => true,  
 				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
 				TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb,  AUTOCOMPLETE => true,
-                                WHERE=>"(parent_id = §tcompany_id§ or id = §tcompany_id§)",  
+                                WHERE=>"(parent_id = §orgunit_id§ or id = §orgunit_id§)",  
 				RELATION => OneToMany,  READONLY => true, ),
 
 		condition_num => array(SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
@@ -37,7 +37,7 @@ class BusConvention extends BtbObject{
 		bus_company_id => array(SHORTNAME => company,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
 				EDIT => true,  QEDIT => true,  
 				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,
-                                WHERE=>"id != §tcompany_id§ and parent_id = 0 and (work_service_mfk like '%,1,%' or work_service_mfk like '%,2,%')",
+                                WHERE=>"id != §orgunit_id§ and parent_id = 0 and (work_service_mfk like '%,1,%' or work_service_mfk like '%,2,%')",
                                 DEPENDENT_OFME=>array("bus_branch_id", "bus_id"),   
 				TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb,  AUTOCOMPLETE => false,  
 				RELATION => ManyToOne,  READONLY => false, ),
@@ -55,7 +55,7 @@ class BusConvention extends BtbObject{
 				EDIT => true,  QEDIT => true,  
 				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
 				TYPE => FK,  ANSWER => bus,  ANSMODULE => btb,  AUTOCOMPLETE => false,
-                                WHERE=>"(tcompany_id = §bus_company_id§ or tcompany_id = §bus_branch_id§) and active = 'Y' and publish = 'Y'",
+                                WHERE=>"(orgunit_id = §bus_company_id§ or orgunit_id = §bus_branch_id§) and active = 'Y' and publish = 'Y'",
                                 DEPENDENCIES => array("bus_company_id","bus_branch_id"),  
 				RELATION => OneToMany,  READONLY => false, ),
 
@@ -121,11 +121,11 @@ class BusConvention extends BtbObject{
 		parent::__construct("bus_convention","id","btb");
                 $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
                 $this->DISPLAY_FIELD = "";
-                $this->ORDER_BY_FIELDS = "tcompany_id, tbranch_id, condition_num";
+                $this->ORDER_BY_FIELDS = "orgunit_id, tbranch_id, condition_num";
                 $this->horizontalTabs = true;
                  
                 
-                $this->UNIQUE_KEY = array('tcompany_id','tbranch_id','condition_num');
+                $this->UNIQUE_KEY = array('orgunit_id','tbranch_id','condition_num');
                 
                 $this->showQeditErrors = true;
                 $this->showRetrieveErrors = true;
@@ -145,15 +145,15 @@ class BusConvention extends BtbObject{
         
         
         
-        public static function loadByMainIndex($tcompany_id, $tbranch_id, $condition_num,$create_obj_if_not_found=false)
+        public static function loadByMainIndex($orgunit_id, $tbranch_id, $condition_num,$create_obj_if_not_found=false)
         {
            $obj = new BusConvention();
-           if(!$tcompany_id) throw new AfwRuntimeException("loadByMainIndex : tcompany_id is mandatory field");
+           if(!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
            if(!$tbranch_id) throw new AfwRuntimeException("loadByMainIndex : tbranch_id is mandatory field");
            if(!$condition_num) throw new AfwRuntimeException("loadByMainIndex : condition_num is mandatory field");
 
 
-           $obj->select("tcompany_id",$tcompany_id);
+           $obj->select("orgunit_id",$orgunit_id);
            $obj->select("tbranch_id",$tbranch_id);
            $obj->select("condition_num",$condition_num);
 
@@ -164,7 +164,7 @@ class BusConvention extends BtbObject{
            }
            elseif($create_obj_if_not_found)
            {
-                $obj->set("tcompany_id",$tcompany_id);
+                $obj->set("orgunit_id",$orgunit_id);
                 $obj->set("tbranch_id",$tbranch_id);
                 $obj->set("condition_num",$condition_num);
 
@@ -184,7 +184,7 @@ class BusConvention extends BtbObject{
                $link = array();
                
 
-               list($data[0],$link[0]) = $this->displayAttribute("tcompany_id",false, $lang);
+               list($data[0],$link[0]) = $this->displayAttribute("orgunit_id",false, $lang);
                list($data[1],$link[1]) = $this->displayAttribute("tbranch_id",false, $lang);
                list($data[2],$link[2]) = $this->displayAttribute("condition_num",false, $lang);
 

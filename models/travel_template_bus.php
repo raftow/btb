@@ -44,7 +44,7 @@ class TravelTemplateBus extends BtbObject{
 				EDIT => true,  QEDIT => true, CSS => width_pct_100,  
 				SIZE => 128,  UTF8 => false,  
 				TYPE => FK,  ANSWER => bus,  ANSMODULE => btb,  AUTOCOMPLETE => false,
-                                WHERE => "tcompany_id = §bus_company_id§",
+                                WHERE => "orgunit_id = §bus_company_id§",
                                 DEPENDENCY=>bus_company_id, 
 				RELATION => OneToMany,  READONLY => false, ),
                 
@@ -213,10 +213,10 @@ class TravelTemplateBus extends BtbObject{
               // to be implemented @todo
               $found_nb = 0;
               // on cherche dans les bus d'une compagnie donnee 
-              if($busObj->tcompany_id and $busObj->id)
+              if($busObj->orgunit_id and $busObj->id)
               {
                       
-                      $this->set("bus_company_id",$busObj->getVal("tcompany_id"));
+                      $this->set("bus_company_id",$busObj->getVal("orgunit_id"));
                       $this->set("bus_id",$busObj->id);
                       
                       if($busObj->estExample())
@@ -237,7 +237,7 @@ class TravelTemplateBus extends BtbObject{
               // on cherche dans tous les bus publiquement proposes
               else
               {
-                   die("tcompany_id = ".$busObj->tcompany_id." and id = ".$busObj->id);
+                   die("orgunit_id = ".$busObj->orgunit_id." and id = ".$busObj->id);
               }
               return array($found_nb,"","");
         }

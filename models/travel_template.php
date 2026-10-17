@@ -75,9 +75,9 @@ class TravelTemplate extends BtbObject
         if ($objme) {
             $company_id = $objme->getMyDepartmentId();
             if (!$company_id) $company_id = $objme->getMyOrganizationId();
-            $this->set("tcompany_id", $company_id);
-            $this->silentField("tcompany_id");
-            $compObj = $this->het("tcompany_id");
+            $this->set("orgunit_id", $company_id);
+            $this->silentField("orgunit_id");
+            $compObj = $this->het("orgunit_id");
             if ($compObj) {
                 $depart_city_id = $compObj->getVal("city_id");
                 $this->set("depart_city_id", $depart_city_id);
@@ -88,30 +88,30 @@ class TravelTemplate extends BtbObject
         return true;
     }
 
-    public static function loadAllTTOfCompany($tcompany_id)
+    public static function loadAllTTOfCompany($orgunit_id)
     {
         $obj = new TravelTemplate();
-        if (!$tcompany_id) throw new AfwRuntimeException("loadAllTTOfCompany : tcompany_id is mandatory field");
-        $obj->select("tcompany_id", $tcompany_id);
+        if (!$orgunit_id) throw new AfwRuntimeException("loadAllTTOfCompany : orgunit_id is mandatory field");
+        $obj->select("orgunit_id", $orgunit_id);
 
         return $obj->loadMany();
     }
 
-    public static function loadByMainIndex($tcompany_id, $travel_template_name, $create_obj_if_not_found = false)
+    public static function loadByMainIndex($orgunit_id, $travel_template_name, $create_obj_if_not_found = false)
     {
         $obj = new TravelTemplate();
-        if (!$tcompany_id) throw new AfwRuntimeException("loadByMainIndex : tcompany_id is mandatory field");
+        if (!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
         if (!$travel_template_name) throw new AfwRuntimeException("loadByMainIndex : travel_template_name is mandatory field");
 
 
-        $obj->select("tcompany_id", $tcompany_id);
+        $obj->select("orgunit_id", $orgunit_id);
         $obj->select("travel_template_name", $travel_template_name);
 
         if ($obj->load()) {
             if ($create_obj_if_not_found) $obj->activate();
             return $obj;
         } elseif ($create_obj_if_not_found) {
-            $obj->set("tcompany_id", $tcompany_id);
+            $obj->set("orgunit_id", $orgunit_id);
             $obj->set("travel_template_name", $travel_template_name);
 
             $obj->insert();
@@ -140,7 +140,7 @@ class TravelTemplate extends BtbObject
         $link = array();
 
 
-        //list($data[0],$link[0]) = $this->displayAttribute("tcompany_id",false, $lang);
+        //list($data[0],$link[0]) = $this->displayAttribute("orgunit_id",false, $lang);
         $data[0] = "P" . $this->id;
         list($data[1], $link[1]) = $this->displayAttribute("travel_template_name", false, $lang);
         $tfrequency_enum = $this->getVal("tfrequency_enum");
@@ -521,9 +521,9 @@ class TravelTemplate extends BtbObject
 
     public function calcCode()
     {
-        $tcompany_id = $this->getVal("tcompany_id");
-        if (!$tcompany_id) return "C-NOT-DEFINED";
-        $woObj = $this->het("tcompany_id");
+        $orgunit_id = $this->getVal("orgunit_id");
+        if (!$orgunit_id) return "C-NOT-DEFINED";
+        $woObj = $this->het("orgunit_id");
         if ((!$woObj) or $woObj->isEmpty()) return "C-EMPTY";
 
         $code = $woObj->calcCode() . "-" . ($this->getId() + 100);
@@ -553,9 +553,9 @@ class TravelTemplate extends BtbObject
 
         $trv->logicDelete($commit = true, $only_me = false, $where_clause = "travel_date >='$first_travel_date' and travel_template_id = $this_id and active='Y' and (travel_status_id is null or travel_status_id in (0," . self::$TRAVEL_STATUS_PREPARE . "))");
 
-        $tcompany_id = $this->getVal("tcompany_id");
-        if (!$tcompany_id) return array("company not defined", "");
-        $woObj = $this->het("tcompany_id");
+        $orgunit_id = $this->getVal("orgunit_id");
+        if (!$orgunit_id) return array("company not defined", "");
+        $woObj = $this->het("orgunit_id");
 
         // تكرار الرحلة
         $tfrequency_enum = $this->getVal("tfrequency_enum");
@@ -712,7 +712,7 @@ class TravelTemplate extends BtbObject
                 $return_date = AfwDateHelper::shiftHijriDate($travel_date, $total_nb_days);
 
                 $trObj = Travel::loadByMainIndex(
-                    $tcompany_id,
+                    $orgunit_id,
                     $travel_name,
                     $travel_date,
                     $travel_gdate,
@@ -946,8 +946,8 @@ class TravelTemplate extends BtbObject
         global $server_db_prefix, $images;
 
 
-        $tcompany_id = $this->getVal("tcompany_id");
-        if ($tcompany_id) $woObj = $this->het("tcompany_id");
+        $orgunit_id = $this->getVal("orgunit_id");
+        if ($orgunit_id) $woObj = $this->het("orgunit_id");
         else $woObj = null;
 
         switch ($attribute) {
@@ -1224,7 +1224,7 @@ class TravelTemplate extends BtbObject
 
     public function genereBusList($lang = "ar")
     {
-        $tcompany_id = $this->tcompany_id;
+        $orgunit_id = $this->orgunit_id;
         $bus_id = $this->example_bus_id;
 
         $busTemplateObj = $this->btemp;
@@ -1272,7 +1272,7 @@ class TravelTemplate extends BtbObject
             $bus_template_id = $busTemplateObj->getId();
             $b = new Bus();
             if (!$list_bus_company_mfk) $list_bus_company_mfk = ",";
-            $b->where("tcompany_id in (0 $list_bus_company_mfk 0) and bus_template_id=$bus_template_id");
+            $b->where("orgunit_id in (0 $list_bus_company_mfk 0) and bus_template_id=$bus_template_id");
             //@todo : $bus_priority_order_by should be from company config
             $bus_priority_order_by = "example desc, bus_num asc";
             $busList = $b->loadMany($limit = $to_book_bus_nb, $bus_priority_order_by);
@@ -1332,7 +1332,7 @@ class TravelTemplate extends BtbObject
         $ttbusList = $this->get("busList");
         $ttbusCount = count($ttbusList);
 
-        $compObj = $this->het("tcompany_id");
+        $compObj = $this->het("orgunit_id");
 
 
         for ($bnum = 1; $bnum <= $ttbusCount; $bnum++) {
@@ -1443,7 +1443,7 @@ class TravelTemplate extends BtbObject
     public function calcList_bus_company_mfk()
     {
         $arrList_bus_company = array();
-        $arrList_bus_company[] = $this->getVal("tcompany_id");
+        $arrList_bus_company[] = $this->getVal("orgunit_id");
         $branchObj = $this->hetBranch();
         if ($branchObj) $arrList_bus_company[] = $branchObj->getId();
 
@@ -1655,7 +1655,7 @@ class TravelTemplate extends BtbObject
 
     public function copyMeToOtherCompany($company_id)
     {
-        $except_fields = array("tcompany_id" => true, "travel_template_name" => true,);
+        $except_fields = array("orgunit_id" => true, "travel_template_name" => true,);
         $ttNew = TravelTemplate::loadByMainIndex($company_id, $this->getVal("travel_template_name"), $create_obj_if_not_found = true);
         if (count($ttNew->get("travelList")) > 0) return array("this template is already working and generating travels, can't erase it", "", null);
         $ttNew->copyDataFrom($this, $except_fields, $except_if_filled_fields = null);
@@ -1790,7 +1790,7 @@ class TravelTemplate extends BtbObject
         if ($company_id) {
             $wbObj = WorkBranch::loadById($company_id);
             $list_of_branch_ids = $wbObj->getMyBranchsId();
-            $ttObj->where("tcompany_id in ($list_of_branch_ids)");
+            $ttObj->where("orgunit_id in ($list_of_branch_ids)");
         }
 
         //@todo time limits should be in settings ?
@@ -1896,7 +1896,7 @@ class TravelTemplate extends BtbObject
                                 $busUniqueOwner = null;
                                 $busUniqueDisp = "";
                         } 
-                        $woObj = $this->het("tcompany_id");
+                        $woObj = $this->het("orgunit_id");
                         if($busUnique and $busUniqueOwner and $woObj) 
                         {
                                 

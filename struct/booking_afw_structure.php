@@ -90,7 +90,7 @@
 
 		'conditions' => array('STEP' => 2,  'FGROUP' => 'conditions',  'SHOW' => true,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => false,  
 				'SIZE' => 'AREA',  'MAXLENGTH' => 32,  
-				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'travel_id.tcompany_id.conditions',  'UTF8' => true,  
+				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'travel_id.orgunit_id.conditions',  'UTF8' => true,  
 				'TYPE' => 'TEXT',  'FORMAT' => 'TOHTML',  'READONLY' => true,  'SEARCH-BY-ONE' => '',  'DISPLAY' => true,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
 				'CSS' => 'width_pct_100',),
@@ -124,13 +124,13 @@
 
 		'branch_id' => array('SHORTNAME' => 'branch',  
 				'TYPE' => 'FK',  'ANSWER' => 'work_branch',  'ANSMODULE' => 'btb',  
-				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'travel.tcompany_id',  'SEARCH-BY-ONE' => '',  'DISPLAY' => '',  'STEP' => 1,  
+				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'travel.orgunit_id',  'SEARCH-BY-ONE' => '',  'DISPLAY' => '',  'STEP' => 1,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
 				'CSS' => 'width_pct_100',),
 
 		'company_id' => array('SHORTNAME' => 'company',  
 				'TYPE' => 'FK',  'ANSWER' => 'work_branch',  'ANSMODULE' => 'btb',  
-				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'travel.tcompany_id.parent_id',  'SEARCH-BY-ONE' => '',  'DISPLAY' => '',  'STEP' => 1,  
+				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'travel.orgunit_id.parent_id',  'SEARCH-BY-ONE' => '',  'DISPLAY' => '',  'STEP' => 1,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
 				'CSS' => 'width_pct_100',),
 

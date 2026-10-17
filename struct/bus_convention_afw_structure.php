@@ -10,7 +10,7 @@
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
 				'CSS' => 'width_pct_100',),
 
-			'tcompany_id' => array('SHORTNAME' => 'tcompany',  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 32,  'MAXLENGTH' => 32,  'REQUIRED' => true,  'UTF8' => false,  
+			'orgunit_id' => array('SHORTNAME' => 'tcompany',  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 32,  'MAXLENGTH' => 32,  'REQUIRED' => true,  'UTF8' => false,  
 				'TYPE' => 'FK',  'ANSWER' => 'work_branch',  'ANSMODULE' => 'btb',  'AUTOCOMPLETE' => true,  
 				'RELATION' => 'ManyToOne',  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  'STEP' => 1,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'MANDATORY' => true,  'ERROR-CHECK' => true, 
@@ -18,7 +18,7 @@
 
 			'tbranch_id' => array('SHORTNAME' => 'tbranch',  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 32,  'MAXLENGTH' => 32,  'REQUIRED' => true,  'UTF8' => false,  
 				'TYPE' => 'FK',  'ANSWER' => 'work_branch',  'ANSMODULE' => 'btb',  'AUTOCOMPLETE' => true,  
-				'WHERE' => "(parent_id = §tcompany_id§ or id = §tcompany_id§)", 
+				'WHERE' => "(parent_id = §orgunit_id§ or id = §orgunit_id§)", 
 				 
 				'RELATION' => 'OneToMany',  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  'STEP' => 1,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'MANDATORY' => true,  'ERROR-CHECK' => true, 
@@ -30,7 +30,7 @@
 				'CSS' => 'width_pct_100',),
 
 			'bus_company_id' => array('SHORTNAME' => 'company',  'SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 32,  'MAXLENGTH' => 32,  'REQUIRED' => true,  'UTF8' => false,  
-				'WHERE' => "id != §tcompany_id§ and parent_id = 0 and (work_service_mfk like '%,1,%' or work_service_mfk like '%,2,%')", 
+				'WHERE' => "id != §orgunit_id§ and parent_id = 0 and (work_service_mfk like '%,1,%' or work_service_mfk like '%,2,%')", 
 				 
 				'DEPENDENT_OFME' => array (
   0 => 'bus_branch_id',
@@ -54,7 +54,7 @@
 
 			'bus_id' => array('SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 32,  'MAXLENGTH' => 32,  'REQUIRED' => true,  'UTF8' => false,  
 				'TYPE' => 'FK',  'ANSWER' => 'bus',  'ANSMODULE' => 'btb',  'AUTOCOMPLETE' => false,  
-				'WHERE' => "(tcompany_id = §bus_company_id§ or tcompany_id = §bus_branch_id§) and active = 'Y' and publish = 'Y'", 
+				'WHERE' => "(orgunit_id = §bus_company_id§ or orgunit_id = §bus_branch_id§) and active = 'Y' and publish = 'Y'", 
 				 
 				'DEPENDENCIES' => array (
   0 => 'bus_company_id',

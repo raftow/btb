@@ -17,7 +17,7 @@ class TravelerDistribution extends BtbObject{
                 id => array(SHOW => true, RETRIEVE => true, EDIT => true, TYPE => PK),
 
 		
-		tcompany_id => array(SHORTNAME => tcompany,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
+		orgunit_id => array(SHORTNAME => tcompany,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
 				EDIT => true,  QEDIT => true,  
 				SIZE => 40,  MANDATORY => true,  UTF8 => false,  
                                 TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb,  AUTOCOMPLETE => false,  
@@ -70,10 +70,10 @@ class TravelerDistribution extends BtbObject{
 		parent::__construct("traveler_distribution","id","btb");
                 $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
                 $this->DISPLAY_FIELD = "traveler_distribution_name";
-                $this->ORDER_BY_FIELDS = "tcompany_id, traveler_distribution_name";
+                $this->ORDER_BY_FIELDS = "orgunit_id, traveler_distribution_name";
                  
                 
-                $this->UNIQUE_KEY = array('tcompany_id','traveler_distribution_name');
+                $this->UNIQUE_KEY = array('orgunit_id','traveler_distribution_name');
                 
                 $this->showQeditErrors = true;
                 $this->showRetrieveErrors = true;
@@ -92,14 +92,14 @@ class TravelerDistribution extends BtbObject{
         
         
         
-        public static function loadByMainIndex($tcompany_id, $traveler_distribution_name,$create_obj_if_not_found=false)
+        public static function loadByMainIndex($orgunit_id, $traveler_distribution_name,$create_obj_if_not_found=false)
         {
            $obj = new TravelerDistribution();
-           if(!$tcompany_id) throw new AfwRuntimeException("loadByMainIndex : tcompany_id is mandatory field");
+           if(!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
            if(!$traveler_distribution_name) throw new AfwRuntimeException("loadByMainIndex : traveler_distribution_name is mandatory field");
 
 
-           $obj->select("tcompany_id",$tcompany_id);
+           $obj->select("orgunit_id",$orgunit_id);
            $obj->select("traveler_distribution_name",$traveler_distribution_name);
 
            if($obj->load())
@@ -109,7 +109,7 @@ class TravelerDistribution extends BtbObject{
            }
            elseif($create_obj_if_not_found)
            {
-                $obj->set("tcompany_id",$tcompany_id);
+                $obj->set("orgunit_id",$orgunit_id);
                 $obj->set("traveler_distribution_name",$traveler_distribution_name);
 
                 $obj->insert();
@@ -128,7 +128,7 @@ class TravelerDistribution extends BtbObject{
                $link = array();
                
 
-               list($data[0],$link[0]) = $this->displayAttribute("tcompany_id",false, $lang);
+               list($data[0],$link[0]) = $this->displayAttribute("orgunit_id",false, $lang);
                list($data[1],$link[1]) = $this->displayAttribute("traveler_distribution_name",false, $lang);
 
                

@@ -297,8 +297,8 @@ class Road extends BtbObject{
                global $server_db_prefix, $images;
                $objme = AfwSession::getUserConnected();
                
-               $tcompany_id = $objme->getMyOrganizationId();
-               if($tcompany_id) $woObj = WorkBranch::loadById($tcompany_id);
+               $orgunit_id = $objme->getMyOrganizationId();
+               if($orgunit_id) $woObj = WorkBranch::loadById($orgunit_id);
                else $woObj = null;
                
                switch($attribute) 

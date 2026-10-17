@@ -49,7 +49,7 @@
                 $date_font_family = "maghreb";
                 
                 $check_depending_user_type = "check_employee";
-                $my_account_page = "main.php?Main_Page=afw_mode_display.php&cl=Employee&id=[EMPL]&currmod=hrm&no_my_account_page_in_mod=[MODULE]";
+                $my_account_page = "main.php?Main_Page=afw_mode_edit.php&cl=Employee&id=[EMPL]&currmod=hrm&no_my_account_page_in_mod=[MODULE]";
                 
                 $login_page_options = array();
                 

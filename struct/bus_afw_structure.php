@@ -22,11 +22,11 @@
 
 		'owner_parent_id' => array('SHORTNAME' => 'owner_parent',  
 				'TYPE' => 'FK',  'ANSWER' => 'work_branch',  'ANSMODULE' => 'btb',  
-				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'tcompany_id.parent_id',  'SEARCH-BY-ONE' => '',  'DISPLAY' => '',  'STEP' => 1,  
+				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'orgunit_id.parent_id',  'SEARCH-BY-ONE' => '',  'DISPLAY' => '',  'STEP' => 1,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
 				'CSS' => 'width_pct_100',),
 
-			'tcompany_id' => array('SHORTNAME' => 'owner',  'SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  'MINIBOX' => false,  
+			'orgunit_id' => array('SHORTNAME' => 'owner',  'SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  'MINIBOX' => false,  
 				'CSS' => 'width_pct_50',  'SIZE' => 40,  'REQUIRED' => true,  'UTF8' => false,  
 				'TYPE' => 'FK',  'ANSWER' => 'work_branch',  'ANSMODULE' => 'btb',  'AUTOCOMPLETE' => false,  
 				'WHERE' => "parent_id = §MY_COMPANY§ or id = §MY_COMPANY§", 
@@ -156,7 +156,7 @@
 			'account_company_id' => array('STEP' => 4,  'SHORTNAME' => 'account',  'SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => true,  'MINIBOX' => false,  
 				'CSS' => 'width_pct_50',  'SIZE' => 40,  'REQUIRED' => false,  'UTF8' => false,  
 				'TYPE' => 'FK',  'ANSWER' => 'work_branch',  'ANSMODULE' => 'btb',  'AUTOCOMPLETE' => false,  
-				'WHERE' => "parent_id = §owner_parent_id§ or parent_id = §tcompany_id§ or parent_id = §tcompany_id§ or id = §tcompany_id§", 
+				'WHERE' => "parent_id = §owner_parent_id§ or parent_id = §orgunit_id§ or parent_id = §orgunit_id§ or id = §orgunit_id§", 
 				 
 				'RELATION' => 'OneToMany',  'READONLY' => false,  'SEARCH-BY-ONE' => true,  'DISPLAY' => true,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
@@ -203,7 +203,7 @@
 			'responsible_id' => array('STEP' => 6,  'SHORTNAME' => 'responsible',  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'MINIBOX' => true,  'EDIT' => true,  'QEDIT' => false,  
 				'CSS' => 'width_pct_25',  'SIZE' => 32,  'MAXLENGTH' => 32,  'MANDATORY' => false,  'UTF8' => false,  
 				'TYPE' => 'FK',  'ANSWER' => 'employee',  'ANSMODULE' => 'hrm',  'AUTOCOMPLETE' => false,  
-				'WHERE' => "id_sh_org = §tcompany_id§ or id_sh_div = §tcompany_id§ ", 
+				'WHERE' => "id_sh_org = §orgunit_id§ or id_sh_div = §orgunit_id§ ", 
 				 
 				'RELATION' => 'ManyToOne',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
@@ -241,7 +241,7 @@
 
 			'driver_id' => array('STEP' => 7,  'SHORTNAME' => 'driver',  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'MINIBOX' => false,  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 32,  'UTF8' => false,  
 				'TYPE' => 'FK',  'ANSWER' => 'employee',  'ANSMODULE' => 'hrm',  
-				'WHERE' => "id_sh_org = §tcompany_id§ or id_sh_div = §tcompany_id§ ", 
+				'WHERE' => "id_sh_org = §orgunit_id§ or id_sh_div = §orgunit_id§ ", 
 				 
 				'RELATION' => 'ManyToOne',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 

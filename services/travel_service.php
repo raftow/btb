@@ -352,7 +352,7 @@ class TravelService
           inner join c0btb.travel_bus tb on tb.travel_id = t.id
           inner join c0btb.bus_seat bs on bs.bus_id = tb.bus_id  
           left join c0btb.travel_seat ts on ts.travel_bus_id = tb.id and ts.seat_code = bs.seat_code
-        where t.tcompany_id = $company_id
+        where t.orgunit_id = $company_id
           and (t.travel_template_id = $travel_template_id or '$travel_template_id'='0')
           and (t.id = $travel_id or '$travel_id'='0')
           and (tb.id = $travel_bus_id or '$travel_bus_id'='0')
@@ -452,7 +452,7 @@ class TravelService
         $lang = AfwLanguageHelper::getGlobalLanguage();
         if ($objTravelTemplate) {
             if (!$objCompany) {
-                $objCompany = $objTravelTemplate->het('tcompany_id');
+                $objCompany = $objTravelTemplate->het('orgunit_id');
             }
             $objTravelTemplateId = $objTravelTemplate->id;
         } else {
@@ -785,13 +785,13 @@ class TravelService
                                
                 
         $tbObj = new TravelBus();
-        $tbObj->where("travel_id in (select id from c0btb.travel where tcompany_id=$company_id and $cond_leaved and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
+        $tbObj->where("travel_id in (select id from c0btb.travel where orgunit_id=$company_id and $cond_leaved and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
         $tbObj->set("opened", "Z");
         $tbObj->set("opened_date", $hijri_current_date);
         $tbObj->update(false);
 
         $trvObj = new Travel();
-        $trvObj->select("tcompany_id",$company_id);
+        $trvObj->select("orgunit_id",$company_id);
         $trvObj->where($cond_leaved);
         $trvObj->where("($travel_template_id=0 or travel_template_id=$travel_template_id)");
         $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_GONE);                
@@ -822,13 +822,13 @@ class TravelService
 
                 
         $tbObj = new TravelBus();
-        $tbObj->where("travel_id in (select id from c0btb.travel where tcompany_id=$company_id and $cond_returned and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
+        $tbObj->where("travel_id in (select id from c0btb.travel where orgunit_id=$company_id and $cond_returned and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
         $tbObj->set("opened", "Z");
         $tbObj->set("opened_date", $hijri_current_date);
         $tbObj->update(false);
 
         $trvObj = new Travel();
-        $trvObj->select("tcompany_id",$company_id);
+        $trvObj->select("orgunit_id",$company_id);
         $trvObj->where($cond_returned);
         $trvObj->where("($travel_template_id=0 or travel_template_id=$travel_template_id)");
         $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_RETURNED);                
@@ -859,13 +859,13 @@ class TravelService
 
         /*        
         $tbObj = new TravelBus();
-        $tbObj->where("travel_id in (select id from c0btb.travel where tcompany_id=$company_id and $cond_to_leave and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
+        $tbObj->where("travel_id in (select id from c0btb.travel where orgunit_id=$company_id and $cond_to_leave and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
         $tbObj->set("opened", "Y");
         $tbObj->set("opened_date", $hijri_current_date);
         $tbObj->update(false);*/
 
         $trvObj = new Travel();
-        $trvObj->select("tcompany_id",$company_id);
+        $trvObj->select("orgunit_id",$company_id);
         $trvObj->where($cond_to_leave);
         $trvObj->where("($travel_template_id=0 or travel_template_id=$travel_template_id)");
         $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_GOING);                
