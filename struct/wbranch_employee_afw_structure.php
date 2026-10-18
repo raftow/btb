@@ -451,7 +451,7 @@ class BtbWbranchEmployeeAfwStructure
 
 		'active' => array(
 			'SHOW' => true,
-			'RETRIEVE' => true,
+			'RETRIEVE' => false,
 			'SEARCH' => true,
 			'QSEARCH' => true,
 			'EDIT' => true,

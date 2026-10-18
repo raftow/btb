@@ -6329,3 +6329,7 @@ body.login {
 .notification_message_container {
     margin-top: 80px !important;
 }
+
+span.picture-span>div.hzm-user-account.hzm-container-center.hzm-custom-icon-container {
+    padding-top: 0px !important;
+}

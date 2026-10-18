@@ -612,14 +612,14 @@ class BtbTravelTemplateAfwStructure
 			'ANSWER' => 'work_branch',
 			'MANDATORY' => true,
 			'ANSMODULE' => 'btb',
-			'WHERE' => "(id = §tcompany_id§ or  -- me
+			/* 'WHERE' => "(id = §tcompany_id§ or  -- me
                                             id = §tparent_id§ or  -- my parent 
                                             parent_id = §tcompany_id§ or -- my children
                                             parent_id = §tparent_id§ or -- my brothers (same parent)
-                                            id in (select bus_branch_id from c0btb.bus_convention where tbranch_id in (§tparent_id§, §tcompany_id§)) -- convention with me or with my parent
+                                            id in (select bus_branch_id from c0btb.bus _convention where tbranch_id in (§tparent_id§, §tcompany_id§)) -- convention with me or with my parent
                                            ) 
                                            and 
-                                           (work_service_mfk like '%,1,%' or work_service_mfk like '%,2,%')",
+                                           (work_service_mfk like '%,1,%' or work_service_mfk like '%,2,%')",*/
 			'NO-COTE' => true,
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => true,

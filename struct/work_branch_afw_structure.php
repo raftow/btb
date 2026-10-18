@@ -164,7 +164,7 @@ class BtbWorkBranchAfwStructure
 		),
 
 		'orgunit_id' => array(
-			'STEP' => 1,
+			'STEP' => 99,
 			'SHORTNAME' => 'orgunit',
 			'SEARCH' => true,
 			'QSEARCH' => true,
@@ -218,7 +218,7 @@ class BtbWorkBranchAfwStructure
 		'account_in_parent' => array(
 			'SHOW' => true,
 			'RETRIEVE' => false,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_25',
 			'EDIT' => true,
 			'QEDIT' => false,
 			'DEFAUT' => 'N',
@@ -532,6 +532,7 @@ class BtbWorkBranchAfwStructure
 			'READONLY' => true,
 			'ICONS' => true,
 			'DELETE-ICON' => true,
+			'VIEW-ICON' => false,
 			'BUTTONS' => true,
 			'NO-LABEL' => false,
 			'SEARCH-BY-ONE' => '',
@@ -619,6 +620,7 @@ class BtbWorkBranchAfwStructure
 			'CSS' => 'width_pct_100',
 		),
 
+		/*
 		'busConventionList' => array(
 			'STEP' => 7,
 			'SHORTNAME' => 'busConventions',
@@ -638,7 +640,7 @@ class BtbWorkBranchAfwStructure
 			'UTF8' => false,
 			'TYPE' => 'FK',
 			'CATEGORY' => 'ITEMS',
-			'ANSWER' => 'bus_convention',
+			'ANSWER' => 'bus _convention',
 			'ANSMODULE' => 'btb',
 			'ITEM' => 'tbranch_id',
 			'READONLY' => true,
@@ -669,7 +671,7 @@ class BtbWorkBranchAfwStructure
 			'UTF8' => false,
 			'TYPE' => 'FK',
 			'CATEGORY' => 'ITEMS',
-			'ANSWER' => 'bus_convention',
+			'ANSWER' => 'bus _convention',
 			'ANSMODULE' => 'btb',
 			'ITEM' => 'bus_branch_id',
 			'READONLY' => true,
@@ -679,7 +681,7 @@ class BtbWorkBranchAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'CSS' => 'width_pct_100',
-		),
+		),*/
 
 		'travelTemplateList' => array(
 			'STEP' => 8,
@@ -907,10 +909,10 @@ class BtbWorkBranchAfwStructure
 		),
 
 		'active' => array(
-			'SHOW-ADMIN' => true,
+			'SHOW' => true,
 			'RETRIEVE' => false,
-			'EDIT' => false,
-			'QEDIT' => false,
+			'EDIT' => true,
+			'QEDIT' => true,
 			'DEFAUT' => 'Y',
 			'TYPE' => 'YN',
 			'SEARCH-BY-ONE' => '',
@@ -918,7 +920,7 @@ class BtbWorkBranchAfwStructure
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_25',
 		),
 
 		'created_by'         => array(

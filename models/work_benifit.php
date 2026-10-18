@@ -13,75 +13,9 @@ class WorkBenifit extends BtbObject{
         public static $MY_ATABLE_ID=13785; 
 
         
-	public static $DATABASE		= ""; public static $MODULE		    = "btb"; public static $TABLE			= ""; public static $DB_STRUCTURE = null; /* = array(
-                id => array(SHOW => true, RETRIEVE => true, EDIT => true, TYPE => PK),
-
-		
-		branch_id => array(SHORTNAME => branch,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  MINIBOX =>false, CSS => width_pct_50,  
-				SIZE => 40, REQUIRED => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb,  AUTOCOMPLETE => false,  
-				RELATION => OneToMany,  READONLY => true, ),
-
-		level_enum => array(SHORTNAME => level,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => false,  UTF8 => false,  
-				TYPE => ENUM,  ANSWER => "FUNCTION",  READONLY => false,  "EDIT-SHORT-LIST" => true, EMPTY_IS_ALL=>true,),
-
-		travel_program_id => array(SHORTNAME => program,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => false,  UTF8 => false,  
-				TYPE => FK,  ANSWER => travel_program,  ANSMODULE => btb, EMPTY_IS_ALL=>true,  
-				RELATION => ManyToOne,  READONLY => false, ),
-                
-		days_nb => array(SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => false,  UTF8 => false,  
-				TYPE => "INT", "DEFAULT"=>0, CAN_ZERO=>true, FORMAT=>EMPTY_IS_ALL, READONLY => false, ),
-
-                program_title  => array(SHOW => false, EDIT => false,  QEDIT => true,  READONLY => true, MANDATORY => true, CATEGORY => FORMULA,  TYPE => TEXT),
-
-		week_period_enum => array(SHORTNAME => period,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => false,  UTF8 => false,  
-				TYPE => ENUM,  ANSWER => "FUNCTION",  READONLY => false,  "EDIT-SHORT-LIST" => true, EMPTY_IS_ALL=>true, ),
-                  
-		period_type_enum => array(SHORTNAME => type,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => false,  UTF8 => false,  
-				TYPE => ENUM,  ANSWER => "FUNCTION",  READONLY => false,  "EDIT-SHORT-LIST" => true, EMPTY_IS_ALL=>true, ),
-
-		yperiod_id => array(SHORTNAME => yperiod,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => FK,  ANSWER => yperiod,  ANSMODULE => btb, FORMAT=>EMPTY_IS_ALL,  
-				RELATION => ManyToOne,  READONLY => false, ),
-                
-                period_title  => array(SHOW => false, EDIT => false,  QEDIT => true,  READONLY => true, MANDATORY => true, CATEGORY => FORMULA,  TYPE => TEXT),
-
-		benifit => array(SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "PCTG",  UNIT => "%",  READONLY => false, ),
-
-                
-                created_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                created_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                updated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                updated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                validated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                validated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                active => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                draft => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                version => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => INT),
-                update_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                delete_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                display_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                sci_id => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => scenario_item, ANSMODULE => pag),
-                tech_notes 	    => array(TYPE => TEXT, CATEGORY => FORMULA, "SHOW-ADMIN" => true, 'STEP' =>"all", TOKEN_SEP=>"§", READONLY=>true, "NO-ERROR-CHECK"=>true),
-	);
-	
-	*/ public function __construct(){
+	public static $DATABASE		= ""; public static $MODULE		    = "btb"; public static $TABLE			= ""; public static $DB_STRUCTURE = null; 
+    
+    public function __construct(){
 		parent::__construct("work_benifit","id","btb");
                 $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
                 $this->DISPLAY_FIELD = "";
@@ -93,7 +27,7 @@ class WorkBenifit extends BtbObject{
                 
                 $this->showQeditErrors = true;
                 $this->showRetrieveErrors = true;
-                $this->after_save_edit = array("class"=> 'WorkBranch',"attribute"=>branch_id, "currmod"=> 'btb',"currstep"=>10);
+                $this->after_save_edit = array("class"=> 'WorkBranch',"attribute"=>'branch_id', "currmod"=> 'btb',"currstep"=>10);
 	}
         
         public function list_of_week_period_enum() { 

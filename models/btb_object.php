@@ -98,6 +98,20 @@ class BtbObject extends AfwMomkenObject {
         {
                 return (($attribute == "created_by") or ($attribute == "created_at") or ($attribute == "updated_by") or ($attribute == "updated_at") or ($attribute == "validated_by") or ($attribute == "validated_at") or ($attribute == "version"));
         }
+
+
+        public static function list_of_seat_category_men()
+        {
+                $list_of_items = array();
+                $list_of_items[5] = "مقعد سرير";  //     code : BED 
+                $list_of_items[7] = "بجانب الباب";  //     code : DOOR 
+                $list_of_items[2] = "مقعد أمامي";  //     code : FRONT 
+                $list_of_items[4] = "الدرجة الذهبية";  //     code : GOLDEN 
+                $list_of_items[1] = "عادي";  //     code : NORMAL 
+                $list_of_items[3] = "الدرجة الفضية";  //     code : SILVER 
+                $list_of_items[6] = "بجانب النافذة";  //     code : WINDOW 
+                return  $list_of_items;
+        }
 	
 
 

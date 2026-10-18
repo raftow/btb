@@ -56,7 +56,8 @@ class WbranchEmployeeArTranslator
         $trad['wbranch_employee']['gender_id'] = 'الجنس';
         $trad['wbranch_employee']['mobile'] = 'الجوال';
         $trad['wbranch_employee']['country_id'] = 'الجنسية';
-        $trad['wbranch_employee']['hierarchy_level_enum'] = 'المستوى في الهيكل الوظيفي';
+        $trad['wbranch_employee']['hierarchy_level_enum'] = 'الوظيفة';
+        $trad['wbranch_employee']['hierarchy_level_enum_tooltip'] = 'المستوى في الهيكل الوظيفي';
 
         $trad['wbranch_employee']['step1'] = 'البيانات العامة';
         $trad['wbranch_employee']['step2'] = 'البيانات الشخصية';

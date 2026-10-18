@@ -882,8 +882,8 @@ class WorkBranch extends BtbObject
                 }
                 $this->execQuery("delete from ${server_db_prefix}btb.work_branch where parent_id = '$id' and active='N'");
 
-                // btb.bus_convention-المؤسسة	orgunit_id  أنا تفاصيل لها-OneToMany
-
+                // btb.bus _convention-المؤسسة	orgunit_id  أنا تفاصيل لها-OneToMany
+                /*
                 $obj = new BusConvention();
                 $obj->where("orgunit_id = '$id' and active='Y' ");
                 $nbRecords = $obj->count();
@@ -891,9 +891,9 @@ class WorkBranch extends BtbObject
                     $this->deleteNotAllowedReason = "Used in some Bus conditions(s) as company";
                     return false;
                 }
-                $this->execQuery("delete from ${server_db_prefix}btb.bus_convention where orgunit_id = '$id' and active='N'");
+                $this->execQuery("delete from ${server_db_prefix}btb.bus _convention where orgunit_id = '$id' and active='N'");
 
-                // btb.bus_convention-الفرع	tbranch_id  أنا تفاصيل لها-OneToMany
+                // btb.bus _convention-الفرع	tbranch_id  أنا تفاصيل لها-OneToMany
 
                 $obj = new BusConvention();
                 $obj->where("tbranch_id = '$id' and active='Y' ");
@@ -902,9 +902,9 @@ class WorkBranch extends BtbObject
                     $this->deleteNotAllowedReason = "Used in some Bus conditions(s) as branch";
                     return false;
                 }
-                $this->execQuery("delete from ${server_db_prefix}btb.bus_convention where tbranch_id = '$id' and active='N'");
+                $this->execQuery("delete from ${server_db_prefix}btb.bus _convention where tbranch_id = '$id' and active='N'");
 
-                // btb.bus_convention-مؤسسة الباص	bus_company_id  أنا تفاصيل لها-OneToMany
+                // btb.bus _convention-مؤسسة الباص	bus_company_id  أنا تفاصيل لها-OneToMany
 
                 $obj = new BusConvention();
                 $obj->where("bus_company_id = '$id' and active='Y' ");
@@ -913,9 +913,9 @@ class WorkBranch extends BtbObject
                     $this->deleteNotAllowedReason = "Used in some Bus conditions(s) as bus company";
                     return false;
                 }
-                $this->execQuery("delete from ${server_db_prefix}btb.bus_convention where bus_company_id = '$id' and active='N'");
+                $this->execQuery("delete from ${server_db_prefix}btb.bus _convention where bus_company_id = '$id' and active='N'");
 
-                // btb.bus_convention-فرع مؤسسة الباص	bus_branch_id  أنا تفاصيل لها-OneToMany
+                // btb.bus _convention-فرع مؤسسة الباص	bus_branch_id  أنا تفاصيل لها-OneToMany
 
                 $obj = new BusConvention();
                 $obj->where("bus_branch_id = '$id' and active='Y' ");
@@ -924,8 +924,8 @@ class WorkBranch extends BtbObject
                     $this->deleteNotAllowedReason = "Used in some Bus conditions(s) as bus branch";
                     return false;
                 }
-                $this->execQuery("delete from ${server_db_prefix}btb.bus_convention where bus_branch_id = '$id' and active='N'");
-
+                $this->execQuery("delete from ${server_db_prefix}btb.bus _convention where bus_branch_id = '$id' and active='N'");
+                */
 
 
                 // FK part of me - deletable 
@@ -940,14 +940,16 @@ class WorkBranch extends BtbObject
 
             } else {
                 // FK on me 
-                // btb.bus_convention-المؤسسة	orgunit_id  أنا تفاصيل لها-OneToMany
-                $this->execQuery("update ${server_db_prefix}btb.bus_convention set orgunit_id='$id_replace' where orgunit_id='$id' ");
-                // btb.bus_convention-الفرع	tbranch_id  أنا تفاصيل لها-OneToMany
-                $this->execQuery("update ${server_db_prefix}btb.bus_convention set tbranch_id='$id_replace' where tbranch_id='$id' ");
-                // btb.bus_convention-مؤسسة الباص	bus_company_id  أنا تفاصيل لها-OneToMany
-                $this->execQuery("update ${server_db_prefix}btb.bus_convention set bus_company_id='$id_replace' where bus_company_id='$id' ");
-                // btb.bus_convention-فرع مؤسسة الباص	bus_branch_id  أنا تفاصيل لها-OneToMany
-                $this->execQuery("update ${server_db_prefix}btb.bus_convention set bus_branch_id='$id_replace' where bus_branch_id='$id' ");
+                /*
+                // btb.bus _convention-المؤسسة	orgunit_id  أنا تفاصيل لها-OneToMany
+                $this->execQuery("update ${server_db_prefix}btb.bus _convention set orgunit_id='$id_replace' where orgunit_id='$id' ");
+                // btb.bus _convention-الفرع	tbranch_id  أنا تفاصيل لها-OneToMany
+                $this->execQuery("update ${server_db_prefix}btb.bus _convention set tbranch_id='$id_replace' where tbranch_id='$id' ");
+                // btb.bus _convention-مؤسسة الباص	bus_company_id  أنا تفاصيل لها-OneToMany
+                $this->execQuery("update ${server_db_prefix}btb.bus _convention set bus_company_id='$id_replace' where bus_company_id='$id' ");
+                // btb.bus _convention-فرع مؤسسة الباص	bus_branch_id  أنا تفاصيل لها-OneToMany
+                $this->execQuery("update ${server_db_prefix}btb.bus _convention set bus_branch_id='$id_replace' where bus_branch_id='$id' ");
+                */
                 // btb.bus-الشركة المالكة للباص	orgunit_id  أنا تفاصيل لها-OneToMany
                 $this->execQuery("update ${server_db_prefix}btb.bus set orgunit_id='$id_replace' where orgunit_id='$id' ");
                 // btb.work_branch-الشركة الأم	parent_id  أنا تفاصيل لها-OneToMany
@@ -987,8 +989,9 @@ class WorkBranch extends BtbObject
         }
     }
 
-    public function isCompany()
+    public function isParent()
     {
+        // The parent doesn't have a parent (to simplify)
         $parent_id = $this->getVal("parent_id");
         return (!$parent_id);
     }
@@ -1028,11 +1031,11 @@ class WorkBranch extends BtbObject
     public function attributeIsApplicable($attribute)
     {
         if ($attribute == "employeeList") {
-            return true; //(!$this->isCompany()); 
+            return true; //(!$this->isParent()); 
         }
 
-
-        if ($attribute == "workBranchList") return $this->isCompany();
+        // to simplify the plateform the branch can not have sub-branches
+        if ($attribute == "workBranchList") return $this->isParent();
 
         if ($attribute == "busConventionList") {
             return ($this->hasTravelActivity());
@@ -1144,18 +1147,7 @@ class WorkBranch extends BtbObject
 
 
 
-    public function list_of_seat_category_men()
-    {
-        $list_of_items = array();
-        $list_of_items[5] = "مقعد سرير";  //     code : BED 
-        $list_of_items[7] = "بجانب الباب";  //     code : DOOR 
-        $list_of_items[2] = "مقعد أمامي";  //     code : FRONT 
-        $list_of_items[4] = "الدرجة الذهبية";  //     code : GOLDEN 
-        $list_of_items[1] = "عادي";  //     code : NORMAL 
-        $list_of_items[3] = "الدرجة الفضية";  //     code : SILVER 
-        $list_of_items[6] = "بجانب النافذة";  //     code : WINDOW 
-        return  $list_of_items;
-    }
+    
 
 
     public function getDateInfo($hdate)
