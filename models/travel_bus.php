@@ -745,7 +745,7 @@ class TravelBus extends BtbObject{
             
             
             /*
-                self::simpleError("This method updateSeats is obsolete for the moment because not optimized as performance");
+                throw new AfwRuntimeException("This method updateSeats is obsolete for the moment because not optimized as performance");
                 // $file_dir_name = dirname(__FILE__);
                 // 
                 
@@ -2080,7 +2080,7 @@ class TravelBus extends BtbObject{
                                 $travel = $this->hetTravel();
                                 if($travel) $template = $travel->hetTemplate();
                                 else $template = null;
-                                if($template) return ($template->estResidence() and (intval($template->getVal("trips_nb"))>$i)) ;
+                                if($template) return ($template->containResidence() and (intval($template->getVal("trips_nb"))>$i)) ;
                         }
                 }
                 return true;

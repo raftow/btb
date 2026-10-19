@@ -63,193 +63,16 @@ class Travel extends BtbObject{
         private $arrSeatsPrices = array();
         
         
-	public static $DATABASE		= ""; public static $MODULE		    = "btb"; public static $TABLE			= ""; public static $DB_STRUCTURE = null; /* = array(
-                id => array(FGROUP=>data, SHOW => true, RETRIEVE => true, EDIT => true, TYPE => PK),
-
-		orgunit_id => array(FGROUP=>data, SHORTNAME => company,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb,  AUTOCOMPLETE => true,  
-				RELATION => OneToMany,  READONLY => true, ),
-                                
-		travel_template_id => array(FGROUP=>data, SHORTNAME => template,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  UTF8 => false,  
-				TYPE => FK,  ANSWER => travel_template,  ANSMODULE => btb,  AUTOCOMPLETE => false,  
-				RELATION => OneToMany,  READONLY => true,  DNA => true ),
-                
-                        full_residence => array(FGROUP=>data, SHORTNAME => residence, SHOW => true,  RETRIEVE => false, EDIT => false,  QEDIT => false,  
-                                        SIZE => 32,  MANDATORY => true,  UTF8 => false,  
-                                        TYPE => "YN",  CATEGORY => SHORTCUT, SHORTCUT=>"travel_template_id.full_residence",  READONLY => true, ),
-                        
-                        template_name => array(FGROUP=>data, SHORTNAME => tname, SHOW => true,  RETRIEVE => true, EDIT => false,  QEDIT => false,  
-                                SIZE => 32,  MANDATORY => true,  UTF8 => false,  
-                                TYPE => "TEXT",  CATEGORY => SHORTCUT, SHORTCUT=>"travel_template_id.travel_template_name",  READONLY => true, ),
-
-                        depart_city_id => array('STEP' =>2, SHORTNAME => city,  SEARCH => false,  QSEARCH => false,  SHOW => false,  RETRIEVE => false,  
-				EDIT => false,  QEDIT => false, CSS => width_pct_25,
-				SIZE => 40,  MANDATORY => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => city,  ANSMODULE => pag,  AUTOCOMPLETE => false,  
-                                CATEGORY => SHORTCUT, SHORTCUT=>"travel_template_id.depart_city_id",  
-				RELATION => ManyToOne,  READONLY => true, ),
- 
-		        city1_id => array('STEP' =>2, SEARCH => false,  QSEARCH => false,  SHOW => false,  RETRIEVE => false,  
-				EDIT => false,  QEDIT => false, CSS => width_pct_25,  
-				SIZE => 40,  MANDATORY => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => city,  ANSMODULE => pag,  AUTOCOMPLETE => false,  
-                                CATEGORY => SHORTCUT, SHORTCUT=>"travel_template_id.city1_id",  
-				RELATION => ManyToOne,  READONLY => true, ),
- 
-		        city2_id => array('STEP' =>2, SEARCH => false,  QSEARCH => false,  SHOW => false,  RETRIEVE => false,  
-				EDIT => false,  QEDIT => false, CSS => width_pct_25,  
-				SIZE => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => FK,  ANSWER => city,  ANSMODULE => pag,  AUTOCOMPLETE => false,  
-                                CATEGORY => SHORTCUT, SHORTCUT=>"travel_template_id.city2_id",  
-				RELATION => ManyToOne,  READONLY => true, ),
- 
-		        city3_id => array('STEP' =>2, SEARCH => false,  QSEARCH => false,  SHOW => false,  RETRIEVE => false,  
-				EDIT => false,  QEDIT => false, CSS => width_pct_25,  
-				SIZE => 40,  MANDATORY => false,  UTF8 => false,  
-				TYPE => FK,  ANSWER => city,  ANSMODULE => pag,  AUTOCOMPLETE => false,  
-                                CATEGORY => SHORTCUT, SHORTCUT=>"travel_template_id.city3_id",  
-				RELATION => ManyToOne,  READONLY => true, ),                                
-                
-                travel_level => array(FGROUP=>data, SHORTNAME => level,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  MINIBOX =>true, CSS => width_pct_50,  
-                        EDIT => true,  QEDIT => true,  
-                        SIZE => 32,  REQUIRED => true,  UTF8 => false,  
-                        TYPE => ENUM,  ANSWER => "FUNCTION",  CATEGORY => SHORTCUT, SHORTCUT=>"travel_template_id.travel_level",  READONLY => true, ),                        
-
-		travel_name => array(FGROUP=>data, SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 48,  "MIN-SIZE" => 5,  CHAR_TEMPLATE => "ARABIC-CHARS,SPACE",  MANDATORY => true,  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
-                 
-		travel_date => array('STEP' => 2, FGROUP=>start, SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 10,  MANDATORY => true,  UTF8 => false,  CSS => width_pct_25, 
-				TYPE => "DATE",  FORMAT => "HIJRI_UNIT",  READONLY => true, ),
-
-                travel_dow => array('STEP' =>6, CATEGORY => FORMULA, TYPE => "TEXT",  SHOW => true, EDIT => false,  READONLY => true,  RETRIEVE => true,  MINIBOX =>true, SIZE=>16, CSS => width_pct_50),
-                
-                travel_gdate => array('STEP' => 2, FGROUP=>start, SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MANDATORY => true,  UTF8 => false,  CSS => width_pct_25,  
-				TYPE => "GDAT",  FORMAT => "FRM",  READONLY => true, ),
-
-		planned_start_time => array('STEP' => 2, FGROUP=>start, SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 8,  MANDATORY => true,  UTF8 => false,  CSS => width_pct_25,  
-                                TYPE => "TIME",  READONLY => true, ),
-
-                start_day_part => array('STEP' =>6, CATEGORY => FORMULA, TYPE => "TEXT",  SHOW => false, EDIT => false,  READONLY => true,  RETRIEVE => false,  
-                                MINIBOX =>true, TO_TRANSLATE => true, SIZE=>16, CSS => width_pct_25),                                
-
-		start_time => array('STEP' => 2, FGROUP=>start, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => false,  QEDIT => false,  
-				SIZE => 8,  UTF8 => false,  CSS => width_pct_25,  
-				TYPE => "TIME",  READONLY => true, ),
-
-		start_place => array('STEP' => 2, FGROUP=>start, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true,  MANDATORY => true,  
-				SIZE => 255,  MAXLENGTH => 96,  CHAR_TEMPLATE => "",  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
-
-		start_location => array('STEP' => 2, FGROUP=>start, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 255,  MAXLENGTH => 255,  CHAR_TEMPLATE => "",  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
-                
-                travelStationList => array('STEP' => 2, FGROUP=>travelStationList,  SHORTNAME => travelStations,  SHOW => true,  FORMAT => retrieve,  ICONS => true,  "DELETE-ICON" => true,  BUTTONS => true,  SEARCH => false,  QSEARCH => false,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => FK,  "NO-LABEL"=>true,
-				CATEGORY => ITEMS,  ANSWER => travel_station,  ANSMODULE => btb,  ITEM => "travel_id",  READONLY => true, ),                
-                
-		return_date => array('STEP' => 2, FGROUP=>arrival, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 10,  MANDATORY => true,  UTF8 => false,  CSS => width_pct_25,  
-				TYPE => "DATE",  FORMAT => "HIJRI_UNIT",  READONLY => true, ),
-
- => array('STEP' =>6, CATEGORY => FORMULA, TYPE => "TEXT",  SHOW => true, EDIT => false,  READONLY => true,  RETRIEVE => true,  MINIBOX =>true, SIZE=>16, CSS => width_pct_50),
-                                
-		return_gdate => array('STEP' => 2, FGROUP=>arrival, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MANDATORY => true,  UTF8 => false,  CSS => width_pct_25,  
-				TYPE => "GDAT",  FORMAT => "FRM",  READONLY => true, ),
-                
-		planned_end_time => array('STEP' => 2, FGROUP=>arrival, SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 8,  MANDATORY => true,  UTF8 => false,  CSS => width_pct_25,  
-				TYPE => "TIME",  READONLY => true, ),
-
-                 => array('STEP' =>6, CATEGORY => FORMULA, TYPE => "TEXT",  SHOW => false, EDIT => false,  READONLY => true,  RETRIEVE => false,  MINIBOX =>true, SIZE=>16, CSS => width_pct_25),                                                end_time => array('STEP' => 2, FGROUP=>arrival, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => false,  QEDIT => false,  CSS => width_pct_25,  
-				SIZE => 8,  UTF8 => false, TO_TRANSLATE => true, 
-				TYPE => "TIME",  READONLY => true, ),
-
-		arrival_place => array('STEP' => 2, FGROUP=>arrival, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true,  MANDATORY => true,  
-				SIZE => 255,  MAXLENGTH => 96,  CHAR_TEMPLATE => "",  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
-
-		arrival_location => array('STEP' => 2, FGROUP=>arrival, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 255,  MAXLENGTH => 255,  CHAR_TEMPLATE => "",  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
-
-                travelers_nb => array('STEP' => 3, FGROUP=>data, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  MINIBOX =>true, CSS => width_pct_25,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => "INT",  READONLY => false, ),
-                                
-                travelers_nb_approved => array('STEP' => 3, FGROUP=>data, SHOW => true,  RETRIEVE => false, EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => "YN", ),                               
-
-                travelBusList => array('STEP' => 3,  SHORTNAME => tbusList,  SHOW => true,  FORMAT => retrieve,  ICONS => true,  "DELETE-ICON" => true,  BUTTONS => true,  SEARCH => false,  QSEARCH => false,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,
-                                RETRIEVE_GROUPS =>array("display","bbooking","bbapproval"),  
-				TYPE => FK,  POLE=>true,
-				CATEGORY => ITEMS,  ANSWER => travel_bus,  ANSMODULE => btb,  ITEM => "travel_id", OPTIMIZE =>true,  READONLY => true),
-                
-                travelHotelList => array('STEP' => 4,  SHORTNAME => travelHotels,  SHOW => true,  FORMAT => retrieve,  ICONS => true,  "DELETE-ICON" => true,  BUTTONS => true,  SEARCH => false,  QSEARCH => false,  RETRIEVE => false,  
-				EDIT => false,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => FK,  "RETRIEVE-GROUPS" =>array("bbooking","rooms2","rooms3","rooms4", "rooms5", "rooms6", "prices", "opening", "bbapproval"),  
-				CATEGORY => ITEMS,  ANSWER => travel_hotel,  ANSMODULE => btb,  ITEM => "travel_id", OPTIMIZE =>true,  READONLY => true,  "CAN-BE-SETTED" => true, ),
-
-                //@@todo this field need review
-                
- => array('STEP' => 4, FGROUP=>data, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  MINIBOX =>true, CSS => width_pct_25,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => "INT",  CATEGORY => FORMULA, READONLY => true, ),
-
-                 => array('STEP' => 5, SHOW => true,  EDIT => true,  READONLY => true, MINIBOX =>true, MANDATORY => false,     
-			                       CATEGORY => FORMULA,  TYPE => TEXT, INPUT_WIDE=>true, CSS=>width_pct_100,),
-                              
-                travel_status_id => array('STEP' => 5,  FGROUP=>data, SHORTNAME => status,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
-                                               EDIT => true,  QEDIT => false, CSS=>width_pct_50,  
-                                               SIZE => 32,  MANDATORY => true,  UTF8 => false,  
-                                               TYPE => FK,  ANSWER => travel_status,  ANSMODULE => btb,  "DEFAULT"=>10,
-                                               RELATION => ManyToOne,  READONLY => true, ),
-                                               
-                 => array('STEP' => 5,  FGROUP=>data, SHOW => true, 
-                                                         EDIT => true,  READONLY => true, MINIBOX =>true, CSS=>width_pct_50,     
-                                                              CATEGORY => FORMULA,  TYPE => "INT",  UNIT => "يوم"),
-                               
-                
-	);
-	
-	*/ public function __construct(){
+	public static $DATABASE		= ""; public static $MODULE		    = "btb"; public static $TABLE			= ""; public static $DB_STRUCTURE = null; 
+        
+        public function __construct(){
 		parent::__construct("travel","id","btb");
                 $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
                 $this->DISPLAY_FIELD = "travel_name";
                 $this->ORDER_BY_FIELDS = "travel_template_id, travel_date";
                  
                 
-                $this->UNIQUE_KEY = array('orgunit_id','travel_name', 'travel_date');
+                $this->UNIQUE_KEY = array('work_branch_id','travel_name', 'travel_date');
                 
                 $this->showQeditErrors = true;
                 $this->showRetrieveErrors = true;
@@ -271,19 +94,19 @@ class Travel extends BtbObject{
         
         
         
-        public static function loadByMainIndex($orgunit_id, $travel_name, $travel_date, 
+        public static function loadByMainIndex($work_branch_id, $travel_name, $travel_date, 
                                                          $travel_gdate, $planned_start_time,
                                                          $return_date, $return_gdate, $planned_end_time, 
                                                          $travel_template_id, $travel_status_id,  
                                                          $create_obj_if_not_found=false)
         {
            $obj = new Travel();
-           if(!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
+           if(!$work_branch_id) throw new AfwRuntimeException("loadByMainIndex : work_branch_id is mandatory field");
            if(!$travel_name) throw new AfwRuntimeException("loadByMainIndex : travel_name is mandatory field");
            if(!$travel_date) throw new AfwRuntimeException("loadByMainIndex : travel_date is mandatory field");
 
 
-           $obj->select("orgunit_id",$orgunit_id);
+           $obj->select("work_branch_id",$work_branch_id);
            $obj->select("travel_name",$travel_name);
            $obj->select("travel_date",$travel_date);
 
@@ -293,7 +116,7 @@ class Travel extends BtbObject{
            }
            elseif($create_obj_if_not_found)
            {
-                $obj->set("orgunit_id",$orgunit_id);
+                $obj->set("work_branch_id",$work_branch_id);
                 $obj->set("travel_name",$travel_name);
                 $obj->set("travel_date",$travel_date);
                 $obj->is_new = true;
@@ -518,8 +341,8 @@ class Travel extends BtbObject{
                         }
                         
                    // FK part of me - deletable 
-                       // btb.travel_station-الرحلة	travel_id  أنا تفاصيل لها-OneToMany
-                        if(!$simul) $this->execQuery("delete from ${server_db_prefix}btb.travel_station where travel_id = '$id' ");
+                       // btb.travel_sta-tion-الرحلة	travel_id  أنا تفاصيل لها-OneToMany
+                        // if(!$simul) $this->execQuery("delete from ${server_db_prefix}btb.travel_sta-tion where travel_id = '$id' ");
  
  
                    // MFK
@@ -534,8 +357,8 @@ class Travel extends BtbObject{
                         if(!$simul) $this->execQuery("update ${server_db_prefix}btb.booking set travel_id='$id_replace' where travel_id='$id' ");
                        // btb.travel_hotel-الرحلة	travel_id  أنا تفاصيل لها-OneToMany
                         if(!$simul) $this->execQuery("update ${server_db_prefix}btb.travel_hotel set travel_id='$id_replace' where travel_id='$id' ");
-                       // btb.travel_station-الرحلة	travel_id  أنا تفاصيل لها-OneToMany
-                        if(!$simul) $this->execQuery("update ${server_db_prefix}btb.travel_station set travel_id='$id_replace' where travel_id='$id' ");
+                       // btb.travel_sta-tion-الرحلة	travel_id  أنا تفاصيل لها-OneToMany
+                        // if(!$simul) $this->execQuery("update ${server_db_prefix}btb.travel_sta-tion set travel_id='$id_replace' where travel_id='$id' ");
  
                         // MFK
  
@@ -816,7 +639,7 @@ class Travel extends BtbObject{
         {
             if($this->getVal("travel_status_id")==self::$TRAVEL_STATUS_PREPARE)
             {
-                if($this->estResidence()) return self::$TRAVEL_STATUS_ORGANIZE;
+                if($this->containResidence()) return self::$TRAVEL_STATUS_ORGANIZE;
                 else return self::$TRAVEL_STATUS_BOOKING;
             }
             else return $this->getVal("travel_status_id"); // no change if other status out of this step
@@ -935,7 +758,7 @@ class Travel extends BtbObject{
                 
                 
                 
-                $travel_company_id = $this->getVal("orgunit_id");
+                $travel_company_id = $this->getVal("work_branch_id");
                 $companyObj = $this->hetCompany();
                 if(!$companyObj) return array("اعدادات عمل الشركة المنظمة لهذه الرحلة غير متوفرة","");
                 
@@ -1038,7 +861,7 @@ class Travel extends BtbObject{
                                 
                                 if($cBus and ($cBus->id>0))
                                 {
-                                        $bus_company_id = $cBus->getVal("orgunit_id");
+                                        $bus_company_id = $cBus->getVal("work_branch_id");
                                         $bus_id = $cBus->getId();
                                         $report_arr[] = "تم اختيار الباص :  ".$cBus."  كباص رقم ".$bnum;
                                         $tbObj = TravelBus::createTravelBusNum($travel_company_id, $travel_id, $bus_company_id, $cBus->id, $bnum);
@@ -1381,10 +1204,11 @@ class Travel extends BtbObject{
         
         }
         
+        /*
         public function genereMyTravelStations($lang = 'ar')
         {
             return TravelService::genereMyTravelStations($this,$lang, true);
-        }
+        }*/
 
         public function getArrivalAndLeaveDateTimesForCity($city_num, $city_id=null)
         {
@@ -1725,7 +1549,7 @@ class Travel extends BtbObject{
         public function calcSakan_galery()
         {
                 $html = "";
-                if($this->estResidence())
+                if($this->containResidence())
                 {
                         $html .= "<div class='galery_title'>الفنادق</div>";
                         $travelHotelList = $this->get("travelHotelList");
@@ -1918,7 +1742,7 @@ class Travel extends BtbObject{
                {
                        $this->arrRoomsPrices = array();
                        $travel_id = $this->getId();
-                       $work_branch_id = $this->getVal("orgunit_id"); 
+                       $work_branch_id = $this->getVal("work_branch_id"); 
                        // boucle on cities of travel trips
                        $skan_details_arr = $this->getSakanCitiesDetails();
                        //dd("skan_details_arr", $skan_details_arr);
@@ -2022,7 +1846,7 @@ class Travel extends BtbObject{
         {
              
              $seats_prices_arr = $this->getSeatsPrices();
-             if($this->estResidence())
+             if($this->containResidence())
              {
                      $rooms_prices_arr = $this->getRoomsPrices();
                      $beds_prices_arr = $this->getBedsPrices();
@@ -2106,7 +1930,7 @@ class Travel extends BtbObject{
              
              $other_services = "";                        
              
-             if($this->estResidence())
+             if($this->containResidence())
              {
                      $col_ms_gal = 4;
                      $gal_with_sakan_Html = "
@@ -2292,7 +2116,7 @@ class Travel extends BtbObject{
                   if($error_app) $sp_errors["travel_status_id"] = $error_app;
               }
               
-              if(($travel_status_id > self::$TRAVEL_STATUS_ORGANIZE) and (!$sp_errors["travel_status_id"]) and ($this->estResidence()) and $this->stepContainAttribute($step, "travel_status_id")) 
+              if(($travel_status_id > self::$TRAVEL_STATUS_ORGANIZE) and (!$sp_errors["travel_status_id"]) and ($this->containResidence()) and $this->stepContainAttribute($step, "travel_status_id")) 
               {
                   list($error_app, ) = $this->approveHotels($lang, $commit=false);
                   if($error_app) $sp_errors["travel_status_id"] = $error_app;
@@ -2348,10 +2172,10 @@ class Travel extends BtbObject{
         public function attributeIsApplicable($attribute)
         {
               /*$residenceVal = $this->valResidence();
-              $residence = $this->estResidence();*/
+              $residence = $this->containResidence();*/
               // die("residence=$residence,$residenceVal");
-              if($attribute=="travelHotelList") return $this->estResidence();
-              if($attribute=="travelers_nb_total") return $this->estResidence();
+              if($attribute=="travelHotelList") return $this->containResidence();
+              if($attribute=="travelers_nb_total") return $this->containResidence();
               
               
               return true;
@@ -2518,7 +2342,7 @@ class Travel extends BtbObject{
                         //@debugg else $infos_arr[] = "approve buses skipped : status=".$this->getVal("status");
                 }
 
-                if(($this->getVal("status") == self::$TRAVEL_STATUS_ORGANIZE) and $this->estResidence() and ($this->days_remain <= $nb_days_before_booking))
+                if(($this->getVal("status") == self::$TRAVEL_STATUS_ORGANIZE) and $this->containResidence() and ($this->days_remain <= $nb_days_before_booking))
                 {
                         list($error_app, $info_app) = $this->approveHotels($lang, $commit=true);
                         if($error_app) $errors_arr[] = $error_app;
@@ -2531,7 +2355,7 @@ class Travel extends BtbObject{
                 }
                 else
                 {
-                        if($this->estResidence()) $infos_arr[] = $this->tm("approve hotels ignored : remain=") . $this->days_remain .$this->tm(" vs limit = ") . $nb_days_before_booking;
+                        if($this->containResidence()) $infos_arr[] = $this->tm("approve hotels ignored : remain=") . $this->days_remain .$this->tm(" vs limit = ") . $nb_days_before_booking;
                         //@debugg else $infos_arr[] = "approve hotels ignored : no sakan for this travel";
                 }
 
@@ -2695,14 +2519,7 @@ class Travel extends BtbObject{
                 return AfwDateHelper::dayNameForDate(AfwDateHelper::hijriToGreg($this->return_date),$lang);
         }
 
-        public function list_of_travel_level() { 
-                $list_of_items = array(); 
-                $list_of_items[1] = "الإقتصادية";
-                $list_of_items[2] = "الفاخرة";
-                $list_of_items[3] = "الأعمال";
-                 
-               return  $list_of_items;
-        }
+        
 
         public function calcTravel_company_full_name()
         {
@@ -2919,7 +2736,7 @@ class Travel extends BtbObject{
 
         public function isObjectEasyAttribute($attribute)
         {
-            if($attribute=="orgunit_id")    return true;
+            if($attribute=="work_branch_id")    return true;
             if($attribute=="travel_status_id")    return true;
             if($attribute=="travel_template_id")    return true;
             if($attribute=="depart_city_id")    return true;

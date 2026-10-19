@@ -2,6 +2,44 @@
 <?php 
         class BtbHotelAfwStructure
         {
+			// token separator = §
+                public static function initInstance(&$obj)
+                {
+                        if ($obj instanceof Hotel ) 
+                        {
+							$obj->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 3;
+							$obj->DISPLAY_FIELD_BY_LANG = ['ar'=>"name_ar", 'en'=>"name_en"];
+							
+							
+							$obj->ORDER_BY_FIELDS = "work_branch_id, country_id, city_id, name_ar";
+							$obj->IS_LOOKUP = true;
+							$obj->public_display = true;
+							$obj->horizontalTabs = true;
+							
+							
+							$obj->ignore_insert_doublon = true;
+							$obj->UNIQUE_KEY = array('work_branch_id', 'country_id', 'city_id', 'name_ar');
+							$obj->editByStep = true;
+							$obj->editNbSteps = 8;
+							$obj->showQeditErrors = true;
+							$obj->showRetrieveErrors = true;
+							$obj->general_check_errors = true;
+							$obj->after_save_edit = array("class" => 'WorkBranch', "attribute" => 'work_branch_id', "currmod" => 'btb', "currstep" => 8);
+							// $obj->after_save_edit = array("mode"=>"qsearch", "currmod"=>'btb', "class"=>'Hotel',"submit"=>true);
+                        }
+                        else 
+                        {
+                            HotelArTranslator::initData();
+                            HotelEnTranslator::initData();
+                        }
+                }
+              
+                /**
+				 * DB_STRUCTURE is the main source of configuration for the class 
+				 *    it is used in all the modules and methods to know how 
+				 *    to handle the class attributes
+				 * @var array
+				 */
                 public static $DB_STRUCTURE = array(
 
                         
@@ -29,6 +67,11 @@
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'MANDATORY' => true,  'ERROR-CHECK' => true, ),
 
 			'name_ar' => array('SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  
+				'CSS' => 'width_pct_50',  'SIZE' => 128,  'MAXLENGTH' => 128,  'MIN-SIZE' => 5,  'CHAR_TEMPLATE' => 'ARABIC-CHARS,SPACE',  'REQUIRED' => true,  'UTF8' => true,  
+				'TYPE' => 'TEXT',  'READONLY' => false,  'SEARCH-BY-ONE' => true,  'DISPLAY' => true,  'STEP' => 1,  
+				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'MANDATORY' => true,  'ERROR-CHECK' => true, ),
+
+			'name_en' => array('SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  
 				'CSS' => 'width_pct_50',  'SIZE' => 128,  'MAXLENGTH' => 128,  'MIN-SIZE' => 5,  'CHAR_TEMPLATE' => 'ARABIC-CHARS,SPACE',  'REQUIRED' => true,  'UTF8' => true,  
 				'TYPE' => 'TEXT',  'READONLY' => false,  'SEARCH-BY-ONE' => true,  'DISPLAY' => true,  'STEP' => 1,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'MANDATORY' => true,  'ERROR-CHECK' => true, ),

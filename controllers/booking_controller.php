@@ -65,7 +65,7 @@ class BookingController extends AfwStepsController{
                 $this->addStep("conditions");
                 $this->addStep("customer");
                 $this->addStep("seats");
-                if($this->getTravelObject($request)->estResidence())
+                if($this->getTravelObject($request)->containResidence())
                 {
                         $bookingObj = $this->getObject($request, false);
                         if(((!$bookingObj) and intval($request["beds"])>0) or 

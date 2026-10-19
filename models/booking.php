@@ -428,11 +428,11 @@ class Booking extends BtbObject
                                 return (intval($this->getVal("travelers_nb")) >= $i);
                         }
                 }
-                if ($attribute == "nb_beds") return $this->estResidence();
+                if ($attribute == "nb_beds") return $this->containResidence();
                 if ($attribute == "confirmed") return $this->estPaid();
-                if ($attribute == "bus_to_hotel") return ($this->estResidence() and ($this->nb_beds > 0));
-                if ($attribute == "bus_select_comment") return $this->estResidence();
-                if ($attribute == "travel_bus1_id") return $this->estResidence();
+                if ($attribute == "bus_to_hotel") return ($this->containResidence() and ($this->nb_beds > 0));
+                if ($attribute == "bus_select_comment") return $this->containResidence();
+                if ($attribute == "travel_bus1_id") return $this->containResidence();
 
 
                 for ($i = 1; $i <= 3; $i++) {
@@ -440,7 +440,7 @@ class Booking extends BtbObject
                                 $travel = $this->hetTravel();
                                 $travelTemp = null;
                                 if ($travel) $travelTemp = $travel->hetTemplate();
-                                return ($travelTemp and ($this->nb_beds > 0) and $this->estResidence() and (intval($travelTemp->getVal("trips_nb")) > $i));
+                                return ($travelTemp and ($this->nb_beds > 0) and $this->containResidence() and (intval($travelTemp->getVal("trips_nb")) > $i));
                         }
                 }
                 // 
@@ -463,17 +463,17 @@ class Booking extends BtbObject
                         }
                 }
 
-                if (($attribute == "div_sakan_options") or ($attribute == "roomDayList")) return (($this->nb_beds > 0) and $this->estResidence());
+                if (($attribute == "div_sakan_options") or ($attribute == "roomDayList")) return (($this->nb_beds > 0) and $this->containResidence());
 
                 for ($i = 1; $i <= 3; $i++) {
                         if ($attribute == "trip${i}_option") {
-                                return (($this->nb_beds > 0) and $this->estResidence());
+                                return (($this->nb_beds > 0) and $this->containResidence());
                         }
                 }
 
                 for ($i = 2; $i <= 3; $i++) {
                         if ($attribute == "travel_bus${i}_id") {
-                                return ($this->estResidence() and ($this->getVal("bus${i}") > 0));
+                                return ($this->containResidence() and ($this->getVal("bus${i}") > 0));
                         }
                 }
                 return true;
@@ -1081,7 +1081,7 @@ class Booking extends BtbObject
                 $confirmation_message .= "$cc . تأكيد حجز المقاعد (عدد المقاعد : $tsCount) <br>\n ";
                 $cc++;
 
-                if ($this->estResidence() and $this->customerWantSakan()) {
+                if ($this->containResidence() and $this->customerWantSakan()) {
                         // before confirm booked rooms we need to disconfirm eventual residual booked rooms 
                         // not freed by error
                         list($nbRoomDaysCanceled, $nbBedDaysCanceled) = $this->cancelOldBookedRoomsAndBeds($lang, $travelTemp);
@@ -1252,7 +1252,7 @@ class Booking extends BtbObject
                 $confirmation_message .= "$cc . إلغاء تأكيد حجز المقاعد <br>\n ";
                 $cc++;
 
-                if ($this->estResidence() and $this->customerWantSakan()) {
+                if ($this->containResidence() and $this->customerWantSakan()) {
                         $confirmation_message .= "$cc . إلغاء تأكيد حجز الغرف<br>\n ";
                         $cc++;
                         list($nbRoomDaysCanceled, $nbBedDaysCanceled) = $this->cancelOldBookedRoomsAndBeds($lang, $travelTemp);
@@ -1462,7 +1462,7 @@ class Booking extends BtbObject
                         $infos_arr[] = "تم انشاء سطر حساب المقاعد";
                 }
 
-                if ($this->estResidence()) {
+                if ($this->containResidence()) {
                         // rooms and beds
                         $trips_nb = intval($travelTemp->getVal("trips_nb"));
                         for ($trip = 1; $trip < $trips_nb; $trip++) {
@@ -1910,7 +1910,7 @@ class Booking extends BtbObject
 
                 if ($fgroup == "travelers") return array("name" => $fgroup, "css" => "pct_100");
                 if ($fgroup == "ptravelers") {
-                        if ($this->estResidence() and ($this->nb_beds > 0)) return array("name" => $fgroup, "css" => "pct_50");
+                        if ($this->containResidence() and ($this->nb_beds > 0)) return array("name" => $fgroup, "css" => "pct_50");
                         else return array("name" => $fgroup, "css" => "pct_100");
                 }
                 if ($fgroup == "hotels") return array("name" => $fgroup, "css" => "pct_50");
@@ -2053,7 +2053,7 @@ class Booking extends BtbObject
                 if (!$travelObj) throw new RuntimeException("sakanDefined : booking $this_id without travel object (id=$travelObjId) !!!");
                 $templateObj = $travelObj->hetTemplate();
                 if (!$templateObj) throw new RuntimeException("sakanDefined : travel without template object !!!");
-                if ($templateObj->estResidence()) {
+                if ($templateObj->containResidence()) {
                         for ($trip = 1; $trip < $templateObj->trips_nb; $trip++) {
                                 $cityTrip = $this->het("city${trip}");
                                 if ($cityTrip) {

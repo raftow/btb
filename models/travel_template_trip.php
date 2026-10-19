@@ -200,18 +200,18 @@ class TravelTemplateTrip extends BtbObject{
         }
         
         
-  
+        /*
         public function getTripRoad()
         {
              $ttObj = $this->het("travel_template_id");
              if(!$ttObj) return null;
              $order =  $this->getVal("trip_num");
              $trips_nb = intval($ttObj->getVal("trips_nb"));
-             if($order<$trips_nb) $tripRoad = $ttObj->snh("road${order}");
+             if($order<$trips_nb) $tripRoad = $ttObj->snh("ro ad${order}");
              else $tripRoad = $ttObj->sng("roadr");
              
              return $tripRoad;
-        }
+        }*/
         
         public function calcNext_departure_datetime()
         {
@@ -238,13 +238,16 @@ class TravelTemplateTrip extends BtbObject{
                $next_departure_datetime = $this->calcNext_departure_datetime();
                $next_arrival_datetime = $this->calcNext_arrival_datetime();
                
-               return diff_datetime_formatted($next_arrival_datetime,$next_departure_datetime, $Format="h:i");
+               return AfwDateHelper::formatDatetimeDiff($next_arrival_datetime,$next_departure_datetime, $Format="h:i");
         }
         
+        /**
+         * @param string $travel_gdate
+         */
         public function getStartGDateTime($travel_gdate)
         {
                 $total_nb_days = intval($this->getVal("departure_day"))-1;
-                $departure_gdate = add_period_to_gregdate($total_nb_days,0,0,$travel_gdate);
+                $departure_gdate = AfwDateHelper::addPeriodToGregDate($total_nb_days, 0, 0, $travel_gdate);
                 
                 $departure_time = $this->getVal("departure_time");
                 if(strlen($departure_time)==5) $departure_time .= ":00";
@@ -255,7 +258,7 @@ class TravelTemplateTrip extends BtbObject{
         public function getArrivalGDateTime($travel_gdate)
         {
                 $total_nb_days = intval($this->getVal("arrival_day"))-1;
-                $departure_gdate = add_period_to_gregdate($total_nb_days,0,0,$travel_gdate);
+                $departure_gdate = AfwDateHelper::addPeriodToGregDate($total_nb_days,0,0,$travel_gdate);
                 
                 $departure_time = $this->getVal("arrival_time");
                 if(strlen($departure_time)==5) $departure_time .= ":00";
@@ -288,13 +291,14 @@ class TravelTemplateTrip extends BtbObject{
              if($order==4) return -999; 
         }
   
+        /*::ro-ad
         public function getTripStationList()
         {
              $ttObj = $this->het("travel_template_id");
              if(!$ttObj) return null;
              $order =  $this->getVal("trip_num");
              $trips_nb = intval($ttObj->getVal("trips_nb"));
-             if($order<$trips_nb) $tripStationList = $ttObj->get("road${order}_station_mfk");
+             if($order<$trips_nb) $tripStationList = $ttObj->get("ro-ad${order}_station_mfk");
              else $tripStationList = $ttObj->get("road_return_station_mfk");
              
              $tripStationList2 = array();
@@ -306,7 +310,7 @@ class TravelTemplateTrip extends BtbObject{
              ksort($tripStationList2);
              
              return $tripStationList2;
-        }
+        }*/
   
         public function setOrder($order)
         {
@@ -343,7 +347,7 @@ class TravelTemplateTrip extends BtbObject{
                                     $time_road_1 = $time_of_drive + $time_of_road_stations;
                                     $log_arr[] = "إجمالي طول السفرة = $time_road_1 س = ($time_of_drive + $time_of_road_stations)  ";
                                     
-                                    list($arrival_day, $arrival_time) = addTimeToDayTime($departure_day, $departure_time, $time_road_1); 
+                                    list($arrival_day, $arrival_time) = AfwDateHelper::addTimeToDayTime($departure_day, $departure_time, $time_road_1); 
                                     
                                     $log_arr[] = "يوم المغادرة $departure_day وقت المغادرة $departure_time";
                                     $log_arr[] = "يوم الوصول $arrival_day وقت الوصول $arrival_time";
@@ -366,11 +370,11 @@ class TravelTemplateTrip extends BtbObject{
                                     $previous_arrival_time = $previousTTObj->getVal("arrival_time");
                                     $city1_hours_nb = $ttObj->getVal("city1_hours_nb");
                                     
-                                    list($departure_day,$departure_time) = addTimeToDayTime($previous_arrival_day, $previous_arrival_time, $city1_hours_nb); 
+                                    list($departure_day,$departure_time) = AfwDateHelper::addTimeToDayTime($previous_arrival_day, $previous_arrival_time, $city1_hours_nb); 
                                     $log_arr[] = "حساب يوم ووقت المغادرة";
                                     $log_arr[] = "($departure_day,$departure_time) = السابق ($previous_arrival_day, $previous_arrival_time) + مدة الاقامة = $city1_hours_nb س";
 
-                                    //die("list($departure_day,$departure_time) = addTimeToDayTime($previous_arrival_day, $previous_arrival_time, $city1_hours_nb)");
+                                    //die("list($departure_day,$departure_time) = AfwDateHelper::addTimeToDayTime($previous_arrival_day, $previous_arrival_time, $city1_hours_nb)");
                                     $this->set("departure_day",$departure_day);
                                     $this->set("departure_time",$departure_time); 
                                     $log_arr[] = "يوم المغادرة $departure_day وقت المغادرة $departure_time";
@@ -402,7 +406,7 @@ class TravelTemplateTrip extends BtbObject{
                                     $time_road_2 = $time_of_drive + $time_of_road_stations;
                                     $log_arr[] = "إجمالي طول السفرة = $time_road_2 س = ($time_of_drive + $time_of_road_stations)  ";
                                     
-                                    list($arrival_day, $arrival_time) = addTimeToDayTime($departure_day, $departure_time, $time_road_2);
+                                    list($arrival_day, $arrival_time) = AfwDateHelper::addTimeToDayTime($departure_day, $departure_time, $time_road_2);
                                      
                                     $this->set("arrival_day",$arrival_day);
                                     $this->set("arrival_time",$arrival_time);
@@ -423,7 +427,7 @@ class TravelTemplateTrip extends BtbObject{
                                     $previous_arrival_time = $previousTTObj->getVal("arrival_time");
                                     $city2_hours_nb = $ttObj->getVal("city2_hours_nb");
                                     
-                                    list($departure_day,$departure_time) = addTimeToDayTime($previous_arrival_day, $previous_arrival_time, $city2_hours_nb); 
+                                    list($departure_day,$departure_time) = AfwDateHelper::addTimeToDayTime($previous_arrival_day, $previous_arrival_time, $city2_hours_nb); 
                                     $log_arr[] = "حساب يوم ووقت المغادرة";
                                     $log_arr[] = "($departure_day,$departure_time) = السابق ($previous_arrival_day, $previous_arrival_time) + مدة الاقامة = $city2_hours_nb س";
                                     
@@ -461,7 +465,7 @@ class TravelTemplateTrip extends BtbObject{
                                     $log_arr[] = "إجمالي طول السفرة = $time_road_3 س = ($time_of_drive + $time_of_road_stations)  ";
                                     
                                     
-                                    list($arrival_day, $arrival_time) = addTimeToDayTime($departure_day, $departure_time, $time_road_3);
+                                    list($arrival_day, $arrival_time) = AfwDateHelper::addTimeToDayTime($departure_day, $departure_time, $time_road_3);
                                      
                                     $this->set("distance",$distance_c3);
                                     $this->set("arrival_day",$arrival_day);
@@ -482,7 +486,7 @@ class TravelTemplateTrip extends BtbObject{
                                     $previous_arrival_time = $previousTTObj->getVal("arrival_time");
                                     $city3_hours_nb = $ttObj->getVal("city3_hours_nb");
                                     
-                                    list($departure_day,$departure_time) = addTimeToDayTime($previous_arrival_day, $previous_arrival_time, $city3_hours_nb); 
+                                    list($departure_day,$departure_time) = AfwDateHelper::addTimeToDayTime($previous_arrival_day, $previous_arrival_time, $city3_hours_nb); 
                                     $log_arr[] = "حساب يوم ووقت المغادرة";
                                     $log_arr[] = "($departure_day,$departure_time) = السابق ($previous_arrival_day, $previous_arrival_time) + مدة الاقامة = $city3_hours_nb س";
                                     
@@ -508,7 +512,7 @@ class TravelTemplateTrip extends BtbObject{
                                     
                                     
                                     
-                                    list($arrival_day, $arrival_time) = addTimeToDayTime($departure_day, $departure_time, $time_road_4); 
+                                    list($arrival_day, $arrival_time) = AfwDateHelper::addTimeToDayTime($departure_day, $departure_time, $time_road_4); 
                                     $log_arr[] = "(arrival_day/arrival_time)=($arrival_day/ $arrival_time), ";
                                     $this->set("arrival_day",$arrival_day);
                                     $this->set("arrival_time",$arrival_time);
@@ -636,13 +640,12 @@ class TravelTemplateTrip extends BtbObject{
                $arrival_city_id = $this->getVal("arrival_city_id");
                $distance = $this->getVal("distance");
                
+               /*::ro-ad
                if($departure_city_id and $arrival_city_id and $distance) 
                {
-                       // require_once("$file_dir_name/../btb/road.php");
-                       // update roads
-                       $road_name = Road::$DEFAULT_ROAD_NAME;
-                       Road::setRoadInfos($road_name, $departure_city_id, $arrival_city_id, $distance);
-               }
+                       $road_name = Ro-ad::$DEFAULT_ROAD_NAME;
+                       Ro-ad::setRoadInfos($road_name, $departure_city_id, $arrival_city_id, $distance);
+               }*/
                
                
                return true;

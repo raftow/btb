@@ -53,6 +53,7 @@ class TravelService
         return $return;
     }
 
+    /*::ro-ad
     public static function genereMyTravelStations($travelObj, $lang = 'ar', $reset=false)
     {
         $travel_gdate = $travelObj->getVal('travel_gdate');
@@ -105,7 +106,7 @@ class TravelService
             $previous_distance = 0;
             foreach ($tripStationList as $tripStationItem) 
             {
-                //@todo rafik no equal division of time between road stations it should be
+                //@todo rafik no equal division of time between ro-ad stations it should be
                 // more intelligent taking in consideration time of prayer lunch dinner etc...
                 $totalTimeInThisStation =
                     $totalTimeOfRoadStations / $tripStationCount;
@@ -309,9 +310,9 @@ class TravelService
             implode("\n<br>", $errors_arr),
             "تم العمل على $travelTemplateTripListCount سفرة قصيرة وتم تحديث $travelStationCount محطة توقف",
         ];
-    }
+    }*/
 
-    public static function genereTravelSeatsAndPricesBlocInsert($company_id, 
+    public static function genereTravelSeatsAndPricesBlocInsert($work_branch_id, 
                 $travel_template_id=0,$travel_id=0,$travel_bus_id=0,
                 $update_price_also_for_confirmed_seats=false, 
                 $update_price_also_for_manuel_prices=false,
@@ -352,7 +353,7 @@ class TravelService
           inner join c0btb.travel_bus tb on tb.travel_id = t.id
           inner join c0btb.bus_seat bs on bs.bus_id = tb.bus_id  
           left join c0btb.travel_seat ts on ts.travel_bus_id = tb.id and ts.seat_code = bs.seat_code
-        where t.orgunit_id = $company_id
+        where t.orgunit_id = $work_branch_id
           and (t.travel_template_id = $travel_template_id or '$travel_template_id'='0')
           and (t.id = $travel_id or '$travel_id'='0')
           and (tb.id = $travel_bus_id or '$travel_bus_id'='0')
@@ -373,7 +374,7 @@ class TravelService
         }    
         else
         {
-            $ttList = TravelTemplate::loadAllTTOfCompany($company_id);
+            $ttList = TravelTemplate::loadAllTTOfCompany($work_branch_id);
         }
         
         $updated_prices = 0;
@@ -471,11 +472,11 @@ class TravelService
         {
             // DISABLE BELOW because may be too much lourd
             // $travelCompanyList = self::allTravelCompanies();
-            Travel::simpleError('move TravelsToNewStatus error : need to specify compamy');
+            throw new AfwRuntimeException('move TravelsToNewStatus error : need to specify compamy');
         }
         else
         {
-            Travel::simpleError('@todo : case of job how to select list of companies');
+            throw new AfwRuntimeException('@todo : case of job how to select list of companies');
         }
 
         foreach ($travelCompanyList as $companyItem) 
@@ -531,6 +532,7 @@ class TravelService
                     }
 
                     // genereMyTravelStations only for first coming travel
+                    /*
                     if($count_travels == 1)
                     {
                         list(
@@ -548,7 +550,7 @@ class TravelService
                                 'ملاحظة أثناء تحديث محطات التوقف : ' .
                                 $info_app;
                         }
-                    }
+                    }*/
 
                     
                 }
@@ -610,7 +612,7 @@ class TravelService
                     $objTravelTemplateId
                 );
                 foreach ($travelList as $travelItem) {
-                    if ($travelItem->estResidence()) {
+                    if ($travelItem->containResidence()) {
                         $count_travels++;
                         list(
                             $error_app,
@@ -637,7 +639,7 @@ class TravelService
                 $now = date('H:i:s');
                 // @todo 00:45 min prepare to leave time from settings
                 // @manage case to,orrow travel time near midnight 00:00 +> very rare
-                list($new_day, $new_time) = AfwDateHelper::addTimeToDayTime(
+                list($new_day, $new_time) = AfwDateHelper::AfwDateHelper::addTimeToDayTime(
                     0,
                     $now,
                     '00:45',
@@ -675,7 +677,7 @@ class TravelService
                 $now = date('H:i:s');
                 // @todo 00:30 max late time from settings
                 // @manage case to,orrow travel time near midnight 00:00 +> very rare
-                list($new_day, $new_time) = AfwDateHelper::addTimeToDayTime(
+                list($new_day, $new_time) = AfwDateHelper::AfwDateHelper::addTimeToDayTime(
                     0,
                     $now,
                     '00:30',
@@ -718,7 +720,7 @@ class TravelService
             if ($managed_status[Travel::$TRAVEL_STATUS_RETURNED]) {
                 $now = date('H:i:s');
                 // @todo 01:30 min retard in return time from settings
-                list($new_day, $new_time) = AfwDateHelper::addTimeToDayTime(
+                list($new_day, $new_time) = AfwDateHelper::AfwDateHelper::addTimeToDayTime(
                     0,
                     $now,
                     '01:30',
@@ -766,12 +768,12 @@ class TravelService
         return [$errors_arr, $infos_arr];
     }
 
-    public static function makeTravelListHasLeaved($company_id, $travel_template_id=0)
+    public static function makeTravelListHasLeaved($work_branch_id, $travel_template_id=0)
     {
         $now = date('H:i:s');
         // @todo 00:30 max late time from settings
         // @manage case to,orrow travel time near midnight 00:00 +> very rare
-        list($new_day, $new_time) = AfwDateHelper::addTimeToDayTime(
+        list($new_day, $new_time) = AfwDateHelper::AfwDateHelper::addTimeToDayTime(
             0,
             $now,
             '00:30',
@@ -785,13 +787,13 @@ class TravelService
                                
                 
         $tbObj = new TravelBus();
-        $tbObj->where("travel_id in (select id from c0btb.travel where orgunit_id=$company_id and $cond_leaved and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
+        $tbObj->where("travel_id in (select id from c0btb.travel where orgunit_id=$work_branch_id and $cond_leaved and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
         $tbObj->set("opened", "Z");
         $tbObj->set("opened_date", $hijri_current_date);
         $tbObj->update(false);
 
         $trvObj = new Travel();
-        $trvObj->select("orgunit_id",$company_id);
+        $trvObj->select("orgunit_id",$work_branch_id);
         $trvObj->where($cond_leaved);
         $trvObj->where("($travel_template_id=0 or travel_template_id=$travel_template_id)");
         $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_GONE);                
@@ -799,11 +801,11 @@ class TravelService
                 
     }
 
-    public static function makeTravelListHasReturned($company_id, $travel_template_id=0)
+    public static function makeTravelListHasReturned($work_branch_id, $travel_template_id=0)
     {
         $now = date('H:i:s');
         // @todo 01:30 min retard in return time from settings
-        list($new_day, $new_time) = AfwDateHelper::addTimeToDayTime(
+        list($new_day, $new_time) = AfwDateHelper::AfwDateHelper::addTimeToDayTime(
             0,
             $now,
             '01:30',
@@ -822,13 +824,13 @@ class TravelService
 
                 
         $tbObj = new TravelBus();
-        $tbObj->where("travel_id in (select id from c0btb.travel where orgunit_id=$company_id and $cond_returned and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
+        $tbObj->where("travel_id in (select id from c0btb.travel where orgunit_id=$work_branch_id and $cond_returned and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
         $tbObj->set("opened", "Z");
         $tbObj->set("opened_date", $hijri_current_date);
         $tbObj->update(false);
 
         $trvObj = new Travel();
-        $trvObj->select("orgunit_id",$company_id);
+        $trvObj->select("orgunit_id",$work_branch_id);
         $trvObj->where($cond_returned);
         $trvObj->where("($travel_template_id=0 or travel_template_id=$travel_template_id)");
         $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_RETURNED);                
@@ -836,12 +838,12 @@ class TravelService
                 
     }
 
-    public static function prepareTravelListToLeave($company_id, $travel_template_id=0)
+    public static function prepareTravelListToLeave($work_branch_id, $travel_template_id=0)
     {
         $now = date('H:i:s');
         // @todo 00:45 min prepare to leave time from settings
         // @manage case to,orrow travel time near midnight 00:00 +> very rare
-        list($new_day, $new_time) = AfwDateHelper::addTimeToDayTime(
+        list($new_day, $new_time) = AfwDateHelper::AfwDateHelper::addTimeToDayTime(
             0,
             $now,
             '00:45',
@@ -859,13 +861,13 @@ class TravelService
 
         /*        
         $tbObj = new TravelBus();
-        $tbObj->where("travel_id in (select id from c0btb.travel where orgunit_id=$company_id and $cond_to_leave and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
+        $tbObj->where("travel_id in (select id from c0btb.travel where orgunit_id=$work_branch_id and $cond_to_leave and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
         $tbObj->set("opened", "Y");
         $tbObj->set("opened_date", $hijri_current_date);
         $tbObj->update(false);*/
 
         $trvObj = new Travel();
-        $trvObj->select("orgunit_id",$company_id);
+        $trvObj->select("orgunit_id",$work_branch_id);
         $trvObj->where($cond_to_leave);
         $trvObj->where("($travel_template_id=0 or travel_template_id=$travel_template_id)");
         $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_GOING);                

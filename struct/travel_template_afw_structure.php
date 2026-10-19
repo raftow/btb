@@ -10,11 +10,11 @@ class BtbTravelTemplateAfwStructure
 			$obj->DISPLAY_FIELD = "travel_template_name";
 
 			// $obj->ENABLE_DISPLAY_MODE_IN_QEDIT=true;
-			$obj->ORDER_BY_FIELDS = "orgunit_id, travel_template_name";
+			$obj->ORDER_BY_FIELDS = "work_branch_id, travel_template_name";
 
 			$obj->horizontalTabs = true;
 
-			$obj->UNIQUE_KEY = array('orgunit_id', 'travel_template_name');
+			$obj->UNIQUE_KEY = array('work_branch_id', 'travel_template_name');
 			$obj->editByStep = true;
 			$obj->editNbSteps = 11;
 			$obj->showQeditErrors = true;
@@ -50,9 +50,8 @@ class BtbTravelTemplateAfwStructure
 			'CSS' => 'width_pct_100',
 		),
 
-		'orgunit_id' => array(
+		'work_branch_id' => array(
 			'FGROUP' => 'travel_props',
-			'SHORTNAME' => 'tcompany',
 			'SEARCH' => true,
 			'QSEARCH' => true,
 			'SHOW' => true,
@@ -85,7 +84,7 @@ class BtbTravelTemplateAfwStructure
 			'ANSWER' => 'work_branch',
 			'ANSMODULE' => 'btb',
 			'CATEGORY' => 'SHORTCUT',
-			'SHORTCUT' => 'orgunit_id.parent_id',
+			'SHORTCUT' => 'work_branch_id.parent_id',
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => '',
 			'STEP' => 1,
@@ -612,11 +611,11 @@ class BtbTravelTemplateAfwStructure
 			'ANSWER' => 'work_branch',
 			'MANDATORY' => true,
 			'ANSMODULE' => 'btb',
-			/* 'WHERE' => "(id = §tcompany_id§ or  -- me
+			/* 'WHERE' => "(id = §tcom pany_id§ or  -- me
                                             id = §tparent_id§ or  -- my parent 
-                                            parent_id = §tcompany_id§ or -- my children
+                                            parent_id = §tco mpany_id§ or -- my children
                                             parent_id = §tparent_id§ or -- my brothers (same parent)
-                                            id in (select bus_branch_id from c0btb.bus _convention where tbranch_id in (§tparent_id§, §tcompany_id§)) -- convention with me or with my parent
+                                            id in (select bus_branch_id from c0btb.bus _convention where tbranch_id in (§tparent_id§, §tcom pany_id§)) -- convention with me or with my parent
                                            ) 
                                            and 
                                            (work_service_mfk like '%,1,%' or work_service_mfk like '%,2,%')",*/
@@ -628,6 +627,7 @@ class BtbTravelTemplateAfwStructure
 			'ERROR-CHECK' => true,
 		),
 
+		/*::ro-ad
 		'road1_id' => array(
 			'SHORTNAME' => 'road1',
 			'STEP' => 3,
@@ -641,7 +641,7 @@ class BtbTravelTemplateAfwStructure
 			'REQUIRED' => true,
 			'UTF8' => false,
 			'TYPE' => 'FK',
-			'ANSWER' => 'road',
+			'ANSWER' => 'ro-ad',
 			'ANSMODULE' => 'btb',
 			'AUTOCOMPLETE' => false,
 			'WHERE' => "depart_city_id = §depart_city_id§ and arrival_city_id = §city1_id§",
@@ -670,7 +670,7 @@ class BtbTravelTemplateAfwStructure
 			'MANDATORY' => true,
 			'UTF8' => false,
 			'TYPE' => 'FK',
-			'ANSWER' => 'road',
+			'ANSWER' => 'ro-ad',
 			'ANSMODULE' => 'btb',
 			'AUTOCOMPLETE' => false,
 			'WHERE' => "depart_city_id = §city1_id§ and arrival_city_id = §city2_id§",
@@ -698,7 +698,7 @@ class BtbTravelTemplateAfwStructure
 			'MANDATORY' => true,
 			'UTF8' => false,
 			'TYPE' => 'FK',
-			'ANSWER' => 'road',
+			'ANSWER' => 'ro-ad',
 			'ANSMODULE' => 'btb',
 			'AUTOCOMPLETE' => false,
 			'WHERE' => "depart_city_id = §city2_id§ and arrival_city_id = §depart_city_id§",
@@ -726,7 +726,7 @@ class BtbTravelTemplateAfwStructure
 			'REQUIRED' => true,
 			'UTF8' => false,
 			'TYPE' => 'FK',
-			'ANSWER' => 'road',
+			'ANSWER' => 'ro-ad',
 			'ANSMODULE' => 'btb',
 			'AUTOCOMPLETE' => false,
 			'WHERE' => "depart_city_id = §last_city_id§ and arrival_city_id = §depart_city_id§",
@@ -757,7 +757,7 @@ class BtbTravelTemplateAfwStructure
 			'WHERE' => "road_id = §road1_id§",
 
 			'TYPE' => 'MFK',
-			'ANSWER' => 'road_station',
+			'ANSWER' => 'ro-ad_station',
 			'ANSMODULE' => 'btb',
 			'READONLY' => false,
 			'SEARCH-BY-ONE' => false,
@@ -782,7 +782,7 @@ class BtbTravelTemplateAfwStructure
 			'WHERE' => "road_id = §road2_id§",
 
 			'TYPE' => 'MFK',
-			'ANSWER' => 'road_station',
+			'ANSWER' => 'ro-ad_station',
 			'ANSMODULE' => 'btb',
 			'READONLY' => false,
 			'SEARCH-BY-ONE' => false,
@@ -807,7 +807,7 @@ class BtbTravelTemplateAfwStructure
 			'WHERE' => "road_id = §road3_id§",
 
 			'TYPE' => 'MFK',
-			'ANSWER' => 'road_station',
+			'ANSWER' => 'ro-ad_station',
 			'ANSMODULE' => 'btb',
 			'READONLY' => false,
 			'SEARCH-BY-ONE' => false,
@@ -832,7 +832,7 @@ class BtbTravelTemplateAfwStructure
 			'WHERE' => "road_id = §road_return_id§",
 
 			'TYPE' => 'MFK',
-			'ANSWER' => 'road_station',
+			'ANSWER' => 'ro-ad_station',
 			'ANSMODULE' => 'btb',
 			'READONLY' => false,
 			'SEARCH-BY-ONE' => false,
@@ -840,7 +840,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'CSS' => 'width_pct_100',
-		),
+		),*/
 
 		'distance_c1' => array(
 			'STEP' => 5,
@@ -905,7 +905,7 @@ class BtbTravelTemplateAfwStructure
 			'TYPE' => 'MFK',
 			'ANSWER' => 'hotel',
 			'ANSMODULE' => 'btb',
-			'WHERE' => "work_branch_id in (118, §tcompany_id§, §tparent_id§) and draft='N' and active='Y' and city_id = §city1_id§",
+			'WHERE' => "work_branch_id in (118, §work_branch_id§, §tparent_id§) and draft='N' and active='Y' and city_id = §city1_id§",
 			'READONLY' => false,
 			'SEARCH-BY-ONE' => false,
 			'DISPLAY' => true,
@@ -976,7 +976,7 @@ class BtbTravelTemplateAfwStructure
 			'TYPE' => 'MFK',
 			'ANSWER' => 'hotel',
 			'ANSMODULE' => 'btb',
-			'WHERE' => "work_branch_id in (118, §tcompany_id§, §tparent_id§) and draft='N' and active='Y' and city_id = §city2_id§",
+			'WHERE' => "work_branch_id in (118, §work_branch_id§, §tparent_id§) and draft='N' and active='Y' and city_id = §city2_id§",
 			'READONLY' => false,
 			'SEARCH-BY-ONE' => false,
 			'DISPLAY' => true,
@@ -1049,7 +1049,7 @@ class BtbTravelTemplateAfwStructure
 			'TYPE' => 'MFK',
 			'ANSWER' => 'hotel',
 			'ANSMODULE' => 'btb',
-			'WHERE' => "work_branch_id in (118, §tcompany_id§, §tparent_id§) and draft='N' and active='Y' and city_id = §city3_id§",
+			'WHERE' => "work_branch_id in (118, §work_branch_id§, §tparent_id§) and draft='N' and active='Y' and city_id = §city3_id§",
 			'READONLY' => false,
 			'SEARCH-BY-ONE' => false,
 			'DISPLAY' => true,
@@ -1212,7 +1212,7 @@ class BtbTravelTemplateAfwStructure
 			'TYPE' => 'FK',
 			'ANSWER' => 'bus',
 			'ANSMODULE' => 'btb',
-			'WHERE' => "orgunit_id in (0§list_bus_company_mfk§0) and bus_template_id=§bus_template_id§ and example='Y' and bus_level = §travel_level§",
+			'WHERE' => "work_branch_id in (0§list_bus_company_mfk§0) and bus_template_id=§bus_template_id§ and example='Y' and bus_level = §travel_level§",
 
 			'DEPENDENCIES' => array(
 				0 => 'bus_template_id',
@@ -1357,7 +1357,7 @@ class BtbTravelTemplateAfwStructure
 			'HIDE_COLS' => array(
 				0 => 'template_name',
 				1 => 'travel_level',
-				2 => 'orgunit_id',
+				2 => 'work_branch_id',
 			),
 			'DELETE-ICON' => true,
 			'BUTTONS' => true,
@@ -1369,7 +1369,7 @@ class BtbTravelTemplateAfwStructure
 			'DO-NOT-RETRIEVE-COLS' => array(
 				0 => 'template_name',
 				1 => 'travel_level',
-				2 => 'orgunit_id',
+				2 => 'work_branch_id',
 			),
 			'CSS' => 'width_pct_100',
 		),
@@ -1392,7 +1392,7 @@ class BtbTravelTemplateAfwStructure
 			'HIDE_COLS' => array(
 				0 => 'template_name',
 				1 => 'travel_level',
-				2 => 'orgunit_id',
+				2 => 'work_branch_id',
 			),
 			'DELETE-ICON' => true,
 			'BUTTONS' => true,
@@ -1404,7 +1404,7 @@ class BtbTravelTemplateAfwStructure
 			'DO-NOT-RETRIEVE-COLS' => array(
 				0 => 'template_name',
 				1 => 'travel_level',
-				2 => 'orgunit_id',
+				2 => 'work_branch_id',
 			),
 			'CSS' => 'width_pct_100',
 		),

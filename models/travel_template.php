@@ -73,11 +73,12 @@ class TravelTemplate extends BtbObject
         $objme = AfwSession::getUserConnected();
 
         if ($objme) {
-            $company_id = $objme->getMyDepartmentId();
-            if (!$company_id) $company_id = $objme->getMyOrganizationId();
-            $this->set("orgunit_id", $company_id);
-            $this->silentField("orgunit_id");
-            $compObj = $this->het("orgunit_id");
+            $orgunit_id = $objme->getMyDepartmentId();
+            if (!$orgunit_id) $orgunit_id = $objme->getMyOrganizationId();
+            $work_branch_id = WorkBranch::fromOrgunitIdToWorkbranchId($orgunit_id);
+            $this->set("work_branch_id", $work_branch_id);
+            $this->silentField("work_branch_id");
+            $compObj = $this->het("work_branch_id");
             if ($compObj) {
                 $depart_city_id = $compObj->getVal("city_id");
                 $this->set("depart_city_id", $depart_city_id);
@@ -88,30 +89,30 @@ class TravelTemplate extends BtbObject
         return true;
     }
 
-    public static function loadAllTTOfCompany($orgunit_id)
+    public static function loadAllTTOfCompany($work_branch_id)
     {
         $obj = new TravelTemplate();
-        if (!$orgunit_id) throw new AfwRuntimeException("loadAllTTOfCompany : orgunit_id is mandatory field");
-        $obj->select("orgunit_id", $orgunit_id);
+        if (!$work_branch_id) throw new AfwRuntimeException("loadAllTTOfCompany : work_branch_id is mandatory field");
+        $obj->select("work_branch_id", $work_branch_id);
 
         return $obj->loadMany();
     }
 
-    public static function loadByMainIndex($orgunit_id, $travel_template_name, $create_obj_if_not_found = false)
+    public static function loadByMainIndex($work_branch_id, $travel_template_name, $create_obj_if_not_found = false)
     {
         $obj = new TravelTemplate();
-        if (!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
+        if (!$work_branch_id) throw new AfwRuntimeException("loadByMainIndex : work_branch_id is mandatory field");
         if (!$travel_template_name) throw new AfwRuntimeException("loadByMainIndex : travel_template_name is mandatory field");
 
 
-        $obj->select("orgunit_id", $orgunit_id);
+        $obj->select("work_branch_id", $work_branch_id);
         $obj->select("travel_template_name", $travel_template_name);
 
         if ($obj->load()) {
             if ($create_obj_if_not_found) $obj->activate();
             return $obj;
         } elseif ($create_obj_if_not_found) {
-            $obj->set("orgunit_id", $orgunit_id);
+            $obj->set("work_branch_id", $work_branch_id);
             $obj->set("travel_template_name", $travel_template_name);
 
             $obj->insert();
@@ -140,7 +141,7 @@ class TravelTemplate extends BtbObject
         $link = array();
 
 
-        //list($data[0],$link[0]) = $this->displayAttribute("orgunit_id",false, $lang);
+        //list($data[0],$link[0]) = $this->displayAttribute("work_branch_id",false, $lang);
         $data[0] = "P" . $this->id;
         list($data[1], $link[1]) = $this->displayAttribute("travel_template_name", false, $lang);
         $tfrequency_enum = $this->getVal("tfrequency_enum");
@@ -186,52 +187,7 @@ class TravelTemplate extends BtbObject
     }
 
 
-    public function convert_tfrequency_to_days($tfrequency_val)
-    {
-        if ($tfrequency_val == 1) return 1;
-        if ($tfrequency_val == 2) return 7;
-        if ($tfrequency_val == 3) return 31;
-        if ($tfrequency_val == 4) return 366;
-        if ($tfrequency_val == 5) return 354;
-        if ($tfrequency_val == 6) return 30;
-
-        return  -999;
-    }
-
-
-    public function list_of_tfrequency_enum()
-    {
-        $list_of_items = array();
-        $list_of_items[1] = "يوميا";  //     code : DAILY 
-        $list_of_items[2] = "أسبوعيا";  //     code : WEEKLY 
-        $list_of_items[3] = "شهريا (نصراني)";  //     code : MONTHLY 
-        $list_of_items[4] = "سنويا (نصراني)";  //     code : YEARLY 
-        $list_of_items[5] = "سنويا (هجري)";  //     code : HIJRI_YEARLY
-        $list_of_items[6] = "شهريا (هجري)";  //     code : HIJRI_MONTHLY 
-        return  $list_of_items;
-    }
-
-    public function list_of_period_method_id()
-    {
-        $list_of_items = array();
-        $list_of_items[2] = "الصاق تاريخ الرحلة لأقرب ويكاند";  //     code : NEAREST_WE 
-        $list_of_items[3] = "الصاق تاريخ الرحلة للويكاند الموالي";  //     code : NEXT_WE 
-        $list_of_items[1] = "بدون تغيير";  //     code : NO_CHANGE 
-        $list_of_items[4] = "الصاق تاريخ الرحلة للويكاند السابق";  //     code : PREVIOUS_WE 
-        return  $list_of_items;
-    }
-
-
-    public function list_of_complete_method_id()
-    {
-        $list_of_items = array();
-        $list_of_items[5] = "زيادة أيام بعد ثم قبل";  //     code : ADD_AF 
-        $list_of_items[3] = "زيادة أيام بعد";  //     code : ADD_AFTER 
-        $list_of_items[4] = "زيادة أيام قبل ثم بعد";  //     code : ADD_BA 
-        $list_of_items[2] = "زيادة أيام قبل";  //     code : ADD_BEFORE 
-        $list_of_items[1] = "ترك القرار يدويا";  //     code : NO_ADD 
-        return  $list_of_items;
-    }
+    
 
 
 
@@ -521,9 +477,9 @@ class TravelTemplate extends BtbObject
 
     public function calcCode()
     {
-        $orgunit_id = $this->getVal("orgunit_id");
-        if (!$orgunit_id) return "C-NOT-DEFINED";
-        $woObj = $this->het("orgunit_id");
+        $work_branch_id = $this->getVal("orgwork_branch_idunit_id");
+        if (!$work_branch_id) return "C-NOT-DEFINED";
+        $woObj = $this->het("work_branch_id");
         if ((!$woObj) or $woObj->isEmpty()) return "C-EMPTY";
 
         $code = $woObj->calcCode() . "-" . ($this->getId() + 100);
@@ -553,9 +509,9 @@ class TravelTemplate extends BtbObject
 
         $trv->logicDelete($commit = true, $only_me = false, $where_clause = "travel_date >='$first_travel_date' and travel_template_id = $this_id and active='Y' and (travel_status_id is null or travel_status_id in (0," . self::$TRAVEL_STATUS_PREPARE . "))");
 
-        $orgunit_id = $this->getVal("orgunit_id");
-        if (!$orgunit_id) return array("company not defined", "");
-        $woObj = $this->het("orgunit_id");
+        $work_branch_id = $this->getVal("work_branch_id");
+        if (!$work_branch_id) return array("company not defined", "");
+        $woObj = $this->het("work_branch_id");
 
         // تكرار الرحلة
         $tfrequency_enum = $this->getVal("tfrequency_enum");
@@ -712,7 +668,7 @@ class TravelTemplate extends BtbObject
                 $return_date = AfwDateHelper::shiftHijriDate($travel_date, $total_nb_days);
 
                 $trObj = Travel::loadByMainIndex(
-                    $orgunit_id,
+                    $work_branch_id,
                     $travel_name,
                     $travel_date,
                     $travel_gdate,
@@ -911,6 +867,11 @@ class TravelTemplate extends BtbObject
         }
     }
 
+    public function containResidence() {
+        return $this->sureIs("full_residence");
+    }
+         
+
 
     public function attributeIsApplicable($attribute)
     {
@@ -918,8 +879,8 @@ class TravelTemplate extends BtbObject
             if (($attribute == "city${i}_hours_nb")
                 or ($attribute == "city${i}_id")
                 or ($attribute == "distance_c${i}")
-                or ($attribute == "road${i}_id")
-                or ($attribute == "road${i}_station_mfk")
+                // /*::ro-ad or ($attribute == "ro-ad${i}_id")
+                // /*::ro-ad or ($attribute == "ro-ad${i}_station_mfk")
             ) {
                 return (intval($this->getVal("trips_nb")) > $i);
             }
@@ -927,14 +888,14 @@ class TravelTemplate extends BtbObject
 
         for ($i = 1; $i <= 3; $i++) {
             if ($attribute == "city${i}_hotel_mfk") {
-                return ($this->estResidence() and (intval($this->getVal("trips_nb")) > $i));
+                return ($this->containResidence() and (intval($this->getVal("trips_nb")) > $i));
             }
         }
 
 
         if ($attribute == "distance_return") return (intval($this->getVal("trips_nb") > 2));
 
-        if ($attribute == "sakanPricingList") return $this->estResidence();
+        if ($attribute == "sakanPricingList") return $this->containResidence();
 
 
         return true;
@@ -1162,49 +1123,51 @@ class TravelTemplate extends BtbObject
 
         $last_city       = $this->lastTripCityId();
         
+        /*::ro-ad
+        if ($depart_city and $city1 and ($trips_nb > 1)) Ro-ad::setRoadInfos($road_name, $depart_city, $city1, $this->getVal("distance_c1"));
+        if ($city1 and $city2 and ($trips_nb > 2)) Ro-ad::setRoadInfos($road_name, $city1,       $city2, $this->getVal("distance_c2"));
+        if ($city2 and $city3 and ($trips_nb > 3)) Ro-ad::setRoadInfos($road_name, $city2,       $city3, $this->getVal("distance_c3"));
+        if ($last_city and $depart_city and ($trips_nb > 1)) Ro-ad::setRoadInfos($road_name, $last_city, $depart_city, $this->getVal("distance_return"));
 
-        if ($depart_city and $city1 and ($trips_nb > 1)) Road::setRoadInfos($road_name, $depart_city, $city1, $this->getVal("distance_c1"));
-        if ($city1 and $city2 and ($trips_nb > 2)) Road::setRoadInfos($road_name, $city1,       $city2, $this->getVal("distance_c2"));
-        if ($city2 and $city3 and ($trips_nb > 3)) Road::setRoadInfos($road_name, $city2,       $city3, $this->getVal("distance_c3"));
-        if ($last_city and $depart_city and ($trips_nb > 1)) Road::setRoadInfos($road_name, $last_city, $depart_city, $this->getVal("distance_return"));
-
+        
         if (!$this->getVal("distance_c1")) {
             if ($depart_city and $city1) {
-                $road = Road::loadByMainIndex($road_name, $depart_city, $city1, $create_obj_if_not_found = true);
-                if ($road) $this->set("distance_c1", $road->getVal("distance"));
+                $ro-ad = Road::loadByMainIndex($road_name, $depart_city, $city1, $create_obj_if_not_found = true);
+                if ($ro-ad) $this->set("distance_c1", $ro-ad->getVal("distance"));
             }
         }
 
         if (($trips_nb > 2) and (!$this->getVal("distance_c2"))) {
             if ($depart_city and $city1) {
-                $road = Road::loadByMainIndex($road_name, $city1, $city2, $create_obj_if_not_found = true);
-                if ($road) $this->set("distance_c2", $road->getVal("distance"));
+                $ro-ad = Road::loadByMainIndex($road_name, $city1, $city2, $create_obj_if_not_found = true);
+                if ($ro-ad) $this->set("distance_c2", $ro-ad->getVal("distance"));
             }
         }
 
         if (($trips_nb > 3) and (!$this->getVal("distance_c3"))) {
             if ($depart_city and $city1) {
-                $road = Road::loadByMainIndex($road_name, $city2, $city3, $create_obj_if_not_found = true);
-                if ($road) $this->set("distance_c3", $road->getVal("distance"));
+                $ro-ad = Road::loadByMainIndex($road_name, $city2, $city3, $create_obj_if_not_found = true);
+                if ($ro-ad) $this->set("distance_c3", $ro-ad->getVal("distance"));
             }
         }
 
         if (!$this->getVal("distance_return")) {
             if ($depart_city and $city1) {
-                $road = Road::loadByMainIndex($road_name, $last_city, $depart_city, $create_obj_if_not_found = true);
-                if ($road) $this->set("distance_return", $road->getVal("distance"));
+                $ro-ad = Road::loadByMainIndex($road_name, $last_city, $depart_city, $create_obj_if_not_found = true);
+                if ($ro-ad) $this->set("distance_return", $ro-ad->getVal("distance"));
             }
-        }
+        }*/
 
 
         return true;
     }
 
+    /*
     public function getTotalTimeOfRoadStations($distance, $trip = "")
     {
         if (!$trip) $tt = 15 + $distance * 0.07;
         else {
-            $stationList = $this->get("road${trip}_station_mfk");
+            $stationList = $this->get("ro-ad${trip}_station_mfk");
             $tt = count($stationList) * 10.0;  // حمام - بقالة الخ
             $tt +=  20.0;   // صلاة
             $tt +=  20.0;   // طعام
@@ -1214,7 +1177,7 @@ class TravelTemplate extends BtbObject
 
 
         return $tt;
-    }
+    }*/
 
     public function needBusFinalSelection()
     {
@@ -1456,13 +1419,13 @@ class TravelTemplate extends BtbObject
     {
         $default_arrival_location = "";
         if (!$default_arrival_location) {
-            if (!$this->estResidence()) $default_arrival_location = "محطة الباص";
+            if (!$this->containResidence()) $default_arrival_location = "محطة الباص";
             else $default_arrival_location = "الفندق";
         }
 
         $default_depart_location = "";
         if (!$default_depart_location) {
-            if (!$this->estResidence()) $default_depart_location = "محطة الباص";
+            if (!$this->containResidence()) $default_depart_location = "محطة الباص";
             else $default_depart_location = "الفندق";
         }
 
@@ -1653,10 +1616,10 @@ class TravelTemplate extends BtbObject
     }
 
 
-    public function copyMeToOtherCompany($company_id)
+    public function copyMeToOtherCompany($work_branch_id)
     {
-        $except_fields = array("orgunit_id" => true, "travel_template_name" => true,);
-        $ttNew = TravelTemplate::loadByMainIndex($company_id, $this->getVal("travel_template_name"), $create_obj_if_not_found = true);
+        $except_fields = array("work_branch_id" => true, "travel_template_name" => true,);
+        $ttNew = TravelTemplate::loadByMainIndex($work_branch_id, $this->getVal("travel_template_name"), $create_obj_if_not_found = true);
         if (count($ttNew->get("travelList")) > 0) return array("this template is already working and generating travels, can't erase it", "", null);
         $ttNew->copyDataFrom($this, $except_fields, $except_if_filled_fields = null);
         $ttNew->commit();
@@ -1701,15 +1664,7 @@ class TravelTemplate extends BtbObject
         return $this->generated_bus_program;
     }
 
-    public function list_of_travel_level()
-    {
-        $list_of_items = array();
-        $list_of_items[1] = "الإقتصادية";
-        $list_of_items[2] = "الفاخرة";
-        $list_of_items[3] = "الأعمال";
-
-        return  $list_of_items;
-    }
+    
 
     protected function getSpecificDataErrors(
         $lang = 'ar',
@@ -1754,7 +1709,7 @@ class TravelTemplate extends BtbObject
     }
 
 
-    public static function findAvailablePrograms($programInfo, $period_margin = 0, $company_id = 0, $travel_time = "any")
+    public static function findAvailablePrograms($programInfo, $period_margin = 0, $work_branch_id = 0, $travel_time = "any")
     {
 
         $departure_city_id  = $programInfo["departure_city"];
@@ -1787,8 +1742,8 @@ class TravelTemplate extends BtbObject
         $period_max = $period + $period_margin;
         $ttObj->where("travel_period between $period_min and $period_max");
 
-        if ($company_id) {
-            $wbObj = WorkBranch::loadById($company_id);
+        if ($work_branch_id) {
+            $wbObj = WorkBranch::loadById($work_branch_id);
             $list_of_branch_ids = $wbObj->getMyBranchsId();
             $ttObj->where("orgunit_id in ($list_of_branch_ids)");
         }
