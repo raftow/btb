@@ -98,7 +98,7 @@ class BtbTravelTemplateAfwStructure
 			'CATEGORY' => 'FORMULA',
 			'TYPE' => 'MFK',
 			'ANSWER' => 'city',
-			'ANSMODULE' => 'pag',
+			'ANSMODULE' => 'ums',
 			'NO-COTE' => true,
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => '',
@@ -420,7 +420,7 @@ class BtbTravelTemplateAfwStructure
 			'UTF8' => false,
 			'TYPE' => 'FK',
 			'ANSWER' => 'city',
-			'ANSMODULE' => 'pag',
+			'ANSMODULE' => 'ums',
 			'AUTOCOMPLETE' => false,
 			'WHERE' => "avail='Y' and id in (0§city_mfk§0)",
 
@@ -447,7 +447,7 @@ class BtbTravelTemplateAfwStructure
 			'UTF8' => false,
 			'TYPE' => 'FK',
 			'ANSWER' => 'city',
-			'ANSMODULE' => 'pag',
+			'ANSMODULE' => 'ums',
 			'AUTOCOMPLETE' => false,
 			'WHERE' => "avail='Y' and id in (0§city_mfk§0)",
 
@@ -474,7 +474,7 @@ class BtbTravelTemplateAfwStructure
 			'UTF8' => false,
 			'TYPE' => 'FK',
 			'ANSWER' => 'city',
-			'ANSMODULE' => 'pag',
+			'ANSMODULE' => 'ums',
 			'AUTOCOMPLETE' => false,
 			'WHERE' => "avail='Y' and id in (0§city_mfk§0)",
 
@@ -501,7 +501,7 @@ class BtbTravelTemplateAfwStructure
 			'UTF8' => false,
 			'TYPE' => 'FK',
 			'ANSWER' => 'city',
-			'ANSMODULE' => 'pag',
+			'ANSMODULE' => 'ums',
 			'AUTOCOMPLETE' => false,
 			'WHERE' => "avail='Y' and id in (0§city_mfk§0)",
 
@@ -1537,9 +1537,7 @@ class BtbTravelTemplateAfwStructure
 			'SHOW' => true,
 			'RETRIEVE' => false,
 			'QEDIT' => false,
-			'TYPE' => 'FK',
-			'ANSWER' => 'scenario_item',
-			'ANSMODULE' => 'pag',
+			'TYPE' => 'INT', /*stepnum-not-the-object*/
 			'FGROUP' => 'tech_fields'
 		),
 

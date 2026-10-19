@@ -23,7 +23,7 @@
 				'CSS' => 'width_pct_100',),
 
 			'station_city_id' => array('STEP' => 2,  'SHORTNAME' => 'city',  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => false,  'SIZE' => 40,  'MANDATORY' => false,  'UTF8' => false,  
-				'TYPE' => 'FK',  'ANSWER' => 'city',  'ANSMODULE' => 'pag',  'AUTOCOMPLETE' => false,  
+				'TYPE' => 'FK',  'ANSWER' => 'city',  'ANSMODULE' => 'ums',  'AUTOCOMPLETE' => false,  
 				'WHERE' => "avail='Y'", 
 				 
 				'RELATION' => 'ManyToOne',  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
@@ -102,7 +102,7 @@
                                                                 'QEDIT' => false, 'ANSWER' => 'ugroup', 'ANSMODULE' => 'ums', 'TYPE' => 'MFK', 'FGROUP' => 'tech_fields'),
 
                         'sci_id'                        => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 'QEDIT' => false, 
-                                                                'TYPE' => 'FK', 'ANSWER' => 'scenario_item', 'ANSMODULE' => 'pag', 'FGROUP' => 'tech_fields'),
+                                                                'TYPE' => 'INT', /*stepnum-not-the-object*/ 'FGROUP' => 'tech_fields'),
 
                         'tech_notes' 	                => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'TYPE' => 'TEXT', 'CATEGORY' => 'FORMULA', "SHOW-ADMIN" => true, 
                                                                 'TOKEN_SEP'=>"§", 'READONLY'=>true, "NO-ERROR-CHECK"=>true, 'FGROUP' => 'tech_fields'),

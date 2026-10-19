@@ -36,28 +36,28 @@
 
 		'depart_city_id' => array('STEP' => 2,  'SHORTNAME' => 'city',  'SEARCH' => false,  'QSEARCH' => false,  'SHOW' => false,  'RETRIEVE' => false,  'EDIT' => false,  'QEDIT' => false,  
 				'CSS' => 'width_pct_25',  'SIZE' => 40,  'MANDATORY' => true,  'UTF8' => false,  
-				'TYPE' => 'FK',  'ANSWER' => 'city',  'ANSMODULE' => 'pag',  'AUTOCOMPLETE' => false,  
+				'TYPE' => 'FK',  'ANSWER' => 'city',  'ANSMODULE' => 'ums',  'AUTOCOMPLETE' => false,  
 				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'travel_template_id.depart_city_id',  
 				'RELATION' => 'ManyToOne',  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => false,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, ),
 
 		'city1_id' => array('STEP' => 2,  'SEARCH' => false,  'QSEARCH' => false,  'SHOW' => false,  'RETRIEVE' => false,  'EDIT' => false,  'QEDIT' => false,  
 				'CSS' => 'width_pct_25',  'SIZE' => 40,  'MANDATORY' => true,  'UTF8' => false,  
-				'TYPE' => 'FK',  'ANSWER' => 'city',  'ANSMODULE' => 'pag',  'AUTOCOMPLETE' => false,  
+				'TYPE' => 'FK',  'ANSWER' => 'city',  'ANSMODULE' => 'ums',  'AUTOCOMPLETE' => false,  
 				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'travel_template_id.city1_id',  
 				'RELATION' => 'ManyToOne',  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => false,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'ERROR-CHECK' => true, ),
 
 		'city2_id' => array('STEP' => 2,  'SEARCH' => false,  'QSEARCH' => false,  'SHOW' => false,  'RETRIEVE' => false,  'EDIT' => false,  'QEDIT' => false,  
 				'CSS' => 'width_pct_25',  'SIZE' => 32,  'MANDATORY' => false,  'UTF8' => false,  
-				'TYPE' => 'FK',  'ANSWER' => 'city',  'ANSMODULE' => 'pag',  'AUTOCOMPLETE' => false,  
+				'TYPE' => 'FK',  'ANSWER' => 'city',  'ANSMODULE' => 'ums',  'AUTOCOMPLETE' => false,  
 				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'travel_template_id.city2_id',  
 				'RELATION' => 'ManyToOne',  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => false,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
 
 		'city3_id' => array('STEP' => 2,  'SEARCH' => false,  'QSEARCH' => false,  'SHOW' => false,  'RETRIEVE' => false,  'EDIT' => false,  'QEDIT' => false,  
 				'CSS' => 'width_pct_25',  'SIZE' => 40,  'MANDATORY' => false,  'UTF8' => false,  
-				'TYPE' => 'FK',  'ANSWER' => 'city',  'ANSMODULE' => 'pag',  'AUTOCOMPLETE' => false,  
+				'TYPE' => 'FK',  'ANSWER' => 'city',  'ANSMODULE' => 'ums',  'AUTOCOMPLETE' => false,  
 				'CATEGORY' => 'SHORTCUT',  'SHORTCUT' => 'travel_template_id.city3_id',  
 				'RELATION' => 'ManyToOne',  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => false,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', ),
@@ -414,7 +414,7 @@
                                                                 'QEDIT' => false, 'ANSWER' => 'ugroup', 'ANSMODULE' => 'ums', 'TYPE' => 'MFK', 'FGROUP' => 'tech_fields'),
 
                         'sci_id'                        => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 'QEDIT' => false, 
-                                                                'TYPE' => 'FK', 'ANSWER' => 'scenario_item', 'ANSMODULE' => 'pag', 'FGROUP' => 'tech_fields'),
+                                                                'TYPE' => 'INT', /*stepnum-not-the-object*/ 'FGROUP' => 'tech_fields'),
 
                         'tech_notes' 	                => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'TYPE' => 'TEXT', 'CATEGORY' => 'FORMULA', "SHOW-ADMIN" => true, 
                                                                 'TOKEN_SEP'=>"§", 'READONLY'=>true, "NO-ERROR-CHECK"=>true, 'FGROUP' => 'tech_fields'),

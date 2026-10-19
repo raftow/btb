@@ -97,7 +97,7 @@ class Hotel extends BtbObject{
 			                       CATEGORY => FORMULA,  TYPE => FK, ANSWER => hotel_file,  ANSMODULE => btb ),
 
                         photo_path => array('STEP' => 3, TYPE => TEXT, 
-                                          CATEGORY => SHORTCUT, SHORTCUT=>"photo.afile_id.file_path",
+                                          CATEGORY => SHORTCUT, SHORTCUT=>"photo.workflow_file_id.file_path",
                                           "DEFAULT"=>"pic/default_hotel_photo.png",
                                           "CAN-BE-SETTED"=>false,"NO-COTE"=>true,),
                 
@@ -746,7 +746,7 @@ class Hotel extends BtbObject{
                         // doc_type_id != 17 means do not show maps pictures
                         if($hotelFileItem and $hotelFileItem->getVal("doc_type_id") != 17)
                         { 
-                                $photoFile = $hotelFileItem->het("afile_id");
+                                $photoFile = $hotelFileItem->het("workflow_file_id");
                                 if($photoFile) 
                                 {
                                         $photo_path_arr[] = $photoFile->getVal("file_path");

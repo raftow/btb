@@ -464,7 +464,7 @@ class BtbBusAfwStructure
 			'STEP' => 3,
 			'TYPE' => 'TEXT',
 			'CATEGORY' => 'SHORTCUT',
-			'SHORTCUT' => 'photo.afile_id.file_path',
+			'SHORTCUT' => 'photo.workflow_file_id.file_path',
 			'DEFAUT' => 'pic/default_bus_photo.png',
 			'CAN-BE-SETTED' => false,
 			'NO-COTE' => true,
@@ -497,7 +497,7 @@ class BtbBusAfwStructure
 			'STEP' => 3,
 			'TYPE' => 'TEXT',
 			'CATEGORY' => 'SHORTCUT',
-			'SHORTCUT' => 'internal_photo.afile_id.file_path',
+			'SHORTCUT' => 'internal_photo.workflow_file_id.file_path',
 			'DEFAUT' => 'pic/default_bus_photo.png',
 			'CAN-BE-SETTED' => false,
 			'NO-COTE' => true,
@@ -1204,9 +1204,7 @@ class BtbBusAfwStructure
 			'SHOW' => true,
 			'RETRIEVE' => false,
 			'QEDIT' => false,
-			'TYPE' => 'FK',
-			'ANSWER' => 'scenario_item',
-			'ANSMODULE' => 'pag',
+			'TYPE' => 'INT', /*stepnum-not-the-object*/
 			'FGROUP' => 'tech_fields'
 		),
 

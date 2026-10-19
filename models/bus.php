@@ -106,7 +106,7 @@ class Bus extends BtbObject
                 $title_arr = array();
                 foreach ($busFileList as $busFileItem) {
                         if ($busFileItem) {
-                                $photoFile = $busFileItem->het("afile_id");
+                                $photoFile = $busFileItem->het("workflow_file_id");
                                 if ($photoFile) {
                                         $photo_path_arr[] = $photoFile->getVal("file_path");
                                         $title_arr[] = $busFileItem->getVal("description");
@@ -571,7 +571,7 @@ class Bus extends BtbObject
                 $file_dir_name = dirname(__FILE__);
                 $pf_nb = 0;
                 foreach ($busSource->get("busFileList") as $busFileItem) {
-                        $pfObj = BusFile::loadByMainIndex($this->getId(), $busFileItem->getVal("afile_id"), $create_obj_if_not_found = true);
+                        $pfObj = BusFile::loadByMainIndex($this->getId(), $busFileItem->getVal("workflow_file_id"), $create_obj_if_not_found = true);
                         if ($pfObj->is_new or (($pfObj->getVal("description") == "[لم يتم إدخال عنوان مفسر للملف المرفق]") or (!$pfObj->getVal("description"))
                                 and
                                 ($busFileItem->getVal("description") != "[لم يتم إدخال عنوان مفسر للملف المرفق]"))) {

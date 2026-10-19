@@ -33,9 +33,9 @@ class HotelFile extends BtbObject{
                                 WHERE=>"concat(',',valid_ext,',') like '%,§afile_ext§,%' and id in (§module_config_token_file_types§)",  
 				RELATION => ManyToOne,  READONLY => false, ),
 
-                afile_ext => array(TYPE => TEXT, CATEGORY => SHORTCUT, SHORTCUT=>"afile_id.afile_ext","CAN-BE-SETTED"=>false,"NO-COTE"=>true,),                
+                afile_ext => array(TYPE => TEXT, CATEGORY => SHORTCUT, SHORTCUT=>"workflow_file_id.afile_ext","CAN-BE-SETTED"=>false,"NO-COTE"=>true,),                
 
-		afile_id => array(
+		workflow_file_id => array(
 			         SHORTNAME => "file",
 				 SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
 				EDIT => true, INPUT_WIDE=>true,  QEDIT => true,  
@@ -63,10 +63,10 @@ class HotelFile extends BtbObject{
 		parent::__construct("hotel_file","id","btb");
                 $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
                 $this->DISPLAY_FIELD = "id";
-                $this->ORDER_BY_FIELDS = "hotel_id, afile_id";
+                $this->ORDER_BY_FIELDS = "hotel_id, workflow_file_id";
                  
                 
-                $this->UNIQUE_KEY = array('hotel_id','afile_id');
+                $this->UNIQUE_KEY = array('hotel_id','workflow_file_id');
                 
                 $this->showQeditErrors = true;
                 $this->showRetrieveErrors = true;
@@ -85,15 +85,15 @@ class HotelFile extends BtbObject{
         
         
         
-        public static function loadByMainIndex($hotel_id, $afile_id,$create_obj_if_not_found=false)
+        public static function loadByMainIndex($hotel_id, $workflow_file_id,$create_obj_if_not_found=false)
         {
            $obj = new HotelFile();
            if(!$hotel_id) throw new AfwRuntimeException("loadByMainIndex : hotel_id is mandatory field");
-           if(!$afile_id) throw new AfwRuntimeException("loadByMainIndex : afile_id is mandatory field");
+           if(!$workflow_file_id) throw new AfwRuntimeException("loadByMainIndex : workflow_file_id is mandatory field");
 
 
            $obj->select("hotel_id",$hotel_id);
-           $obj->select("afile_id",$afile_id);
+           $obj->select("workflow_file_id",$workflow_file_id);
 
            if($obj->load())
            {
@@ -103,7 +103,7 @@ class HotelFile extends BtbObject{
            elseif($create_obj_if_not_found)
            {
                 $obj->set("hotel_id",$hotel_id);
-                $obj->set("afile_id",$afile_id);
+                $obj->set("workflow_file_id",$workflow_file_id);
 
                 $obj->insert();
                 $obj->is_new = true;
