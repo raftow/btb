@@ -706,7 +706,7 @@ class BtbWorkBranchAfwStructure
 			'CATEGORY' => 'ITEMS',
 			'ANSWER' => 'travel_template',
 			'ANSMODULE' => 'btb',
-			'ITEM' => 'orgunit_id',
+			'ITEM' => 'work_branch_id',
 			'READONLY' => true,
 			'CAN-BE-SETTED' => true,
 			'SEARCH-BY-ONE' => false,

@@ -266,7 +266,7 @@ class WorkBranch extends BtbObject
             $link = array();
             $title = "إضافة باص جديد";
             $title_detailed = $title . "لـ : " . $displ;
-            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=Bus&currmod=btb&sel_orgunit_id=$my_id&sel_example=N";
+            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=Bus&currmod=btb&sel_work_branch_id=$my_id&sel_example=N";
             $link["TITLE"] = $title;
             $link["UGROUPS"] = array();
             $otherLinksArray[] = $link;
@@ -281,7 +281,7 @@ class WorkBranch extends BtbObject
             if ($parent_id and ($parent_id != $my_id)) {
                 $title .= " خاص بهذا الفرع";
             }
-            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=Bus&currmod=btb&sel_orgunit_id=$my_id&sel_example=Y";
+            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=Bus&currmod=btb&sel_work_branch_id=$my_id&sel_example=Y";
             $link["TITLE"] = $title;
             $link["UGROUPS"] = array();
             $otherLinksArray[] = $link;
@@ -336,7 +336,7 @@ class WorkBranch extends BtbObject
             $link = array();
             $title = "إضافة برنامج جديد";
             $title_detailed = $title . "لـ : " . $displ;
-            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=TravelTemplate&currmod=btb&sel_orgunit_id=$my_id";
+            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=TravelTemplate&currmod=btb&sel_work_branch_id=$my_id";
             $link["TITLE"] = $title;
             $link["UGROUPS"] = array();
             $otherLinksArray[] = $link;

@@ -907,8 +907,8 @@ class TravelTemplate extends BtbObject
         global $server_db_prefix, $images;
 
 
-        $orgunit_id = $this->getVal("orgunit_id");
-        if ($orgunit_id) $woObj = $this->het("orgunit_id");
+        $work_branch_id = $this->getVal("work_branch_id");
+        if ($work_branch_id) $woObj = $this->het("work_branch_id");
         else $woObj = null;
 
         switch ($attribute) {
@@ -1187,8 +1187,8 @@ class TravelTemplate extends BtbObject
 
     public function genereBusList($lang = "ar")
     {
-        $orgunit_id = $this->orgunit_id;
-        $bus_id = $this->example_bus_id;
+        $work_branch_id = $this->getVal("work_branch_id");
+        $bus_id = $this->getVal("example_bus_id");
 
         $busTemplateObj = $this->btemp;
 
@@ -1235,7 +1235,7 @@ class TravelTemplate extends BtbObject
             $bus_template_id = $busTemplateObj->getId();
             $b = new Bus();
             if (!$list_bus_company_mfk) $list_bus_company_mfk = ",";
-            $b->where("orgunit_id in (0 $list_bus_company_mfk 0) and bus_template_id=$bus_template_id");
+            $b->where("work_branch_id in (0 $list_bus_company_mfk 0) and bus_template_id=$bus_template_id");
             //@todo : $bus_priority_order_by should be from company config
             $bus_priority_order_by = "example desc, bus_num asc";
             $busList = $b->loadMany($limit = $to_book_bus_nb, $bus_priority_order_by);
@@ -1295,7 +1295,7 @@ class TravelTemplate extends BtbObject
         $ttbusList = $this->get("busList");
         $ttbusCount = count($ttbusList);
 
-        $compObj = $this->het("orgunit_id");
+        $compObj = $this->het("work_branch_id");
 
 
         for ($bnum = 1; $bnum <= $ttbusCount; $bnum++) {
@@ -1406,7 +1406,7 @@ class TravelTemplate extends BtbObject
     public function calcList_bus_company_mfk()
     {
         $arrList_bus_company = array();
-        $arrList_bus_company[] = $this->getVal("orgunit_id");
+        $arrList_bus_company[] = $this->getVal("work_branch_id");
         $branchObj = $this->hetBranch();
         if ($branchObj) $arrList_bus_company[] = $branchObj->getId();
 
@@ -1745,7 +1745,7 @@ class TravelTemplate extends BtbObject
         if ($work_branch_id) {
             $wbObj = WorkBranch::loadById($work_branch_id);
             $list_of_branch_ids = $wbObj->getMyBranchsId();
-            $ttObj->where("orgunit_id in ($list_of_branch_ids)");
+            $ttObj->where("work_branch_id in ($list_of_branch_ids)");
         }
 
         //@todo time limits should be in settings ?
@@ -1851,7 +1851,7 @@ class TravelTemplate extends BtbObject
                                 $busUniqueOwner = null;
                                 $busUniqueDisp = "";
                         } 
-                        $woObj = $this->het("orgunit_id");
+                        $woObj = $this->het("work_branch_id");
                         if($busUnique and $busUniqueOwner and $woObj) 
                         {
                                 

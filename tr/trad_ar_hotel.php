@@ -17,7 +17,8 @@ class HotelArTranslator
                 $trad["hotel"]["satisfaction_tooltip"] = "يمكنك وضع نسبة مائوية حسب تقديرك وسيتم معالجتها آليا حسب احصائيات الميدان";
                 $trad["hotel"]["booking_infos"] = "طريقة حجز هذا الفندق";
 
-                $trad["hotel"]["name_ar"] = "مسمى الفندق";
+                $trad["hotel"]["name_ar"] = "مسمى الفندق عربي";
+                $trad["hotel"]["name_en"] = "مسمى الفندق إنجليزي";
                 $trad["hotel"]["desc_ar"] = "تفاصيل الوصول إلى الفندق";
                 $trad["hotel"]["location"] = "الموقع على الخرائط";
                 $trad["hotel"]["distance"] = "المسافة على الحرم";

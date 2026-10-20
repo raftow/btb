@@ -420,7 +420,7 @@ class Hotel extends BtbObject
 
         return "
                      </form>
-                     <link href='../pag/assets/css/style.css' rel='stylesheet' />
+                     <link href='../lib/assets/css/style.css' rel='stylesheet' />
                      <form id='upload' method='post' action='afw_my_upload.php' enctype='multipart/form-data'>
 			<div id='drop'>
 				اضغط على   [رفع الملفات] لاختيار الملف أو اسحب الملف مباشرة إلى هذه المنطقة لتحميله
@@ -442,15 +442,15 @@ class Hotel extends BtbObject
 
 		</form>
                 <!-- JavaScript Includes -->
-		<script src='../pag/assets/js/jquery.knob.js'></script>
+		<script src='../lib/assets/js/jquery.knob.js'></script>
 
 		<!-- jQuery File Upload Dependencies -->
-		<script src='../pag/assets/js/jquery.ui.widget.js'></script>
-		<script src='../pag/assets/js/jquery.iframe-transport.js'></script>
-		<script src='../pag/assets/js/jquery.fileupload.js'></script>
+		<script src='../lib/assets/js/jquery.ui.widget.js'></script>
+		<script src='../lib/assets/js/jquery.iframe-transport.js'></script>
+		<script src='../lib/assets/js/jquery.fileupload.js'></script>
 		
 		<!-- Our main JS file -->
-		<script src='../pag/assets/js/script.js'></script>
+		<script src='../lib/assets/js/script.js'></script>
                 ";
     }
 

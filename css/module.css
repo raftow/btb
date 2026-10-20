@@ -4455,7 +4455,7 @@ ul.footerlinks li {
 }
 
 .footer_bg {
-    background-image: url(../../external/pic/bg-footer.jpg);
+    /* background-image: url(../../external/pic/bg-footer.jpg);*/
     background-color: #e27505;
     background-size: contain;
 }
@@ -4766,7 +4766,6 @@ button.btn.show_me:hover {
 }
 
 .footer_bg {
-        background-image: url(../../external/pic/bg-footer.jpg);
         background-color: #e27505;
         background-size: contain;
         /* background-position: bottom; */
@@ -4783,15 +4782,9 @@ button.btn.show_me:hover {
 button.btn.show_me:hover>a>h6 {
         color: white !important;
 }
-.footer_bg {
-        background-image: url(../../external/pic/bg-footer.jpg);
-        background-color: #e27505;
-        background-size: contain;
-        background-position: bottom;
-}
+
 
 .simple_footer.footer_bg {
-        background-image: url(../../external/pic/bg-footer.jpg);
         background-color: #e27505;
         background-size: 100%;
         background-position: bottom;
@@ -6332,4 +6325,80 @@ body.login {
 
 span.picture-span>div.hzm-user-account.hzm-container-center.hzm-custom-icon-container {
     padding-top: 0px !important;
+}
+
+
+
+#drop {
+    background-color: #eefacb75 !important;
+    padding: 20px !important;
+    border-image: url(../pic/border-import.png) 25 repeat !important;
+    float: right;
+    width: 100%;
+    text-align: center;
+}
+
+#drop a{
+    background-color:#054CE8;
+    padding:12px 26px;
+    color:#fff;
+    font-size: 18px;
+    font-weight: normal;
+    border-radius:8px;
+    cursor:pointer;
+    display:inline-block;
+    margin-top:12px;
+    line-height:1;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+#drop a:hover{
+    background-color:#0986a3;
+}
+
+#drop input{
+    display:none;
+}
+#upload {
+    background-color: #eeeeee63 !important;
+    width: 100% !important;
+    height: 95% !important;
+    padding: 9px !important;
+    border-radius: 0px !important;
+    margin: 0 !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) !important;
+    float: right;
+}
+
+#upload ul {
+    list-style: none;
+    margin: 0 0px !important;
+    border-top: 1px dashed #72c427 !important;
+    border-bottom: 1px #72c427 !important;
+    float: right;
+    width: 100%;
+    padding: 0px !important;
+}
+
+#upload ul li {
+    background-color: #FEFEFF;
+    border-top: 1px dashed #72c427 !important;
+    border-bottom: 1px #72c427 !important;
+    padding: 6px;
+    height: 75px;
+    position: relative;
+    direction: ltr;
+}
+
+#upload ul li p {
+    width: 60%;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #000;
+    font-weight: normal;
+    font-size: 85%;
+    position: absolute;
+    top: 20px;
+    left: 100px;
+    text-align: left;
 }

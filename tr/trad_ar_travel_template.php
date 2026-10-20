@@ -21,7 +21,7 @@ class TravelTemplateArTranslator
                 $trad["travel_template"]["traveltemplate.single"] = "برنامج رحلة";
                 $trad["travel_template"]["traveltemplate.new"] = "جديد(ة)";
                 $trad["travel_template"]["travel_template"] = "برامج الرحلات";
-                $trad["travel_template"]["orgunit_id"] = "شركة الأسفار";
+                $trad["travel_template"]["work_branch_id"] = "شركة الأسفار";
                 $trad["travel_template"]["travel_template_name"] = "مسمى برنامج الرحلة";
                 $trad["travel_template"]["tfrequency_enum"] = "تكرار الرحلة";
                 //   ;"تاريخ أخر رحلة تم توليدها "
@@ -37,9 +37,9 @@ class TravelTemplateArTranslator
                 $trad["travel_template"]["period_method_id"] = "طريقة تصحيح بداية الرحلة";
                 $trad["travel_template"]["complete_method_id"] = "طريقة إكمال فترة الرحلة";
                 $trad["travel_template"]["depart_city_id"] = "مدينة الإنطلاق والعودة";
-                $trad["travel_template"]["city1_id"] = "مدينة الرحلة الأولى";
-                $trad["travel_template"]["city2_id"] = "مدينة الرحلة الثانية";
-                $trad["travel_template"]["city3_id"] = "مدينة الرحلة الثالثة";
+                $trad["travel_template"]["city1_id"] = "المدينة المقصودة 1";
+                $trad["travel_template"]["city2_id"] = "المدينة المقصودة 2";
+                $trad["travel_template"]["city3_id"] = "المدينة المقصودة 3";
 
                 $trad["travel_template"]["start_place"] = "مكان المغادرة";
                 $trad["travel_template"]["start_location"] = "رابط مكان المغادرة على الخريطة";
