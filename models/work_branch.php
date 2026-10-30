@@ -18,11 +18,11 @@ class WorkBranch extends BtbObject
     public static $DB_STRUCTURE = null;
 
     public static $fromOrgunitIdToWorkbranchId = [];
-    
+
     public function __construct()
     {
         parent::__construct("work_branch", "id", "btb");
-        BtbWorkBranchAfwStructure::initInstance($this);   
+        BtbWorkBranchAfwStructure::initInstance($this);
     }
 
     public static function loadById($id)
@@ -42,14 +42,13 @@ class WorkBranch extends BtbObject
         $objOrg->where("id_domain = 15 and active='Y'");
         $objOrgList = $objOrg->loadMany();
 
-        foreach($objOrgList as $objOrgItem) {
+        foreach ($objOrgList as $objOrgItem) {
             $wbObj = self::fromOrgunitToWorkbranch($objOrgItem);
-            if($wbObj->is_new) $nb_i++;
-            elseif($wbObj->is_updated) $nb_u++;
+            if ($wbObj->is_new) $nb_i++;
+            elseif ($wbObj->is_updated) $nb_u++;
         }
 
         return [$nb_i, $nb_u];
-
     }
 
     /**
@@ -57,12 +56,12 @@ class WorkBranch extends BtbObject
      */
     public static function fromOrgunitIdToWorkbranchId($orgunit_id)
     {
-        if(!$orgunit_id) return 0;
-        if(!self::$fromOrgunitIdToWorkbranchId[$orgunit_id]) {
+        if (!$orgunit_id) return 0;
+        if (!self::$fromOrgunitIdToWorkbranchId[$orgunit_id]) {
             $objOrgItem = Orgunit::loadById($orgunit_id);
             $parent_id = $objOrgItem->getVal("id_sh_parent");
             $parentOrg = $objOrgItem->het("id_sh_parent");
-            if(!$parent_id or !$parentOrg) $wb_parent_id = 0;
+            if (!$parent_id or !$parentOrg) $wb_parent_id = 0;
             else {
                 $parentWB = self::fromOrgunitToWorkbranch($parentOrg);
                 $wb_parent_id = $parentWB->id;
@@ -70,12 +69,12 @@ class WorkBranch extends BtbObject
             $crm_code = $objOrgItem->getVal("crm_code");
             $objWorkbranch = WorkBranch::loadByMainIndex($wb_parent_id, $crm_code);
             $objWorkbranchId = $objWorkbranch ? $objWorkbranch->id : 0;
-            if(!$objWorkbranchId) $objWorkbranchId = "not-found"; 
+            if (!$objWorkbranchId) $objWorkbranchId = "not-found";
 
             self::$fromOrgunitIdToWorkbranchId[$orgunit_id] = $objWorkbranchId;
         }
 
-        if(self::$fromOrgunitIdToWorkbranchId[$orgunit_id] == "not-found") return 0;
+        if (self::$fromOrgunitIdToWorkbranchId[$orgunit_id] == "not-found") return 0;
 
         return self::$fromOrgunitIdToWorkbranchId[$orgunit_id];
     }
@@ -87,7 +86,7 @@ class WorkBranch extends BtbObject
     {
         $parent_id = $objOrgItem->getVal("id_sh_parent");
         $parentOrg = $objOrgItem->het("id_sh_parent");
-        if(!$parent_id or !$parentOrg) $wb_parent_id = 0;
+        if (!$parent_id or !$parentOrg) $wb_parent_id = 0;
         else {
             $parentWB = self::fromOrgunitToWorkbranch($parentOrg);
             $wb_parent_id = $parentWB->id;
@@ -96,13 +95,14 @@ class WorkBranch extends BtbObject
         return WorkBranch::loadByMainIndex($wb_parent_id, $crm_code, true, $objOrgItem->getVal("titre_short"), $objOrgItem->getVal("titre_short_en"));
     }
 
-    public function updateMeFromOrgunit($lang = "ar") {
+    public function updateMeFromOrgunit($lang = "ar")
+    {
         $crm_code = $this->getVal("company_code");
         $objOrgItem = Orgunit::loadByCRMCode($crm_code);
-        if(!$objOrgItem) return ["Orgunit not found", ""];
+        if (!$objOrgItem) return ["Orgunit not found", ""];
         $wbObj = WorkBranch::fromOrgunitToWorkbranch($objOrgItem);
-        if($wbObj->is_new) $message = "Company inserted";
-        elseif($wbObj->is_updated) $message = "Company updated";
+        if ($wbObj->is_new) $message = "Company inserted";
+        elseif ($wbObj->is_updated) $message = "Company updated";
         else $message = "Nothing done";
         $this->reloadMe();
 
@@ -110,24 +110,24 @@ class WorkBranch extends BtbObject
     }
 
 
-    public function createUpdateMyOrgunit($commit=true)
+    public function createUpdateMyOrgunit($commit = true)
     {
-        
+
 
         $parentWB = $this->het("parent_id");
         $parentOrgunit = null;
         $parent_id = 0;
         // avoid infinite loop
-        if($parentWB and ($parentWB->id != $this->id)) {
+        if ($parentWB and ($parentWB->id != $this->id)) {
             $parentOrgunit = $parentWB->createUpdateMyOrgunit();
         }
 
-        if($parentOrgunit) $parent_id = $parentOrgunit->id;
-        
+        if ($parentOrgunit) $parent_id = $parentOrgunit->id;
+
         $crm_code = $this->getVal("company_code");
 
         $orgunitObj = Orgunit::loadByCRMCode($crm_code, $create_obj_if_not_found = true);
-        if(!$orgunitObj) return null;
+        if (!$orgunitObj) return null;
         if ($orgunitObj->is_new) {
             if ($parent_id) $id_sh_type = 8;
             else $id_sh_type = 6;
@@ -146,55 +146,51 @@ class WorkBranch extends BtbObject
             $this->set("orgunit_id", $orgunitObj->getId());
         }
 
-        if($commit) $this->commit();
+        if ($commit) $this->commit();
 
         return $orgunitObj;
     }
-    
+
     /**
      * @param int $parent_id, 
      * @param string $company_code
      */
 
-    public static function loadByMainIndex($parent_id, $company_code, $create_obj_if_not_found=false, $name_ar="", $name_en="")
+    public static function loadByMainIndex($parent_id, $company_code, $create_obj_if_not_found = false, $name_ar = "", $name_en = "")
     {
 
 
         $obj = new WorkBranch();
-        $obj->select("company_code",$company_code);
-        $obj->select("parent_id",$parent_id);
+        $obj->select("company_code", $company_code);
+        $obj->select("parent_id", $parent_id);
 
-        if($obj->load())
-        {
-            if($create_obj_if_not_found) {
-                if($name_ar) $obj->set("name_ar",$name_ar);
-                if($name_en) $obj->set("name_en",$name_en);
+        if ($obj->load()) {
+            if ($create_obj_if_not_found) {
+                if ($name_ar) $obj->set("name_ar", $name_ar);
+                if ($name_en) $obj->set("name_en", $name_en);
                 /* throw new AfwRuntimeException("obj updating : ".var_export($obj, true));*/
-                if($obj->activate()) $obj->is_updated = true;
+                if ($obj->activate()) $obj->is_updated = true;
             }
             // else throw new AfwRuntimeException("obj will not be updated");
             return $obj;
-        }
-        elseif($create_obj_if_not_found)
-        {
-            $obj->set("company_code",$company_code);
-            $obj->set("parent_id",$parent_id);
-            if($name_ar) $obj->set("name_ar",$name_ar);
-            if($name_en) $obj->set("name_en",$name_en);
+        } elseif ($create_obj_if_not_found) {
+            $obj->set("company_code", $company_code);
+            $obj->set("parent_id", $parent_id);
+            if ($name_ar) $obj->set("name_ar", $name_ar);
+            if ($name_en) $obj->set("name_en", $name_en);
 
             $obj->insertNew();
-            if(!$obj->id) return null; // means beforeInsert rejected insert operation
+            if (!$obj->id) return null; // means beforeInsert rejected insert operation
             $obj->is_new = true;
             return $obj;
-        }
-        else return null;
-        
+        } else return null;
     }
 
     /**
      * @param int $orgunit_id
      */
-    public static function OrunitIdToMyId($orgunit_id) {
+    public static function OrunitIdToMyId($orgunit_id)
+    {
         $wbObj = self::loadByOrgunitId($orgunit_id);
         return $wbObj->id;
     }
@@ -204,21 +200,18 @@ class WorkBranch extends BtbObject
      */
     public static function loadByOrgunitId($orgunit_id)
     {
-        if(!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
+        if (!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
 
 
         $obj = new WorkBranch();
-        $obj->select("orgunit_id",$orgunit_id);
+        $obj->select("orgunit_id", $orgunit_id);
 
-        if($obj->load())
-        {
+        if ($obj->load()) {
             return $obj;
-        }
-        else return null;
-        
+        } else return null;
     }
 
-    
+
 
     public function getDisplay($lang = "ar")
     {
@@ -829,7 +822,7 @@ class WorkBranch extends BtbObject
                         "STEP" => 1,
                     );
 
-                    
+
 
                     $color = "green";
                     $title_ar = "تحديث جدول تسعيرات الفنادق";
@@ -861,6 +854,19 @@ class WorkBranch extends BtbObject
                         "BF-ID" => "",
                         "HZM-SIZE" => 12,
                         "STEP" => 11,
+                    );
+
+                    $color = "orange";
+                    $title_ar = "استيراد نماذج الباصات الافتراضية";
+                    $methodName = "importDefaultBusTemplates";
+                    $pbms[AfwStringHelper::hzmEncode($methodName)] = array(
+                        "METHOD" => $methodName,
+                        "COLOR" => $color,
+                        "LABEL_AR" => $title_ar,
+                        "PUBLIC" => true,
+                        "BF-ID" => "",
+                        "HZM-SIZE" => 12,
+                        "STEP" => 5,
                     );
                 }
             }
@@ -1176,7 +1182,7 @@ class WorkBranch extends BtbObject
 
 
 
-    
+
 
 
     public function getDateInfo($hdate)
@@ -1298,7 +1304,7 @@ class WorkBranch extends BtbObject
     public function getAccountCompany()
     {
         $parentCompanyObj = null;
-        if ($this->est("account_in_parent")) {
+        if ($this->sureIs("account_in_parent")) {
             $parentCompanyObj =  $this->het("parent_id");
         }
 
@@ -1328,6 +1334,12 @@ class WorkBranch extends BtbObject
     }
 
 
+    public function importDefaultBusTemplates($lang = "ar")
+    {
+        list($err_arr, $inf_arr) = BusTemplate::importDefaultBusTemplatesTo($this->id, $lang);
+        // die(var_export($inf_arr,true));
+        return AfwFormatHelper::pbm_result($err_arr, $inf_arr, $sep = "<br>\n");
+    }
 
     public function moveTravelsToNewStatus($lang = "ar")
     {
@@ -1362,7 +1374,7 @@ class WorkBranch extends BtbObject
         // ولا تتعطل برامجه في فترة يحتاج فيها المرونة إلى حين تترتب أموره 
         if ($option == "bus_booking_before") return false;
 
-        return $this->est($option);
+        return $this->sureIs($option);
     }
 
     public function getPartialAmountCanBePaid($total)

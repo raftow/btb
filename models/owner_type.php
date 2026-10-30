@@ -3,29 +3,36 @@
 // ----             auto generated php class of �table� owner_type : owner_type - أنواع التصرف 
 // ------------------------------------------------------------------------------------
 
-                
-$file_dir_name = dirname(__FILE__); 
-                
+
+$file_dir_name = dirname(__FILE__);
+
 // old include of afw.php
 
-class OwnerType extends BtbObject{
+class OwnerType extends BtbObject
+{
 
-        public static $MY_ATABLE_ID=13799; 
+    public static $MY_ATABLE_ID = 13799;
 
 
- // lookup Value List codes 
-        // MONTHLY - إيجار شهري  
-        public static $OWNER_TYPE_MONTHLY = 2; 
+    // lookup Value List codes 
+    // MONTHLY - إيجار شهري  
+    public static $OWNER_TYPE_MONTHLY = 2;
 
-        // ONCE - إيجار بالرحلة  
-        public static $OWNER_TYPE_ONCE = 3; 
+    // ONCE - إيجار بالرحلة  
+    public static $OWNER_TYPE_ONCE = 3;
 
-        // YEARLY - إيجار سنوي  
-        public static $OWNER_TYPE_YEARLY = 1; 
+    // YEARLY - إيجار سنوي  
+    public static $OWNER_TYPE_YEARLY = 1;
 
-  
-        
-	public static $DATABASE		= ""; public static $MODULE		    = "btb"; public static $TABLE			= ""; public static $DB_STRUCTURE = null; /* = array(
+    // OWNER - إيجار سنوي  
+    public static $OWNER_TYPE_OWNER = 4;
+
+
+
+    public static $DATABASE        = "";
+    public static $MODULE            = "btb";
+    public static $TABLE            = "";
+    public static $DB_STRUCTURE = null; /* = array(
                 id => array(SHOW => true, RETRIEVE => true, EDIT => true, TYPE => PK),
 
 		
@@ -68,126 +75,112 @@ class OwnerType extends BtbObject{
                 tech_notes 	    => array(TYPE => TEXT, CATEGORY => FORMULA, "SHOW-ADMIN" => true, 'STEP' =>"all", TOKEN_SEP=>"§", READONLY=>true, "NO-ERROR-CHECK"=>true),
 	);  
 	
-	*/ public function __construct(){
-		parent::__construct("owner_type","id","btb");
-                $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-                $this->DISPLAY_FIELD = "name_ar";
-                // $this->ENABLE_DISPLAY_MODE_IN_QEDIT=true;
-                $this->ORDER_BY_FIELDS = "lookup_code";
-                $this->horizontalTabs = true;
-                $this->IS_LOOKUP = true; 
-                $this->AUDIT_DATA = true;
-                $this->ignore_insert_doublon = true;
-                $this->UNIQUE_KEY = array('lookup_code');
-                
-                $this->showQeditErrors = true;
-                $this->showRetrieveErrors = true;
-                $this->general_check_errors = true;
-                $this->public_display = true;
-                // $this->after_save_edit = array("class"=>Road,"attribute"=>road_id, "currmod"=> 'btb',"currstep"=>9);
-	}
-        
-        public static function loadById($id)
-        {
-           $obj = new OwnerType();
-           $obj->select_visibilite_horizontale();
-           if($obj->load($id))
-           {
-                return $obj;
-           }
-           else return null;
+	*/
+    public function __construct()
+    {
+        parent::__construct("owner_type", "id", "btb");
+        $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
+        $this->DISPLAY_FIELD = "name_ar";
+        // $this->ENABLE_DISPLAY_MODE_IN_QEDIT=true;
+        $this->ORDER_BY_FIELDS = "lookup_code";
+        $this->horizontalTabs = true;
+        $this->IS_LOOKUP = true;
+        $this->AUDIT_DATA = true;
+        $this->ignore_insert_doublon = true;
+        $this->UNIQUE_KEY = array('lookup_code');
+
+        $this->showQeditErrors = true;
+        $this->showRetrieveErrors = true;
+        $this->general_check_errors = true;
+        $this->public_display = true;
+        // $this->after_save_edit = array("class"=>Road,"attribute"=>road_id, "currmod"=> 'btb',"currstep"=>9);
+    }
+
+    public static function loadById($id)
+    {
+        $obj = new OwnerType();
+        $obj->select_visibilite_horizontale();
+        if ($obj->load($id)) {
+            return $obj;
+        } else return null;
+    }
+
+
+
+    public static function loadByMainIndex($lookup_code, $create_obj_if_not_found = false)
+    {
+        if (!$lookup_code) throw new AfwRuntimeException("loadByMainIndex : lookup_code is mandatory field");
+
+
+        $obj = new OwnerType();
+        $obj->select("lookup_code", $lookup_code);
+
+        if ($obj->load()) {
+            if ($create_obj_if_not_found) $obj->activate();
+            return $obj;
+        } elseif ($create_obj_if_not_found) {
+            $obj->set("lookup_code", $lookup_code);
+
+            $obj->insert();
+            $obj->is_new = true;
+            return $obj;
+        } else return null;
+    }
+
+
+    public function getDisplay($lang = "ar")
+    {
+
+        $data = array();
+        $link = array();
+
+
+        list($data["ar"], $link["ar"]) = $this->displayAttribute("name_ar", false, $lang);
+
+
+        return $data[$lang];
+    }
+
+
+
+
+
+
+
+    public function beforeDelete($id, $id_replace)
+    {
+        global $server_db_prefix;
+
+        if (!$id) {
+            $id = $this->getId();
+            $simul = true;
+        } else {
+            $simul = false;
         }
-        
-        
-        
-        public static function loadByMainIndex($lookup_code,$create_obj_if_not_found=false)
-        {
-           if(!$lookup_code) throw new AfwRuntimeException("loadByMainIndex : lookup_code is mandatory field");
+
+        if ($id) {
+            if ($id_replace == 0) {
+                // FK part of me - not deletable 
 
 
-           $obj = new OwnerType();
-           $obj->select("lookup_code",$lookup_code);
-
-           if($obj->load())
-           {
-                if($create_obj_if_not_found) $obj->activate();
-                return $obj;
-           }
-           elseif($create_obj_if_not_found)
-           {
-                $obj->set("lookup_code",$lookup_code);
-
-                $obj->insert();
-                $obj->is_new = true;
-                return $obj;
-           }
-           else return null;
-           
-        }
+                // FK part of me - deletable 
 
 
-        public function getDisplay($lang="ar")
-        {
-               
-               $data = array();
-               $link = array();
-               
+                // FK not part of me - replaceable 
 
-               list($data["ar"],$link["ar"]) = $this->displayAttribute("name_ar",false, $lang);
 
-               
-               return $data[$lang];
-        }
-        
-        
-        
-        
-        
-        
-        
-        public function beforeDelete($id,$id_replace) 
-        {
-            global $server_db_prefix;
-            
-            if(!$id)
-            {
-                $id = $this->getId();
-                $simul = true;
+
+                // MFK
+
+            } else {
+                // FK on me 
+
+
+                // MFK
+
+
             }
-            else
-            {
-                $simul = false;
-            }
-            
-            if($id)
-            {   
-               if($id_replace==0)
-               {
-                   // FK part of me - not deletable 
-
-                        
-                   // FK part of me - deletable 
-
-                   
-                   // FK not part of me - replaceable 
-
-                        
-                   
-                   // MFK
-
-               }
-               else
-               {
-                        // FK on me 
-
-                        
-                        // MFK
-
-                   
-               } 
-               return true;
-            }    
-	}
-             
+            return true;
+        }
+    }
 }
-?>

@@ -12,7 +12,7 @@ class TravelTemplateArTranslator
                 $trad["travel_template"]["step4"] = "المحطات";
                 $trad["travel_template"]["step5"] = "الإقامة";
                 $trad["travel_template"]["step6"] = "السفرات القصيرة";
-                $trad["travel_template"]["step7"] = "الباصات";
+                $trad["travel_template"]["step7"] = "المركبات";
                 $trad["travel_template"]["step8"] = "أسعار المقاعد";
                 $trad["travel_template"]["step9"] = "أسعار السكن";
                 $trad["travel_template"]["step10"] = "الرحلات القادمة";
@@ -96,7 +96,7 @@ class TravelTemplateArTranslator
                 $trad["travel_template"]["road2_station_mfk"] = "المحطات بين مدينة 1 و مدينة 2";
                 $trad["travel_template"]["road3_station_mfk"] = "المحطات بين مدينة 2 و مدينة 3";
                 $trad["travel_template"]["road_return_station_mfk"] = "محطات العودة";
-                $trad["travel_template"]["travelTemplateBusList"] = "قائمة باصات الرحلة";
+                $trad["travel_template"]["travelTemplateBusList"] = "قائمة مركبات الرحلة";
 
                 $trad["travel_template"]["active"] = "تنشيط التوليد الآلي للرحلات";
                 $trad["travel_template"]["travel_props"] = "خصائص الرحلة";
@@ -105,11 +105,11 @@ class TravelTemplateArTranslator
                 $trad["travel_template"]["daily"] = "يوميا";
                 $trad["travel_template"]["dow"] = "يوم";
 
-                $trad["travel_template"]["busList"] = "قائمة الباصات لبرنامج هذه الرحلة";
-                $trad["travel_template"]["example_bus_id"] = "الباص النموذج";
-                $trad["travel_template"]["bus_template_id"] = "هيكل وعدد مقاعد الباص";
-                $trad["travel_template"]["need_final_selection"] = "تعيين لوحة الباص قبل السفر";
-                $trad["travel_template"]["list_bus_company_mfk"] = "مزود الباصات  - الشركات المالكة التي نتعامل معها";
+                $trad["travel_template"]["busList"] = "قائمة المركبات لبرنامج هذه الرحلة";
+                $trad["travel_template"]["example_bus_id"] = "المركبة النموذج";
+                $trad["travel_template"]["bus_template_id"] = "قالب وعدد مقاعد المركبة";
+                $trad["travel_template"]["need_final_selection"] = "تعيين لوحة المركبة قبل السفر";
+                $trad["travel_template"]["list_bus_company_mfk"] = "مزود المركبات  - الشركات المالكة التي نتعامل معها";
                 return $trad;
         }
 

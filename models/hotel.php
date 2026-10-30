@@ -39,8 +39,8 @@ class Hotel extends BtbObject
     public function __construct()
     {
         parent::__construct("hotel", "id", "btb");
-        BtbHotelAfwStructure::initInstance($this); 
-        
+        BtbHotelAfwStructure::initInstance($this);
+
         /*
                 $btr_html = _back_trace();
                 global $Hotel_construcotr_counter;
@@ -70,7 +70,7 @@ class Hotel extends BtbObject
         return $return;
     }
 
-    public function list_of_roombed_men()
+    public static function list_of_roombed_men()
     {
         $list_of_items = array();
         $list_of_items[1] = "سرير عزابي";
@@ -95,7 +95,7 @@ class Hotel extends BtbObject
         return false;
     }
 
-    public function list_of_week_period_men()
+    public static function list_of_week_period_men()
     {
         $list_of_items = array();
         $list_of_items[1] = "ويكاند";
@@ -104,7 +104,7 @@ class Hotel extends BtbObject
         return  $list_of_items;
     }
 
-    public function list_of_period_type_men()
+    public static function list_of_period_type_men()
     {
         $list_of_items = array();
         $list_of_items[1] = "فترة عادية";
@@ -216,10 +216,11 @@ class Hotel extends BtbObject
     public function afterUpdate($id, $fields_updated, $disableAfterCommitDBEvent = false)
     {
         // ******
+        /*
         $lang = AfwLanguageHelper::getGlobalLanguage();
-        if ($fields_updated["floors_spec"]) {
+        if ($fields_updated["floors _spec"]) {
             list($_SESSION["error"], $_SESSION["information"]) = $this->applyfloorsSpecs($lang);
-        }
+        }*/
     }
 
     public function beforeDelete($id, $id_replace)
@@ -280,11 +281,18 @@ class Hotel extends BtbObject
         return $pbms;
     }
 
-    public function genereRoomNums($rooms_spec, $room_size, $nb_rooms, $room_size_max = "")
+    /**
+     * @param string $rooms_in_floors_spec, example : "1fl=106-110/2fl=211-215" means 
+     *              in first floor rooms 106 to 110 , in second floor rooms 211 to 215
+     * @param int $room_size, 
+     * @param int $nb_rooms
+     * 
+     */
+    public function genereRoomNums($rooms_in_floors_spec, $room_size, $nb_rooms, $room_size_max = 0)
     {
         $lang = AfwLanguageHelper::getGlobalLanguage();
         //if(!$nb_rooms) $this->throwError("hotel::genereRoomNums(rooms_spec=$rooms_spec, room_size=$room_size, nb_rooms=$nb_rooms)")
-        if (!$room_size_max) $room_size_max = $room_size + 1;
+        if (!$room_size_max) $room_size_max = $room_size + 1; // room size max by default is one bed more than standard size
         if ($room_size_max > 6) $room_size_max = 6;
         $hotel_id = $this->getId();
 
@@ -293,25 +301,26 @@ class Hotel extends BtbObject
         $new_rooms = 0;
         $old_rooms = 0;
         $log_arr = array();
+        $warnings_arr = array();
         $hroom_arr = array();
 
-        $room_nums_arr = array();
+
         $room_reel_nums_arr = array();
         $room_reel_counter = 1;
 
-        $rooms_spec = trim($rooms_spec);
-        if ($rooms_spec) {
-            $rooms_spec = str_replace("/", "\n", $rooms_spec);
-            $room_floors = explode("\n", $rooms_spec);
+        $rooms_in_floors_spec = trim($rooms_in_floors_spec);
+        if ($rooms_in_floors_spec) {
+            $rooms_in_floors_spec = str_replace("/", "\n", $rooms_in_floors_spec);
+            $rooms_spec_by_floor_arr = explode("\n", $rooms_in_floors_spec);
 
-            foreach ($room_floors as $room_floor) {
-                list($floor_num, $room_nums) = explode(":", $room_floor);
-                if ($floor_num and (!$room_nums)) {
-                    $room_nums = $floor_num;
+            foreach ($rooms_spec_by_floor_arr as $rooms_spec_by_floor) {
+                list($floor_num, $room_nums_spec) = explode("fl=", $rooms_spec_by_floor);
+                if ($floor_num and (!$room_nums_spec)) {
+                    $room_nums_spec = $floor_num;
                     $floor_num = 0;  // ألدور الأرضي افتراضيا
                 }
-                $room_nums = str_replace('+', ' ', $room_nums);
-                $room_blocs = explode(" ", $room_nums);
+                $room_nums_spec = str_replace('+', ' ', $room_nums_spec);
+                $room_blocs = explode(" ", $room_nums_spec);
                 foreach ($room_blocs as $room_bloc) {
                     list($room_min, $room_max) = explode("-", $room_bloc);
                     if (!$room_max) $room_max = $room_min;
@@ -334,40 +343,51 @@ class Hotel extends BtbObject
                     }
                 }
             }
+
+            $nb_rooms_found = count($room_reel_nums_arr);
+            if ($nb_rooms_found != $nb_rooms) {
+                $warnings_arr[] = "مواصفات الغرف التالية : $rooms_in_floors_spec لا تحتوي على $nb_rooms من الغرف ولكن $nb_rooms_found غرفة";
+            }
         }
 
+        /* غير مفهوم
         if ($nb_rooms > 0) {
             for ($i = 1; $i <= $nb_rooms; $i++) {
                 $rnum = $room_size * 100000 + $i;
                 $floor_num = 0;
                 $room_nums_arr[$i] = array("num" => $rnum, "floor" => $floor_num);
             }
-        }
+        }*/
 
-        foreach ($room_nums_arr as $ri => $room_nums_row) {
+
+
+
+        foreach ($room_reel_nums_arr as $ri => $room_nums_row) {
             $rnum = $room_nums_row["num"];
-            $rnum_reel = $room_reel_nums_arr[$ri]["num"];
-            $floor_num = $room_reel_nums_arr[$ri]["floor"];
-            if (!$floor_num) $floor_num = $this->getFloorNumFromRoomNum($rnum_reel);
-            if (!$floor_num) $floor_num = $room_nums_row["floor"];
+            // $rnum_reel = $room_reel_nums_arr[$ri]["num"];
+            $floor_num = $room_nums_row["floor"];
+            //if (!$floor_num) $floor_num = $this->getFloorNumFromRoomNum($rnum_reel);
+            //if (!$floor_num) $floor_num = $room_nums_row["floor"];
 
-            $hroom = Hroom::loadByMainIndex($hotel_id, $rnum, $floor_num, $create_obj_if_not_found = true);
+            $hroom = Hroom::loadByMainIndex($hotel_id, $rnum, $floor_num, $room_size, $create_obj_if_not_found = true);
             if ($hroom->is_new) {
                 $new_rooms++;
+                $log_arr[] = $this->translateMessage("غرفة جديدة", $lang) . ":" . $hroom->getDisplay($lang);
             } else {
+                $log_arr[] = $this->translateMessage("غرفة سابقة", $lang) . ":" . $hroom->getDisplay($lang);
                 $old_rooms++;
             }
 
-            $hroom->resetDefaults($room_size_max, $room_size, $rnum_reel);
+            // $hroom->resetDefaults($room_size_max, $room_size, $rnum_reel);
             $hroom_arr[$hroom->getId()] = $hroom;
         }
 
         $log_arr[] = $this->translateMessage("غرف جديدة", $lang) . ":" . $new_rooms;
         $log_arr[] = $this->translateMessage("غرف سابقة", $lang) . ":" . $old_rooms;
-        $log_arr[] = "============================================================";
+        //$log_arr[] = "============================================================";
 
 
-        return array($hroom_arr, $log_arr);
+        return array($hroom_arr, $log_arr, $warnings_arr);
     }
 
     public function genereRooms($lang = "ar")
@@ -376,18 +396,30 @@ class Hotel extends BtbObject
         $rooms_spec = str_replace("\n", "\\", $rooms_spec);
         $rooms_spec = str_replace("*", "\\", $rooms_spec);
         $rooms_spec = str_replace("|", ":", $rooms_spec);
-        $rooms_spec = str_replace("=", ":", $rooms_spec);
+
+        $rooms_spec = str_replace("rs", ":", $rooms_spec);
         $rooms_spec_arr = explode("\\", $rooms_spec);
-        $log = "انشاء غرف حسب المواصفات  التالية : " . $rooms_spec;
+
+        $info_arr = [];
+        $warnings_arr = [];
+        $errors_arr = [];
+
         foreach ($rooms_spec_arr as $rooms_spec_item) {
-            list($rooms_spec_quantity, $rooms_spec_size, $rooms_spec_spec) = explode(":", $rooms_spec_item);
+            list($rooms_spec_quantity, $rooms_spec_size, $rooms_in_floors_spec) = explode(":", $rooms_spec_item);
+            if ($rooms_spec_quantity and $rooms_spec_size) {
+                $this->addInMfk("roombed_men", [$rooms_spec_size]);
+            }
             $rooms_spec_size = intval($rooms_spec_size);
             $rooms_spec_size_max = $rooms_spec_size + 2;
-            list($hroom_arr, $log_arr) = $this->genereRoomNums(trim($rooms_spec_spec), $rooms_spec_size, $rooms_spec_quantity, $rooms_spec_size_max);
-            $log .= "\n<br>" . implode("\n<br>", $log_arr);
+            $rooms_in_floors_spec = trim($rooms_in_floors_spec);
+            list($hroom_arr, $info_arr, $warnings_arr) = $this->genereRoomNums($rooms_in_floors_spec, $rooms_spec_size, $rooms_spec_quantity, $rooms_spec_size_max);
         }
 
-        return array("", $log);
+        $this->commit();
+
+        $info_arr[] = "تم انشاء هذه الغرف حسب المواصفات  التالية : " . $rooms_spec;
+
+        return AfwFormatHelper::pbm_result($errors_arr, $info_arr, $warnings_arr);
     }
 
     public function calcDragDropDiv()
@@ -701,12 +733,17 @@ class Hotel extends BtbObject
         }
         if (!$this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
             if ($yperiod_id)
+                $this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = HotelPricing::loadByMainIndex($hotel_id, $room_size, 0, $period_type_enum, $yperiod_id, $create_obj_if_not_found = false);
+            $found_rep = "تم العثور على التسعيرة المناسبة مع عدم اعتبار ويكاند أو ليس ويكاند";
+        }
+        if (!$this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
+            if ($yperiod_id)
                 $this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = HotelPricing::loadByMainIndex($hotel_id, $room_size, $week_period_enum, $period_type_enum, 0, $create_obj_if_not_found = false);
             $found_rep = "تم العثور على التسعيرة المناسبة مع عدم اعتبار مسمى الموسم";
         }
         if (!$this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
             $this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = HotelPricing::loadByMainIndex($hotel_id, $room_size, 0, $period_type_enum, 0, $create_obj_if_not_found = false);
-            $found_rep = "تم العثور على التسعيرة المناسبة مع عدم اعتبار ويكاند أو ليس ويكاند";
+            $found_rep = "تم العثور على التسعيرة المناسبة مع عدم اعتبارمسمى الموسم وويكاند أو ليس ويكاند";
         }
 
         if (!$this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
@@ -797,11 +834,12 @@ class Hotel extends BtbObject
         return true;
     }
 
+    /*
     public function getFloorNumFromRoomNum($room_num)
     {
-        $floors_spec = $this->getVal("floors_spec");
-        $floors_spec = str_replace("/", "\n", $floors_spec);
-        $floors_spec_arr = explode("\n", $floors_spec);
+        $floors _spec = $this->getVal("floors _spec");
+        $floors_ spec = str_replace("/", "\n", $floors _spec);
+        $floors_spec_arr = explode("\n", $floors _spec);
         $nb_rec = 0;
         foreach ($floors_spec_arr as $floors_spec_line) {
             list($floor, $floor_limits)  = explode(":", $floors_spec_line);
@@ -821,9 +859,9 @@ class Hotel extends BtbObject
         $file_dir_name = dirname(__FILE__);
         // require_once("$file_dir_name/../btb/hroom.php");
 
-        $floors_spec = $this->getVal("floors_spec");
-        $floors_spec = str_replace("/", "\n", $floors_spec);
-        $floors_spec_arr = explode("\n", $floors_spec);
+        $floors_ spec = $this->getVal("floors _spec");
+        $floors_ spec = str_replace("/", "\n", $floor s_spec);
+        $floors_spec_arr = explode("\n", $flo ors_spec);
         $nb_rec = 0;
         foreach ($floors_spec_arr as $floors_spec_line) {
             list($floor, $floor_limits)  = explode(":", $floors_spec_line);
@@ -840,9 +878,21 @@ class Hotel extends BtbObject
         }
 
         return array("", "$nb_rec سجل تم تعديله");
+    }*/
+
+
+    public static function list_of_floor_capacity()
+    {
+        $list_of_items = array();
+        $list_of_items[10] = "10 غرف";
+        $list_of_items[100] = "100 غرفة";
+        $list_of_items[1000] = "1000 غرفة";
+
+        return  $list_of_items;
     }
 
-    public function showRoomsFloors($items_objs, $first_item, $objme, $structure)
+
+    public function showRoomsFloors($items_objs, $first_item, $objme, $structure, $showBookingInfos = false)
     {
         $lang = AfwLanguageHelper::getGlobalLanguage();
 
@@ -866,11 +916,13 @@ class Hotel extends BtbObject
         foreach ($items_objs as $hroom_id => $hroomObj) {
             $nb_beds = $hroomObj->getVal("capacity_default");
             $room_beds_picture = str_repeat("<i class=\"fa fa-bed\"></i>", $nb_beds);
-
+            $booking_status = "status-none";
             if ($hroomObj) {
                 //if(!$floor_to_display[$floor_num][$hroom_id]) $floor_to_display[$floor_num][$hroom_id] = "";
                 $room_title = $hroomObj->getShortDisplay($lang);
-                if (true) {
+                $booking_checkbox = "";
+                $room_is_checked = "";
+                if ($showBookingInfos) {
                     if ($this->desiredRoomsFilter) {
                         if ($this->exactRoomSize) {
                             if ($this->desired_rooms[intval($hroomObj->getVal("capacity_default"))]) {
@@ -902,8 +954,7 @@ class Hotel extends BtbObject
                         $booking_status_name = "متوفرة";
                         $class_chkbx = "echeckbox";
                     }
-                    $booking_checkbox = "";
-                    $room_is_checked = "";
+
                     /*
                                if(!$this->bookingCheckboxes) $booking_checkbox = "";
                                else
@@ -916,13 +967,22 @@ class Hotel extends BtbObject
                                */
 
                     $room_booker_picture = "<div class='room_content room_$booking_status'>$booking_status_name $booking_checkbox</div>";
+                } else $room_booker_picture = "";
+
+
+                if ($room_booker_picture) {
+                    $room_booker_picture_div = "<div class='pic_booker_room$hroom_id room_booker_picture'>
+                                  $room_booker_picture
+                                </div>";
+                } else {
+                    $room_booker_picture_div = "";
                 }
 
                 $hroom_id = $hroomObj->getId();
                 $floor_num = $hroomObj->getVal("floor_num");
                 if ($max_floor < $floor_num) $max_floor = $floor_num;
                 if ($min_floor > $floor_num) $min_floor = $floor_num;
-                $room_price = "?";
+                $room_price = "0 SAR";
                 $floor_to_display[$floor_num][$hroom_id] = "<div class='pic_room$hroom_id room_booking_picture $booking_status room$room_is_checked'>
                                 <div class='pic_header_room$hroom_id room_header_picture'>
                                         <div class='pic_title_room$hroom_id room_header_title'>
@@ -935,9 +995,7 @@ class Hotel extends BtbObject
                                 <div class='pic_beds_room$hroom_id room_beds_picture'>
                                   $room_beds_picture
                                 </div>
-                                <div class='pic_booker_room$hroom_id room_booker_picture'>
-                                  $room_booker_picture
-                                </div>
+                                $room_booker_picture_div
                           </div><!-- pic_room$hroom_id -->
                           ";
             }
@@ -945,7 +1003,7 @@ class Hotel extends BtbObject
 
         for ($floor_num = $max_floor; $floor_num >= $min_floor; $floor_num--) {
             $floor_rooms_list = $floor_to_display[$floor_num];
-            if (count($floor_rooms_list) > 0) {
+            if ($floor_rooms_list and is_array($floor_rooms_list) and (count($floor_rooms_list) > 0)) {
                 $data_to_display .= "<div class='floor$floor_num floor_booking_picture'>\n";
                 $floor_name = $hroomObject->translate("floor-$floor_num", $lang);
                 $data_to_display .= "<div class='floor_title_$floor_num floor_title'>$floor_name</div>\n";
@@ -961,11 +1019,12 @@ class Hotel extends BtbObject
     }
 
 
-    public function shouldBeCalculatedField($attribute){
-        if($attribute=="photo_path") return true;
-        if($attribute=="dragDropDiv") return true;
-        if($attribute=="ul_cl_files") return true;
-        if($attribute=="photo") return true;
+    public function shouldBeCalculatedField($attribute)
+    {
+        if ($attribute == "photo_path") return true;
+        if ($attribute == "dragDropDiv") return true;
+        if ($attribute == "ul_cl_files") return true;
+        if ($attribute == "photo") return true;
         return false;
     }
 }

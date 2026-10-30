@@ -90,7 +90,7 @@ class BusSeat extends BtbObject
         return implode(' - ', $data);
     }
 
-    
+
 
     public function fld_CREATION_USER_ID()
     {
@@ -165,7 +165,7 @@ class BusSeat extends BtbObject
         }
     }
 
-    
+
 
     public function getFieldGroupInfos($fgroup)
     {
@@ -179,7 +179,7 @@ class BusSeat extends BtbObject
         return ['name' => $fgroup, 'css' => 'none'];
     }
 
-    public function list_of_seat_category()
+    public static function list_of_seat_category()
     {
         $list_of_items = [];
         $list_of_items[5] = 'مقعد سرير'; //     code : BED

@@ -21,13 +21,13 @@ class BtbWorkBranchAfwStructure
 			// $obj->after_save_edit = array("class"=>'WorkBranch',"attribute"=>'xxxx_id', "currmod"=>'btb',"currstep"=>2);
 			$obj->after_save_edit = array("mode" => "qsearch", "currmod" => 'btb', "class" => 'WorkBranch', "submit" => true);
 
-			        
-        
-        
-        
-        // 
-        
-        
+
+
+
+
+			// 
+
+
 		} else {
 			WorkBranchArTranslator::initData();
 			WorkBranchEnTranslator::initData();
@@ -509,6 +509,11 @@ class BtbWorkBranchAfwStructure
 			'UTF8' => true,
 			'TYPE' => 'TEXT',
 			'FORMAT' => 'TOHTML',
+			'DEFAUT' => 'يجب الحضور قبل موعد الرحلة بنصف ساعة على الأقل
+يمنع التدخين في الباص منعا باتا
+يمنع رفع الصوت في الباص أثناء فترات النوم
+يرجى الحفاظ على أغراضكم الشخصية وتخلي الشركة مسؤوليتها تماما في حال فقدانها
+نأمل مراعاة أوقات الاستراحة و تناول الوجبات وعدم التأخر في الرجوع إلى الباص',
 			'READONLY' => false,
 			'SEARCH-BY-ONE' => false,
 			'DISPLAY' => true,
@@ -575,7 +580,7 @@ class BtbWorkBranchAfwStructure
 			'ANSMODULE' => 'btb',
 			'CATEGORY' => 'ITEMS',
 			'ITEM' => '',
-			'WHERE' => "example='Y' and orgunit_id in (0§parent_id§, 0§id§)",
+			'WHERE' => "example='Y' and work_branch_id in (0§parent_id§, 0§id§)",
 			'SHOW' => true,
 			'FORMAT' => 'retrieve',
 			'DO-NOT-RETRIEVE-COLS' => array(
@@ -601,7 +606,7 @@ class BtbWorkBranchAfwStructure
 			'ANSWER' => 'bus',
 			'ANSMODULE' => 'btb',
 			'CATEGORY' => 'ITEMS',
-			'ITEM' => 'orgunit_id',
+			'ITEM' => 'work_branch_id',
 			'WHERE' => "example='N'",
 			'SHOW' => true,
 			'FORMAT' => 'retrieve',

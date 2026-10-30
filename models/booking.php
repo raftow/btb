@@ -719,8 +719,8 @@ class Booking extends BtbObject
                         $fields_updated["traveler_mfk"] = true;
                 }
 
-                $you_travel = $this->est("you_travel");
-                $other_travelers = $this->est("other_travelers");
+                $you_travel = $this->sureIs("you_travel");
+                $other_travelers = $this->sureIs("other_travelers");
                 $travelers_nb = intval($this->getVal("travelers_nb"));
 
                 $travelerList = $this->get("traveler_mfk");
@@ -1843,7 +1843,7 @@ class Booking extends BtbObject
         }
 
 
-        public function list_of_group_num()
+        public static function list_of_group_num()
         {
                 $list_of_items = array();
                 $list_of_items[1] = "الأولى";
@@ -1864,7 +1864,7 @@ class Booking extends BtbObject
         protected function attributeCanBeEditedBy($attribute, $user, $desc)
         {
                 $objme = AfwSession::getUserConnected();
-                list($original_can_be_updated, $original_reason) = $this->attributeCanBeModifiedBy($attribute, $user, $desc);
+                list($original_can_be_updated, $original_reason) = [true, ''];
                 $travel = $this->hetTravel();
                 if (!$travel) return array(false, "no travel assigned");
                 if ($travel->isGone()) {

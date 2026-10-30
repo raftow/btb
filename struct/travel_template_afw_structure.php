@@ -7,21 +7,21 @@ class BtbTravelTemplateAfwStructure
 	{
 		if ($obj instanceof TravelTemplate) {
 			$obj->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-			$obj->DISPLAY_FIELD = "travel_template_name";
+			$obj->DISPLAY_FIELD_BY_LANG = ['ar' => "name_ar", 'en' => "name_en"];
 
 			// $obj->ENABLE_DISPLAY_MODE_IN_QEDIT=true;
-			$obj->ORDER_BY_FIELDS = "work_branch_id, travel_template_name";
+			$obj->ORDER_BY_FIELDS = "work_branch_id, travel_template_code";
 
 			$obj->horizontalTabs = true;
 
-			$obj->UNIQUE_KEY = array('work_branch_id', 'travel_template_name');
+			$obj->UNIQUE_KEY = array('work_branch_id', 'travel_template_code');
 			$obj->editByStep = true;
 			$obj->editNbSteps = 11;
 			$obj->showQeditErrors = true;
 			$obj->showRetrieveErrors = true;
 			$obj->general_check_errors = true;
-			// $obj->after_save_edit = array("class"=>'TravelTemplate',"attribute"=>'xxxx_id', "currmod"=>'btb',"currstep"=>2);
-			$obj->after_save_edit = array("mode" => "qsearch", "currmod" => 'btb', "class" => 'TravelTemplate', "submit" => true);
+			$obj->after_save_edit = array("class" => 'WorkBranch', "attribute" => 'work_branch_id', "currmod" => 'btb', "currstep" => 8);
+			//$obj->after_save_edit = array("mode" => "qsearch", "currmod" => 'btb', "class" => 'TravelTemplate', "submit" => true);
 		} else {
 			TravelTemplateArTranslator::initData();
 			TravelTemplateEnTranslator::initData();
@@ -119,7 +119,59 @@ class BtbTravelTemplateAfwStructure
 			'CSS' => 'width_pct_100',
 		),
 
-		'travel_template_name' => array(
+		'travel_template_code' => array(
+			'FGROUP' => 'travel_props',
+			'SEARCH' => true,
+			'QSEARCH' => true,
+			'SHOW' => true,
+			'RETRIEVE' => true,
+			'MINIBOX' => true,
+			'EDIT' => true,
+			'QEDIT' => true,
+			'CSS' => 'width_pct_100',
+			'SIZE' => 16,
+			'MIN-SIZE' => 5,
+			'CHAR_TEMPLATE' => 'ARABIC-CHARS,SPACE',
+			'REQUIRED' => true,
+			'UTF8' => true,
+			'TYPE' => 'TEXT',
+			'READONLY' => false,
+			'SEARCH-BY-ONE' => true,
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'MANDATORY' => true,
+			'ERROR-CHECK' => true,
+		),
+
+		'name_ar' => array(
+			'FGROUP' => 'travel_props',
+			'SEARCH' => true,
+			'QSEARCH' => true,
+			'SHOW' => true,
+			'RETRIEVE' => true,
+			'MINIBOX' => true,
+			'EDIT' => true,
+			'QEDIT' => true,
+			'CSS' => 'width_pct_100',
+			'SIZE' => 48,
+			'MIN-SIZE' => 5,
+			'CHAR_TEMPLATE' => 'ARABIC-CHARS,SPACE',
+			'REQUIRED' => true,
+			'UTF8' => true,
+			'TYPE' => 'TEXT',
+			'READONLY' => false,
+			'SEARCH-BY-ONE' => true,
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'MANDATORY' => true,
+			'ERROR-CHECK' => true,
+		),
+
+		'name_en' => array(
 			'FGROUP' => 'travel_props',
 			'SEARCH' => true,
 			'QSEARCH' => true,

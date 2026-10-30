@@ -69,7 +69,7 @@ class BtbWbranchEmployeeAfwStructure
 			// 'WHERE' => "me.id in (select orgunit_id from §DBPREFIX§wbranch.work_branch where active='Y')",
 			'RELATION' => 'ManyToOne',
 			'READONLY' => true,
-			'EDIT_IF_EMPTY' => true,
+			'EDIT_IF_ATTRIBUTE_EMPTY' => true,
 			'SEARCH-BY-ONE' => true,
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
@@ -92,7 +92,7 @@ class BtbWbranchEmployeeAfwStructure
 			'UTF8' => false,
 			'TYPE' => 'TEXT',
 			'READONLY' => true,
-			'EDIT_IF_EMPTY' => true,
+			'EDIT_IF_ATTRIBUTE_EMPTY' => true,
 			'REQUIRED' => true,
 			'SEARCH-BY-ONE' => true,
 			'DISPLAY' => true,
@@ -214,7 +214,7 @@ class BtbWbranchEmployeeAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			
+
 		),
 		'lastname_en' => array(
 			'TYPE' => 'TEXT',
@@ -365,7 +365,7 @@ class BtbWbranchEmployeeAfwStructure
 			'MANDATORY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			
+
 		),
 
 		'picture' => array(
@@ -412,7 +412,7 @@ class BtbWbranchEmployeeAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 		),
-		
+
 		'privilegeCode' => array(
 			'STEP' => 99,
 			'HIDE_IF_NEW' => true,
@@ -534,7 +534,7 @@ class BtbWbranchEmployeeAfwStructure
 			'EDIT-UGROUPS' => '',
 		),*/
 
-		
+
 
 		/*
 		 * 'statif_pct' => array(

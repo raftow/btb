@@ -60,35 +60,30 @@ class Bus extends BtbObject
         rafik : what to put in $bus_code because it is not unique if the bus is an example ?
         response : $this->set("bus_code", "EXAMPLE-".$this->getId());        
         */
-        
 
-        public static function loadByMainIndex($orgunit_id, $bus_code,$create_obj_if_not_found=false)
+
+        public static function loadByMainIndex($work_branch_id, $bus_code, $create_obj_if_not_found = false)
         {
-           if(!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
-           if(!$bus_code) throw new AfwRuntimeException("loadByMainIndex : bus_code is mandatory field");
+                if (!$work_branch_id) throw new AfwRuntimeException("loadByMainIndex : work_branch_id is mandatory field");
+                if (!$bus_code) throw new AfwRuntimeException("loadByMainIndex : bus_code is mandatory field");
 
 
-           $obj = new Bus();
-           $obj->select("orgunit_id",$orgunit_id);
-           $obj->select("bus_code",$bus_code);
+                $obj = new Bus();
+                $obj->select("work_branch_id", $work_branch_id);
+                $obj->select("bus_code", $bus_code);
 
-           if($obj->load())
-           {
-                if($create_obj_if_not_found) $obj->activate();
-                return $obj;
-           }
-           elseif($create_obj_if_not_found)
-           {
-                $obj->set("orgunit_id",$orgunit_id);
-                $obj->set("bus_code",$bus_code);
+                if ($obj->load()) {
+                        if ($create_obj_if_not_found) $obj->activate();
+                        return $obj;
+                } elseif ($create_obj_if_not_found) {
+                        $obj->set("work_branch_id", $work_branch_id);
+                        $obj->set("bus_code", $bus_code);
 
-                $obj->insertNew();
-                if(!$obj->id) return null; // means beforeInsert rejected insert operation
-                $obj->is_new = true;
-                return $obj;
-           }
-           else return null;
-           
+                        $obj->insertNew();
+                        if (!$obj->id) return null; // means beforeInsert rejected insert operation
+                        $obj->is_new = true;
+                        return $obj;
+                } else return null;
         }
 
         public function getPhotoPathList($from_example = true)
@@ -125,18 +120,18 @@ class Bus extends BtbObject
 
         public function getAccountCompany()
         {
-                $accountCompanyObj = $this->hetAccount();
+                $accountCompanyObj = $this->het("account_company_id");
 
                 if ($accountCompanyObj) return $accountCompanyObj;
 
-                $parentBusObj = $this->het("myparent");
+                $parentBusObj = $this->het("parent_bus_id");
 
                 if ($parentBusObj) {
                         $accountCompanyObj = $parentBusObj->getAccountCompany();
                         if ($accountCompanyObj) return $accountCompanyObj;
                 }
 
-                $busOwner = $this->hetOwner();
+                $busOwner = $this->het("work_branch_id");
                 if ($busOwner) {
                         $accountCompanyObj = $busOwner->getAccountCompany();
                 }
@@ -158,7 +153,7 @@ class Bus extends BtbObject
                         return array(-1, $errors_arr, $report_arr, null, null);
                 }
 
-                $busOwner = $this->hetOwner();
+                $busOwner = $this->het("work_branch_id");
                 if (!$busOwner) {
                         $errors_arr[] = "هذا الباص لم يتم تحديد ملكيته لأي مؤسسة";
                         return array(-1, $errors_arr, $report_arr, null, null);
@@ -201,13 +196,13 @@ class Bus extends BtbObject
                 return array($total_price, $errors_arr, $report_arr, $this->prices_expiry_date, $bp);
         }
 
-        public static function loadByBusNum($orgunit_id, $parent_bus_id, $bus_num, $create_obj_if_not_found = false)
+        public static function loadByBusNum($work_branch_id, $parent_bus_id, $bus_num, $create_obj_if_not_found = false)
         {
                 $obj = new Bus();
-                if (!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
+                if (!$work_branch_id) throw new AfwRuntimeException("loadByBusNum : work_branch_id is mandatory field");
 
 
-                $obj->select("orgunit_id", $orgunit_id);
+                $obj->select("work_branch_id", $work_branch_id);
                 $obj->select("parent_bus_id", $parent_bus_id);
                 $obj->select("bus_num", $bus_num);
 
@@ -215,7 +210,7 @@ class Bus extends BtbObject
                         if ($create_obj_if_not_found) $obj->activate();
                         return $obj;
                 } elseif ($create_obj_if_not_found) {
-                        $obj->set("orgunit_id", $orgunit_id);
+                        $obj->set("work_branch_id", $work_branch_id);
                         $obj->set("parent_bus_id", $parent_bus_id);
                         $obj->set("bus_num", $bus_num);
 
@@ -225,7 +220,7 @@ class Bus extends BtbObject
                 } else return null;
         }
 
-        
+
 
 
         public function calcCategory($translate = true, $short = true)
@@ -276,7 +271,7 @@ class Bus extends BtbObject
                 $data[0] = $this->calcCategory($translate = true, $short = true);
                 list($data[1], $link[1]) = $this->displayAttribute("bus_brand_id", false, $lang);
                 list($data[2], $link[2]) = $this->displayAttribute("bus_model_id", false, $lang);
-                list($data[3], $link[3]) = $this->displayAttribute("orgunit_id", false, $lang);
+                list($data[3], $link[3]) = $this->displayAttribute("work_branch_id", false, $lang);
 
 
 
@@ -289,7 +284,7 @@ class Bus extends BtbObject
                 $link = array();
 
 
-                list($data[0], $link[0]) = $this->displayAttribute("orgunit_id", false, $lang);
+                list($data[0], $link[0]) = $this->displayAttribute("work_branch_id", false, $lang);
                 list($data[1], $link[1]) = $this->displayAttribute("bus_brand_id", false, $lang);
                 list($data[2], $link[2]) = $this->displayAttribute("bus_model_id", false, $lang);
                 $data[3] = $this->calcCategory($translate = true, $short = true);
@@ -309,7 +304,7 @@ class Bus extends BtbObject
 
 
 
-        public function list_of_bus_color()
+        public static function list_of_bus_color()
         {
                 $list_of_items = array();
                 $list_of_items[9] = "بيج";  //     code : BEIGE 
@@ -403,7 +398,7 @@ class Bus extends BtbObject
                 return array("obsolete", "");
                 /*
               
-                $ownerObj = $this->hetOwner();
+                $ownerObj = $this->het("work_branch_id");
                 if($ownerObj) return $ownerObj->genere BusProgramsAndPricings($lang, $return_program_list=false, $this);
                 else return array("الشركة المالكة للباص غير معروفة","");
                 */
@@ -622,7 +617,7 @@ class Bus extends BtbObject
                 $nb_buses = intval($this->getVal("instance_nb"));
                 if ($this->getId() and ($nb_buses > 0)) {
                         for ($bus_num = 1; $bus_num <= $nb_buses; $bus_num++) {
-                                $busObj = self::loadByBusNum($this->getVal("orgunit_id"), $this->getId(), $bus_num);
+                                $busObj = self::loadByBusNum($this->getVal("work_branch_id"), $this->getId(), $bus_num);
                                 if (!$busObj) {
                                         $params["bus_code"] = "EX-" . $this->getId() . "-" . $bus_num;
                                         $params["bus_num"] = $bus_num;
@@ -635,15 +630,19 @@ class Bus extends BtbObject
                                         }
                                 } else {
                                         //die("this->bus_brand_id = $this->bus_brand_id");
-                                        $busObj->owner_type_id = $this->value_of_owner_type_id;
-                                        $busObj->bus_brand_id  = $this->value_of_bus_brand_id;
-                                        $busObj->bus_model_id  = $this->value_of_bus_model_id;
-                                        $busObj->factory_year  = $this->factory_year;
-                                        $busObj->bus_template_id    = $this->value_of_bus_template_id;
-                                        $busObj->account_company_id = $this->value_of_account_company_id;
-                                        $busObj->responsible_id     = $this->value_of_responsible_id;
-                                        $busObj->nb_days_anticipate = $this->nb_days_anticipate;
-                                        $busObj->booking_infos = $this->booking_infos;
+                                        $attributes = [
+                                                "owner_type_id",
+                                                "bus_brand_id",
+                                                "bus_model_id",
+                                                "factory_year",
+                                                "bus_template_id",
+                                                "account_company_id",
+                                                "responsible_id",
+                                                "nb_days_anticipate",
+                                                "booking_infos",
+                                        ];
+                                        $busObj->copyAttributesFrom($this, $attributes);
+
                                         $busObj->commit();
 
                                         $infos_arr[] = "الباص رقم $bus_num  موجود سابقا في الأسطول فقد تم تحديثه";
@@ -665,16 +664,18 @@ class Bus extends BtbObject
 
         public function updateMyPropertiesFrom($parentBusObj, $updated_properties = [])
         {
-                if ((!$updated_properties) or ($updated_properties["owner_type_id"])) $this->owner_type_id = $parentBusObj->value_of_owner_type_id;
-                if ((!$updated_properties) or ($updated_properties["bus_brand_id"])) $this->bus_brand_id  = $parentBusObj->value_of_bus_brand_id;
-                if ((!$updated_properties) or ($updated_properties["bus_model_id"])) $this->bus_model_id  = $parentBusObj->value_of_bus_model_id;
-                if ((!$updated_properties) or ($updated_properties["factory_year"])) $this->factory_year  = $parentBusObj->factory_year;
-                if ((!$updated_properties) or ($updated_properties["bus_template_id"])) $this->bus_template_id    = $parentBusObj->value_of_bus_template_id;
-                if ((!$updated_properties) or ($updated_properties["account_company_id"])) $this->account_company_id = $parentBusObj->value_of_account_company_id;
-                if ((!$updated_properties) or ($updated_properties["responsible_id"])) $this->responsible_id     = $parentBusObj->value_of_responsible_id;
-                if ((!$updated_properties) or ($updated_properties["nb_days_anticipate"])) $this->nb_days_anticipate = $parentBusObj->nb_days_anticipate;
-                if ((!$updated_properties) or ($updated_properties["booking_infos"])) $this->booking_infos = $parentBusObj->booking_infos;
-                if ((!$updated_properties) or ($updated_properties["prices_expiry_date"])) $this->prices_expiry_date = $parentBusObj->prices_expiry_date;
+                $attributes = [];
+                if ((!$updated_properties) or ($updated_properties["owner_type_id"])) $attributes[] = "owner_type_id";
+                if ((!$updated_properties) or ($updated_properties["bus_brand_id"])) $attributes[] = "bus_brand_id";
+                if ((!$updated_properties) or ($updated_properties["bus_model_id"])) $attributes[] = "bus_model_id";
+                if ((!$updated_properties) or ($updated_properties["factory_year"])) $attributes[] = "factory_year";
+                if ((!$updated_properties) or ($updated_properties["bus_template_id"])) $attributes[] = "bus_template_id";
+                if ((!$updated_properties) or ($updated_properties["account_company_id"])) $attributes[] = "account_company_id";
+                if ((!$updated_properties) or ($updated_properties["responsible_id"])) $attributes[] = "responsible_id";
+                if ((!$updated_properties) or ($updated_properties["nb_days_anticipate"])) $attributes[] = "nb_days_anticipate";
+                if ((!$updated_properties) or ($updated_properties["booking_infos"])) $attributes[] = "booking_infos";
+                if ((!$updated_properties) or ($updated_properties["prices_expiry_date"])) $attributes[] = "prices_expiry_date";
+                $this->copyAttributesFrom($parentBusObj, $attributes);
                 $this->commit();
         }
 
@@ -682,18 +683,23 @@ class Bus extends BtbObject
         {
                 $busObj = new Bus();
 
+
+
                 $busObj->select("parent_bus_id", $this->getId());
-                $busObj->forceMode();
-                $busObj->owner_type_id = $this->value_of_owner_type_id;
-                $busObj->bus_brand_id  = $this->value_of_bus_brand_id;
-                $busObj->bus_model_id  = $this->value_of_bus_model_id;
-                $busObj->factory_year  = $this->factory_year;
-                $busObj->bus_template_id    = $this->value_of_bus_template_id;
-                $busObj->account_company_id = $this->value_of_account_company_id;
-                $busObj->responsible_id     = $this->value_of_responsible_id;
-                $busObj->nb_days_anticipate = $this->nb_days_anticipate;
-                $busObj->booking_infos = $this->booking_infos;
-                $busObj->prices_expiry_date = $this->prices_expiry_date;
+
+                $attributes = [
+                        "owner_type_id",
+                        "bus_brand_id",
+                        "bus_model_id",
+                        "factory_year",
+                        "bus_template_id",
+                        "account_company_id",
+                        "responsible_id",
+                        "nb_days_anticipate",
+                        "booking_infos",
+                        "prices_expiry_date",
+                ];
+                $busObj->copyAttributesFrom($this, $attributes);
                 return $busObj->update(false);
         }
 
@@ -758,12 +764,13 @@ class Bus extends BtbObject
                         if ($bus_ids_list_txt) {
                                 $ppObj->forceMode();
                                 $ppObj->where("bus_id in ($bus_ids_list_txt)");
-                                $ppObj->select("travel_program_id", $busPricingItem->value_of_travel_program_id);
-                                $ppObj->select("days_nb", $busPricingItem->days_nb);
-                                $ppObj->select("week_period_enum", $busPricingItem->week_period_enum);
-                                $ppObj->select("period_type_enum", $busPricingItem->period_type_enum);
-                                $ppObj->select("yperiod_id", $busPricingItem->value_of_yperiod_id);
+                                $ppObj->select("        ", $busPricingItem->getVal("travel_program_id"));
+                                $ppObj->select("days_nb", $busPricingItem->getVal("days_nb"));
+                                $ppObj->select("week_period_enum", $busPricingItem->getVal("week_period_enum"));
+                                $ppObj->select("period_type_enum", $busPricingItem->getVal("period_type_enum"));
+                                $ppObj->select("yperiod_id", $busPricingItem->getVal("yperiod_id"));
                                 $ppObj->set("price", $busPricingItem->getVal("price"));
+
                                 $ppObj->update(false);
                         }
                 }
@@ -846,7 +853,7 @@ class Bus extends BtbObject
         // attribute can be modified by user in some specific context
         protected function attributeCanBeEditedBy($attribute, $user, $desc)
         {
-                $default_can_update = $this->attributeCanBeModifiedBy($attribute, $user, $desc);
+                $default_can_update = [true, ''];
                 if ($attribute == "account_company_id") return $this->pricesAreUpdatable() ? $default_can_update : array(false, "pricesInherited and not customizable");
                 if ($attribute == "prices_expiry_date") return $this->pricesAreUpdatable() ? $default_can_update : array(false, "pricesInherited and not customizable");
                 /*
@@ -866,14 +873,14 @@ class Bus extends BtbObject
 
         public function ownerIsBranch()
         {
-                $owner = $this->hetOwner();
+                $owner = $this->het("work_branch_id");
                 if ($owner) $owner->isBranch();
                 else return null;
         }
 
         public function ownerIsParent()
         {
-                $owner = $this->hetOwner();
+                $owner = $this->het("work_branch_id");
                 if ($owner) $owner->isParent();
                 else return null;
         }
@@ -991,7 +998,7 @@ class Bus extends BtbObject
                 // وهي حالة غريبة
                 // نحدث خطأ
                 $travelCompany = $travelTemplateObject->hetTcompany();
-                $busOwner = $this->hetOwner();
+                $busOwner = $this->het("work_branch_id");
                 if (!$busOwner) throw new RunTimeException("bus owner not defined");
                 if (!$travelCompany) throw new RunTimeException("travel not defined");
 
@@ -1825,7 +1832,7 @@ class Bus extends BtbObject
         }
 
 
-        public function list_of_bus_level()
+        public static function list_of_bus_level()
         {
                 $list_of_items = array();
                 $list_of_items[1] = "إقتصادي";
@@ -1835,22 +1842,23 @@ class Bus extends BtbObject
                 return  $list_of_items;
         }
 
-        public function shouldBeCalculatedField($attribute){
-                if($attribute=="owner_parent_id") return true;
-                if($attribute=="photo_path") return true;
-                if($attribute=="internal_photo_path") return true;
-                if($attribute=="nb_seats") return true;
-                if($attribute=="category") return true;
-                if($attribute=="dragDropDiv") return true;
-                if($attribute=="ul_cl_files") return true;
-                if($attribute=="photo") return true;
-                if($attribute=="internal_photo") return true;
-                if($attribute=="the_account_company") return true;
-                if($attribute=="pricing_help") return true;
-                if($attribute=="seatsCategDiv") return true;
-                if($attribute=="seatsCategReelDiv") return true;
-                if($attribute=="definition") return true;
-                if($attribute=="photoGalery") return true;
+        public function shouldBeCalculatedField($attribute)
+        {
+                if ($attribute == "owner_parent_id") return true;
+                if ($attribute == "photo_path") return true;
+                if ($attribute == "internal_photo_path") return true;
+                if ($attribute == "nb_seats") return true;
+                if ($attribute == "category") return true;
+                if ($attribute == "dragDropDiv") return true;
+                if ($attribute == "ul_cl_files") return true;
+                if ($attribute == "photo") return true;
+                if ($attribute == "internal_photo") return true;
+                if ($attribute == "the_account_company") return true;
+                if ($attribute == "pricing_help") return true;
+                if ($attribute == "seatsCategDiv") return true;
+                if ($attribute == "seatsCategReelDiv") return true;
+                if ($attribute == "definition") return true;
+                if ($attribute == "photoGalery") return true;
                 return false;
         }
 }

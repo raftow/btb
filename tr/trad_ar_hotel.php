@@ -36,7 +36,10 @@ class HotelArTranslator
                 $trad["hotel"]["hotelPricingList_help"] = "سعر التكلفة للسكن حسب البرنامج والفترة";
 
                 $trad["hotel"]["travelHotelList"] = "الرحلات القادمة";
-                $trad["hotel"]["floors_spec"] = "مواصفات الأدوار";
+                $trad["hotel"]["booking_spec"] = "مواصفات الحجز";
+                $trad["hotel"]["floor_capacity"] = "عدد غرف الدور";
+                $trad["hotel"]["floor_capacity_tooltip"] = "يجب أن يكون عدد غرف الدور من أسات 10 يعني 10 / 100 / 1000 الخ";
+
                 $trad["hotel"]["floors_spec_unit"] = "مثال<br>0:1-28 <br>1:101-139";
                 $trad["hotel"]["floors_spec_tooltip"] = "في المثال الذي على اليسار المقصود الدور الأرضي أرقام الغرف من 1 إلى 28  وأما الدور الأول فالغرف من 101 إلى 139";
 
@@ -49,7 +52,7 @@ class HotelArTranslator
                 $trad["hotel"]["step2"] = "إرفاق الصور";
                 $trad["hotel"]["step3"] = "توظيف الصور";
                 $trad["hotel"]["step4"] = "مواصفات الغرف";
-                $trad["hotel"]["step5"] = "الهيكل";
+                $trad["hotel"]["step5"] = "القالب";
                 $trad["hotel"]["step6"] = "الأسعار";
                 $trad["hotel"]["step7"] = "معلومات الحجز";
                 $trad["hotel"]["step8"] = "الرحلات القادمة";

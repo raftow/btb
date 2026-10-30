@@ -11,7 +11,7 @@ class BtbHotelAfwStructure
 
 
 			$obj->ORDER_BY_FIELDS = "work_branch_id, country_id, city_id, name_ar";
-			$obj->IS_LOOKUP = true;
+			//$obj->IS_LOOKUP = true; // otherwise in menu will be QEDIT
 			$obj->public_display = true;
 			$obj->horizontalTabs = true;
 
@@ -296,6 +296,31 @@ class BtbHotelAfwStructure
 			'ERROR-CHECK' => true,
 		),
 
+		'floor_capacity' => array(
+			'STEP' => 1,
+			'SEARCH' => false,
+			'QSEARCH' => false,
+			'SHOW' => true,
+			'RETRIEVE' => false,
+			'EDIT' => true,
+			'QEDIT' => true,
+			'ROWS' => 2,
+			'CHAR_TEMPLATE' => '',
+			'UTF8' => true,
+			'TYPE' => 'ENUM',
+			'ANSWER' => 'FUNCTION',
+			'ANSMODULE' => 'btb',
+
+			'DEFAULT' => 100,
+			'READONLY' => false,
+			'INPUT_WIDE' => true,
+			'SEARCH-BY-ONE' => false,
+			'DISPLAY' => true,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'CSS' => 'width_pct_50',
+		),
+
 		'dragDropDiv' => array(
 			'STEP' => 2,
 			'TYPE' => 'TEXT',
@@ -393,7 +418,10 @@ class BtbHotelAfwStructure
 			'CSS' => 'width_pct_100',
 		),
 
-		'floors_spec' => array(
+
+
+
+		'booking_spec' => array(
 			'STEP' => 4,
 			'SEARCH' => false,
 			'QSEARCH' => false,
@@ -402,7 +430,7 @@ class BtbHotelAfwStructure
 			'EDIT' => true,
 			'QEDIT' => true,
 			'SIZE' => 'AREA',
-			'ROWS' => 2,
+			'ROWS' => 6,
 			'CHAR_TEMPLATE' => '',
 			'UTF8' => true,
 			'TYPE' => 'TEXT',
@@ -451,13 +479,14 @@ class BtbHotelAfwStructure
 			'UTF8' => false,
 			'TYPE' => 'MENUM',
 			'ANSWER' => 'FUNCTION',
-			'READONLY' => false,
+			'READONLY' => true,
 			'EDIT-SHORT-LIST' => true,
 			'ANSMODULE' => 'btb',
 			'SEARCH-BY-ONE' => false,
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
+			'LIST_SEPARATOR' => ' / ',
 			'CSS' => 'width_pct_100',
 		),
 
@@ -479,6 +508,7 @@ class BtbHotelAfwStructure
 			'EDIT-SHORT-LIST' => true,
 			'ANSMODULE' => 'btb',
 			'SEARCH-BY-ONE' => false,
+			'LIST_SEPARATOR' => ' / ',
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
@@ -733,17 +763,7 @@ class BtbHotelAfwStructure
 			'FGROUP' => 'tech_fields'
 		),
 
-		'draft'                         => array(
-			'STEP' => 99,
-			'HIDE_IF_NEW' => true,
-			'SHOW' => true,
-			'RETRIEVE' => false,
-			'EDIT' => true,
-			'QEDIT' => true,
-			"DEFAULT" => 'Y',
-			'TYPE' => 'YN',
-			'FGROUP' => 'tech_fields'
-		),
+
 
 		'update_groups_mfk'             => array(
 			'STEP' => 99,

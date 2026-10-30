@@ -1,0 +1,46 @@
+<?php
+	$tbf_info = array();
+	$tab_info = array();
+	$role_info = array();
+	include('previleges/table/previleges_btb_table_booking.php');
+	include('previleges/table/previleges_btb_table_branch_seat_price.php');
+	include('previleges/table/previleges_btb_table_bus.php');
+	include('previleges/table/previleges_btb_table_bus_brand.php');
+	include('previleges/table/previleges_btb_table_bus_convention.php');
+	include('previleges/table/previleges_btb_table_bus_file.php');
+	include('previleges/table/previleges_btb_table_bus_model.php');
+	include('previleges/table/previleges_btb_table_bus_pricing.php');
+	include('previleges/table/previleges_btb_table_bus_seat_category.php');
+	include('previleges/table/previleges_btb_table_bus_template.php');
+	include('previleges/table/previleges_btb_table_bus_template_row.php');
+	include('previleges/table/previleges_btb_table_bus_type.php');
+	include('previleges/table/previleges_btb_table_hotel.php');
+	include('previleges/table/previleges_btb_table_hotel_file.php');
+	include('previleges/table/previleges_btb_table_hotel_pricing.php');
+	include('previleges/table/previleges_btb_table_hroom.php');
+	include('previleges/table/previleges_btb_table_owner_type.php');
+	include('previleges/table/previleges_btb_table_road.php');
+	include('previleges/table/previleges_btb_table_road_station.php');
+	include('previleges/table/previleges_btb_table_travel.php');
+	include('previleges/table/previleges_btb_table_travel_bus.php');
+	include('previleges/table/previleges_btb_table_travel_hotel.php');
+	include('previleges/table/previleges_btb_table_travel_program.php');
+	include('previleges/table/previleges_btb_table_travel_status.php');
+	include('previleges/table/previleges_btb_table_travel_template.php');
+	include('previleges/table/previleges_btb_table_travel_template_bus.php');
+	include('previleges/table/previleges_btb_table_travel_template_sakan_pricing.php');
+	include('previleges/table/previleges_btb_table_travel_template_seat_pricing.php');
+	include('previleges/table/previleges_btb_table_travel_template_trip.php');
+	include('previleges/table/previleges_btb_table_wbranch_employee.php');
+	include('previleges/table/previleges_btb_table_work_benifit.php');
+	include('previleges/table/previleges_btb_table_work_branch.php');
+	include('previleges/table/previleges_btb_table_work_role.php');
+	include('previleges/table/previleges_btb_table_yperiod.php');
+	include('previleges/role/previleges_btb_role380.php');
+	include('previleges/role/previleges_btb_role335.php');
+	include('previleges/role/previleges_btb_role379.php');
+	include('previleges/role/previleges_btb_role332.php');
+	include('previleges/role/previleges_btb_role336.php');
+	include('previleges/role/previleges_btb_role333.php');
+
+ ?>

@@ -10,9 +10,9 @@ class BtbBusAfwStructure
 			$obj->DISPLAY_FIELD_BY_LANG = ['ar' => "bus_code", 'en' => "bus_code"];
 
 			// $obj->ENABLE_DISPLAY_MODE_IN_QEDIT=true;
-			$obj->ORDER_BY_FIELDS = "orgunit_id, bus_code";
+			$obj->ORDER_BY_FIELDS = "work_branch_id, bus_code";
 
-			$obj->UNIQUE_KEY = array('orgunit_id', 'bus_code');
+			$obj->UNIQUE_KEY = array('work_branch_id', 'bus_code');
 			$obj->editByStep = true;
 			$obj->horizontalTabs = true;
 			$obj->editNbSteps = 10;
@@ -22,7 +22,7 @@ class BtbBusAfwStructure
 			$obj->public_display = true;
 			// $obj->after_save_edit = array("class"=>'Bus',"attribute"=>'xxxx_id', "currmod"=>'btb',"currstep"=>2);
 			// $obj->after_save_edit = array("mode"=>"qsearch", "currmod"=>'btb', "class"=>'Bus',"submit"=>true);
-			$obj->after_save_edit = array("class" => 'WorkBranch', "attribute" => 'orgunit_id', "currmod" => 'btb', "currstep" => 5);
+			$obj->after_save_edit = array("class" => 'WorkBranch', "attribute" => 'work_branch_id', "currmod" => 'btb', "currstep" => 5);
 		} else {
 			BusArTranslator::initData();
 			BusEnTranslator::initData();
@@ -91,7 +91,7 @@ class BtbBusAfwStructure
 			'ANSWER' => 'work_branch',
 			'ANSMODULE' => 'btb',
 			'CATEGORY' => 'SHORTCUT',
-			'SHORTCUT' => 'orgunit_id.parent_id',
+			'SHORTCUT' => 'work_branch_id.parent_id',
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => '',
 			'STEP' => 1,
@@ -100,7 +100,7 @@ class BtbBusAfwStructure
 			'CSS' => 'width_pct_100',
 		),
 
-		'orgunit_id' => array(
+		'work_branch_id' => array(
 			'SHORTNAME' => 'owner',
 			'SEARCH' => true,
 			'QSEARCH' => true,
@@ -154,7 +154,7 @@ class BtbBusAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'parent_bus_id' => array(
@@ -163,7 +163,7 @@ class BtbBusAfwStructure
 			'QSEARCH' => false,
 			'SHOW' => true,
 			'RETRIEVE' => false,
-			'EDIT' => false,
+			'EDIT' => true,
 			'QEDIT' => true,
 			'CSS' => 'width_pct_25',
 			'SIZE' => 32,
@@ -173,9 +173,9 @@ class BtbBusAfwStructure
 			'TYPE' => 'FK',
 			'ANSWER' => 'bus',
 			'ANSMODULE' => 'btb',
-			'AUTOCOMPLETE' => true,
+			'AUTOCOMPLETE' => false,
 			'RELATION' => 'OneToMany',
-			'READONLY' => true,
+			'READONLY' => false,
 			'SEARCH-BY-ONE' => false,
 			'DISPLAY' => true,
 			'STEP' => 1,
@@ -199,13 +199,42 @@ class BtbBusAfwStructure
 			'MANDATORY' => true,
 			'UTF8' => true,
 			'TYPE' => 'TEXT',
-			'READONLY' => true,
+			'READONLY' => false,
 			'SEARCH-BY-ONE' => true,
 			'DISPLAY' => true,
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
+		),
+
+		'bus_type_id' => array(
+			'SHORTNAME' => 'type',
+			'SEARCH' => true,
+			'QSEARCH' => true,
+			'SHOW' => true,
+			'RETRIEVE' => true,
+			'EDIT' => true,
+			'QEDIT' => true,
+			'MINIBOX' => true,
+			'CSS' => 'width_pct_50',
+			'SIZE' => 32,
+			'MANDATORY' => true,
+			'UTF8' => false,
+			'TYPE' => 'FK',
+			'ANSWER' => 'bus_type',
+			'ANSMODULE' => 'btb',
+			'RELATION' => 'ManyToOne',
+			'READONLY' => false,
+			'SEARCH-BY-ONE' => true,
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'ERROR-CHECK' => true,
+			'DEPENDENT_OFME' => array(
+				0 => 'bus_brand_id',
+			),
 		),
 
 		'bus_brand_id' => array(
@@ -224,6 +253,13 @@ class BtbBusAfwStructure
 			'TYPE' => 'FK',
 			'ANSWER' => 'bus_brand',
 			'ANSMODULE' => 'btb',
+			'WHERE' => "bus_type_id = §bus_type_id§",
+			'DEPENDENT_OFME' => array(
+				0 => 'bus_model_id',
+			),
+			'DEPENDENCIES' => array(
+				0 => 'bus_type_id',
+			),
 			'RELATION' => 'ManyToOne',
 			'READONLY' => false,
 			'SEARCH-BY-ONE' => true,
@@ -245,7 +281,7 @@ class BtbBusAfwStructure
 			'MINIBOX' => true,
 			'CSS' => 'width_pct_50',
 			'SIZE' => 32,
-			'MANDATORY' => true,
+			'MANDATORY' => false,
 			'UTF8' => false,
 			'TYPE' => 'FK',
 			'ANSWER' => 'bus_model',
