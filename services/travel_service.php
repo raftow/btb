@@ -324,7 +324,7 @@ class TravelService
         if(!$objme) return array("not authenticated","");
         
         $me=$objme->id;
-
+        $cond_seats_for_travel_id = "";
         if($travel_id)
         {
             $cond_seats_for_travel_id = "travel_bus_id in (select id from c0btb.travel_bus where travel_id=$travel_id)";
@@ -335,7 +335,7 @@ class TravelService
             $sql_delete_old_tt_seats = "delete from c0btb.travel_seat where travel_template_id = $travel_template_id 
                                           and (confirmed = 'N' or confirmed is null)
                                           and (manuel = 'N' or manuel is null)";
-            if($travel_id) $sql_delete_old_tt_seats .= " and " . $cond_seats_for_travel_id;
+            if($travel_id and $cond_seats_for_travel_id) $sql_delete_old_tt_seats .= " and " . $cond_seats_for_travel_id;
             if($travel_bus_id) $sql_delete_old_tt_seats .= " and travel_bus_id = $travel_bus_id";
             list($resultdd, $ddrow_count, $ddaffected_row_count) = TravelSeat::executeQuery($sql_delete_old_tt_seats);
         }
@@ -398,7 +398,7 @@ class TravelService
                 {
                     $tsObj->where("confirmed = 'N' or confirmed is null");
                 }
-                if($travel_id)
+                if($travel_id and $cond_seats_for_travel_id)
                 {
                     $tsObj->where($cond_seats_for_travel_id);    
                 }
@@ -773,7 +773,7 @@ class TravelService
         $now = date('H:i:s');
         // @todo 00:30 max late time from settings
         // @manage case to,orrow travel time near midnight 00:00 +> very rare
-        list($new_day, $new_time) = AfwDateHelper::AfwDateHelper::addTimeToDayTime(
+        list($new_day, $new_time) = AfwDateHelper::addTimeToDayTime(
             0,
             $now,
             '00:30',
@@ -805,7 +805,7 @@ class TravelService
     {
         $now = date('H:i:s');
         // @todo 01:30 min retard in return time from settings
-        list($new_day, $new_time) = AfwDateHelper::AfwDateHelper::addTimeToDayTime(
+        list($new_day, $new_time) = AfwDateHelper::addTimeToDayTime(
             0,
             $now,
             '01:30',
@@ -843,7 +843,7 @@ class TravelService
         $now = date('H:i:s');
         // @todo 00:45 min prepare to leave time from settings
         // @manage case to,orrow travel time near midnight 00:00 +> very rare
-        list($new_day, $new_time) = AfwDateHelper::AfwDateHelper::addTimeToDayTime(
+        list($new_day, $new_time) = AfwDateHelper::addTimeToDayTime(
             0,
             $now,
             '00:45',
