@@ -6,7 +6,7 @@
   'level' => '999',
   'public' => false,
   'module_id' => '1272',
-  'menu_name_ar' => 'إنشاء هيكل مركبة',
+  'menu_name_ar' => 'إنشاء قالب مركبة',
   'menu_name_en' => 'create Bus model',
   'page' => 'main.php?Main_Page=afw_mode_edit.php&cl=BusTemplate&currmod=btb',
   'css' => 'bf',

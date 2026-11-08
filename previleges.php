@@ -10,6 +10,7 @@
 	include('previleges/table/previleges_btb_table_bus_file.php');
 	include('previleges/table/previleges_btb_table_bus_model.php');
 	include('previleges/table/previleges_btb_table_bus_pricing.php');
+	include('previleges/table/previleges_btb_table_bus_seat.php');
 	include('previleges/table/previleges_btb_table_bus_seat_category.php');
 	include('previleges/table/previleges_btb_table_bus_template.php');
 	include('previleges/table/previleges_btb_table_bus_template_row.php');

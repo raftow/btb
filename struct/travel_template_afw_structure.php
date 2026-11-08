@@ -47,7 +47,7 @@ class BtbTravelTemplateAfwStructure
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'work_branch_id' => array(
@@ -75,7 +75,7 @@ class BtbTravelTemplateAfwStructure
 			'EDIT-UGROUPS' => '',
 			'MANDATORY' => true,
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'tparent_id' => array(
@@ -90,7 +90,7 @@ class BtbTravelTemplateAfwStructure
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'city_mfk' => array(
@@ -104,7 +104,7 @@ class BtbTravelTemplateAfwStructure
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'last_city_id' => array(
@@ -116,7 +116,7 @@ class BtbTravelTemplateAfwStructure
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'travel_template_code' => array(
@@ -128,7 +128,7 @@ class BtbTravelTemplateAfwStructure
 			'MINIBOX' => true,
 			'EDIT' => true,
 			'QEDIT' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'SIZE' => 16,
 			'MIN-SIZE' => 5,
 			'CHAR_TEMPLATE' => 'ARABIC-CHARS,SPACE',
@@ -154,7 +154,7 @@ class BtbTravelTemplateAfwStructure
 			'MINIBOX' => true,
 			'EDIT' => true,
 			'QEDIT' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'SIZE' => 48,
 			'MIN-SIZE' => 5,
 			'CHAR_TEMPLATE' => 'ARABIC-CHARS,SPACE',
@@ -180,7 +180,7 @@ class BtbTravelTemplateAfwStructure
 			'MINIBOX' => true,
 			'EDIT' => true,
 			'QEDIT' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'SIZE' => 48,
 			'MIN-SIZE' => 5,
 			'CHAR_TEMPLATE' => 'ARABIC-CHARS,SPACE',
@@ -203,7 +203,7 @@ class BtbTravelTemplateAfwStructure
 			'QSEARCH' => false,
 			'SHOW' => true,
 			'RETRIEVE' => false,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'EDIT' => true,
 			'QEDIT' => true,
 			'SIZE' => 32,
@@ -227,7 +227,7 @@ class BtbTravelTemplateAfwStructure
 			'SHOW' => true,
 			'RETRIEVE' => true,
 			'MINIBOX' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'EDIT' => true,
 			'QEDIT' => true,
 			'SIZE' => 32,
@@ -251,7 +251,7 @@ class BtbTravelTemplateAfwStructure
 			'SHOW' => true,
 			'RETRIEVE' => true,
 			'MINIBOX' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'EDIT' => true,
 			'QEDIT' => true,
 			'SIZE' => 32,
@@ -278,7 +278,7 @@ class BtbTravelTemplateAfwStructure
 			'SHOW' => true,
 			'RETRIEVE' => true,
 			'MINIBOX' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'EDIT' => true,
 			'QEDIT' => true,
 			'SIZE' => 32,
@@ -303,7 +303,7 @@ class BtbTravelTemplateAfwStructure
 			'MINIBOX' => false,
 			'EDIT' => true,
 			'QEDIT' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'SIZE' => 10,
 			'MANDATORY' => true,
 			'UTF8' => false,
@@ -327,7 +327,7 @@ class BtbTravelTemplateAfwStructure
 			'MINIBOX' => false,
 			'EDIT' => true,
 			'QEDIT' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'SIZE' => 8,
 			'MANDATORY' => true,
 			'UTF8' => false,
@@ -350,7 +350,7 @@ class BtbTravelTemplateAfwStructure
 			'SHOW' => true,
 			'RETRIEVE' => true,
 			'MINIBOX' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'EDIT' => true,
 			'QEDIT' => true,
 			'SIZE' => 32,
@@ -393,7 +393,7 @@ class BtbTravelTemplateAfwStructure
 			'QSEARCH' => false,
 			'SHOW' => true,
 			'RETRIEVE' => false,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'EDIT' => true,
 			'QEDIT' => false,
 			'SIZE' => 128,
@@ -420,7 +420,7 @@ class BtbTravelTemplateAfwStructure
 			'QSEARCH' => false,
 			'SHOW' => true,
 			'RETRIEVE' => false,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'EDIT' => true,
 			'QEDIT' => false,
 			'SIZE' => 128,
@@ -448,7 +448,7 @@ class BtbTravelTemplateAfwStructure
 			'QEDIT' => false,
 			'DEFAUT' => 'Y',
 			'TYPE' => 'YN',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => '',
 			'STEP' => 1,
@@ -706,7 +706,7 @@ class BtbTravelTemplateAfwStructure
 			'EDIT-UGROUPS' => '',
 			'MANDATORY' => true,
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'road2_id' => array(
@@ -734,7 +734,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'road3_id' => array(
@@ -762,7 +762,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'road_return_id' => array(
@@ -791,7 +791,7 @@ class BtbTravelTemplateAfwStructure
 			'EDIT-UGROUPS' => '',
 			'MANDATORY' => true,
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'road1_station_mfk' => array(
@@ -816,7 +816,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'road2_station_mfk' => array(
@@ -841,7 +841,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'road3_station_mfk' => array(
@@ -866,7 +866,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'road_return_station_mfk' => array(
@@ -891,7 +891,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),*/
 
 		'distance_c1' => array(
@@ -914,7 +914,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'city1_hours_nb' => array(
@@ -937,7 +937,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'city1_hotel_mfk' => array(
@@ -957,14 +957,14 @@ class BtbTravelTemplateAfwStructure
 			'TYPE' => 'MFK',
 			'ANSWER' => 'hotel',
 			'ANSMODULE' => 'btb',
-			'WHERE' => "work_branch_id in (118, §work_branch_id§, §tparent_id§) and draft='N' and active='Y' and city_id = §city1_id§",
+			'WHERE' => "work_branch_id in (1, §work_branch_id§, §tparent_id§) and active='Y' and city_id = §city1_id§", // -- and dr aft='N'
 			'READONLY' => false,
 			'SEARCH-BY-ONE' => false,
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'distance_c2' => array(
@@ -987,7 +987,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'city2_hours_nb' => array(
@@ -1008,7 +1008,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'city2_hotel_mfk' => array(
@@ -1028,14 +1028,14 @@ class BtbTravelTemplateAfwStructure
 			'TYPE' => 'MFK',
 			'ANSWER' => 'hotel',
 			'ANSMODULE' => 'btb',
-			'WHERE' => "work_branch_id in (118, §work_branch_id§, §tparent_id§) and draft='N' and active='Y' and city_id = §city2_id§",
+			'WHERE' => "work_branch_id in (1, §work_branch_id§, §tparent_id§) and active='Y' and city_id = §city2_id§", // -- and dr aft='N'
 			'READONLY' => false,
 			'SEARCH-BY-ONE' => false,
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'distance_c3' => array(
@@ -1058,7 +1058,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'city3_hours_nb' => array(
@@ -1081,7 +1081,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'city3_hotel_mfk' => array(
@@ -1101,14 +1101,14 @@ class BtbTravelTemplateAfwStructure
 			'TYPE' => 'MFK',
 			'ANSWER' => 'hotel',
 			'ANSMODULE' => 'btb',
-			'WHERE' => "work_branch_id in (118, §work_branch_id§, §tparent_id§) and draft='N' and active='Y' and city_id = §city3_id§",
+			'WHERE' => "work_branch_id in (1, §work_branch_id§, §tparent_id§) and active='Y' and city_id = §city3_id§",  // -- and dr aft='N'
 			'READONLY' => false,
 			'SEARCH-BY-ONE' => false,
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'distance_return' => array(
@@ -1131,7 +1131,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'travel_duration' => array(
@@ -1167,7 +1167,7 @@ class BtbTravelTemplateAfwStructure
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'trips_program' => array(

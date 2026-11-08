@@ -2,6 +2,39 @@
 <?php
 class BtbBusTemplateAfwStructure
 {
+	// token separator = §
+	public static function initInstance(&$obj)
+	{
+		if ($obj instanceof BusTemplate) {
+			$obj->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
+			$obj->DISPLAY_FIELD = "bus_model_name";
+
+			// $obj->ENABLE_DISPLAY_MODE_IN_QEDIT=true;
+			$obj->ORDER_BY_FIELDS = "work_branch_id, bus_model_name";
+
+
+
+			$obj->UNIQUE_KEY = array('work_branch_id', 'bus_model_name');
+			$obj->editByStep = true;
+			$obj->editNbSteps = 4;
+			$obj->showQeditErrors = true;
+			$obj->showRetrieveErrors = true;
+			$obj->general_check_errors = true;
+			$obj->public_display = true;
+			// $obj->after_save_edit = array("class"=>'BusTemplate',"attribute"=>'xxxx_id', "currmod"=>'btb',"currstep"=>2);
+			$obj->after_save_edit = array("mode" => "qsearch", "currmod" => 'btb', "class" => 'BusTemplate', "submit" => true);
+		} else {
+			BusTemplateArTranslator::initData();
+			BusTemplateEnTranslator::initData();
+		}
+	}
+
+	/**
+	 * DB_STRUCTURE is the main source of configuration for the class 
+	 *    it is used in all the modules and methods to know how 
+	 *    to handle the class attributes
+	 * @var array
+	 */
 	public static $DB_STRUCTURE = array(
 
 
@@ -15,7 +48,7 @@ class BtbBusTemplateAfwStructure
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_50',
+			'CSS' => 'width_pct_25',
 		),
 
 		'work_branch_id' => array(
@@ -39,7 +72,7 @@ class BtbBusTemplateAfwStructure
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_50',
+			'CSS' => 'width_pct_25',
 		),
 
 		'bus_model_name' => array(
@@ -62,10 +95,39 @@ class BtbBusTemplateAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_50',
+			'CSS' => 'width_pct_25',
 		),
 
-		'empty_columns' => array(
+		'bus_type_id' => array(
+			'SHORTNAME' => 'type',
+			'SEARCH' => true,
+			'QSEARCH' => true,
+			'SHOW' => true,
+			'RETRIEVE' => true,
+			'EDIT' => true,
+			'QEDIT' => true,
+			'MINIBOX' => true,
+			'CSS' => 'width_pct_25',
+			'SIZE' => 32,
+			'MANDATORY' => true,
+			'UTF8' => false,
+			'TYPE' => 'FK',
+			'ANSWER' => 'bus_type',
+			'ANSMODULE' => 'btb',
+			'RELATION' => 'ManyToOne',
+			'READONLY' => false,
+			'SEARCH-BY-ONE' => true,
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'ERROR-CHECK' => true,
+			'DEPENDENT_OFME' => array(
+				0 => 'bus_brand_id',
+			),
+		),
+
+		'corridors_spec' => array(
 			'SEARCH' => true,
 			'QSEARCH' => false,
 			'SHOW' => true,
@@ -85,7 +147,7 @@ class BtbBusTemplateAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_50',
+			'CSS' => 'width_pct_75',
 		),
 
 		'rows_nb' => array(
@@ -106,8 +168,56 @@ class BtbBusTemplateAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_50',
+			'CSS' => 'width_pct_25',
 		),
+
+		'force_seats' => array(
+			'SEARCH' => true,
+			'QSEARCH' => false,
+			'SHOW' => true,
+			'RETRIEVE' => true,
+			'EDIT' => true,
+			'QEDIT' => true,
+			'SIZE' => 'AREA',
+			'ROWS' => 3,
+			'CHAR_TEMPLATE' => '',
+			'MANDATORY' => false,
+			'UTF8' => true,
+			'TYPE' => 'TEXT',
+			'READONLY' => false,
+			'SEARCH-BY-ONE' => false,
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'ERROR-CHECK' => true,
+			'CSS' => 'width_pct_100',
+		),
+
+		'remove_seats' => array(
+			'SEARCH' => true,
+			'QSEARCH' => false,
+			'SHOW' => true,
+			'RETRIEVE' => true,
+			'EDIT' => true,
+			'QEDIT' => true,
+			'SIZE' => 'AREA',
+			'ROWS' => 3,
+			'CHAR_TEMPLATE' => '',
+			'MANDATORY' => false,
+			'UTF8' => true,
+			'TYPE' => 'TEXT',
+			'READONLY' => false,
+			'SEARCH-BY-ONE' => false,
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'ERROR-CHECK' => true,
+			'CSS' => 'width_pct_100',
+		),
+
+
 
 		'nb_seats' => array(
 			'STEP' => 99,
@@ -147,7 +257,7 @@ class BtbBusTemplateAfwStructure
 			'READONLY' => true,
 			'SEARCH-BY-ONE' => false,
 			'DISPLAY' => true,
-			'STEP' => 2,
+			'STEP' => 4,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'CSS' => 'width_pct_100',
@@ -164,7 +274,7 @@ class BtbBusTemplateAfwStructure
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => true,
 			'READONLY' => true,
-			'STEP' => 3,
+			'STEP' => 2,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'CSS' => 'width_pct_100',

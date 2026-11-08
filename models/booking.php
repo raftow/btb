@@ -189,7 +189,7 @@ class Booking extends BtbObject
                 $pbms = array();
 
                 $color = "green";
-                $title_ar = "تحديث الباصات المتوفر فيها مقاعد";
+                $title_ar = "تحديث المركبات المتوفر فيها مقاعد";
                 $pbms["xc123B"] = array("METHOD" => "updateBuses", "COLOR" => $color, "LABEL_AR" => $title_ar, "ADMIN-ONLY" => true, "BF-ID" => "", 'ICON' => 'bus', 'STEP' => 4);
 
                 $color = "yellow";
@@ -261,7 +261,7 @@ class Booking extends BtbObject
 
         public function beforeDelete($id, $id_replace)
         {
-                global $server_db_prefix;
+                $server_db_prefix = AfwSession::currentDBPrefix();
 
                 if (!$id) {
                         $id = $this->getId();
@@ -405,7 +405,7 @@ class Booking extends BtbObject
                 for ($k = 1; $k <= 3; $k++) {
                         if (($attribute == "div_seats_bus$k") or ($attribute == "my_seats_bus$k")) {
                                 $tbus = $this->het("bus$k");
-                                return "اختيار المقاعد من الباص "; // .$tbus->getShortDisplay($lang);
+                                return "اختيار المقاعد من المركبة "; // .$tbus->getShortDisplay($lang);
                         }
                 }
 
@@ -899,7 +899,7 @@ class Booking extends BtbObject
                         list($bus_errors, $bus_infos) = $this->updateBuses($lang, false);
                         if (count($bus_errors) > 0) AfwSession::pushWarning(implode("<br>\n", $bus_errors));
                         elseif (count($bus_infos) > 0) AfwSession::pushInformation(implode("<br>\n", $bus_infos));
-                        else AfwSession::pushInformation("تم تحديث الباص بنجاح");
+                        else AfwSession::pushInformation("تم تحديث المركبة بنجاح");
 
 
                         $this->set("discount", 0);
@@ -1301,7 +1301,7 @@ class Booking extends BtbObject
 
         public function calcBus_select_comment()
         {
-                return "<div class='bus_select_comment'>تم إختيار الباص لأجل توفر صنف المقاعد المطلوبة</div>";
+                return "<div class='bus_select_comment'>تم إختيار المركبة لأجل توفر صنف المقاعد المطلوبة</div>";
         }
 
 

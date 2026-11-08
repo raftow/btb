@@ -1,9 +1,10 @@
 <?php
 
-class WorkBranchEnTranslator{
-    public static function initData()
-    {
-        $trad = [];
+class WorkBranchEnTranslator
+{
+	public static function initData()
+	{
+		$trad = [];
 
 		$trad["work_branch"]["workbranch.single"] = "Work branch";
 		$trad["work_branch"]["workbranch.new"] = "new";
@@ -32,7 +33,7 @@ class WorkBranchEnTranslator{
 		$trad["work_branch"]["employeeList"] = "Employee list";
 		$trad["work_branch"]["allEmployeeList"] = "All employee list";
 		$trad["work_branch"]["workBranchList"] = "List of Work branchs";
-		$trad["work_branch"]["exbusList"] = "Exbus list";
+		$trad["work_branch"]["exampleBusList"] = "List of example buses";
 		$trad["work_branch"]["busList"] = "Bus list";
 		$trad["work_branch"]["busConventionList"] = "Bus convention list";
 		$trad["work_branch"]["travelConventionList"] = "Travel convention list";
@@ -43,7 +44,7 @@ class WorkBranchEnTranslator{
 		$trad["work_branch"]["seat_category_men"] = "Seat category men";
 		$trad["work_branch"]["branchSeatPriceList"] = "Branch seat price list";
 		$trad["work_branch"]["travelList"] = "Travel list";
-        // steps
+		// steps
 		$trad["work_branch"]["step1"] = "Definition";
 		$trad["work_branch"]["step2"] = "Advanced Information";
 		$trad["work_branch"]["step3"] = "step3";
@@ -55,12 +56,12 @@ class WorkBranchEnTranslator{
 		$trad["work_branch"]["step9"] = "step9";
 		$trad["work_branch"]["step10"] = "step10";
 		$trad["work_branch"]["step11"] = "step11";
-        return $trad;
-    }
+		return $trad;
+	}
 
-    public static function getInstance()
+	public static function getInstance()
 	{
-        if(false) return new WorkBranchArTranslator();
+		if (false) return new WorkBranchArTranslator();
 		return new WorkBranch();
 	}
 }

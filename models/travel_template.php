@@ -214,7 +214,7 @@ class TravelTemplate extends BtbObject
             unset($link);
             $my_id = $this->getId();
             $link = array();
-            $title = "إدارة الباصات";
+            $title = "إدارة المركبات";
             $title_detailed = $title . "لـ : " . $displ;
             $link["URL"] = "main.php?Main_Page=afw_mode_qedit.php&cl=TravelTemplateBus&currmod=btb&id_origin=$my_id&class_origin=TravelTemplate&module_origin=btb&newo=-1&limit=30&ids=all&fixmtit=$title_detailed&fixmdisable=1&fixm=travel_template_id=$my_id&sel_travel_template_id=$my_id&return_mode=1&popup=1";
             $link["TITLE"] = $title;
@@ -267,7 +267,7 @@ class TravelTemplate extends BtbObject
 
 
         $color = "green";
-        $title_ar = "تحديث باصات البرنامج";
+        $title_ar = "تحديث مركبات البرنامج";
         $pbms["As458Y"] = array("METHOD" => "genereBusList", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'MODE' => array("mode_busList" => true), 'STEP' => 7);
 
         $color = "red";
@@ -826,7 +826,7 @@ class TravelTemplate extends BtbObject
 
     public function beforeDelete($id, $id_replace)
     {
-        global $server_db_prefix;
+        $server_db_prefix = AfwSession::currentDBPrefix();
 
         if ($id) {
             if ($id_replace == 0) {
@@ -1214,7 +1214,7 @@ class TravelTemplate extends BtbObject
         $tr_temp_id = $this->getId();
         $travelers_nb = intval($this->travelers_nb);
         $log_arr = array();
-        $log_arr[] = "عدد الباصات التي نحتاج إليها في الرحلة حسب التقدير :";
+        $log_arr[] = "عدد المركبات التي نحتاج إليها في الرحلة حسب التقدير :";
         $bus_nb = round(($travelers_nb / $nb_seats));
         // $pct_bus_spare keep or remove ?
         $pct_bus_spare = 0.0;  // 0 %
@@ -1224,7 +1224,7 @@ class TravelTemplate extends BtbObject
         $taux_prio = 70.0 / 100;
 
         $to_book_bus_nb = round($taux * $bus_nb);
-        $log_arr[] = "نحتاج $to_book_bus_nb باص =~  (1+$pct_bus_spare/100.0) * $travelers_nb / $nb_seats ";
+        $log_arr[] = "نحتاج $to_book_bus_nb مركبة =~  (1+$pct_bus_spare/100.0) * $travelers_nb / $nb_seats ";
 
         // if we impose a specific example we keep it alone
         if ($busExampleObj) {
@@ -1276,7 +1276,7 @@ class TravelTemplate extends BtbObject
                     // $log_arr[] = $log0;
                     // if($err) return array("genereBusList > $i :      ".$err,"");
                 } else {
-                    $log_arr[] = "تم العثور على$found باص : $busItem " . $log0;
+                    $log_arr[] = "تم العثور على$found مركبة : $busItem " . $log0;
                     $found_all += $found;
                     $to_book_bus_nb = $to_book_bus_nb - $found;
                     if ($to_book_bus_nb <= 0) break;
@@ -1287,7 +1287,7 @@ class TravelTemplate extends BtbObject
 
         $log = implode("\n<br>", $log_arr);
 
-        return array("", "$log \n<br> $found_all باص تم العثور عليهم");
+        return array("", "$log \n<br> $found_all مركبة تم العثور عليهم");
     }
 
     public function getBusCandidate($lang, $booking_start_date, $booking_start_time, $booking_end_date, $booking_end_time, $travel_id)
@@ -1305,32 +1305,32 @@ class TravelTemplate extends BtbObject
             $bus = null;
             $ttb = TravelTemplateBus::loadByMainIndex($tr_temp_id, $bnum, $create_obj_if_not_found = false);
             if (!$ttb) {
-                $log_arr[] = "لا يوجد باص رقم $bnum في برنامج الرحلة";
+                $log_arr[] = "لا يوجد مركبة رقم $bnum في برنامج الرحلة";
             } else {
-                $bus = $ttb->hetBus();
+                $bus = $ttb->het("bus_id");
             }
             $busCand = null;
             if ($bus) {
-                //$log_arr[] = "تم اختيار الباص ". $bus;
+                //$log_arr[] = "تم اختيار المركبة ". $bus;
                 if ($bus->estExample()) {
                     if ((!$compObj) or (!$compObj->estExpert())) {
                         $busCand = $bus;
                     } else {
                         list($busCand, $reason) = $bus->getAvailableReelChildForPeriod($lang, $booking_start_date, $booking_start_time, $booking_end_date, $booking_end_time, $travel_id);
                         if (!$busCand) {
-                            $log_arr[] = "أفراد الباص المثال :  " . $bus . " غير متوفرين لهذه الفترة [$booking_start_date $booking_start_time] إلى [$booking_end_date $booking_end_time ] " . $reason;
+                            $log_arr[] = "أفراد المركبة المثال :  " . $bus . " غير متوفرين لهذه الفترة [$booking_start_date $booking_start_time] إلى [$booking_end_date $booking_end_time ] " . $reason;
                         }
                     }
                 } else {
                     list($isAvail, $reason) = $bus->isAvailableForPeriod($lang, $booking_start_date, $booking_start_time, $booking_end_date, $booking_end_time, $travel_id);
                     if (!$isAvail) {
-                        $log_arr[] = "الباص " . $bus . " غير متوفر لهذه الفترة [$booking_start_date $booking_start_time] إلى [$booking_end_date $booking_end_time ] " . $reason;
+                        $log_arr[] = "المركبة " . $bus . " غير متوفر لهذه الفترة [$booking_start_date $booking_start_time] إلى [$booking_end_date $booking_end_time ] " . $reason;
                     } else {
                         $busCand = $bus;
                     }
                 }
             } else {
-                $log_arr[] = "لا يوجد رقم تسلسلي للباص رقم $bnum في برنامج الرحلة";
+                $log_arr[] = "لا يوجد رقم تسلسلي للمركبة رقم $bnum في برنامج الرحلة";
             }
 
             if ($busCand) {
@@ -1422,13 +1422,13 @@ class TravelTemplate extends BtbObject
     {
         $default_arrival_location = "";
         if (!$default_arrival_location) {
-            if (!$this->containResidence()) $default_arrival_location = "محطة الباص";
+            if (!$this->containResidence()) $default_arrival_location = "محطة المركبة";
             else $default_arrival_location = "الفندق";
         }
 
         $default_depart_location = "";
         if (!$default_depart_location) {
-            if (!$this->containResidence()) $default_depart_location = "محطة الباص";
+            if (!$this->containResidence()) $default_depart_location = "محطة المركبة";
             else $default_depart_location = "الفندق";
         }
 
@@ -1838,11 +1838,11 @@ class TravelTemplate extends BtbObject
                 $ttbusList = $this->get("busList");
                 $errors_arr = array();
                 $infos_arr = array();
-                $infos_arr[] = "عدد الباصات التي سيتم  العمل عليها : " . count($ttbusList);
+                $infos_arr[] = "عدد المركبات التي سيتم  العمل عليها : " . count($ttbusList);
                 foreach($ttbusList as $ttbusObj)
                 {
                         $ttbusObjDisp = $ttbusObj->getShortDisplay($lang);
-                        $busUnique = $ttbusObj->hetBus();
+                        $busUnique = $ttbusObj->het("bus_id");
                         if($busUnique) 
                         {
                                 $busUniqueOwner = $busUnique->hetOwner();

@@ -82,7 +82,29 @@ class HotelFile extends BtbObject
         return implode(" - ", $data);
     }
 
+    /**
+     * @param string $attribute
+     */
+    public function displayPreview(
+        $attribute,
+        $structure = null,
+        $lang = 'ar'
+    ) {
+        if ($attribute != "workflow_file_id") return $this->showAttribute($attribute, $structure, true, $lang);
+        $wfObj = $this->het("workflow_file_id");
+        if (!$wfObj) return "<div style='width: 100%;height: 100%;text-align: center;'><i class='fas fa-file-alt' style='font-size: 48px;color: gray;'></i><br>Preview not available if no file uploaded</div>";
+        /* $upld_path = AfwSession::config("uploads_http_path", "");
+        $afile_ext = strtolower($this->getVal("afile_ext"));
+        $doc_type_id = $this->getVal("doc_type_id");*/
 
+        if ($wfObj->estPicture()) {
+            return $wfObj->pictureView();
+        } elseif ($wfObj->estVideo()) {
+            return $wfObj->showMe();
+        } else {
+            return "<div style='width: 100%;height: 100%;text-align: center;'><i class='fas fa-file-alt' style='font-size: 48px;color: gray;'></i><br>Preview not available for this file type</div>";
+        }
+    }
 
 
     protected function getPublicMethods()
@@ -119,7 +141,7 @@ class HotelFile extends BtbObject
 
     public function beforeDelete($id, $id_replace)
     {
-        global $server_db_prefix;
+        $server_db_prefix = AfwSession::currentDBPrefix();
 
         if ($id) {
             if ($id_replace == 0) {

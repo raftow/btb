@@ -6,7 +6,7 @@
   'level' => '999',
   'public' => false,
   'module_id' => '1272',
-  'menu_name_ar' => 'البحث في هياكل المركبات',
+  'menu_name_ar' => 'البحث في قوالب المركبات',
   'menu_name_en' => 'Bus models search',
   'page' => 'main.php?Main_Page=afw_mode_search.php&cl=BusTemplate&currmod=btb',
   'css' => 'bf',

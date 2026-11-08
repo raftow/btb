@@ -1,6 +1,6 @@
 <?php
 // ------------------------------------------------------------------------------------
-// ----             auto generated php class of table bus_template_row : bus_template_row - صفوف نموذج الباص 
+// ----             auto generated php class of table bus_template_row : bus_template_row - صفوف نموذج المركبة 
 // ------------------------------------------------------------------------------------
 
 
@@ -12,19 +12,19 @@ class BusTemplateRow extends BtbObject
 {
 
         public static $MY_ATABLE_ID = 13734;
-        // إجراء إحصائيات حول صفوف نموذج الباص 
+        // إجراء إحصائيات حول صفوف نموذج المركبة 
         public static $BF_STATS_BUS_TEMPLATE_ROW = 104012;
-        // إدارة صفوف نموذج الباص 
+        // إدارة صفوف نموذج المركبة 
         public static $BF_QEDIT_BUS_TEMPLATE_ROW = 104007;
-        // إنشاء صف بنموذج الباص 
+        // إنشاء صف بنموذج المركبة 
         public static $BF_EDIT_BUS_TEMPLATE_ROW = 104006;
-        // الاستعلام عن صف بنموذج الباص 
+        // الاستعلام عن صف بنموذج المركبة 
         public static $BF_QSEARCH_BUS_TEMPLATE_ROW = 104011;
-        // البحث في صفوف نموذج الباص 
+        // البحث في صفوف نموذج المركبة 
         public static $BF_SEARCH_BUS_TEMPLATE_ROW = 104010;
-        // عرض تفاصيل صف بنموذج الباص 
+        // عرض تفاصيل صف بنموذج المركبة 
         public static $BF_DISPLAY_BUS_TEMPLATE_ROW = 104009;
-        // مسح صف بنموذج الباص 
+        // مسح صف بنموذج المركبة 
         public static $BF_DELETE_BUS_TEMPLATE_ROW = 104008;
 
 
@@ -122,7 +122,7 @@ class BusTemplateRow extends BtbObject
 
         public function beforeDelete($id, $id_replace)
         {
-                global $server_db_prefix;
+                $server_db_prefix = AfwSession::currentDBPrefix();
 
                 if ($id) {
                         if ($id_replace == 0) {
@@ -187,8 +187,11 @@ class BusTemplateRow extends BtbObject
 
         public function attributeIsApplicable($attribute)
         {
+                /**
+                 * @var BusTemplate $bt
+                 */
                 $bt = $this->het("bus_template_id");
-                list($all_cols,  $empty_columns_arr) = $bt->getCols();
+                list($all_cols,  $empty_columns_arr, $removed_cols_arr) = $bt->getCols();
                 $row_num = $this->getVal("row_num");
 
                 foreach ($all_cols as $i => $col) {
@@ -196,6 +199,14 @@ class BusTemplateRow extends BtbObject
 
                         if (($attribute == "${lowerCol}_width") or ($attribute == "${lowerCol}_length")) {
                                 return ((!$this->seatEraseMe($i, $col)) and $bt and (!$bt->columnEraseMe($i, $col, $row_num)));
+                        }
+                }
+
+
+                foreach ($removed_cols_arr as $ir => $col) {
+                        $lowerCol = strtolower($col);
+                        if (($attribute == "${lowerCol}_width") or ($attribute == "${lowerCol}_length")) {
+                                return false;
                         }
                 }
 

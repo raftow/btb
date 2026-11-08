@@ -181,7 +181,7 @@ class Hotel extends BtbObject
                 $my_id = $this->getId();
                 $link = array();
                 $title = "تحرير وتوظيف الصور";
-                $title_detailed = $title . " لهذا الباص : " . $displ;
+                $title_detailed = $title . " لهذه المركبة : " . $displ;
                 $link["URL"] = "main.php?Main_Page=afw_mode_qedit.php&cl=HotelFile&currmod=btb&id_origin=$my_id&class_origin=Hotel&module_origin=btb&newo=-1&limit=30&ids=all&fixmtit=$title_detailed&fixmdisable=1&fixm=hotel_id=$my_id&sel_hotel_id=$my_id&return_mode=1&popup=1";
                 $link["TITLE"] = $title;
                 $link["UGROUPS"] = array();
@@ -225,7 +225,7 @@ class Hotel extends BtbObject
 
     public function beforeDelete($id, $id_replace)
     {
-        global $server_db_prefix;
+        $server_db_prefix = AfwSession::currentDBPrefix();
 
         if ($id) {
             if ($id_replace == 0) {

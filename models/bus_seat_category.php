@@ -1,6 +1,6 @@
 <?php
 // ------------------------------------------------------------------------------------
-// ----             auto generated php class of table bus_seat_category : bus_seat_category - تصنيفات مقاعد الباصات 
+// ----             auto generated php class of table bus_seat_category : bus_seat_category - تصنيفات مقاعد المركبات 
 // ------------------------------------------------------------------------------------
 
 
@@ -17,47 +17,11 @@ class BusSeatCategory extends BtbObject
     public static $DATABASE        = "";
     public static $MODULE            = "btb";
     public static $TABLE            = "";
-    public static $DB_STRUCTURE = null; /* = array(
-                id => array(SHOW => true, RETRIEVE => true, EDIT => true, TYPE => PK),
-
-		
-		bus_id => array(SHORTNAME => bus, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => bus,  ANSMODULE => btb,  AUTOCOMPLETE => false, INPUT_WIDE => true,  
-				RELATION => OneToMany,  READONLY => true, ),
-
-		seat_category_enum => array(SHORTNAME => category,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => ENUM,  ANSWER => "FUNCTION", READONLY => false, ),
-
-		seat_list => array(SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 96,  MAXLENGTH => 255,  "MIN-SIZE" => 2,  CHAR_TEMPLATE => "ALPHABETIC,COMMAS,NUMERIC",  REQUIRED => true,  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
-
-                
-                created_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                created_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                updated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                updated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                validated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                validated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                active => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                draft => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                version => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => INT),
-                update_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                delete_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                display_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                sci_id => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => scenario_item, ANSMODULE => pag),
-                tech_notes 	    => array(TYPE => TEXT, CATEGORY => FORMULA, "SHOW-ADMIN" => true, 'STEP' =>"all", TOKEN_SEP=>"§", READONLY=>true, "NO-ERROR-CHECK"=>true),
-	);
-	
-	*/
+    public static $DB_STRUCTURE = null;
     public function __construct()
     {
         parent::__construct("bus_seat_category", "id", "btb");
+        // BtbBusSeatCategoryAfwStructure::init_ins();
         $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
         $this->DISPLAY_FIELD = "";
         $this->ORDER_BY_FIELDS = "bus_id, seat_category_enum";
@@ -112,7 +76,7 @@ class BusSeatCategory extends BtbObject
         $data = array();
         $link = array();
 
-        $bus = $this->hetBus();
+        $bus = $this->het("bus_id");
         if ($bus) $data[0] = $bus->getShortDisplay($lang);
         else $data[0] = "unknown-bus";
 
@@ -206,7 +170,7 @@ class BusSeatCategory extends BtbObject
 
     public function beforeDelete($id, $id_replace)
     {
-        global $server_db_prefix;
+        $server_db_prefix = AfwSession::currentDBPrefix();
 
         if ($id) {
             if ($id_replace == 0) {

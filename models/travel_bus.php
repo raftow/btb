@@ -1,6 +1,6 @@
 <?php
 // ------------------------------------------------------------------------------------
-// ----             auto generated php class of table travel_bus : travel_bus - باصات الرحلة 
+// ----             auto generated php class of table travel_bus : travel_bus - مركبات الرحلة 
 // ------------------------------------------------------------------------------------
 
 
@@ -12,19 +12,19 @@ class TravelBus extends BtbObject
 {
 
         public static $MY_ATABLE_ID = 13744;
-        // إجراء إحصائيات حول باصات الرحلة 
+        // إجراء إحصائيات حول مركبات الرحلة 
         public static $BF_STATS_TRAVEL_BUS = 104056;
-        // إدارة باصات الرحلة 
+        // إدارة مركبات الرحلة 
         public static $BF_QEDIT_TRAVEL_BUS = 104051;
-        // إنشاء باص رحلة 
+        // إنشاء مركبة رحلة 
         public static $BF_EDIT_TRAVEL_BUS = 104050;
-        // الاستعلام عن باص رحلة 
+        // الاستعلام عن مركبة رحلة 
         public static $BF_QSEARCH_TRAVEL_BUS = 104055;
-        // البحث في باصات الرحلة 
+        // البحث في مركبات الرحلة 
         public static $BF_SEARCH_TRAVEL_BUS = 104054;
-        // عرض تفاصيل باص رحلة 
+        // عرض تفاصيل مركبة رحلة 
         public static $BF_DISPLAY_TRAVEL_BUS = 104053;
-        // مسح باص رحلة 
+        // مسح مركبة رحلة 
         public static $BF_DELETE_TRAVEL_BUS = 104052;
 
         public static $STEP_BUS_PRICING = 2;
@@ -34,254 +34,9 @@ class TravelBus extends BtbObject
         public static $DATABASE                = "";
         public static $MODULE                    = "btb";
         public static $TABLE                        = "";
-        public static $DB_STRUCTURE = null; /* = array(
-                id => array(SHOW => true, RETRIEVE => true, EDIT => false, TYPE => PK),
- 
- 
-		bus_company_id => array('STEP' => 1,  SHORTNAME => bcompany,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 40,  MAXLENGTH => 40,  REQUIRED => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb,  AUTOCOMPLETE => true,  
-				RELATION => ManyToOne,  READONLY => true, CSS => width_pct_50, ),
- 
-		bus_id => array('STEP' => 1,  SHORTNAME => bus,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true, ALL_FGROUP=>true,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => bus,  ANSMODULE => btb,  AUTOCOMPLETE => true,  
-                                RELATION => OneToMany,  READONLY => true,  DNA => true, CSS => width_pct_50, ),
+        public static $DB_STRUCTURE = null;
 
-        travel_company_id => array(FGROUP => bbooking, 'STEP' => 1,  SHORTNAME => tcompany,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => false,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 40,  MAXLENGTH => 40,  REQUIRED => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb,  AUTOCOMPLETE => true,  
-				RELATION => ManyToOne,  READONLY => true, ),
-                
-		travel_id => array(FGROUP => bbooking, 'STEP' => 1,  SHORTNAME => travel,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
-				EDIT => false,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => travel,  ANSMODULE => btb,  AUTOCOMPLETE => false,  
-				RELATION => OneToMany,  READONLY => true,  DNA => true, ),
- 
-                                
-                bus_code => array(CATEGORY=>SHORTCUT, SHORTCUT=>"bus.bus_code", TYPE => "TEXT",  READONLY => true, ), 
-                bus_desc => array(CATEGORY=>FORMULA, TYPE => "TEXT",  READONLY => true, ),
-                bus_seats => array(CATEGORY=>FORMULA, TYPE => "TEXT",  READONLY => true, ),
-                // محجوز  للصيانة   / تم تأجيره  لرحلة
-                bus_booking_type_id => array('STEP' => 1,  SHORTNAME => booking_type,  SEARCH => false,  QSEARCH => false,  SHOW => false,  RETRIEVE => false,  
-				EDIT => false,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => FK,  ANSWER => bus_booking_type,  ANSMODULE => btb,  
-				RELATION => ManyToOne,  READONLY => false, ),
- 
-		booking_start_date => array('STEP' => 1,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 10,  MAXLENGTH => 10,  FORMAT => HIJRI_UNIT,  UTF8 => false,  
-				TYPE => "DATE",  READONLY => false, CSS => width_pct_50, ),
- 
-		booking_start_time => array('STEP' => 1,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 8,  MAXLENGTH => 8,  UTF8 => false,  
-				TYPE => "TIME",  READONLY => false, CSS => width_pct_50, ),
- 
-		booking_end_date => array('STEP' => 1,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 10,  MAXLENGTH => 10,  FORMAT => HIJRI_UNIT,  UTF8 => false,  
-				TYPE => "DATE",  READONLY => false, CSS => width_pct_50, ),
- 
-		booking_end_time => array('STEP' => 1,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 8,  MAXLENGTH => 8,  UTF8 => false,  
-				TYPE => "TIME",  READONLY => false, CSS => width_pct_50, ),
-                
-		total_price => array('STEP' => 2, UNIT => "ريال",  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "INT",  READONLY => false, ),
- 
-                seat_price => array('STEP' => 2, UNIT => "ريال",  UNIT_EN => "SAR",  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "FLOAT", FORMAT=>"*.2" , CATEGORY => FORMULA, READONLY => true, ),
-                
-                seat_normal_price => array('STEP' => 2, UNIT => "ريال",  UNIT_EN => "SAR",  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-                                TYPE => "FLOAT", FORMAT=>"*.2" , CATEGORY => FORMULA, READONLY => true, ),
 
-                seat_front_price => array('STEP' => 2, UNIT => "ريال",  UNIT_EN => "SAR",  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "FLOAT", FORMAT=>"*.2" , CATEGORY => FORMULA, READONLY => true, ),
-
-                'price_report' => array('STEP' => 2, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_100,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "TEXT", CATEGORY => FORMULA, READONLY => true, INPUT_WIDE => true, ),
-                
-
-		price_approval => array('STEP' => 2,  SHORTNAME => priced,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_33,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "YN", "DEFAULT" => "W", FORMAT => translate_for_attribute, FORMAT_CSS => array("Y"=>"price_approved", "N"=>"price_rejected", "W"=>"price_waiting"),  READONLY => true, ),
- 
-		price_approval_date => array('STEP' => 2,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_33,  
-				SIZE => 10,  MAXLENGTH => 10,  UTF8 => false,  
-				TYPE => "DATE",  FORMAT => "HIJRI_UNIT",  READONLY => true, ),
-
-		booking_needed => array(FGROUP => bbooking, SHORTNAME => tobook, 'STEP' => 3,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_25,
-                                EDIT_FGROUP=>true, QEDIT_FGROUP=>true, RETRIEVE_FGROUP => true,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => "YN", "DEFAULT" => "Y",  READONLY => true, ),
- 
-		booking_needed_now => array(FGROUP => bbooking, SHORTNAME => tobooknow, 'STEP' => 3,    
-				SHOW => true,  RETRIEVE => false, EDIT => true,  QEDIT => false, CSS => width_pct_25,
-                                EDIT_FGROUP=>true, QEDIT_FGROUP=>true, RETRIEVE_FGROUP => true,  
-				TYPE => "YN", CATEGORY => FORMULA,  READONLY => true, ),
-
-		'booked' => array(FGROUP => bbooking,'STEP' => 3,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_25,
-                                EDIT_FGROUP=>true, QEDIT_FGROUP=>true, RETRIEVE_FGROUP => true,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "YN", "DEFAULT" => "N",  READONLY => true, ),
-                
-		booked_date => array(FGROUP => bbooking,'STEP' => 3,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_25,
-                                EDIT_FGROUP=>true, QEDIT_FGROUP=>true, RETRIEVE_FGROUP => true,  
-				SIZE => 10,  MAXLENGTH => 10,  UTF8 => false,  
-				TYPE => "DATE",  FORMAT => "HIJRI_UNIT",  READONLY => true, ),
- 
-		booking_comment => array(FGROUP => bbooking, 'STEP' => 3,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,
-                                EDIT_FGROUP=>true, QEDIT_FGROUP=>true, RETRIEVE_FGROUP => true,  
-				SIZE => 255,  MAXLENGTH => 255,  "MIN-SIZE" => 10,  CHAR_TEMPLATE => "ALL",  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
- 
-                busDiv => array('STEP' => 4, "TYPE" => "TEXT", "CATEGORY" => "FORMULA", "SHOW"=>true, "RETRIEVE"=>false, SIZE=>255, "NO-LABEL"=>true,),
-
-                        photo_path => array('STEP' =>99, TYPE => TEXT, CATEGORY => SHORTCUT, SHORTCUT=>"bus.photo_path", "CAN-BE-SETTED"=>false,"NO-COTE"=>true,),
-                                          
-                        internal_photo_path => array('STEP' =>99, TYPE => TEXT, CATEGORY => SHORTCUT, SHORTCUT=>"bus.internal_photo_path", "CAN-BE-SETTED"=>false,"NO-COTE"=>true,),                  
-                
-		opened => array('STEP' => 4,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true, FORMAT => translate_for_attribute, 
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-                                TYPE => "YN", "DEFAULT" => "W",  OPEN_OPTIONS=>true,
-                                FORMAT_CSS => array("Y"=>"booking_opened", "N"=>"booking_closed", "W"=>"booking_waiting", "Z"=>"travel_closed"),
-                                READONLY => true, CSS => width_pct_50, ),
- 
-		opened_date => array('STEP' => 4,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 10,  MAXLENGTH => 10,  UTF8 => false,  
-				TYPE => "DATE",  FORMAT => "HIJRI_UNIT", CSS => width_pct_50,  READONLY => true, ),
- 
-                freeSeatList => array('STEP' => 4, TYPE => FK, ANSWER => travel_seat, ANSMODULE => btb, CATEGORY => ITEMS, ITEM => 'travel_bus_id', 
-                                            WHERE=>"(booked is null or booked != 'Y')", 
-                                            SHOW => true, FORMAT=>retrieve, 
-                                            "DO-NOT-RETRIEVE-COLS" => ["traveler_id", "expiry_date", "confirmed", "confirmed_date", "payment_type_id", "payment_ref"],
-                                            EDIT => true, READONLY=> true, ICONS=>true, 'DELETE-ICON'=>true, BUTTONS=>true, "NO-LABEL"=>false),                
- 
-                bookedSeatList => array('STEP' => 5, TYPE => FK, ANSWER => travel_seat, ANSMODULE => btb, CATEGORY => ITEMS, ITEM => 'travel_bus_id', 
-                                            WHERE=>"booked='Y' and (confirmed != 'Y' or confirmed is null)", 
-                                            SHOW => true, FORMAT=>retrieve, 
-                                            "DO-NOT-RETRIEVE-COLS" => ["confirmed", "confirmed_date", "payment_type_id", "payment_ref"],
-                                            EDIT => true, READONLY=> true, ICONS=>true, 'DELETE-ICON'=>true, BUTTONS=>true, "NO-LABEL"=>false),                
-
-                confirmedSeatList => array('STEP' => 6, TYPE => FK, ANSWER => travel_seat, ANSMODULE => btb, CATEGORY => ITEMS, ITEM => 'travel_bus_id', 
-                                            WHERE=>"booked='Y' and confirmed='Y'", 
-                                            SHOW => true, FORMAT=>retrieve, 
-                                            "DO-NOT-RETRIEVE-COLS" => ["expiry_date", "confirmed"],
-                                            EDIT => true, READONLY=> true, ICONS=>true, 'DELETE-ICON'=>true, BUTTONS=>true, "NO-LABEL"=>false),                
-                             
-                                allSeatList => array('STEP' => 99, TYPE => FK, ANSWER => travel_seat, ANSMODULE => btb, CATEGORY => ITEMS, ITEM => 'travel_bus_id',),                
-                
-                                tpl_city1_hotel_mfk => array(TYPE => MFK, ANSWER => hotel, ANSMODULE => btb, CATEGORY=>SHORTCUT, SHORTCUT=>"travel.template.city1_hotel_mfk","NO-COTE"=>true),
-                                tpl_city2_hotel_mfk => array(TYPE => MFK, ANSWER => hotel, ANSMODULE => btb, CATEGORY=>SHORTCUT, SHORTCUT=>"travel.template.city2_hotel_mfk","NO-COTE"=>true),
-                                tpl_city3_hotel_mfk => array(TYPE => MFK, ANSWER => hotel, ANSMODULE => btb, CATEGORY=>SHORTCUT, SHORTCUT=>"travel.template.city3_hotel_mfk","NO-COTE"=>true),
-                
-                city1_hotel_mfk => array('STEP' => 7, FGROUP=>"",  SHORTNAME => hotels1,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => MFK,  ANSWER => hotel,  ANSMODULE => btb,  
-                                WHERE => "active='Y' and id in (0§tpl_city1_hotel_mfk§0)",
-                                READONLY => false, ),                
-                
-                city2_hotel_mfk => array('STEP' => 7, FGROUP=>"",  SHORTNAME => hotels2,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => MFK,  ANSWER => hotel,  ANSMODULE => btb,  
-                                WHERE => "active='Y' and id in (0§tpl_city2_hotel_mfk§0)",
-                                READONLY => false, ),                
-
-                city3_hotel_mfk => array('STEP' => 7, FGROUP=>"",  SHORTNAME => hotels3,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => MFK,  ANSWER => hotel,  ANSMODULE => btb,  
-                                WHERE => "active='Y' and id in (0§tpl_city3_hotel_mfk§0)",
-                                READONLY => false, ),
-                               
-		approval => array(FGROUP => bbapproval, 'STEP' => 8,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,
-				EDIT => true,  QEDIT => false, CSS => width_pct_25,
-                                EDIT_FGROUP=>true, QEDIT_FGROUP=>true, RETRIEVE_FGROUP => true,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "YN", "DEFAULT" => "W",  READONLY => true, ),
- 
-		approval_date => array(FGROUP => bbapproval, 'STEP' => 8,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_25,
-                                EDIT_FGROUP=>true, QEDIT_FGROUP=>true, RETRIEVE_FGROUP => true,  
-				SIZE => 10,  MAXLENGTH => 10,  UTF8 => false,  
-				TYPE => "DATE",  FORMAT => "HIJRI_UNIT",  READONLY => true, ),
- 
-		approval_bus_code => array(FGROUP => bbapproval, 'STEP' =>8, SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  MINIBOX =>false, CSS => width_pct_25,
-                                EDIT_FGROUP=>true, QEDIT_FGROUP=>true, RETRIEVE_FGROUP => true, 
-				SIZE => 16,  "MIN-SIZE" => 3,  CHAR_TEMPLATE => "ALPHABETIC,NUMERIC",    
-				TYPE => "TEXT",  READONLY => false, ),
-
-		bus_num => array(FGROUP => bbapproval, 'STEP' => 8,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_25,
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => "INT",  READONLY => false, ),
- 
-		approval_bus_price => array(FGROUP => bbapproval, 'STEP' => 8, UNIT => "ريال",  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_25,
-                                EDIT_FGROUP=>true, QEDIT_FGROUP=>true, RETRIEVE_FGROUP => true,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "INT",  READONLY => false, ),
-
-		approval_comment => array(FGROUP => bbapproval, 'STEP' => 8,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_75,
-                                EDIT_FGROUP=>true, QEDIT_FGROUP=>true, RETRIEVE_FGROUP => true,  
-				SIZE => 255,  MAXLENGTH => 255,  "MIN-SIZE" => 10,  CHAR_TEMPLATE => "ALL",  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
-                                
-                created_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                created_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                updated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                updated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                validated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                validated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                active => array(SHOW => true, RETRIEVE => false, EDIT => true, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                draft => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                version => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => INT),
-                update_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                delete_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                display_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                sci_id => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => scenario_item, ANSMODULE => pag),
-                tech_notes 	    => array(TYPE => TEXT, CATEGORY => FORMULA, "SHOW-ADMIN" => true, 'STEP' =>"all", TOKEN_SEP=>"§", READONLY=>true, "NO-ERROR-CHECK"=>true),
-        );
-        
-        private $max_rows = -1;
-
-        private $effctive_seats_types = null;
-
-        private $rows_policy = null;
-
-        private $all_cols = null;
-        private $empty_columns_arr = null;
- 
-	*/
         public function __construct()
         {
                 parent::__construct("travel_bus", "id", "btb");
@@ -438,7 +193,7 @@ class TravelBus extends BtbObject
         public function getNodeDisplay($lang = "ar")
         {
                 $data = array();
-                $data[] = "باص رقم " . $this->getVal("bus_num");
+                $data[] = "مركبة رقم " . $this->getVal("bus_num");
                 // $data[] = $this->bus->getNodeDisplay($lang);
                 return implode(" - ", $data);
         }
@@ -446,9 +201,9 @@ class TravelBus extends BtbObject
         public function getShortDisplay($lang = "ar")
         {
                 $data = array();
-                $data[] = "باص رقم " . $this->getVal("bus_num");
+                $data[] = "مركبة رقم " . $this->getVal("bus_num");
                 /*
-               $trv = $this->hetTravel();
+               $trv = $this->het("travel_id");
 
                if($trv) $data[] = "رحلة ".$trv->getShortDisplay($lang);
                
@@ -472,7 +227,7 @@ class TravelBus extends BtbObject
                 $data[0] = "رحلة رقم " . $data[0];
 
                 $data[1] = $this->getVal("bus_num");
-                $data[1] = "باص رقم " . $data[1];
+                $data[1] = "مركبة رقم " . $data[1];
                 /*
                $bus = $this->het("bus_id");
                if($bus)
@@ -499,14 +254,14 @@ class TravelBus extends BtbObject
                         }
 
                         $color = "blue";
-                        $title_ar = "تحديث سعر تكلفة الباص والمقعد الواحد";
+                        $title_ar = "تحديث سعر تكلفة المركبة والمقعد الواحد";
                         $pbms["HAZn85"] = array(
                                 "METHOD" => "updatePrice",
                                 "COLOR" => $color,
                                 "LABEL_AR" => $title_ar,
                                 'CONFIRMATION_NEEDED' => true,
-                                'CONFIRMATION_QUESTION' => array('ar' => "هل تريد فعلا تحديث سعر تكلفة الباص والمقعد الواحد؟", 'en' => "....."),
-                                'CONFIRMATION_WARNING' => array('ar' => "سوف يتم حساب السعر بحسب الفترة والبرنامج وإعدادات تسعير مثل هذا الباص", 'en' => "....."),
+                                'CONFIRMATION_QUESTION' => array('ar' => "هل تريد فعلا تحديث سعر تكلفة المركبة والمقعد الواحد؟", 'en' => "....."),
+                                'CONFIRMATION_WARNING' => array('ar' => "سوف يتم حساب السعر بحسب الفترة والبرنامج وإعدادات تسعير مثل هذه المركبة", 'en' => "....."),
                                 "ADMIN-ONLY" => true,
                                 "BF-ID" => "",
                                 'STEP' => 2
@@ -514,7 +269,7 @@ class TravelBus extends BtbObject
                 }
                 if (!$this->estBooked()) {
                         $color = "blue";
-                        $title_ar = "تحديث إعدادات تأجير الباص";
+                        $title_ar = "تحديث إعدادات تأجير المركبة";
                         $pbms["Hdf98u"] = array("METHOD" => "updateBookingParams", "COLOR" => $color, "LABEL_AR" => $title_ar, "ADMIN-ONLY" => true, "BF-ID" => "", 'STEP' => 3);
                 } else {
                         /*
@@ -575,7 +330,7 @@ class TravelBus extends BtbObject
 
         public function beforeDelete($id, $id_replace)
         {
-                global $server_db_prefix;
+                $server_db_prefix = AfwSession::currentDBPrefix();
 
                 if (!$id) {
                         $id = $this->getId();
@@ -593,25 +348,25 @@ class TravelBus extends BtbObject
                                 $obj->where("travel_bus_id = '$id' and active='Y' and booking_id > 0");
                                 $nbRecords = $obj->count();
                                 if ($nbRecords > 0) {
-                                        $this->deleteNotAllowedReason = "لا يمكن حذف هذا الباص بسبب أن فيه مقاعد محجوزة حاليا";
+                                        $this->deleteNotAllowedReason = "لا يمكن حذف هذه المركبة بسبب أن فيه مقاعد محجوزة حاليا";
                                         return false;
                                 }
 
                                 if (!$simul) $this->execQuery("delete from ${server_db_prefix}btb.travel_seat where travel_bus_id = '$id'");
 
-                                // btb.booking-الباص الأول	travel_bus1_id  أنا تفاصيل لها-OneToMany
+                                // btb.booking-المركبة الأول	travel_bus1_id  أنا تفاصيل لها-OneToMany
 
                                 $obj = new Booking();
                                 $obj->where("travel_bus1_id = '$id' and active='Y' ");
                                 $nbRecords = $obj->count();
                                 if ($nbRecords > 0) {
-                                        $this->deleteNotAllowedReason = "لا يمكن حذف هذا الباص بسبب أنه بصدد الاستخدام في إحدى عمليات الحجز";
+                                        $this->deleteNotAllowedReason = "لا يمكن حذف هذه المركبة بسبب أنه بصدد الاستخدام في إحدى عمليات الحجز";
                                         return false;
                                 }
                                 if (!$simul) $this->execQuery("delete from ${server_db_prefix}btb.booking where travel_bus1_id = '$id' and active='N'");
 
 
-                                // btb.booking-الباص الثاني	travel_bus2_id  أنا تفاصيل لها-OneToMany
+                                // btb.booking-المركبة الثاني	travel_bus2_id  أنا تفاصيل لها-OneToMany
                                 // this logic or the second below
                                 // first logic
 
@@ -619,18 +374,18 @@ class TravelBus extends BtbObject
                                 $obj->where("travel_bus2_id = '$id' and active='Y' ");
                                 $nbRecords = $obj->count();
                                 if ($nbRecords > 0) {
-                                        $this->deleteNotAllowedReason = "لا يمكن حذف هذا الباص بسبب أنه بصدد الاستخدام في إحدى عمليات الحجز";
+                                        $this->deleteNotAllowedReason = "لا يمكن حذف هذه المركبة بسبب أنه بصدد الاستخدام في إحدى عمليات الحجز";
                                         return false;
                                 }
                                 if (!$simul) $this->execQuery("delete from ${server_db_prefix}btb.booking where travel_bus2_id = '$id' and active='N'");
 
-                                // btb.booking-الباص الثالث	travel_bus3_id  أنا تفاصيل لها-OneToMany
+                                // btb.booking-المركبة الثالث	travel_bus3_id  أنا تفاصيل لها-OneToMany
 
                                 $obj = new Booking();
                                 $obj->where("travel_bus3_id = '$id' and active='Y' ");
                                 $nbRecords = $obj->count();
                                 if ($nbRecords > 0) {
-                                        $this->deleteNotAllowedReason = "لا يمكن حذف هذا الباص بسبب أنه بصدد الاستخدام في إحدى عمليات الحجز";
+                                        $this->deleteNotAllowedReason = "لا يمكن حذف هذه المركبة بسبب أنه بصدد الاستخدام في إحدى عمليات الحجز";
                                         return false;
                                 }
                                 if (!$simul) $this->execQuery("delete from ${server_db_prefix}btb.booking where travel_bus3_id = '$id' and active='N'");
@@ -640,9 +395,9 @@ class TravelBus extends BtbObject
                                 // but we need to check to be sure that the screen of booker is not opened now on this booking
                                 // then we can remove this bus as below (to be studied @todo)
                                 /*
-                        // btb.booking-الباص الثاني	travel_bus2_id  أنا تفاصيل لها-OneToMany
+                        // btb.booking-المركبة الثاني	travel_bus2_id  أنا تفاصيل لها-OneToMany
                         $this->execQuery("update ${server_db_prefix}btb.booking set travel_bus2_id='$id_replace' where travel_bus2_id='$id' ");
-                        // btb.booking-الباص الثالث	travel_bus3_id  أنا تفاصيل لها-OneToMany
+                        // btb.booking-المركبة الثالث	travel_bus3_id  أنا تفاصيل لها-OneToMany
                         $this->execQuery("update ${server_db_prefix}btb.booking set travel_bus3_id='$id_replace' where travel_bus3_id='$id' ");        
                         */
 
@@ -659,11 +414,11 @@ class TravelBus extends BtbObject
                                 // FK on me 
                                 // btb.travel_seat-سجل الحجز	travel_bus_id  أنا تفاصيل لها-OneToMany
                                 $this->execQuery("update ${server_db_prefix}btb.travel_seat set travel_bus_id='$id_replace' where travel_bus_id='$id' ");
-                                // btb.booking-الباص الأول	travel_bus1_id  أنا تفاصيل لها-OneToMany
+                                // btb.booking-المركبة الأول	travel_bus1_id  أنا تفاصيل لها-OneToMany
                                 $this->execQuery("update ${server_db_prefix}btb.booking set travel_bus1_id='$id_replace' where travel_bus1_id='$id' ");
-                                // btb.booking-الباص الثاني	travel_bus2_id  أنا تفاصيل لها-OneToMany
+                                // btb.booking-المركبة الثاني	travel_bus2_id  أنا تفاصيل لها-OneToMany
                                 $this->execQuery("update ${server_db_prefix}btb.booking set travel_bus2_id='$id_replace' where travel_bus2_id='$id' ");
-                                // btb.booking-الباص الثالث	travel_bus3_id  أنا تفاصيل لها-OneToMany
+                                // btb.booking-المركبة الثالث	travel_bus3_id  أنا تفاصيل لها-OneToMany
                                 $this->execQuery("update ${server_db_prefix}btb.booking set travel_bus3_id='$id_replace' where travel_bus3_id='$id' ");
 
 
@@ -715,7 +470,7 @@ class TravelBus extends BtbObject
         public function updateSeats($lang = "ar", $update_price_also_for_manuel_prices = false, $publicM = true, $update_price_also_for_confirmed_seats = false)
         {
                 $travel_company_id = $this->getVal("travel_company_id");
-                $travelObj = $this->hetTravel();
+                $travelObj = $this->het("travel_id");
                 $travel_id = $travelObj->id;
                 $travel_template_id = $travelObj->getVal("travel_template_id");
                 $travel_bus_id = $this->id;
@@ -736,7 +491,7 @@ class TravelBus extends BtbObject
                 // $file_dir_name = dirname(__FILE__);
                 // 
                 
-                $bus = $this->hetBus();
+                $bus = $this->het("bus_id");
                 if(!$bus)  return array("bus not defined can't generate seats", "");
                 
                 $template = $bus->hetTemplate();
@@ -800,14 +555,14 @@ class TravelBus extends BtbObject
                 $this->set("booked_date", $hijri_current_date);
                 $this->commit();
 
-                return array("", "تم تأجير الباص مبدئيا وتحرير معلومات توثيق التأجير للباص");
+                return array("", "تم تأجير المركبة مبدئيا وتحرير معلومات توثيق التأجير للباص");
         }
 
 
         public function approvePrices($lang = "ar", $commit = true, $update_brothers = true, $total_price_cond = false, $seat_price_cond = false)
         {
 
-                $travelObj = $this->hetTravel();
+                $travelObj = $this->het("travel_id");
                 if (!$travelObj) {
 
                         return array("no travel associated to this travel-bus", "");
@@ -816,7 +571,7 @@ class TravelBus extends BtbObject
                 $travel_name = $travelObj->getShortDisplay($lang);
                 $travel_date = $travelObj->showAttribute("travel_date");
 
-                $busObj = $this->hetBus();
+                $busObj = $this->het("bus_id");
                 if (!$busObj) {
                         return array("no bus associated to this travel-bus", "");
                 }
@@ -862,7 +617,7 @@ class TravelBus extends BtbObject
                         // approve also all the buses brothers if the seat price is same
                         if ($busParent and $update_brothers) {
                                 list($nb_brothers_approved, $errors_arr) = $travelObj->approveAllBrothersBusesPrices($busParent->id, $total_price, $seat_price);
-                                $sms_message .= "<br> وتم اعتماد $nb_brothers_approved لأسعار باصات مشابهة من نفس النموذج ";
+                                $sms_message .= "<br> وتم اعتماد $nb_brothers_approved لأسعار مركبات مشابهة من نفس النموذج ";
                         }
 
                         return array("", $sms_message);
@@ -900,8 +655,8 @@ class TravelBus extends BtbObject
 
                 // identify account to pay
                 // here is bus company account
-                $bus = $this->hetBus();
-                if (!$bus)  return array("باص غير محدد لا يمكن تحديد معلومات السداد", "", $account_company_id, $product_code, $product_ref, $otherPartAccountObjTypeId, $otherPartAccountObjId, $payment_deadline);
+                $bus = $this->het("bus_id");
+                if (!$bus)  return array("مركبة غير محدد لا يمكن تحديد معلومات السداد", "", $account_company_id, $product_code, $product_ref, $otherPartAccountObjTypeId, $otherPartAccountObjId, $payment_deadline);
 
 
                 $accountBusCompanyObj = $bus->getAccountCompany();
@@ -910,7 +665,7 @@ class TravelBus extends BtbObject
                         $bus_company_id = $busCompanyObj->getId();
                         $accountBusCompanyObj = $busCompanyObj->getAccountCompany();
                         if (!$accountBusCompanyObj) {
-                                return array("لم نتمكن من تحديد شركة الباص لدفع مستحقاتها", "", $account_company_id, $product_code, $product_ref, $otherPartAccountObjTypeId, $otherPartAccountObjId, $payment_deadline);
+                                return array("لم نتمكن من تحديد شركة المركبة لدفع مستحقاتها", "", $account_company_id, $product_code, $product_ref, $otherPartAccountObjTypeId, $otherPartAccountObjId, $payment_deadline);
                         }
                 }
 
@@ -922,13 +677,13 @@ class TravelBus extends BtbObject
                 $otherPartAccountObjTypeId = Account::$ACCOUNT_TYPE_BUS_COMPANY;
                 $otherPartAccountObj = Account::loadByMainIndex($account_company_id, $otherPartAccountObjTypeId, "bus-co-$account_bus_company_id", $create_obj_if_not_found = true);
                 if (!$otherPartAccountObj) {
-                        return array("لم نتمكن من تحديد قسم المالية لشركة الباص لدفع مستحقاتها", "", $account_company_id, $product_code, $product_ref, $otherPartAccountObjTypeId, $otherPartAccountObjId, $payment_deadline);
+                        return array("لم نتمكن من تحديد قسم المالية لشركة المركبة لدفع مستحقاتها", "", $account_company_id, $product_code, $product_ref, $otherPartAccountObjTypeId, $otherPartAccountObjId, $payment_deadline);
                 }
 
                 $otherPartAccountObjId = $otherPartAccountObj->getId();
 
                 if (!$otherPartAccountObjId) {
-                        return array("لم نتمكن من تحديد معرف قسم المالية لشركة الباص لدفع مستحقاتها", "", $account_company_id, $product_code, $product_ref, $otherPartAccountObjTypeId, $otherPartAccountObjId, $payment_deadline);
+                        return array("لم نتمكن من تحديد معرف قسم المالية لشركة المركبة لدفع مستحقاتها", "", $account_company_id, $product_code, $product_ref, $otherPartAccountObjTypeId, $otherPartAccountObjId, $payment_deadline);
                 }
 
                 // indentify product to pay
@@ -947,7 +702,7 @@ class TravelBus extends BtbObject
                 if (!$approval_comment) return array("تعليمات الإدارة : لا بد من تحرير معلومات توثيق التأكيد النهائي والموافقة في الحقل المخصص لذلك أدناه", "");
 
                 $approval_bus_code = $this->getVal("approval_bus_code");
-                if (!$approval_bus_code) return array("تعليمات الإدارة : لا بد من تحرير رقم لوحة الباص لتوثيق التأكيد النهائي والموافقة في الحقل المخصص لذلك أدناه", "");
+                if (!$approval_bus_code) return array("تعليمات الإدارة : لا بد من تحرير رقم لوحة المركبة لتوثيق التأكيد النهائي والموافقة في الحقل المخصص لذلك أدناه", "");
 
                 $total_price = intval($this->getVal("total_price"));
                 $approval_bus_price = intval($this->getVal("approval_bus_price"));
@@ -957,7 +712,7 @@ class TravelBus extends BtbObject
                         return array("لا يمكن إعتماد سعر أكبر من السعر المتفق عليه أثناء التأجير المبدئي للباص، حيث هذا فقط من صلاحية مدير المؤسسة علما وأنه تم حساب اسعار المقاعد للحجز من قبل العملاء على السعر المتفق عليه أثناء الحجز المبدئي. لا بد من مراجعة المدير", "");
                 }
 
-                $travelObj = $this->hetTravel();
+                $travelObj = $this->het("travel_id");
                 if (!$travelObj) {
                         return array("no travel associated to this travel-bus", "");
                 }
@@ -990,7 +745,7 @@ class TravelBus extends BtbObject
                 $this->set("approval_date", $hijri_current_date);
                 $this->commit();
 
-                return array("", "تم حجز الباص نهائيا وتحرير معلومات توثيق التأكيد النهائي والموافقة من قبل الشركة المالكة للباص. وتم اصدار أمر لقسم المالية بدفع السعر المؤكد للطرف الآخر. رقم أمر الدفع : $row_id مع تحديد أجل الدفع إلى تاريخ $deadline_date_display");
+                return array("", "تم حجز المركبة نهائيا وتحرير معلومات توثيق التأكيد النهائي والموافقة من قبل الشركة المالكة للباص. وتم اصدار أمر لقسم المالية بدفع السعر المؤكد للطرف الآخر. رقم أمر الدفع : $row_id مع تحديد أجل الدفع إلى تاريخ $deadline_date_display");
         }
 
         public function disApproveBus($lang = "ar")
@@ -1013,7 +768,7 @@ class TravelBus extends BtbObject
                 $this->set("approval_date", $hijri_current_date);
                 $this->commit();
 
-                return array("", "تم إلغاء تأكيد حجز الباص .وتم الغاء أمر الدفع ");
+                return array("", "تم إلغاء تأكيد حجز المركبة .وتم الغاء أمر الدفع ");
         }
 
 
@@ -1060,14 +815,14 @@ class TravelBus extends BtbObject
                 $hijri_current_date = AfwDateHelper::currentHijriDate();
                 if (!$this->bookedTemporary()) {
                         // only at least booked temporary buses can be opened for seat booking
-                        $err = "لا يمكن فتح حجز المقاعد على باص غير محجوز مبدئيا من عند مالكه";
+                        $err = "لا يمكن فتح حجز المقاعد على مركبة غير محجوز مبدئيا من عند مالكه";
                         if ($publicM) return array($err, "");
                         else array(0, $err);
                 }
                 list($approved, $reason) = $this->priceApprovedAtTime();
                 if (!$approved) {
                         // approve bus total price with owner before open seat for booking
-                        $err = "قم بإعتماد سعر التكلفة حتى نتمكن من فتح الباص لحجز المقاعد. " . $reason;
+                        $err = "قم بإعتماد سعر التكلفة حتى نتمكن من فتح المركبة لحجز المقاعد. " . $reason;
                         if ($publicM) return array($err, "");
                         else array(0, $err);
                 }
@@ -1097,7 +852,7 @@ class TravelBus extends BtbObject
                 require_once "$file_dir_name/../btb/bus_template.php";
                 require_once "$file_dir_name/../btb/bus_template_row.php";
 
-                $bus = $this->hetBus();
+                $bus = $this->het("bus_id");
                 if (!$bus)  return "bus not defined can't display seats";
 
                 $template = $bus->hetTemplate();
@@ -1110,7 +865,7 @@ class TravelBus extends BtbObject
                 if (!$travel_bus_id)  return "travel bus booking not defined can't display seats";
 
 
-                $travelObj = $this->hetTravel();
+                $travelObj = $this->het("travel_id");
                 if (!$travelObj)  return "travel not defined can't display seats";
 
                 $rows_nb = intval($template->getVal("rows_nb"));
@@ -1218,7 +973,7 @@ class TravelBus extends BtbObject
         }
 
 
-        // إعادة حساب الأسعار على سياسة الشركة وباعتبار اسعار تكلفة الباص
+        // إعادة حساب الأسعار على سياسة الشركة وباعتبار اسعار تكلفة المركبة
         // في حال العمل باسعار محددة وليس بأسعار محسوية لا نعمل بهذه الوظيفة
         // وانما ننادي وظيفة تحديث أسعار المقاعد بحسب الأسعار النموذجية  
         // المدخلة والمثبتة في نموذج الرحلة
@@ -1255,7 +1010,7 @@ class TravelBus extends BtbObject
                 $report_arr = array();
                 $errors_arr = array();
 
-                $travelObj = $this->hetTravel();
+                $travelObj = $this->het("travel_id");
 
                 if (!$travelObj) {
                         if ($return_report) return array("لا يوجد رحلة نسعر  عليها : خطأ حرج", "");
@@ -1264,9 +1019,9 @@ class TravelBus extends BtbObject
                 $travelObjId = $travelObj->getId();
                 $travel_date = $travelObj->travel_date;
 
-                $busObj = $this->hetBus();
+                $busObj = $this->het("bus_id");
                 if (!$busObj) {
-                        if ($return_report) return array("لا يوجد باص نسعر عليه :  خطأ حرج", "");
+                        if ($return_report) return array("لا يوجد مركبة نسعر عليه :  خطأ حرج", "");
                         else return  $seat_price;
                 }
 
@@ -1278,7 +1033,7 @@ class TravelBus extends BtbObject
 
                 $travelCompanyObj = $this->get("travel_company_id");
                 if (!$travelCompanyObj) {
-                        if ($return_report) return array("لا يوجد شركة أسفار لنأخذ اعدادات الأسعار منها :  خطأ حرج في علاقة الباص بالرحلة رقم تسلسل " . $this->id, "");
+                        if ($return_report) return array("لا يوجد شركة أسفار لنأخذ اعدادات الأسعار منها :  خطأ حرج في علاقة المركبة بالرحلة رقم تسلسل " . $this->id, "");
                         else return  $seat_price;
                 }
 
@@ -1341,7 +1096,7 @@ class TravelBus extends BtbObject
                                 // لاحظ هنا  $all=true   
                                 $nb_gen_seats = $this->countSeatsAvailable($all = true);
                                 if ($nb_gen_seats) {
-                                        $report_arr[] = "عدد المقاعد الإجمالي في الباص :$nb_gen_seats ";
+                                        $report_arr[] = "عدد المقاعد الإجمالي في المركبة :$nb_gen_seats ";
                                         $nb_seats = $nb_gen_seats;
                                 }
                         }
@@ -1495,13 +1250,13 @@ class TravelBus extends BtbObject
 
                 $driver_volan_zoom = $sw * 2 + 20;
 
-                $busObj = $this->hetBus();
+                $busObj = $this->het("bus_id");
                 if ($busObj) {
                         $busObjId = $busObj->getId();
                         $photo_galery = $busObj->calcPhotoGalery();
                 } else {
                         $busObjId = 0;
-                        $photo_galery = Travel::alertDiv("حصل خطأ في تحديد الباص");
+                        $photo_galery = Travel::alertDiv("حصل خطأ في تحديد المركبة");
                 }
 
 
@@ -2033,7 +1788,7 @@ class TravelBus extends BtbObject
 
                 for ($i = 1; $i <= 3; $i++) {
                         if ($attribute == "city${i}_hotel_mfk") {
-                                $travel = $this->hetTravel();
+                                $travel = $this->het("travel_id");
                                 if ($travel) $template = $travel->hetTemplate();
                                 else $template = null;
                                 if ($template) return ($template->containResidence() and (intval($template->getVal("trips_nb")) > $i));
@@ -2050,13 +1805,13 @@ class TravelBus extends BtbObject
                 if (!$langue) $langue = $lang;
 
                 $prices_arr = array();
-                $bus = $this->hetBus();
+                $bus = $this->het("bus_id");
                 if (!$bus) {
-                        $prices_arr[] = array("ptype" => "خطأ", "price" => 0, "comment" => "الباص غير محدد",);
+                        $prices_arr[] = array("ptype" => "خطأ", "price" => 0, "comment" => "المركبة غير محدد",);
                         return $prices_arr;
                 }
 
-                $travelObj = $this->hetTravel();
+                $travelObj = $this->het("travel_id");
                 if (!$travelObj) {
                         $prices_arr[] = array("ptype" => "خطأ", "price" => 0, "comment" => "الرحلة غير محددة",);
                         return $prices_arr;
@@ -2189,9 +1944,9 @@ class TravelBus extends BtbObject
         {
                 $booking_needed = $this->sureIs("booking_needed");
                 if ($booking_needed) {
-                        $bus = $this->hetBus();
+                        $bus = $this->het("bus_id");
                         $days_anticipate = $bus->getMyDaysAnticipate();
-                        $travel = $this->hetTravel();
+                        $travel = $this->het("travel_id");
                         $days_remain = 0;
                         if ($travel) $days_remain = $travel->days_remain;
                 } else {
@@ -2214,12 +1969,12 @@ class TravelBus extends BtbObject
         ) {
                 $sp_errors = array();
 
-                $travel = $this->hetTravel();
-                if (!$travel) $sp_errors["travel_id"] = "خطأ حرج : رحلة الباص غير محددة: رجاء التواصل مع مدير التطبيق";
+                $travel = $this->het("travel_id");
+                if (!$travel) $sp_errors["travel_id"] = "خطأ حرج : رحلة المركبة غير محددة: رجاء التواصل مع مدير التطبيق";
                 $tcompany = $this->hetTcompany();
                 if (!$tcompany) $sp_errors["travel_company_id"] = "خطأ حرج : شركة الرحلة غير محددة: رجاء التواصل مع مدير التطبيق";
                 $bcompany = $this->hetBcompany();
-                if (!$bcompany) $sp_errors["bus_company_id"] = "خطأ حرج : شركة الباص غير محددة: رجاء التواصل مع مدير التطبيق";
+                if (!$bcompany) $sp_errors["bus_company_id"] = "خطأ حرج : شركة المركبة غير محددة: رجاء التواصل مع مدير التطبيق";
 
                 //$booking_needed = $this->sureIs("booking_needed");
                 list($booking_needed_now, $anticipate_days, $remain_days) = $this->bookingNeededNow();
@@ -2232,14 +1987,14 @@ class TravelBus extends BtbObject
                 $pctge_fill = $confirmedSeatsCount / $allSeatsCount;
 
                 if ($booking_needed_now and (!$booked)) {
-                        $sp_errors["booked"] = "هذا الباص يحتاج حجزا مبدئيا لدى الشركة المالكة قبل $anticipate_days يوم من موعد الرحلة";
+                        $sp_errors["booked"] = "هذه المركبة يحتاج حجزا مبدئيا لدى الشركة المالكة قبل $anticipate_days يوم من موعد الرحلة";
                 }
 
                 if ($travel and $booked and (!$approval)) {
                         // @todo 0.75 should be in settings
                         $pct_before_approve_bus = 0.75;
                         if ($pctge_fill >= $pct_before_approve_bus) {
-                                $sp_errors["approval"] = "حان الوقت لتأكيد حجز هذا الباص مع الشركة المالكة";
+                                $sp_errors["approval"] = "حان الوقت لتأكيد حجز هذه المركبة مع الشركة المالكة";
                         }
                 }
 
@@ -2253,7 +2008,7 @@ class TravelBus extends BtbObject
                       $remain_to_travel = AfwDateHelper::diff_date($travel_gdate_time, $tawwa);
                       if($remain_to_travel <= $nb_days_auto_bus_middle)
                       {
-                            $sp_errors["approval"] = "حان الوقت لتأكيد حجز هذا الباص مع الشركة المالكة";                  
+                            $sp_errors["approval"] = "حان الوقت لتأكيد حجز هذه المركبة مع الشركة المالكة";                  
                       }*/
 
 
@@ -2294,18 +2049,18 @@ class TravelBus extends BtbObject
         public function getAttributeLabel($attribute, $lang = 'ar', $short = false, $AIT = true)
         {
                 if ($attribute == "city1_hotel_mfk") {
-                        $city1 = $this->het("travel.template.city1_id");
+                        $city1 = $this->het("travel_id.template.city1_id");
 
                         return "الفنادق في " . $city1;
                 }
 
                 if ($attribute == "city2_hotel_mfk") {
-                        $city2 = $this->het("travel.template.city2_id");
+                        $city2 = $this->het("travel_id.template.city2_id");
 
                         return "الفنادق في " . $city2;
                 }
                 if ($attribute == "city3_hotel_mfk") {
-                        $city3 = $this->het("travel.template.city3_id");
+                        $city3 = $this->het("travel_id.template.city3_id");
 
                         return "الفنادق في " . $city3;
                 }
@@ -2371,13 +2126,13 @@ class TravelBus extends BtbObject
 
         public function updateBookingParams($lang = "ar")
         {
-                $travelObj = $this->hetTravel();
+                $travelObj = $this->het("travel_id");
                 if (!$travelObj) {
                         return array("no travel associated to this travel-bus", "");
                 }
                 $travelObjId = $travelObj->getId();
 
-                $busObj = $this->hetBus();
+                $busObj = $this->het("bus_id");
                 if (!$busObj) {
                         return array("no bus associated to this travel-bus", "");
                 }
@@ -2386,7 +2141,7 @@ class TravelBus extends BtbObject
                 $this->set("booking_needed", $approval_needed);
                 $this->commit();
 
-                return array("", "تم تحديث إعدادات حجز الباص");
+                return array("", "تم تحديث إعدادات حجز المركبة");
         }
 
         protected function attributeCanBeEditedBy($attribute, $user, $desc)
@@ -2489,7 +2244,7 @@ class TravelBus extends BtbObject
                 $seat_type = "all";
 
                 if (!$this->all_cols) {
-                        $bus = $this->hetBus();
+                        $bus = $this->het("bus_id");
                         if (!$bus)  throw new RuntimeException("bus not defined for this travel bus : $this->id !!!");
                         $templateObj = $bus->hetTemplate();
                         if (!$templateObj)  throw new RuntimeException("bus template not defined for this bus : $bus->id !!!");
@@ -2516,7 +2271,7 @@ class TravelBus extends BtbObject
         public function applySeatsFillingPolicy($travelObj, $wanted_seat_type, $nb_seats)
         {
                 if ($this->rows_policy[$wanted_seat_type]) return $this->rows_policy[$wanted_seat_type];
-                // $bus = $this->hetBus();
+                // $bus = $this->het("bus_id");
                 // if(!$bus)  throw new RuntimeException("any travel bus must have a defined bus");
 
                 $max_rows = $this->getMaxRows();
@@ -2575,11 +2330,30 @@ class TravelBus extends BtbObject
         public function getMaxRows()
         {
                 if ($this->max_rows > 0) return $this->max_rows;
-                $bus = $this->hetBus();
+                $bus = $this->het("bus_id");
                 if (!$bus)  throw new RuntimeException("any travel bus must have a defined bus");
 
                 $this->max_rows = $bus->getMaxRows();
                 if ($this->max_rows < 0) throw new RuntimeException("unknown number of rows for bus template");
                 return $this->max_rows;
+        }
+
+        public function shouldBeCalculatedField($attribute)
+        {
+                if ($attribute == "bus_code") return true;
+                if ($attribute == "photo_path") return true;
+                if ($attribute == "internal_photo_path") return true;
+                if ($attribute == "tpl_city1_hotel_mfk") return true;
+                if ($attribute == "tpl_city2_hotel_mfk") return true;
+                if ($attribute == "tpl_city3_hotel_mfk") return true;
+                if ($attribute == "bus_desc") return true;
+                if ($attribute == "bus_seats") return true;
+                if ($attribute == "seat_price") return true;
+                if ($attribute == "seat_normal_price") return true;
+                if ($attribute == "seat_front_price") return true;
+                if ($attribute == "price_report") return true;
+                if ($attribute == "booking_needed_now") return true;
+                if ($attribute == "busDiv") return true;
+                return false;
         }
 }

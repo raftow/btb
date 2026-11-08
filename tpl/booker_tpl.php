@@ -9,22 +9,22 @@
                         <div class="search-comp-text data-show-desktop">
                                 <div class="col"><h5>
                                                 <i class="material-icons">pin_drop</i>سفر من</h5>
-                                        <p><?php echo $departure_city_name?>
+                                        <p><?php echo $departure_city_name ?>
                                         </p>
                                 </div>
                                 <div class="col"><h5>
                                                 <i class="material-icons">pin_drop</i>لغرض</h5>
-                                        <p><?php echo $travel_description?>
+                                        <p><?php echo $travel_description ?>
                                         </p>
                                 </div>
                                 <div class="col"><h5>
                                                 <i class="material-icons">date_range</i>تاريخ السفر</h5>
-                                        <p><?php echo $departure_full_date?>
+                                        <p><?php echo $departure_full_date ?>
                                         </p>
                                 </div>
                                 <div class="col"><h5>
                                                 <i class="material-icons">date_range</i> تاريخ العودة</h5>
-                                        <p><?php echo $return_full_date?>
+                                        <p><?php echo $return_full_date ?>
                                         </p>
                                 </div>
                                 <div class="col"><h5>
@@ -43,11 +43,11 @@
                         </div>
                         <div class="search-comp-text data-show-mob">
                                 <div class="col"><h5>تاريخ السفر</h5>
-                                        <p><?php echo $departure_full_date?>
+                                        <p><?php echo $departure_full_date ?>
                                         </p>
                                 </div>
                                 <div class="col"><h5> تاريخ العودة</h5>
-                                        <p><?php echo $arrival_full_date?>
+                                        <p><?php echo $arrival_full_date ?>
                                         </p>
                                 </div>
                                 <div class="col"><h5>عدد المسافرين</h5>
@@ -75,7 +75,7 @@
                                                                 <label>
                                                                         <i class="material-icons">pin_drop</i> سفر من
                                                                 </label>
-                                                                <?php echo AfwInputHelper::picture_dropdown($cityList, "departure_city_id", $selected=array($departure_city_id), "departure_city_id",false, 200); ?> 
+                                                                <?php echo AfwInputHelper::picture_dropdown($cityList, "departure_city_id", $selected = array($departure_city_id), "departure_city_id", false, 200); ?> 
                                                         </div>
                                                 </div>
                                                 <div class="col big">
@@ -84,16 +84,16 @@
                                                                         <i class="material-icons">pin_drop</i>لغرض
                                                                 </label>
                                                                 <?php
-                                                                        $cityBoth = array();
-                                                                        // "مكة المكرمة"
-                                                                        $cityBoth[Travel::$CITY_MAKKA] = "العمرة";    
-                                                                        // " المدينة"
-                                                                        $cityBoth[Travel::$CITY_MADINA] = "الزيارة";
-                                                                        // مكة المكرمة أولا ثم المدينة
-                                                                        $cityBoth[Travel::$CITY_MAKKA_FIRST] = "العمرة ثم الزيارة";
-                                                                        //  المدينة أولا ثم مكة المكرمة 
-                                                                        $cityBoth[Travel::$CITY_MADINA_FIRST] = "الزيارة ثم العمرة";
-                                                                        echo AfwInputHelper::picture_dropdown($cityBoth, "omra_city_first", $selected=array($omra_city_first), "omra_city_first",false, 200)." ($omra_city_first)";
+                                                                $cityBoth = array();
+                                                                // "مكة المكرمة"
+                                                                $cityBoth[Travel::$CITY_MAKKA] = "العمرة";
+                                                                // " المدينة"
+                                                                $cityBoth[Travel::$CITY_MADINA] = "الزيارة";
+                                                                // مكة المكرمة أولا ثم المدينة
+                                                                $cityBoth[Travel::$CITY_MAKKA_FIRST] = "العمرة ثم الزيارة";
+                                                                //  المدينة أولا ثم مكة المكرمة 
+                                                                $cityBoth[Travel::$CITY_MADINA_FIRST] = "الزيارة ثم العمرة";
+                                                                echo AfwInputHelper::picture_dropdown($cityBoth, "omra_city_first", $selected = array($omra_city_first), "omra_city_first", false, 200) . " ($omra_city_first)";
                                                                 ?>
                                                                 
                                                         </div>
@@ -104,7 +104,7 @@
                                                                         <label>
                                                                                 <i class="material-icons">date_range</i> تاريخ السفر
                                                                         </label>
-                                                                        <input type="text" id="departure_date" name="departure_date" value="<?=AfwDateHelper::inputFormatHijriDate($departure_date) ?>" autocomplete="off">
+                                                                        <input type="text" id="departure_date" name="departure_date" value="<?= AfwDateHelper::inputFormatHijriDate($departure_date) ?>" autocomplete="off">
                                                                         <script type="text/javascript">
                                                                                 $('#departure_date').calendarsPicker({calendar: $.calendars.instance('UmmAlQura')});
                                                                         </script>
@@ -117,11 +117,11 @@
                                                                                         <label>
                                                                                                 <i class="material-icons">date_range</i>  تاريخ العودة
                                                                                         </label>
-                                                                                        <input type="text" id="return_date" name="return_date"  value="<?=AfwDateHelper::inputFormatHijriDate($return_date) ?>" autocomplete="off">
+                                                                                        <input type="text" id="return_date" name="return_date"  value="<?= AfwDateHelper::inputFormatHijriDate($return_date) ?>" autocomplete="off">
                                                                                         <script type="text/javascript">
                                                                                                 $('#return_date').calendarsPicker({calendar: $.calendars.instance('UmmAlQura')});
                                                                                         </script>
-                                                                                        <?php if(!$return_mandatory) { ?><i class="material-icons closeReturnDate closeBtn">close</i><?php } ?>
+                                                                                        <?php if (!$return_mandatory) { ?><i class="material-icons closeReturnDate closeBtn">close</i><?php } ?>
                                                                                 </div>
                                                                         </div>
                                                                 </div>
@@ -180,7 +180,7 @@
                                 <div class='sticky_filter'>
                                         <div class="hideMob">
                                                 <ul class="list-filter-sec">
-                                                        <li><h4>فئة الباص</h4>
+                                                        <li><h4>فئة المركبة</h4>
                                                         </li>
                                                         <li>
                                                                 <input type="checkbox" class="filled-in" id="buscat_1" checked>
@@ -205,7 +205,7 @@
 
                                                 </ul>
                                                 <ul class="list-filter-sec">
-                                                        <li><h4>مغادرة <?php echo $departure_city_name?></h4>
+                                                        <li><h4>مغادرة <?php echo $departure_city_name ?></h4>
                                                         </li>
                                                         <li>
                                                                 <input type="checkbox" class="filled-in going-morning" id="going_morning">
@@ -219,7 +219,7 @@
                                                         </li>
                                                 </ul>
                                                 <ul class="list-filter-sec">
-                                                        <li><h4>مغادرة <?php echo $arrival_city_name?></h4>
+                                                        <li><h4>مغادرة <?php echo $arrival_city_name ?></h4>
                                                         </li>
                                                         <li>
                                                                 <input type="checkbox" class="filled-in return-morning" id="returning_morning">
@@ -252,22 +252,23 @@
                         <div class="list-component">
                                 <div class="list-component-con">
                                         <div class="list-head">
-                                                <h4><span><?=$trip01_title?></span> <?php echo $departure_city_name?> </h4>
+                                                <h4><span><?= $trip01_title ?></span> <?php echo $departure_city_name ?> </h4>
                                                 <div>
                                                         <i class="fas fa-bus"></i>
                                                         <i class="fas fa-long-arrow-alt-left"></i>
                                                 </div>
-                                                <h4><span><?=$trip12_title?></span> <?php echo $arrival_city1_name?> </h4>
-                                                <?php if($arrival_city2_name){ ?>
+                                                <h4><span><?= $trip12_title ?></span> <?php echo $arrival_city1_name ?> </h4>
+                                                <?php if ($arrival_city2_name) { ?>
                                                 <div>
                                                         <i class="fas fa-bus"></i>
                                                         <i class="fas fa-long-arrow-alt-left"></i>
                                                 </div>
-                                                <h4><span><?=$trip23_title?></span> <?php echo $arrival_city2_name?> </h4>
+                                                <h4><span><?= $trip23_title ?></span> <?php echo $arrival_city2_name ?> </h4>
                                                 <?php } ?>
                                         </div>
                                         
-                                        <div class="trip-date"><?php echo $departure_full_date ." ($period يوم)";//. " ت=" . $departure_date . " ع=".count($travelFoundList)?></div>
+                                        <div class="trip-date"><?php echo $departure_full_date . " ($period يوم)"; //. " ت=" . $departure_date . " ع=".count($travelFoundList)
+                                                                ?></div>
                                         <div class="list-calendar">
                                                 <div class="list-calendar-con">
                                                         <span class="calnder-arrow-disabled">
@@ -287,8 +288,7 @@
                                                 </div>
                                         </div>
                         <?php
-                                if(count($travelFoundList)>0)
-                                {
+                        if (count($travelFoundList) > 0) {
                         ?>        
 
                                         <div class="list go_morning">
@@ -409,38 +409,32 @@
                                                 </div>
                                         </div>
                         <?php
-                                }
-                                else
-                                {
-                                        
-                                        if($foundProgramsListCount>0)
-                                        {
+                        } else {
+
+                                if ($foundProgramsListCount > 0) {
                         ?>
                         <div class='booking_warning'>        يوجد <?php echo $foundProgramsListCount ?> برنامج تحت الإعداد موافق للمعايير المطلوبة ولكن لا يوجد رحلات مفتوحة حاليا</div>
                         <?php
-                                        }
-                                        
-                                        if($foundBiggerProgramsListCount>0)
-                                        {
+                                }
+
+                                if ($foundBiggerProgramsListCount > 0) {
                         ?>
                         <div class='booking_warning'>نود إعلامك عميلنا العزيز بتوفر برنامج قريب من المطلوبة ولكنه يميتد إلى <?php echo $bigger_period ?> يوم وليس <?php echo $period ?> يوم</div>
                         <?php
-                                        }
-                                        
-                                        if($foundSmallerProgramsListCount>0)
-                                        {
+                                }
+
+                                if ($foundSmallerProgramsListCount > 0) {
                         ?>
                         <div class='booking_warning'>أو إن شئت عميلنا العزيز هنالك برنامج <?php echo $smaller_period ?> يوم وليس <?php echo $period ?> يوم</div>
                         <?php
-                                        }
+                                }
 
-                                        if(!$allCount)
-                                        {
+                                if (!$allCount) {
                         ?>
                         <div class='booking_warning'>        لا يوجد عند عملائنا حاليا برامج تطابق هذه المعايير، نتشرف بزيارتكم لنا لاحقا</div>
                         <?php
-                                        }
                                 }
+                        }
                         ?>
                                 <div class='booking_info'>يسعدنا خدمتك</div>        
                                         

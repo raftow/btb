@@ -43,7 +43,7 @@ class WorkBranchArTranslator
                 $trad["work_branch"]["orgunit_id"] = "الوحدة في الموارد البشرية";
                 $trad["work_branch"]["workBranchList"] = "قائمة فروع الشركة";
                 $trad["work_branch"]["busList"] = "قائمة المركبات الخاصة بهذا الفرع فقط";
-                $trad["work_branch"]["exbusList"] = "نماذج المركبات";
+                $trad["work_branch"]["exampleBusList"] = "نماذج المركبات";
 
                 $trad["work_branch"]["employeeList"] = "الموظفون";
                 $trad["work_branch"]["work_service_mfk"] = "الخدمات المفعلة";

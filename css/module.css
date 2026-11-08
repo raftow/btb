@@ -35,7 +35,7 @@ input.footer-input-group-field {
     min-width: 330px;
     min-height: 220px;
     float: right;
-    width: 512px !important;
+    width: 100% !important;
 }
 
 .btb_label {
@@ -166,8 +166,11 @@ span.hzm_a.driver_volan.inv-watch {
 
 .bus_seats_bloc {
     position: relative;
+    top: 168px;
+    left: -30px;
     overflow-y: visible;
-    display: table;
+    display: block;
+    float: left;
 }
 
 .bus_body_header {
@@ -192,6 +195,10 @@ span.hzm_a.driver_volan.inv-watch {
     background-size: 28px !important;
     background-position: 8px !important;
 
+}
+
+span.plane.bus_seat {
+    font-size: 10px;
 }
 
 .seat_men {
@@ -376,9 +383,9 @@ span.hzm_a.driver_volan.inv-watch {
 }
 
 .seat_normal {
-    color: rgb(0, 0, 0);
+    color: rgb(71 67 67);
     cursor: pointer;
-    border-color: rgb(0, 0, 0);
+    border-color: rgb(200 195 195);
 }
 
 .seat_door {
@@ -602,6 +609,26 @@ span.hzm_a.driver_volan.inv-watch {
     float: right;
 }
 
+.plane_picture {
+    background: url(../pic/plane-complete-model-before-zoom.png) 1px 1px no-repeat;
+    background-size: 100%;
+    background-position-x: 0px;
+    width: 30%;
+    height: 450px;
+    margin-top: auto;
+    overflow: visible;
+    float: right;
+    margin-right: 25%;
+}
+
+.plane.the_bus>.bus_complete>.bus_body {
+    background: url(../pic/plane_bg_zoom.png) 1px 1px no-repeat;
+    background-size: 100%;
+    /* background-position-x: 0px; */
+    width: 800px !important;
+    height: 500px !important;
+    float: right;
+}
 
 .the_legend {
     float: right;
@@ -616,6 +643,9 @@ span.hzm_a.driver_volan.inv-watch {
     padding-top: 20px;
 }
 
+.plane.the_bus {
+    margin-right: 150px;
+}
 
 .the_bus {
     float: right;
@@ -702,10 +732,13 @@ li.makeFlex.hrtlCenter {
     min-width: 208px;
 }
 
+.body_form_hzm.body_form_bustemplat {
+    min-height: 900px !important;
+}
 
 .hzm_data.hzm_data_busDiv {
     padding-right: 50px;
-    min-height: 600px;
+    min-height: 850px;
     contain: content;
 }
 

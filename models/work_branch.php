@@ -257,7 +257,7 @@ class WorkBranch extends BtbObject
         if ($mode == "mode_busList") {
             unset($link);
             $link = array();
-            $title = "إضافة باص جديد";
+            $title = "إضافة مركبة جديد";
             $title_detailed = $title . "لـ : " . $displ;
             $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=Bus&currmod=btb&sel_work_branch_id=$my_id&sel_example=N";
             $link["TITLE"] = $title;
@@ -269,7 +269,7 @@ class WorkBranch extends BtbObject
         if ($mode == "mode_exbusList") {
             unset($link);
             $link = array();
-            $title = "إضافة نموذج باص جديد";
+            $title = "إضافة نموذج مركبة جديد";
             $title_detailed = $title . "لـ : " . $displ;
             if ($parent_id and ($parent_id != $my_id)) {
                 $title .= " خاص بهذا الفرع";
@@ -387,7 +387,7 @@ class WorkBranch extends BtbObject
         $errors_arr = [];
         $infos_arr = [];
 
-        $mamlakaObj = self::loadById(118);
+        $mamlakaObj = self::loadById(1);
         list($err, $info) = $this->copyMotherSettings($lang, true, $mamlakaObj);
         if ($err) $errors_arr[] = $err;
         if ($info) $infos_arr[] = $info;
@@ -471,6 +471,59 @@ class WorkBranch extends BtbObject
         } else {
 
             return array("please define parent company", "");
+        }
+    }
+
+    public function updateOstool($lang = "ar")
+    {
+        $errors_arr = array();
+        $infos_arr = array();
+        $bCount = 0;
+        $bCountUpdate = 0;
+
+        $busList = $this->get("exampleBusList");
+        /**
+         * @var Bus $busItem
+         */
+        foreach ($busList as $busItem) {
+            list($error, $info, $bObj) = $busItem->genereRealBusListFromThisExample($lang);
+            if ($error) $errors_arr[] = $error;
+            if ($info) $infos_arr[] = $info;
+            if ($busItem->is_new) $bCount++;
+            else $bCountUpdate++;
+        }
+
+        $infos_arr[] = "تم بحمد الله نسخ $bCount  من المركبات الجديدة و تحديث $bCountUpdate  من المركبات الموجودة سابقا  من الشركة الأم " . $this->getDisplay($lang) . " إلى الفرع " . $this->getDisplay($lang);
+
+        if (count($errors_arr) > 0) return array(implode("<br>\n", $errors_arr), "");
+        else return array("", implode("<br>\n", $infos_arr));
+    }
+
+    public function copyMotherBusExamples($lang = "ar")
+    {
+        $parentObj = $this->het("parent_id");
+
+        $errors_arr = array();
+        $bCount = 0;
+        $bCountUpdate = 0;
+
+        if ($parentObj) {
+            $busList = $parentObj->get("exampleBusList");
+            /**
+             * @var Bus $busItem
+             */
+            foreach ($busList as $busItem) {
+                list($error, $info, $bObj) = $busItem->copyMeToOtherCompany($this->getId());
+                if ($error) $errors_arr[] = $error;
+                if ($busItem->is_new) $bCount++;
+                else $bCountUpdate++;
+            }
+
+            if (count($errors_arr) > 0) return array(implode("<br>\n", $errors_arr), "");
+            else return array("", "تم بحمد الله نسخ $bCount  من المركبات الجديدة و تحديث $bCountUpdate  من المركبات الموجودة سابقا  من الشركة الأم " . $parentObj->getDisplay($lang) . " إلى الفرع " . $this->getDisplay($lang));
+        } else {
+
+            return array("Please define parent company", "");
         }
     }
 
@@ -757,6 +810,30 @@ class WorkBranch extends BtbObject
                             "HZM-SIZE" => 12,
                             "STEP" => 2,
                         );
+
+                        $color = "blue";
+                        $title_ar = "تحديث اسطول المركبات";
+                        $pbms["hw8ty5"] = array(
+                            "METHOD" => "updateOstool",
+                            "COLOR" => $color,
+                            "LABEL_AR" => $title_ar,
+                            "PUBLIC" => true,
+                            "BF-ID" => "",
+                            "HZM-SIZE" => 12,
+                            "STEP" => $this->stepOfAttribute("busList"),
+                        );
+
+                        $color = "yellow";
+                        $title_ar = "نسخ نماذج المركبات من الشركة الأم";
+                        $pbms["hh1Ob5"] = array(
+                            "METHOD" => "copyMotherBusExamples",
+                            "COLOR" => $color,
+                            "LABEL_AR" => $title_ar,
+                            "PUBLIC" => true,
+                            "BF-ID" => "",
+                            "HZM-SIZE" => 12,
+                            "STEP" => $this->stepOfAttribute("exampleBusList"),
+                        );
                     }
                 } else {
                     if (($objme->isAdmin()) or ($objme->hasRole("btb", 333))) {
@@ -789,7 +866,7 @@ class WorkBranch extends BtbObject
                 if (($objme->isAdmin()) or ($objme->hasRole("btb", 333))) {
                     /*
                             $color = "green";
-                            $title_ar = "تحديث البرامج وجدول تسعيرات الباصات"; 
+                            $title_ar = "تحديث البرامج وجدول تسعيرات المركبات"; 
                             $pbms["hhAxd4"] = array("METHOD"=>"genere BusProgramsAndPricings",
                                                  "COLOR"=>$color, 
                                                  "LABEL_AR"=>$title_ar, 
@@ -856,8 +933,9 @@ class WorkBranch extends BtbObject
                         "STEP" => 11,
                     );
 
+                    /*
                     $color = "orange";
-                    $title_ar = "استيراد نماذج الباصات الافتراضية";
+                    $title_ar = "استيراد قوالب المركبات الافتراضية";
                     $methodName = "importDefaultBusTemplates";
                     $pbms[AfwStringHelper::hzmEncode($methodName)] = array(
                         "METHOD" => $methodName,
@@ -867,7 +945,7 @@ class WorkBranch extends BtbObject
                         "BF-ID" => "",
                         "HZM-SIZE" => 12,
                         "STEP" => 5,
-                    );
+                    );*/
                 }
             }
             /*
@@ -891,12 +969,12 @@ class WorkBranch extends BtbObject
 
     public function beforeDelete($id, $id_replace)
     {
-        global $server_db_prefix;
+        $server_db_prefix = AfwSession::currentDBPrefix();
 
         if ($id) {
             if ($id_replace == 0) {
                 // FK part of me - not deletable 
-                // btb.bus-الشركة المالكة للباص	orgunit_id  أنا تفاصيل لها-OneToMany
+                // btb.bus-الشركة المالكة للمركبة	orgunit_id  أنا تفاصيل لها-OneToMany
 
                 $obj = new Bus();
                 $obj->where("orgunit_id = '$id' and active='Y' ");
@@ -939,7 +1017,7 @@ class WorkBranch extends BtbObject
                 }
                 $this->execQuery("delete from ${server_db_prefix}btb.bus _convention where tbranch_id = '$id' and active='N'");
 
-                // btb.bus _convention-مؤسسة الباص	bus_company_id  أنا تفاصيل لها-OneToMany
+                // btb.bus _convention-مؤسسة المركبة	bus_company_id  أنا تفاصيل لها-OneToMany
 
                 $obj = new BusConvention();
                 $obj->where("bus_company_id = '$id' and active='Y' ");
@@ -950,7 +1028,7 @@ class WorkBranch extends BtbObject
                 }
                 $this->execQuery("delete from ${server_db_prefix}btb.bus _convention where bus_company_id = '$id' and active='N'");
 
-                // btb.bus _convention-فرع مؤسسة الباص	bus_branch_id  أنا تفاصيل لها-OneToMany
+                // btb.bus _convention-فرع مؤسسة المركبة	bus_branch_id  أنا تفاصيل لها-OneToMany
 
                 $obj = new BusConvention();
                 $obj->where("bus_branch_id = '$id' and active='Y' ");
@@ -980,12 +1058,12 @@ class WorkBranch extends BtbObject
                 $this->execQuery("update ${server_db_prefix}btb.bus _convention set orgunit_id='$id_replace' where orgunit_id='$id' ");
                 // btb.bus _convention-الفرع	tbranch_id  أنا تفاصيل لها-OneToMany
                 $this->execQuery("update ${server_db_prefix}btb.bus _convention set tbranch_id='$id_replace' where tbranch_id='$id' ");
-                // btb.bus _convention-مؤسسة الباص	bus_company_id  أنا تفاصيل لها-OneToMany
+                // btb.bus _convention-مؤسسة المركبة	bus_company_id  أنا تفاصيل لها-OneToMany
                 $this->execQuery("update ${server_db_prefix}btb.bus _convention set bus_company_id='$id_replace' where bus_company_id='$id' ");
-                // btb.bus _convention-فرع مؤسسة الباص	bus_branch_id  أنا تفاصيل لها-OneToMany
+                // btb.bus _convention-فرع مؤسسة المركبة	bus_branch_id  أنا تفاصيل لها-OneToMany
                 $this->execQuery("update ${server_db_prefix}btb.bus _convention set bus_branch_id='$id_replace' where bus_branch_id='$id' ");
                 */
-                // btb.bus-الشركة المالكة للباص	orgunit_id  أنا تفاصيل لها-OneToMany
+                // btb.bus-الشركة المالكة للمركبة	orgunit_id  أنا تفاصيل لها-OneToMany
                 $this->execQuery("update ${server_db_prefix}btb.bus set orgunit_id='$id_replace' where orgunit_id='$id' ");
                 // btb.work_branch-الشركة الأم	parent_id  أنا تفاصيل لها-OneToMany
                 $this->execQuery("update ${server_db_prefix}btb.work_branch set parent_id='$id_replace' where parent_id='$id' ");
@@ -1018,7 +1096,7 @@ class WorkBranch extends BtbObject
                 // copy from convenient example of WorkBranch
                 // should be more intelligent and use some config than each new compny copy same config than 
                 // friend company after aythorization
-                $stdWB = WorkBranch::loadById(118);
+                $stdWB = WorkBranch::loadById(1);
                 $this->copyMotherSettings($lang, false, $stdWB);
             }
         }
@@ -1096,7 +1174,7 @@ class WorkBranch extends BtbObject
             return ($this->hasHotelActivity());
         }
 
-        if ($attribute == "exbusList") {
+        if ($attribute == "exampleBusList") {
             return ($this->hasBusActivity());
         }
 
@@ -1169,8 +1247,8 @@ class WorkBranch extends BtbObject
     public static function list_of_work_service_mfk()
     {
         $list_of_items = array();
-        $list_of_items[1] = "تأجير باصاتي إلى شركائي";  //   
-        $list_of_items[2] = "تأجير باصاتي إلى جميع شركات الأسفار";  //   
+        $list_of_items[1] = "تأجير مركباتي إلى شركائي";  //   
+        $list_of_items[2] = "تأجير مركباتي إلى جميع شركات الأسفار";  //   
         $list_of_items[3] = "رحلات بدون إقامة";  //   
         $list_of_items[4] = "رحلات مع إقامة";  //   
         $list_of_items[5] = "رحلات مخصصة من العميل";  //   
@@ -1369,7 +1447,7 @@ class WorkBranch extends BtbObject
 
 
         // bus_booking_before means :
-        // اشتراط أن يكون الباص تم تأجيره مبدئيا قبل فتح حجز المقاعد
+        // اشتراط أن يكون المركبة تم تأجيره مبدئيا قبل فتح حجز المقاعد
         // هذا الخيار لا ينصح به في البداية حتى يتمرس المشرف على استخدام النظام
         // ولا تتعطل برامجه في فترة يحتاج فيها المرونة إلى حين تترتب أموره 
         if ($option == "bus_booking_before") return false;

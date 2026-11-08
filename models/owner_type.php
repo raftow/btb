@@ -149,7 +149,7 @@ class OwnerType extends BtbObject
 
     public function beforeDelete($id, $id_replace)
     {
-        global $server_db_prefix;
+        $server_db_prefix = AfwSession::currentDBPrefix();
 
         if (!$id) {
             $id = $this->getId();

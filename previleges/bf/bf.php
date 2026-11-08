@@ -2,13 +2,13 @@
 
 	return array (
   'id' => NULL,
-  'code' => 'f2-a-bus_type/qsearch',
+  'code' => 'f2-a-travel_template/qsearch',
   'level' => 999,
   'public' => false,
   'module_id' => '1272',
-  'menu_name_ar' => 'أنواع المركبات',
-  'menu_name_en' => 'Bus brands',
-  'page' => 'main.php?Main_Page=afw_mode_qsearch.php&cl=BusType&currmod=btb',
+  'menu_name_ar' => 'برامج الرحلات',
+  'menu_name_en' => 'Travel templates',
+  'page' => 'main.php?Main_Page=afw_mode_qsearch.php&cl=TravelTemplate&currmod=btb',
   'css' => 'bf',
   'icon' => 'bficon- bfc-',
 );

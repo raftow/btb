@@ -1,6 +1,6 @@
 <?php
 // ------------------------------------------------------------------------------------
-// ----             auto generated php class of table bus_pricing : bus_pricing - أسعار الباصات 
+// ----             auto generated php class of table bus_pricing : bus_pricing - أسعار المركبات 
 // ------------------------------------------------------------------------------------
 
 
@@ -153,7 +153,7 @@ class WorkBenifit extends BtbObject
 
    public function beforeDelete($id, $id_replace)
    {
-      global $server_db_prefix;
+      $server_db_prefix = AfwSession::currentDBPrefix();
 
       if ($id) {
          if ($id_replace == 0) {

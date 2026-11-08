@@ -13,6 +13,7 @@ class BtbBusAfwStructure
 			$obj->ORDER_BY_FIELDS = "work_branch_id, bus_code";
 
 			$obj->UNIQUE_KEY = array('work_branch_id', 'bus_code');
+			$obj->UNIQUE_KEY2 = array('work_branch_id', 'parent_bus_id', 'bus_num');
 			$obj->editByStep = true;
 			$obj->horizontalTabs = true;
 			$obj->editNbSteps = 10;
@@ -52,35 +53,37 @@ class BtbBusAfwStructure
 		),
 
 		'example' => array(
-			'SHOW' => false,
+			'SHOW' => true,
 			'RETRIEVE' => false,
-			'EDIT' => false,
+			'EDIT' => true,
 			'QEDIT' => false,
 			'READONLY' => true,
+			'DISABLE-READONLY-ADMIN' => true,
 			'MINIBOX' => false,
 			'DEFAUT' => 'Y',
 			'TYPE' => 'YN',
 			'CSS' => 'width_pct_50',
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => false,
-			'STEP' => 1,
+			'STEP' => 99,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 		),
 
 		'reel' => array(
-			'SHOW' => false,
+			'SHOW' => true,
 			'RETRIEVE' => false,
-			'EDIT' => false,
+			'EDIT' => true,
 			'QEDIT' => false,
 			'READONLY' => true,
+			'DISABLE-READONLY-ADMIN' => true,
 			'MINIBOX' => false,
 			'DEFAUT' => 'N',
 			'TYPE' => 'YN',
 			'CSS' => 'width_pct_50',
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => false,
-			'STEP' => 1,
+			'STEP' => 99,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 		),
@@ -320,7 +323,7 @@ class BtbBusAfwStructure
 		),
 
 		'bus_template_id' => array(
-			'SHORTNAME' => 'template',
+
 			'SEARCH' => false,
 			'QSEARCH' => false,
 			'SHOW' => true,
@@ -616,6 +619,7 @@ class BtbBusAfwStructure
 			'ERROR-CHECK' => true,
 		),
 
+		/*
 		'account_company_id' => array(
 			'STEP' => 4,
 			'SHORTNAME' => 'account',
@@ -634,7 +638,7 @@ class BtbBusAfwStructure
 			'ANSWER' => 'work_branch',
 			'ANSMODULE' => 'btb',
 			'AUTOCOMPLETE' => false,
-			'WHERE' => "parent_id = §owner_parent_id§ or parent_id = §orgunit_id§ or parent_id = §orgunit_id§ or id = §orgunit_id§",
+			'WHERE' => "parent_id = §owner_parent_id§ or parent_id = §work_branch_id§ or parent_id = §work_branch_id§ or id = §work_branch_id§",
 
 			'RELATION' => 'OneToMany',
 			'READONLY' => false,
@@ -670,7 +674,7 @@ class BtbBusAfwStructure
 			'EDIT-UGROUPS' => '',
 			'MANDATORY' => true,
 			'ERROR-CHECK' => true,
-		),
+		),*/
 
 		'busPricingList' => array(
 			'STEP' => 4,
@@ -797,7 +801,7 @@ class BtbBusAfwStructure
 			'ANSWER' => 'employee',
 			'ANSMODULE' => 'hrm',
 			'AUTOCOMPLETE' => false,
-			'WHERE' => "id_sh_org = §orgunit_id§ or id_sh_div = §orgunit_id§ ",
+			'WHERE' => "me.id in (select employee_id from §DBPREFIX§btb.wbranch_employee we inner join §DBPREFIX§btb.work_branch wb on wb.orgunit_id = we.orgunit_id where we.active='Y' and wb.id = §work_branch_id§)",
 
 			'RELATION' => 'ManyToOne',
 			'READONLY' => false,
@@ -888,7 +892,7 @@ class BtbBusAfwStructure
 			'CHAR_TEMPLATE' => 'ARABIC-CHARS,SPACE',
 			'MANDATORY' => true,
 			'UTF8' => true,
-			'DEFAUT' => 'من منصة باص السعودية',
+			'DEFAUT' => 'من منصة بساط',
 			'TYPE' => 'TEXT',
 			'READONLY' => false,
 			'SEARCH-BY-ONE' => true,
@@ -1000,6 +1004,14 @@ class BtbBusAfwStructure
 			'ANSWER' => 'bus',
 			'ANSMODULE' => 'btb',
 			'ITEM' => 'parent_bus_id',
+			'DO-NOT-RETRIEVE-COLS' => [
+				'instance_nb',
+				'work_branch_id',
+				'owner_type_id',
+				'bus_model_id',
+				'prices_expiry_date',
+				'nb_days_anticipate',
+			],
 			'READONLY' => true,
 			'SEARCH-BY-ONE' => false,
 			'DISPLAY' => true,

@@ -33,8 +33,8 @@ class Travel extends BtbObject
         // PREPARE - في طور الإعداد  
         public static $TRAVEL_STATUS_PREPARE = 10;
 
-        // ORGANIZE - إعتماد الباصات 
-        // أي تم اختيار الباصات بعينها أو أمثلتها وتم تعيين الفنادق وحجز مبدئي لمجموعة من الغرف تخص هذه الرحلة  
+        // ORGANIZE - إعتماد المركبات 
+        // أي تم اختيار المركبات بعينها أو أمثلتها وتم تعيين الفنادق وحجز مبدئي لمجموعة من الغرف تخص هذه الرحلة  
         public static $TRAVEL_STATUS_ORGANIZE = 20;
 
         // BOOKING - إعتماد السكن وتم اعتماد الأسعار وفتح الحجز
@@ -193,7 +193,7 @@ class Travel extends BtbObject
                 if ($mode == "mode_travelBusList") {
                         unset($link);
                         $link = array();
-                        $title = "إضافة باص جديد يدويا";
+                        $title = "إضافة مركبة جديد يدويا";
                         $title_detailed = $title . "لـ : " . $displ;
                         $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=TravelBus&currmod=btb&sel_travel_id=$my_id";
                         $link["TITLE"] = $title;
@@ -237,7 +237,7 @@ class Travel extends BtbObject
                         $pbms["hc12AB"] = array("METHOD" => "genereMyTravelStations", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 2, 'MODE' => array("mode_travelStationList" => true));
 
                         $color = "green";
-                        $title_ar = "تحديث الباصات";
+                        $title_ar = "تحديث المركبات";
                         $pbms["ahc14y"] = array("METHOD" => "genereMyBuses",         "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 3, 'MODE' => array("mode_travelBusList" => true));
 
                         $color = "green";
@@ -259,7 +259,7 @@ class Travel extends BtbObject
 
 
                         $color = "green";
-                        $title_ar = "إعتماد الباصات";
+                        $title_ar = "إعتماد المركبات";
                         $pbms["ah2U4B"] = array("METHOD" => "approveBuses",         "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 3,);
 
                         $color = "green";
@@ -280,7 +280,7 @@ class Travel extends BtbObject
 
         public function beforeDelete($id, $id_replace)
         {
-                global $server_db_prefix;
+                $server_db_prefix = AfwSession::currentDBPrefix();
 
                 if (!$id) {
                         $id = $this->getId();
@@ -313,7 +313,7 @@ class Travel extends BtbObject
 
                                 // check if there's no record that block the delete operation
                                 if (!$success) {
-                                        $this->deleteNotAllowedReason = "هذه الرحلة تحتوي على باصات محجوزة أو  بدأ الحجز عليها لا بد من إلغاء الحجوزات أو لا<br>\n";
+                                        $this->deleteNotAllowedReason = "هذه الرحلة تحتوي على مركبات محجوزة أو  بدأ الحجز عليها لا بد من إلغاء الحجوزات أو لا<br>\n";
                                         $this->deleteNotAllowedReason .= implode("<br>\n", $delete_blocked_reasons);
                                         return false;
                                 }
@@ -321,7 +321,7 @@ class Travel extends BtbObject
                                 list($success, $delete_blocked_reasons, $ObjectsToDeleteListCount, $ObjectsToDeleteList) =
                                         $obj->deleteOneByOneWhere("travel_id = '$id'", $simul = false);
                                 if (!$success) {
-                                        $this->deleteNotAllowedReason = "حصل خطأ أثناء حذف الباصات<br>\n";
+                                        $this->deleteNotAllowedReason = "حصل خطأ أثناء حذف المركبات<br>\n";
                                         $this->deleteNotAllowedReason .= implode("<br>\n", $delete_blocked_reasons);
                                         return false;
                                 }
@@ -496,14 +496,14 @@ class Travel extends BtbObject
                         return array("الرجاء إعتماد عدد المسافرين المتوقع $solutionHtml", "");
                 }
 
-                // 1. تم اختيار الباصات الكافية أو أمثلتها وحجزها مبدئيا    
-                // 1.1 تم اختيار الباصات الكافية أو أمثلتها 
+                // 1. تم اختيار المركبات الكافية أو أمثلتها وحجزها مبدئيا    
+                // 1.1 تم اختيار المركبات الكافية أو أمثلتها 
                 list($travelers_nb, $nbseats, $estimated_needed_buses) = $this->calcBuses_needed_nb();
                 $current_nb_buses = count($travelBusList);
                 if ($estimated_needed_buses > $current_nb_buses) {
-                        $pbHtml = "<br>عدد الباصات المطلوب بحسب عدد المسافرين المتوقع : $estimated_needed_buses\n <br>عدد الباصات الحالي :$current_nb_buses ";
-                        $solutionHtml = "<br>قم بتحديث الباصات";
-                        return array("عدد الباصات الحالي لا يكفي لعدد المسافرين المتوقع. $pbHtml.$solutionHtml", "");
+                        $pbHtml = "<br>عدد المركبات المطلوب بحسب عدد المسافرين المتوقع : $estimated_needed_buses\n <br>عدد المركبات الحالي :$current_nb_buses ";
+                        $solutionHtml = "<br>قم بتحديث المركبات";
+                        return array("عدد المركبات الحالي لا يكفي لعدد المسافرين المتوقع. $pbHtml.$solutionHtml", "");
                 }
 
                 $no_bus_with_open_seats = true;
@@ -511,13 +511,13 @@ class Travel extends BtbObject
                 foreach ($travelBusList as $travelBusItem) {
                         // 1.2 تم حجزها مبدئيا
                         if (!$travelBusItem->bookedTemporary() and ($companyObj->hasOption("bus_booking_before"))) {
-                                $pbHtml = "<br>لم يتم تأجير الباص : " . $travelBusItem->getShortDisplay($lang);
+                                $pbHtml = "<br>لم يتم تأجير المركبة : " . $travelBusItem->getShortDisplay($lang);
                                 $MyLinkHtml = $travelBusItem->showMyLink($travelBusItem::$STEP_BUS_BOOKING, "_bus_booking");
-                                $solutionHtml = "<br>قم بتأجير هذا الباص وادخال بيانات التأجير من  هنا " . $MyLinkHtml;
-                                return array("يجب تأجير جميع الباصات تأجيرا مبدئيا$pbHtml.$solutionHtml", "");
+                                $solutionHtml = "<br>قم بتأجير هذه المركبة وادخال بيانات التأجير من  هنا " . $MyLinkHtml;
+                                return array("يجب تأجير جميع المركبات تأجيرا مبدئيا$pbHtml.$solutionHtml", "");
                         }
 
-                        // 1.3 إعدادات تسعير تكلفة الباص مدخلة ومعتمدة بتاريخ حديث
+                        // 1.3 إعدادات تسعير تكلفة المركبة مدخلة ومعتمدة بتاريخ حديث
                         // محاولة تحديث الأسعار 
                         // 2 options
                         // compute seats prices depending on eah bus pricing : disable currently
@@ -535,14 +535,14 @@ class Travel extends BtbObject
                                 $min_seat_price  = 30;
                                 list($approved, $reason) = $travelBusItem->priceApprovedAtTime($nb_days_allowed, $min_seat_price);
                                 if (!$approved) {
-                                        $pbHtml = "<br>الباص : " . $travelBusItem->getShortDisplay($lang) . "<br>" . $reason;
+                                        $pbHtml = "<br>المركبة : " . $travelBusItem->getShortDisplay($lang) . "<br>" . $reason;
                                         $MyLinkHtml = $travelBusItem->showMyLink($travelBusItem::$STEP_BUS_PRICING, "_bus_pricing");
-                                        $solutionHtml = "<br>قم بالتأكد من صحة حساب تكلفة المقعد الواحد بدون الربح التي تظهر في جدول المعلومات العامة لباصات الرحلة ثم قم باعتمادها من هنا $MyLinkHtml  ثم اذا انتهيت يمكنك اعتماد الباصات";
-                                        return array("يجب اعتماد تكلفة تأجير الباصات ليتم حساب الأسعار$pbHtml $solutionHtml", "");
+                                        $solutionHtml = "<br>قم بالتأكد من صحة حساب تكلفة المقعد الواحد بدون الربح التي تظهر في جدول المعلومات العامة لمركبات الرحلة ثم قم باعتمادها من هنا $MyLinkHtml  ثم اذا انتهيت يمكنك اعتماد المركبات";
+                                        return array("يجب اعتماد تكلفة تأجير المركبات ليتم حساب الأسعار$pbHtml $solutionHtml", "");
                                 }
                         }
 
-                        // 1.4 على الأقل واحد من الباصات فيه مقاعد جاهزة للحجز
+                        // 1.4 على الأقل واحد من المركبات فيه مقاعد جاهزة للحجز
                         list($seatsToBookReady, $seatsToBookList) = $travelBusItem->seatsToBookReady();
                         if ($seatsToBookReady) {
                                 // we need to find a least one open bus and we found it
@@ -555,18 +555,18 @@ class Travel extends BtbObject
                                 $seatsToBookItemDisplay = $seatsToBookItem->getDisplay($lang);
                                 if ($seat_price <= $min_seat_price) {
                                         $pbHtml = "<br>يجب أن تكون أسعار المقاعد جاهزة<br> المقعد $seatsToBookItemDisplay  سعره غير صحيح : $seat_price ريال ";
-                                        $solutionHtml = "<br>قم بإدخال الأسعار واعتمادها من خلال عرض هذا الباص في علامة التبويب  'باصات الرحلة' ثم علامة التبويب الأسعار. كذلك يجب التأكد من إدارة سياسة الشركة وأنه تم إدخال زيادات الأسعار بحسب صنف المقعد أمامي الخ إن وجدت هذه السياسة";
+                                        $solutionHtml = "<br>قم بإدخال الأسعار واعتمادها من خلال عرض هذه المركبة في علامة التبويب  'مركبات الرحلة' ثم علامة التبويب الأسعار. كذلك يجب التأكد من إدارة سياسة الشركة وأنه تم إدخال زيادات الأسعار بحسب صنف المقعد أمامي الخ إن وجدت هذه السياسة";
                                         return array(" $pbHtml $solutionHtml", "");
                                 }
                         }
                 }
 
                 // we need to find a least one open for booking bus 
-                // 1.4 على الأقل واحد من الباصات فيه مقاعد جاهزة للحجز
+                // 1.4 على الأقل واحد من المركبات فيه مقاعد جاهزة للحجز
                 // NOTE !!!! this code should not moved from here should be outside the previous loop
                 if ($no_bus_with_open_seats) {
-                        $pbHtml = "<br>يجب أن تكون المقاعد جاهزة للحجز في أحد الباصات";
-                        $solutionHtml = "<br>اختر الباص ثم قم بتحديث المقاعد وأسعارها وفتح الحجز عليها من خلال عرض هذا الباص في علامة التبويب  'باصات الرحلة' ثم علامة التبويب 'المقاعد'.";
+                        $pbHtml = "<br>يجب أن تكون المقاعد جاهزة للحجز في أحد المركبات";
+                        $solutionHtml = "<br>اختر المركبة ثم قم بتحديث المقاعد وأسعارها وفتح الحجز عليها من خلال عرض هذه المركبة في علامة التبويب  'مركبات الرحلة' ثم علامة التبويب 'المقاعد'.";
                         return array(" $pbHtml $solutionHtml", "");
                 }
 
@@ -600,7 +600,7 @@ class Travel extends BtbObject
                 if ($commit) {
                         $this->set("travel_status_id", $this->getAfterBusApprovedStatus());
                         $this->commit();
-                        return array("", "تم اعتماد الباصات");
+                        return array("", "تم اعتماد المركبات");
                 } else {
                         return array("", "لا يوجد أخطاء");
                 }
@@ -638,8 +638,8 @@ class Travel extends BtbObject
         public function approveHotels($lang = "ar", $commit = true)
         {
                 if (intval($this->getVal("travel_status_id")) < self::$TRAVEL_STATUS_ORGANIZE) {
-                        $pbHtml = "يجب أولا إعتماد الباصات ثم السكن";
-                        $solutionHtml = "<br>ارجع إلى التبويب السابق باصات الرحلة واعتمد الباصات";
+                        $pbHtml = "يجب أولا إعتماد المركبات ثم السكن";
+                        $solutionHtml = "<br>ارجع إلى التبويب السابق مركبات الرحلة واعتمد المركبات";
                         return array(" $pbHtml $solutionHtml", "");
                 }
 
@@ -716,7 +716,7 @@ class Travel extends BtbObject
                 if (!$companyObj) return array("اعدادات عمل الشركة المنظمة لهذه الرحلة غير متوفرة", "");
 
                 $ttObj = $this->het("travel_template_id");
-                if (!$ttObj) return array("هذه الرحلة لم تنشأ عن طريق برنامج متكرر فلا يمكن إنشاء الباصات بشكل آلي قم بانشائها بشكل يدوي", "");
+                if (!$ttObj) return array("هذه الرحلة لم تنشأ عن طريق برنامج متكرر فلا يمكن إنشاء المركبات بشكل آلي قم بانشائها بشكل يدوي", "");
 
                 ////////////////////////////////////////////////////////////////////////////////////
                 // calculate distance from storing bus location and my branch location
@@ -779,7 +779,7 @@ class Travel extends BtbObject
                 else $nb_buses_to_create = $max_buses_to_create;
 
                 // calculate default opened buses   
-                // start_open_bus = نسبة الباصات المفتوحة إبتداء
+                // start_open_bus = نسبة المركبات المفتوحة إبتداء
                 $start_open_bus = floatval($companyObj->start_open_bus);
                 $nb_buses_to_open = round($estimated_needed_buses * $start_open_bus / 100);
                 // min 1 bus to open
@@ -798,14 +798,14 @@ class Travel extends BtbObject
 
                 $bus_opened_count = 0;
                 $nb_seats_opened_for_booking = 0;
-                $report_arr[] = "عدد المسافرين $travelers_nb وعدد مقاعد الباص النموذج $bus_tpl_nbseats فنحتاج إلى " . $nb_buses_to_create . " باص";
+                $report_arr[] = "عدد المسافرين $travelers_nb وعدد مقاعد المركبة النموذج $bus_tpl_nbseats فنحتاج إلى " . $nb_buses_to_create . " مركبة";
                 for ($bnum = 1; $bnum <= $nb_buses_to_create; $bnum++) {
                         $bus_booking_log = "";
                         unset($tbObj);
                         $tbObj = TravelBus::loadByTravelAndBusNum($travel_id, $bnum);
                         if (!$tbObj) {
                                 $report_arr[] = "------------------------------------------------------------------";
-                                $report_arr[] = "البحث عن الباص رقم " . $bnum;
+                                $report_arr[] = "البحث عن المركبة رقم " . $bnum;
                                 // find a bus candidate for this travel
                                 list($cBus, $bus_booking_log) = $ttObj->getBusCandidate($lang, $booking_start_date, $booking_start_time, $booking_end_date, $booking_end_time, $this->getId());
 
@@ -813,14 +813,14 @@ class Travel extends BtbObject
                                 if ($cBus and ($cBus->id > 0)) {
                                         $bus_company_id = $cBus->getVal("work_branch_id");
                                         $bus_id = $cBus->getId();
-                                        $report_arr[] = "تم اختيار الباص :  " . $cBus . "  كباص رقم " . $bnum;
+                                        $report_arr[] = "تم اختيار المركبة :  " . $cBus . "  كمركبة رقم " . $bnum;
                                         $tbObj = TravelBus::createTravelBusNum($travel_company_id, $travel_id, $bus_company_id, $cBus->id, $bnum);
 
                                         // gorboj1 was here        
-                                } else return array("تعذر تعيين الباص رقم $bnum  للرحلة رقم $travel_id : $bus_booking_log", "");
+                                } else return array("تعذر تعيين المركبة رقم $bnum  للرحلة رقم $travel_id : $bus_booking_log", "");
                         } else {
                                 $cBus = $tbObj->bus;
-                                $report_arr[] = "الباص رقم " . $bnum . " موجود سابقا : " . $tbObj->getDisplay($lang);
+                                $report_arr[] = "المركبة رقم " . $bnum . " موجود سابقا : " . $tbObj->getDisplay($lang);
                         }
 
                         if ($tbObj) {
@@ -846,16 +846,16 @@ class Travel extends BtbObject
                                                         if ($new_bus_seats > 0) {
                                                                 $bus_opened_count++;
                                                                 $nb_seats_opened_for_booking += $new_bus_seats;
-                                                                $report_arr[] = "تم فتح الباص " . $tbObj->getShortDisplay($lang) . " وفيه $new_bus_seats مقعد متوفر للحجز";
+                                                                $report_arr[] = "تم فتح المركبة " . $tbObj->getShortDisplay($lang) . " وفيه $new_bus_seats مقعد متوفر للحجز";
                                                         } else {
-                                                                $report_arr[] = "تعذر فتح الباص " . $tbObj->getShortDisplay($lang) . " والسبب : " . $reason;
+                                                                $report_arr[] = "تعذر فتح المركبة " . $tbObj->getShortDisplay($lang) . " والسبب : " . $reason;
                                                         }
                                                 } else {
-                                                        $report_arr[] = "الباص رقم $bnum " . $tbObj->getShortDisplay($lang) . " غير محجوز مسبقا ";
+                                                        $report_arr[] = "المركبة رقم $bnum " . $tbObj->getShortDisplay($lang) . " غير محجوز مسبقا ";
                                                 }
                                         } else {
                                                 $bus_opened_count++;
-                                                $report_arr[] = "الباص رقم " . $bnum . " مفتوح سابقا";
+                                                $report_arr[] = "المركبة رقم " . $bnum . " مفتوح سابقا";
                                         }
                                 } else {
                                         $tbObj->makeWaitingSeatsForBooking($lang);
@@ -1409,11 +1409,11 @@ class Travel extends BtbObject
         public function calcBuses_galery()
         {
                 $travelBusList = $this->get("travelBusList");
-                $html = "<div class='galery_title'>الباصات</div>";
+                $html = "<div class='galery_title'>المركبات</div>";
                 $already_photos_arr = array();
                 foreach ($travelBusList as $travelBusItem) {
                         if ($travelBusItem) {
-                                $busObj = $travelBusItem->hetBus();
+                                $busObj = $travelBusItem->het("bus_id");
                                 $html_bus = "";
                                 if ($busObj) list($html_bus, $already_photos_arr) = $busObj->calcPhotoGalery($maxPhoto = 4, $put_default_photo = false, $dont_repeat_photo = true, $already_photos_arr, $galery_css = "new_gallery", $img_style = "");
                                 if ($html_bus) {
@@ -1847,7 +1847,7 @@ class Travel extends BtbObject
 
         public static function getNextStatusOf($travel_status_id)
         {
-                if ($travel_status_id == 10) return array(20, "ah2U4B", "يجب الدخول على استمارة الرحلة واعتماد الباصات من خلال تبويب باصات الرحلة");
+                if ($travel_status_id == 10) return array(20, "ah2U4B", "يجب الدخول على استمارة الرحلة واعتماد المركبات من خلال تبويب مركبات الرحلة");
                 if ($travel_status_id == 20) return array(30, "unknown", "يجب الدخول على استمارة الرحلة واعتماد الفنادق والغرف وأسعارها من خلال تبويب سكن الرحلة");
                 if ($travel_status_id == 30) return array(40, "unknown");
                 if ($travel_status_id == 40) return array(50, "unknown");
@@ -2654,7 +2654,7 @@ class Travel extends BtbObject
 
 // rafik/2020-09-21-10:30 : gorboj1 for me this is not correct way to check if bus is reserved already
 /*
-                                        $report_arr[] = "تم اختيار الباص :  ".$cBus."  للحجز المبدئي كباص رقم ".$bnum;
+                                        $report_arr[] = "تم اختيار المركبة :  ".$cBus."  للحجز المبدئي كمركبة رقم ".$bnum;
                                         
                                         // create the travel bus  
                                         $tbObj = TravelBus::loadByMainIndex($bus_company_id, $bus_id, 1, $booking_start_date, $booking_start_time, $booking_end_date, $booking_end_time,$create_obj_if_not_found=true);
@@ -2672,7 +2672,7 @@ class Travel extends BtbObject
                                                         $tbObj->delete();
                                                         $tbObj2_deleteNotAllowedReason = $tbObj2->deleteNotAllowedReason;
                                                         $tbObj2->activate();                                      
-                                                        return array("يوجد حجز لهذاالباص في نفس الرحلة، يجب التواصل مع المشرف لحل المشكل ، رقم الخطأ : 1001 رقم السجل المعارض  
+                                                        return array("يوجد حجز لهذاالمركبة في نفس الرحلة، يجب التواصل مع المشرف لحل المشكل ، رقم الخطأ : 1001 رقم السجل المعارض  
                                                                         <br>  [$tb1_id($tb1_code) vs $tb2_id($tb2_code)] delete failed, reason : ".$tbObj2_deleteNotAllowedReason,"");
                                                 }
                                                 else

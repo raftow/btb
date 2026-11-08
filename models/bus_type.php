@@ -1,6 +1,6 @@
 <?php
 // ------------------------------------------------------------------------------------
-// ----             auto generated php class of table bus_type : bus_type - ماركات الباصات 
+// ----             auto generated php class of table bus_type : bus_type - ماركات المركبات 
 // ------------------------------------------------------------------------------------
 
 
@@ -12,11 +12,11 @@ class BusType extends BtbObject
 {
 
      public static $MY_ATABLE_ID = 13738;
-     // إدارة ماركات الباصات 
+     // إدارة ماركات المركبات 
      public static $BF_QEDIT_BUS_BRAND = 104064;
-     // عرض تفاصيل ماركة الباص 
+     // عرض تفاصيل ماركة المركبة 
      public static $BF_DISPLAY_BUS_BRAND = 104066;
-     // مسح ماركة الباص 
+     // مسح ماركة المركبة 
      public static $BF_DELETE_BUS_BRAND = 104065;
 
 
@@ -126,7 +126,7 @@ class BusType extends BtbObject
 
      public function beforeDelete($id, $id_replace)
      {
-          global $server_db_prefix;
+          $server_db_prefix = AfwSession::currentDBPrefix();
 
           if ($id) {
                if ($id_replace == 0) {
@@ -137,9 +137,9 @@ class BusType extends BtbObject
 
 
                     // FK not part of me - replaceable 
-                    // btb.bus-ماركة الباص	bus_type_id  حقل يفلتر به-ManyToOne
+                    // btb.bus-ماركة المركبة	bus_type_id  حقل يفلتر به-ManyToOne
                     $this->execQuery("update ${server_db_prefix}btb.bus set bus_type_id='$id_replace' where bus_type_id='$id' ");
-                    // btb.bus_model-ماركة الباص	bus_type_id  حقل يفلتر به-ManyToOne
+                    // btb.bus_model-ماركة المركبة	bus_type_id  حقل يفلتر به-ManyToOne
                     $this->execQuery("update ${server_db_prefix}btb.bus_model set bus_type_id='$id_replace' where bus_type_id='$id' ");
 
 
@@ -148,9 +148,9 @@ class BusType extends BtbObject
 
                } else {
                     // FK on me 
-                    // btb.bus-ماركة الباص	bus_type_id  حقل يفلتر به-ManyToOne
+                    // btb.bus-ماركة المركبة	bus_type_id  حقل يفلتر به-ManyToOne
                     $this->execQuery("update ${server_db_prefix}btb.bus set bus_type_id='$id_replace' where bus_type_id='$id' ");
-                    // btb.bus_model-ماركة الباص	bus_type_id  حقل يفلتر به-ManyToOne
+                    // btb.bus_model-ماركة المركبة	bus_type_id  حقل يفلتر به-ManyToOne
                     $this->execQuery("update ${server_db_prefix}btb.bus_model set bus_type_id='$id_replace' where bus_type_id='$id' ");
 
 

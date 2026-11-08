@@ -216,7 +216,7 @@ class TravelerGroup extends BtbObject
 
      public function beforeDelete($id, $id_replace)
      {
-          global $server_db_prefix;
+          $server_db_prefix = AfwSession::currentDBPrefix();
 
           if ($id) {
                if ($id_replace == 0) {

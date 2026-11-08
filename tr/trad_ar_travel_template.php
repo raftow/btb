@@ -19,11 +19,16 @@ class TravelTemplateArTranslator
                 $trad["travel_template"]["step11"] = "الرحلات السابقة";
 
                 $trad["travel_template"]["traveltemplate.single"] = "برنامج رحلة";
+
                 $trad["travel_template"]["traveltemplate.new"] = "جديد(ة)";
                 $trad["travel_template"]["travel_template"] = "برامج الرحلات";
                 $trad["travel_template"]["work_branch_id"] = "شركة الأسفار";
                 $trad["travel_template"]["travel_template_name"] = "مسمى برنامج الرحلة";
                 $trad["travel_template"]["tfrequency_enum"] = "تكرار الرحلة";
+                $trad["travel_template"]["travel_template_code"] = "رمز الرحلة";
+                $trad["travel_template"]["name_ar"] = "مسمى الرحلة بالعربية";
+                $trad["travel_template"]["name_en"] = "مسمى حالة الرحلة بالانجليزية";
+
                 //   ;"تاريخ أخر رحلة تم توليدها "
                 $trad["travel_template"]["first_travel_date"] = "تاريخ الرحلة القادمة";
 

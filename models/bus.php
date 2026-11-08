@@ -1,6 +1,6 @@
 <?php
 // ------------------------------------------------------------------------------------
-// ----             auto generated php class of table bus : bus - الباصات 
+// ----             auto generated php class of table bus : bus - المركبات 
 // ------------------------------------------------------------------------------------
 
 
@@ -12,19 +12,19 @@ class Bus extends BtbObject
 {
 
         public static $MY_ATABLE_ID = 13737;
-        // إجراء إحصائيات حول الباصات 
+        // إجراء إحصائيات حول المركبات 
         public static $BF_STATS_BUS = 104022;
-        // إدارة الباصات 
+        // إدارة المركبات 
         public static $BF_QEDIT_BUS = 104017;
-        // إنشاء باص 
+        // إنشاء مركبة 
         public static $BF_EDIT_BUS = 104016;
-        // الاستعلام عن باص 
+        // الاستعلام عن مركبة 
         public static $BF_QSEARCH_BUS = 104021;
-        // البحث في الباصات 
+        // البحث في المركبات 
         public static $BF_SEARCH_BUS = 104020;
-        // عرض تفاصيل باص 
+        // عرض تفاصيل مركبة 
         public static $BF_DISPLAY_BUS = 104019;
-        // مسح باص 
+        // مسح مركبة 
         public static $BF_DELETE_BUS = 104018;
 
 
@@ -61,8 +61,13 @@ class Bus extends BtbObject
         response : $this->set("bus_code", "EXAMPLE-".$this->getId());        
         */
 
+        /**
+         * @param int $work_branch_id : the work branch that owns the bus
+         * @param string $bus_code : the bus code (matricule) of the bus
+         * @return Bus|null : the bus object if found, null if not found
+         */
 
-        public static function loadByMainIndex($work_branch_id, $bus_code, $create_obj_if_not_found = false)
+        public static function loadByMainIndex($work_branch_id, $bus_code)
         {
                 if (!$work_branch_id) throw new AfwRuntimeException("loadByMainIndex : work_branch_id is mandatory field");
                 if (!$bus_code) throw new AfwRuntimeException("loadByMainIndex : bus_code is mandatory field");
@@ -73,14 +78,41 @@ class Bus extends BtbObject
                 $obj->select("bus_code", $bus_code);
 
                 if ($obj->load()) {
-                        if ($create_obj_if_not_found) $obj->activate();
+                        return $obj;
+                } else return null;
+        }
+
+        /**
+         * @param int $work_branch_id : the work branch that owns the bus
+         * @param int $parent_bus_id : the bus template (example) that is used to generate this bus
+         * @param int $bus_num : the bus number in the fleet of the bus template (example)
+         * @param string $bus_code : the bus code (matricule) of the bus
+         * @param bool $create_obj_if_not_found : whether to create a new bus object if not found
+         * @return Bus|null : the bus object if found, null if not found and $create_obj_if_not_found is false
+         */
+        public static function loadByBusNum($work_branch_id, $parent_bus_id, $bus_num, $bus_code, $create_obj_if_not_found = false)
+        {
+                $obj = new Bus();
+                if (!$work_branch_id) throw new AfwRuntimeException("loadByBusNum : work_branch_id is mandatory field");
+
+
+                $obj->select("work_branch_id", $work_branch_id);
+                $obj->select("parent_bus_id", $parent_bus_id);
+                $obj->select("bus_num", $bus_num);
+
+                if ($obj->load()) {
+                        if ($create_obj_if_not_found) {
+                                $obj->set("bus_code", $bus_code);
+                                $obj->activate();
+                        }
                         return $obj;
                 } elseif ($create_obj_if_not_found) {
                         $obj->set("work_branch_id", $work_branch_id);
+                        $obj->set("parent_bus_id", $parent_bus_id);
+                        $obj->set("bus_num", $bus_num);
                         $obj->set("bus_code", $bus_code);
 
-                        $obj->insertNew();
-                        if (!$obj->id) return null; // means beforeInsert rejected insert operation
+                        $obj->insert();
                         $obj->is_new = true;
                         return $obj;
                 } else return null;
@@ -91,7 +123,7 @@ class Bus extends BtbObject
                 $busFileList = null;
 
                 if ($from_example) {
-                        $exampleBus = $this->het("myparent");
+                        $exampleBus = $this->het("parent_bus_id");
                         if ($exampleBus) $busFileList = $exampleBus->get("busFileList");
                 }
 
@@ -149,13 +181,13 @@ class Bus extends BtbObject
                 $this_id = $this->getId();
 
                 if (!$this_id) {
-                        $errors_arr[] = "هذا الباص غير مكتمل البيانات";
+                        $errors_arr[] = "هذه المركبة غير مكتمل البيانات";
                         return array(-1, $errors_arr, $report_arr, null, null);
                 }
 
                 $busOwner = $this->het("work_branch_id");
                 if (!$busOwner) {
-                        $errors_arr[] = "هذا الباص لم يتم تحديد ملكيته لأي مؤسسة";
+                        $errors_arr[] = "هذه المركبة لم يتم تحديد ملكيته لأي مؤسسة";
                         return array(-1, $errors_arr, $report_arr, null, null);
                 }
 
@@ -184,41 +216,19 @@ class Bus extends BtbObject
                         $errors_arr[] = "لم يتم العثور على تسعيرة عامة لجميع الفترات";
                         $errors_arr[] = "هذا البرنامج برقم التسلسل $travel_program_id والذي يمتد $days_nb يوم غير معتمد من طرف إدارتكم.<br>
                                                  أرجوا طلب اعتماده من ادارتكم من اعدادات عمل الشركة <b>$company_name</b>
-                                                 الوظيفة توجد في علامة التبويب [برامج الشركة] زر <b>تحديث البرامج وجدول تسعيرات الباصات</b>";
+                                                 الوظيفة توجد في علامة التبويب [برامج الشركة] زر <b>تحديث البرامج وجدول تسعيرات المركبات</b>";
                         return array(-1, $errors_arr, $report_arr, null, null);
                 }
                 $bpId = $bp->getId();
                 $total_price = floatval($bp->getVal("price"));
                 $report_arr[] = "مرجع التسعيرة المعتمدة : $bpId";
-                $report_arr[] = "سعر تكلفة الباص : $total_price";
+                $report_arr[] = "سعر تكلفة المركبة : $total_price";
                 // $report_arr[] = "وفقا للخيارات التالية : @todo";
 
                 return array($total_price, $errors_arr, $report_arr, $this->prices_expiry_date, $bp);
         }
 
-        public static function loadByBusNum($work_branch_id, $parent_bus_id, $bus_num, $create_obj_if_not_found = false)
-        {
-                $obj = new Bus();
-                if (!$work_branch_id) throw new AfwRuntimeException("loadByBusNum : work_branch_id is mandatory field");
 
-
-                $obj->select("work_branch_id", $work_branch_id);
-                $obj->select("parent_bus_id", $parent_bus_id);
-                $obj->select("bus_num", $bus_num);
-
-                if ($obj->load()) {
-                        if ($create_obj_if_not_found) $obj->activate();
-                        return $obj;
-                } elseif ($create_obj_if_not_found) {
-                        $obj->set("work_branch_id", $work_branch_id);
-                        $obj->set("parent_bus_id", $parent_bus_id);
-                        $obj->set("bus_num", $bus_num);
-
-                        $obj->insert();
-                        $obj->is_new = true;
-                        return $obj;
-                } else return null;
-        }
 
 
 
@@ -230,17 +240,20 @@ class Bus extends BtbObject
                 if ($this->sureIs("example") and $this->sureIs("reel")) {
                         $category = "reel_unique";
                 }
+                //    example = N , reel = Y     ===>   bus reel generated from an example and matricule (bus code) is entered                    
+                elseif ((!$this->sureIs("example")) and $this->sureIs("reel")) {
+                        $category = "reel_from_example";
+                }
                 //    example = Y , reel = N     ===>   bus example (not reel used to generate group of buses from same bus template)
                 elseif ($this->sureIs("example") and (!$this->sureIs("reel"))) {
                         $category = "template";
                 }
-                //    example = N , reel = Y     ===>   bus reel generated from an example and matricule (bus code) is entered                    
-                elseif ((!$this->sureIs("example")) and $this->sureIs("reel")) {
-                        $category = "generated_designed";
-                }
                 //    example = N , reel = N     ===>   bus generated from an example not at yet reel => not yet with matricule (bus code)                    
                 else { // if ((!$this->sureIs("example")) and (!$this->sureIs("reel")))
-                        $category = "generated_not_designed";
+
+                        $category = "not_reel_not_example";
+                        // should not happen 
+                        throw new AfwRuntimeException("Bus::calcCategory : bus with id " . $this->getId() . " is not example and not reel, this should not happen");
                 }
 
                 if (!$translate) return $category;
@@ -295,7 +308,7 @@ class Bus extends BtbObject
                 } elseif ($this->sureIs("example")) {
                         //
                 } else {
-                        // generated_not_designed
+                        // not_reel_not_example
                         // ?? $data[4] = "رقم ".$this->getVal("bus_num")." في الأسطول";
                 }
 
@@ -360,7 +373,7 @@ class Bus extends BtbObject
                                 $my_id = $this->getId();
                                 $link = array();
                                 $title = "تحرير وتوظيف الصور";
-                                $title_detailed = $title . " لهذا الباص : " . $displ;
+                                $title_detailed = $title . " لهذا المركبة : " . $displ;
                                 $link["URL"] = "main.php?Main_Page=afw_mode_qedit.php&cl=BusFile&currmod=btb&id_origin=$my_id&class_origin=Bus&module_origin=btb&newo=-1&limit=30&ids=all&fixmtit=$title_detailed&fixmdisable=1&fixm=bus_id=$my_id&sel_bus_id=$my_id&return_mode=1&popup=1";
                                 $link["TITLE"] = $title;
                                 $link["UGROUPS"] = array();
@@ -372,7 +385,7 @@ class Bus extends BtbObject
                 if ($mode == "mode_busSeatCategoryList") {
                         unset($link);
                         $link = array();
-                        $title = "إدارة تصنيفات مقاعد الباصات ";
+                        $title = "إدارة تصنيفات مقاعد المركبات ";
                         $title_detailed = $title . "لـ : " . $displ;
                         $link["URL"] = "main.php?Main_Page=afw_mode_qedit.php&cl=BusSeatCategory&currmod=btb&id_origin=$my_id&class_origin=Bus&module_origin=btb&newo=2&limit=30&ids=all&fixmtit=$title_detailed&fixmdisable=1&fixm=bus_id=$my_id&sel_bus_id=$my_id&return_mode=1";
                         $link["TITLE"] = $title;
@@ -383,7 +396,7 @@ class Bus extends BtbObject
                 if ($mode == "mode_busSeatCategoryList") {
                         unset($link);
                         $link = array();
-                        $title = "إضافة تصنيف مقاعد الباص جديد";
+                        $title = "إضافة تصنيف مقاعد المركبة جديد";
                         $title_detailed = $title . "لـ : " . $displ;
                         $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=BusSeatCategory&currmod=btb&sel_bus_id=$my_id";
                         $link["TITLE"] = $title;
@@ -425,7 +438,7 @@ class Bus extends BtbObject
 
                 $bblist = implode("<br>\n", $bb_arr);
 
-                return array("", "عدد الباصات : $bb  <br>قائمة الباصات : $bblist <br>عدد التسعيرات المنسوخة  : $cc <br>عدد الصور المنسوخة  : $ff <br>عدد أصناف المقاعد المنسوخة  : $cg");
+                return array("", "عدد المركبات : $bb  <br>قائمة المركبات : $bblist <br>عدد التسعيرات المنسوخة  : $cc <br>عدد الصور المنسوخة  : $ff <br>عدد أصناف المقاعد المنسوخة  : $cg");
         }
 
         public function hasParent()
@@ -441,11 +454,11 @@ class Bus extends BtbObject
                 if (!$this->sureIs("example")) {
                         if (!$this->hasParent()) {
                                 $color = "green";
-                                $title_ar = "جعل هذا الباص نموذج فقط";
+                                $title_ar = "جعل هذه المركبة نموذج فقط";
                                 $pbms["xc123B"] = array("METHOD" => "setAsExample", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "");
                         } else {
                                 $color = "green";
-                                $title_ar = "تحديث البيانات من الباص النموذج";
+                                $title_ar = "تحديث البيانات من المركبة النموذج";
                                 $pbms["xas78B"] = array("METHOD" => "copyDataFromExampleParent", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "");
                         }
                 } elseif (!$this->sureIs("reel")) {
@@ -453,16 +466,16 @@ class Bus extends BtbObject
                     if($objme->isSuperAdmin())
                     {
                             $color = "green";
-                            $title_ar = "تحويل إلى باص حقيقي"; 
+                            $title_ar = "تحويل إلى مركبة حقيقية"; 
                             $pbms["xc123A"] = array("METHOD"=>"setAsExisting","COLOR"=>$color, "LABEL_AR"=>$title_ar, "PUBLIC"=>true, "BF-ID"=>"");
                     
                             $color = "yellow";
-                            $title_ar = "انشاء باص حقيقي على هذا النموذج"; 
+                            $title_ar = "انشاء مركبة حقيقية على هذا النموذج"; 
                             $pbms["2YC13B"] = array("METHOD"=>"createFromThisExample","COLOR"=>$color, "LABEL_AR"=>$title_ar, "PUBLIC"=>true, "BF-ID"=>"");
                     }
                     */
                         $color = "red";
-                        $title_ar = "تحديث معلومات أسطول الباصات الحقيقية المنشئة على هذا النموذج";
+                        $title_ar = "تحديث معلومات أسطول المركبات الحقيقية المنشئة على هذا النموذج";
                         $methodName = "UpdateChildFromThisExample";
                         $pbms[AfwStringHelper::hzmEncode($methodName)] = array(
                                 "METHOD" => $methodName,
@@ -477,7 +490,7 @@ class Bus extends BtbObject
                                         'en' => "You will update prices and photos and seats categories"
                                 ),
                                 'CONFIRMATION_QUESTION' => array(
-                                        'ar' => "هل أنت متأكد أنك تريد تحديث بيانات الأسطول من هذا الباص النموذج",
+                                        'ar' => "هل أنت متأكد أنك تريد تحديث بيانات الأسطول من هذه المركبة النموذج",
                                         'en' => "are you sure you want to update bus properties from the bus template"
                                 ),
 
@@ -486,18 +499,19 @@ class Bus extends BtbObject
                 }
                 /*
             $color = "green";
-            $title_ar = "تحديث جدول تسعيرات الباص"; 
+            $title_ar = "تحديث جدول تسعيرات المركبة"; 
             $pbms["hhAxd4"] = array("METHOD"=>"genereMyPricings",
                                  "COLOR"=>$color, 
                                  "LABEL_AR"=>$title_ar, 
                                  "PUBLIC"=>true, "BF-ID"=>"", "HZM-SIZE" =>12, 'STEP' => 4, 
                                  );*/
 
-                $color = "yellow";
-                $title_ar = "تحديث أسطول الباصات الحقيقية المنشئة على هذا النموذج";
-                $methodName = "genereRealBusListFromThisExample";
-                $pbms[AfwStringHelper::hzmEncode($methodName)] = array("METHOD" => $methodName, "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 8);
-
+                if ($this->sureIs("example")) {
+                        $color = "yellow";
+                        $title_ar = "تحديث أسطول المركبات الحقيقية المنشئة على هذا النموذج";
+                        $methodName = "genereRealBusListFromThisExample";
+                        $pbms[AfwStringHelper::hzmEncode($methodName)] = array("METHOD" => $methodName, "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 8);
+                }
                 $color = "blue";
                 $title_ar = "انشاء التصنيف البسيط للمقاعد";
                 $methodName = "genereDefaultCategories";
@@ -521,7 +535,7 @@ class Bus extends BtbObject
                 $this->set("bus_color", 0);
                 $this->commit();
 
-                return array("", "تم تحويل الباص إلى نموذج فقط ويحدد الباص الحقيقي لاحقا");
+                return array("", "تم تحويل المركبة إلى نموذج فقط ويحدد المركبة الحقيقي لاحقا");
         }
 
         /*
@@ -532,21 +546,63 @@ class Bus extends BtbObject
              //$this->set("bus_code", "");
              //$this->set("bus_color", 0);
              $this->commit();
-             return array("","تم تحويل الباص إلى باص حقيقي نرجوا تحديد لون الباص ورقم اللوحة");
+             return array("","تم تحويل المركبة إلى مركبة حقيقية نرجوا تحديد لون المركبة ورقم اللوحة");
         }
         */
 
+        /**
+         * Copies the current bus object to another company (work branch) as a new bus object.
+         * @param int $work_branch_id The ID of the work branch (company) to copy the bus to.
+         * 
+         */
+        public function copyMeToOtherCompany($work_branch_id, $lang = "ar")
+        {
+                $errors_arr = array();
+                $infos_arr = array();
+
+                if ($this->getId()) {
+                        $parent_bus_id = $this->getVal("parent_bus_id");
+                        $bus_num = $this->getVal("bus_num");
+                        $bus_code = $this->getVal("bus_code");
+                        $busObj = Bus::loadByBusNum($work_branch_id, $parent_bus_id, $bus_num, $bus_code, true);
+
+                        $busObj->copyDataFrom($this);
+                        $busObj->set("instance_nb", 1);
+                        $busObj->commit();
+                        $bus_id = $busObj->getId();
+                        $action = $busObj->is_new ? "تم إنشاء مركبة جديدة" : "تم تحديث المركبة";
+                        $infos_arr[] = $action . " في المؤسسة الجديدة بالمعرف التسلسلي $bus_id يرجى تعديل بيانات المركبة لإكمالها مثل رقم اللوحة واللون ونحو ذلك";
+
+                        if ($bus_id) {
+                                $infos_arr[] = "تم نسخ المركبة النموذج إلى مركبة حقيقية جديد بالمعرف التسلسلي $bus_id يرجى تعديل بيانات المركبة لإكمالها مثل رقم اللوحة واللون ونحو ذلك";
+
+                                list($pf_nb, $pp_nb, $cg_nb) = $busObj->copyPhotosAndPricingFrom($this);
+
+                                $infos_arr[] = "وتم نسخ $pf_nb صورة من صور المركبة النموذج";
+                                $infos_arr[] = "وتم نسخ $cg_nb من تصنيفات المقاعد";
+                                $infos_arr[] = "وتم نسخ $pp_nb من سجلات أسعار المركبة النموذج بنفس الأسعار ويجب تحديثها إذا دعت الحاجة";
+                        } else {
+                                $errors_arr[] = "حصل خطأ أثناء نسخ بيانات المركبة النموذج الرجاء مراجعة مشرف النظام";
+                        }
+                } else {
+                        $errors_arr[] = "مركبة غير مكتملة البيانات لا يمكن نسخها إلى مركبة حقيقية";
+                }
+
+                //$this->commit();
+                return array(implode("<br>\n", $errors_arr), implode("<br>\n", $infos_arr));
+        }
+
         public function copyDataFromExampleParent($lang = "ar")
         {
-                $bexampleObj = $this->het("myparent");
-                if (!$bexampleObj) return array("لم يتم انشاء هذا الباص على نموذج باص محدد", "");
+                $bexampleObj = $this->het("parent_bus_id");
+                if (!$bexampleObj) return array("لم يتم انشاء هذه المركبة على نموذج مركبة محدد", "");
                 $this->updateMyPropertiesFrom($bexampleObj);
                 list($pf_nb, $pp_nb, $cg_nb) = $this->copyPhotosAndPricingFrom($bexampleObj);
 
-                $infos_arr[] = "تم تحديث بيانات الباص من الباص النموذج";
-                $infos_arr[] = "تم تحديث $pf_nb صورة من صور الباص النموذج";
+                $infos_arr[] = "تم تحديث بيانات المركبة من المركبة النموذج";
+                $infos_arr[] = "تم تحديث $pf_nb صورة من صور المركبة النموذج";
                 $infos_arr[] = "تم تحديث $cg_nb من تصنيفات المقاعد";
-                $infos_arr[] = "تم تحديث $pp_nb من سجلات أسعار الباص النموذج بنفس الأسعار ويجب تحديثها إذا دعت الحاجة";
+                $infos_arr[] = "تم تحديث $pp_nb من سجلات أسعار المركبة النموذج بنفس الأسعار ويجب تحديثها إذا دعت الحاجة";
 
                 return array("", implode("<br>\n", $infos_arr));
         }
@@ -617,21 +673,27 @@ class Bus extends BtbObject
                 $nb_buses = intval($this->getVal("instance_nb"));
                 if ($this->getId() and ($nb_buses > 0)) {
                         for ($bus_num = 1; $bus_num <= $nb_buses; $bus_num++) {
-                                $busObj = self::loadByBusNum($this->getVal("work_branch_id"), $this->getId(), $bus_num);
+                                $code_example = $this->getId() + $bus_num % 10000;
+                                $bus_code = "EXM " . AfwStringHelper::left_complete_len($code_example, 4, "0");
+                                $params["reel"] = "Y";
+                                $params["example"] = "N";
+                                $params["bus_num"] = $bus_num;
+                                $params["bus_code"] = $bus_code;
+                                list($err, $info, $action) = $this->createOrUpdateFromThisExample(null, $lang, $params, $commit);
+                                if ($err) {
+                                        $errors_arr[] = "خطأ أثناء إنشاء/تحديث المركبة رقم $bus_num  في الأسطول : " . $err;
+                                } else {
+                                        $infos_arr[] = "$action رقم $bus_num  في الأسطول - " . $info;
+                                }
+                                /*
                                 if (!$busObj) {
-                                        $params["bus_code"] = "EX-" . $this->getId() . "-" . $bus_num;
-                                        $params["bus_num"] = $bus_num;
-                                        $params["reel"] = "N";
-                                        list($err, $info) = $this->createFromThisExample($lang, $params, $commit);
-                                        if ($err) {
-                                                $errors_arr[] = "خطأ أثناء إنشاء الباص رقم $bus_num  في الأسطول : " . $err;
-                                        } else {
-                                                $infos_arr[] = "تم إنشاء الباص رقم $bus_num  في الأسطول - " . $info;
-                                        }
+
+                                        
                                 } else {
                                         //die("this->bus_brand_id = $this->bus_brand_id");
                                         $attributes = [
                                                 "owner_type_id",
+                                                "work_branch_id",
                                                 "bus_brand_id",
                                                 "bus_model_id",
                                                 "factory_year",
@@ -642,21 +704,23 @@ class Bus extends BtbObject
                                                 "booking_infos",
                                         ];
                                         $busObj->copyAttributesFrom($this, $attributes);
+                                        $busObj->set("example", "N");
+                                        $busObj->set("reel", "Y");
 
                                         $busObj->commit();
 
-                                        $infos_arr[] = "الباص رقم $bus_num  موجود سابقا في الأسطول فقد تم تحديثه";
-                                }
+                                        $infos_arr[] = "المركبة رقم $bus_num  موجود سابقا في الأسطول فقد تم تحديثه";
+                                }*/
                         }
                 } else {
-                        $errors_arr[] = "باص غير مكتمل البيانات أو لم يتم تحديد كمية هذا النموذج في الأسطول لذلك تعذرت عملية تحديث الأسطول";
+                        $errors_arr[] = "مركبة غير مكتملة البيانات أو لم يتم تحديد كمية هذا النموذج في الأسطول لذلك تعذرت عملية تحديث الأسطول";
                 }
                 return array(implode("<br>\n", $errors_arr), implode("<br>\n", $infos_arr));
         }
 
         public function updateMyPropertiesFromMyParent($lang = "ar", $updated_properties = "")
         {
-                $parentBusObj = $this->het("myparent");
+                $parentBusObj = $this->het("parent_bus_id");
                 if ($parentBusObj) {
                         $this->updateMyPropertiesFrom($parentBusObj, $updated_properties);
                 }
@@ -703,13 +767,29 @@ class Bus extends BtbObject
                 return $busObj->update(false);
         }
 
-        public function createFromThisExample($lang = "ar", $params = array('bus_code' => "", 'reel' => "N", 'bus_color' => 0, 'bus_num' => 0), $commit = true)
+        public function matriculeIsNotReal()
+        {
+                return AfwStringHelper::stringStartsWith($this->getVal("bus_code"), "EXM ");
+        }
+
+        /**
+         * @param Bus $busObj
+         */
+        public function createOrUpdateFromThisExample($busObj, $lang = "ar", $params = array('bus_code' => "", 'reel' => "N", 'bus_color' => 0, 'bus_num' => 0), $commit = true)
         {
                 $errors_arr = array();
                 $infos_arr = array();
 
                 if ($this->getId()) {
-                        $busObj = new Bus();
+
+
+                        if (!$busObj) {
+                                $work_branch_id = $this->getVal("work_branch_id");
+                                $parent_bus_id = $this->getId();
+                                $bus_num = $params["bus_num"];
+                                $bus_code = $params["bus_code"];
+                                $busObj = Bus::loadByBusNum($work_branch_id, $parent_bus_id, $bus_num, $bus_code, true);
+                        }
                         $except_fields = array();
                         $except_if_filled_fields = array();
                         $busObj->copyDataFrom($this, $except_fields, $except_if_filled_fields);
@@ -719,35 +799,33 @@ class Bus extends BtbObject
                         if (!$params["bus_color"]) $params["bus_color"] = ($params["bus_num"] % 14) + 1;
                         if (!$params["reel"]) $params["reel"] = "N";
 
-                        $busObj->parent_bus_id = $this->getId();
-                        $busObj->example = "N";
 
-                        $busObj->bus_code = $params["bus_code"];
-
-                        $busObj->bus_color = $params["bus_color"];
-                        $busObj->bus_num = $params["bus_num"];
 
                         $busObj->set("reel", $params["reel"]);
+                        $busObj->set("example", $params["example"]);
+                        if ($busObj->is_new or $busObj->matriculeIsNotReal()) $busObj->set("bus_code", $params["bus_code"]);
+                        $busObj->set("bus_color", $params["bus_color"]);
+
                         if ($commit) $busObj->commit();
 
                         $bus_id = $busObj->getId();
                         if ($bus_id) {
-                                $infos_arr[] = "تم نسخ الباص النموذج إلى باص حقيقي جديد بالمعرف التسلسلي $bus_id يرجى تعديل بيانات الباص لإكمالها مثل رقم اللوحة واللون ونحو ذلك";
+                                $infos_arr[] = "تم نسخ المركبة النموذج إلى مركبة حقيقية جديد بالمعرف التسلسلي $bus_id يرجى تعديل بيانات المركبة لإكمالها مثل رقم اللوحة واللون ونحو ذلك";
 
                                 list($pf_nb, $pp_nb, $cg_nb) = $busObj->copyPhotosAndPricingFrom($this);
 
-                                $infos_arr[] = "وتم نسخ $pf_nb صورة من صور الباص النموذج";
+                                $infos_arr[] = "وتم نسخ $pf_nb صورة من صور المركبة النموذج";
                                 $infos_arr[] = "وتم نسخ $cg_nb من تصنيفات المقاعد";
-                                $infos_arr[] = "وتم نسخ $pp_nb من سجلات أسعار الباص النموذج بنفس الأسعار ويجب تحديثها إذا دعت الحاجة";
+                                $infos_arr[] = "وتم نسخ $pp_nb من سجلات أسعار المركبة النموذج بنفس الأسعار ويجب تحديثها إذا دعت الحاجة";
                         } else {
-                                $errors_arr[] = "حصل خطأ أثناء نسخ بيانات الباص النموذج الرجاء مراجعة مشرف النظام";
+                                $errors_arr[] = "حصل خطأ أثناء نسخ بيانات المركبة النموذج الرجاء مراجعة مشرف النظام";
                         }
                 } else {
-                        $errors_arr[] = "باص غير مكتمل البيانات لا يمكن نسخه";
+                        $errors_arr[] = "مركبة غير مكتملة البيانات لا يمكن نسخها إلى مركبة حقيقية";
                 }
-
+                $action = $busObj->is_new ? "تم إنشاء مركبة جديدة" : "تم تحديث المركبة";
                 //$this->commit();
-                return array(implode("<br>\n", $errors_arr), implode("<br>\n", $infos_arr));
+                return array(implode("<br>\n", $errors_arr), implode("<br>\n", $infos_arr), $action);
         }
 
         // trigger the bus that this bus pricing item has been changed
@@ -790,7 +868,7 @@ class Bus extends BtbObject
 
         public function beforeDelete($id, $id_replace)
         {
-                global $server_db_prefix;
+                $server_db_prefix = AfwSession::currentDBPrefix();
 
                 if ($id) {
                         if ($id_replace == 0) {
@@ -801,20 +879,20 @@ class Bus extends BtbObject
 
 
                                 // FK not part of me - replaceable 
-                                // btb.travel_bus-الباص	bus_id  حقل يفلتر به-ManyToOne
+                                // btb.travel_bus-المركبة	bus_id  حقل يفلتر به-ManyToOne
                                 $this->execQuery("update ${server_db_prefix}btb.travel_bus set bus_id='$id_replace' where bus_id='$id' ");
 
-                                // btb.bus_file-الباص	bus_id  أنا تفاصيل لها-OneToMany
+                                // btb.bus_file-المركبة	bus_id  أنا تفاصيل لها-OneToMany
                                 $this->execQuery("delete from ${server_db_prefix}btb.bus_file where bus_id = '$id' ");
 
                                 // MFK
 
                         } else {
                                 // FK on me 
-                                // btb.travel_bus-الباص	bus_id  حقل يفلتر به-ManyToOne
+                                // btb.travel_bus-المركبة	bus_id  حقل يفلتر به-ManyToOne
                                 $this->execQuery("update ${server_db_prefix}btb.travel_bus set bus_id='$id_replace' where bus_id='$id' ");
 
-                                // btb.bus_file-الباص	bus_id  أنا تفاصيل لها-OneToMany
+                                // btb.bus_file-المركبة	bus_id  أنا تفاصيل لها-OneToMany
                                 $this->execQuery("update ${server_db_prefix}btb.bus_file set bus_id='$id_replace' where bus_id='$id' ");
 
                                 // MFK
@@ -912,7 +990,7 @@ class Bus extends BtbObject
                 if ($attribute == "parent_bus_id")  return (!$this->sureIs("example"));
                 if ($attribute == "busList")        return ($this->sureIs("example"));
                 if ($attribute == "travelBusList")        return (!$this->sureIs("example"));
-                if ($attribute == "travelTemplateBusList")        return ($this->sureIs("example"));
+                if ($attribute == "travelTemplateBusList") return ($this->sureIs("example"));
                 if ($attribute == "owner_type_id")  return $this->propertiesCanBeCustomized();
 
                 if ($attribute == "custom_prices") return ($this->pricesInherited() and $this->priceCustomizatiomHaveSens());
@@ -984,7 +1062,7 @@ class Bus extends BtbObject
                         }
                 } else {
                         $isAvail = false;
-                        $reason = "الباص النموذج لا يحجز";
+                        $reason = "المركبة النموذج لا يحجز";
                 }
 
 
@@ -994,7 +1072,7 @@ class Bus extends BtbObject
 
         public function approvalNeededFor($travelTemplateObject)
         {
-                // في حال رحلة غير معروفة أو ملك الباص غير معروف 
+                // في حال رحلة غير معروفة أو ملك المركبة غير معروف 
                 // وهي حالة غريبة
                 // نحدث خطأ
                 $travelCompany = $travelTemplateObject->hetTcompany();
@@ -1002,7 +1080,7 @@ class Bus extends BtbObject
                 if (!$busOwner) throw new RunTimeException("bus owner not defined");
                 if (!$travelCompany) throw new RunTimeException("travel not defined");
 
-                // التأكد من ملكية الباص
+                // التأكد من ملكية المركبة
                 $busOwnerId = $busOwner->getId();
                 $travelCompanyId = $travelCompany->getId();
                 if (!$busOwnerId) throw new RunTimeException("bus owner not defined");
@@ -1015,15 +1093,15 @@ class Bus extends BtbObject
                 if ($travelCompanyParent) $travelCompanyParentId = $travelCompanyParent->getId();
                 else $travelCompanyParentId = 0;
 
-                // يعتبر الباص ملكا للشركة اذا 
-                // 1. كانت الشركة المتصرفة في الباص هي نفس منظم الرحلة
-                // 2. أو الشركة المتصرفة في الباص هي الشركة الأم لمنظم الرحلة
-                // 3. أو الشركة الأم للشركة المتصرفة في الباص هي منظم الرحلة
-                // 4. أو الشركة المتصرفة في الباص هي احد الفروع الأخوات مع السماح بتمليكها للأخوات
+                // يعتبر المركبة ملكا للشركة اذا 
+                // 1. كانت الشركة المتصرفة في المركبة هي نفس منظم الرحلة
+                // 2. أو الشركة المتصرفة في المركبة هي الشركة الأم لمنظم الرحلة
+                // 3. أو الشركة الأم للشركة المتصرفة في المركبة هي منظم الرحلة
+                // 4. أو الشركة المتصرفة في المركبة هي احد الفروع الأخوات مع السماح بتمليكها للأخوات
 
                 // يعني بعبارة أخرى
 
-                // 1.  الباص ملكي
+                // 1.  المركبة ملكي
                 // 2. أو ملكا للمؤسسة الأم ليس ملكا خاصا
                 // 3. أو ملكا أحد فروعي ليس ملكا خاصا
                 // 4. أو ملكا لأحد الفروع الأخوات ليس ملكا خاصا بل ومسموح به للفروع الأخوات
@@ -1037,16 +1115,16 @@ class Bus extends BtbObject
                         or (($busOwnerParentId == $travelCompanyParentId) and (!$this->sureIs("mine")) and ($this->estPublish())) // 4.
                 );
 
-                // في حال ملكية الباص لنفس منفذ الرحلة أي شركة الرحلات يعتبر حجز الباص ليس في حاجة للإعتماد
+                // في حال ملكية المركبة لنفس منفذ الرحلة أي شركة الرحلات يعتبر حجز المركبة ليس في حاجة للإعتماد
                 if ($travelCompanyIsConsideredOwnerOfThisBus) return false;
 
-                // الباص النموذج لمجموعة باصات والباص مجهول العين يحتاج قطعا تأكيد الحجز 
-                // وذلك لتحديد عين الباص الذي سيكون للرحلة
-                // إلا إذا وضع في اعدادات الرحلة عدم ادارة موضوع حجز الباص
+                // المركبة النموذج لمجموعة مركبات والباص مجهول العين يحتاج قطعا تأكيد الحجز 
+                // وذلك لتحديد عين المركبة الذي سيكون للرحلة
+                // إلا إذا وضع في اعدادات الرحلة عدم ادارة موضوع حجز المركبة
                 if ($this->sureIs("example")) return $travelTemplateObject->needBusFinalSelection();
                 if (!$this->sureIs("reel")) return $travelTemplateObject->needBusFinalSelection();
 
-                // الآن الباص ليس نموذجا وهو باص حقيقي بلوحة حقيقية
+                // الآن المركبة ليس نموذجا وهو مركبة حقيقية بلوحة حقيقية
                 // وليس ملكا للشركة المنظمة للرحلة
                 // لا حقيقة ولا إعتبارا
                 // فحجزه يحتاج اعتماد مبدئي ثم نهائي مع الشركة المتصرفة
@@ -1302,7 +1380,7 @@ class Bus extends BtbObject
 
         public function busReelSeatsCateg()
         {
-                $template = $this->hetTemplate();
+                $template = $this->het("bus_template_id");
                 $template->all_categories = BusSeatCategory::getAllActivatedCategories([1, 2, 8]);
                 $seats_arr = $template->getSeatCodes();
                 $template->category_arr = array();
@@ -1323,7 +1401,7 @@ class Bus extends BtbObject
                 // 
                 $activated_categs = [1, 2];
 
-                $template = $this->hetTemplate();
+                $template = $this->het("bus_template_id");
                 if (!$template)  return "bus template not defined can't display seats";
 
                 if ($reset_generation) {
@@ -1339,7 +1417,7 @@ class Bus extends BtbObject
                 if (!$bus_template_id) return "bus template empty can't display seats";
                 list($all_cols,  $empty_columns_arr) = $template->getCols();
 
-                $empty_columns_arr = explode(",", strtoupper($template->getVal("empty_columns")));
+
                 $rows_nb = intval($template->getVal("rows_nb"));
 
                 // parse busSeatCategoryList of me and deduce category_arr
@@ -1438,7 +1516,7 @@ class Bus extends BtbObject
         {
                 $template = $this->busReelSeatsCateg();
                 //return var_export($template->category_arr,true);
-                return $template->calcBusDiv(false, "", "هذه صورة تصنيف المقاعد على الباص");
+                return $template->calcBusDiv(false, "", "هذه صورة تصنيف المقاعد على المركبة");
         }
 
         public function calcSeatsCategDiv()     // $sw = 66, $sh = 66, $iw = 5, $ih = 5, $driver_seat_width = 45, $bus_num=1, $seats_bus="-", $booking_id=0, $can_edit=true
@@ -1451,297 +1529,13 @@ class Bus extends BtbObject
                 //return var_export($template->category_arr,true);
 
                 return $template->calcBusDiv(false, "", "هذه صورة تصنيف المقاعد حسب الإعدادات");
-
-                /*
-             $booking_seats_bus_arr = explode("-",trim($seats_bus,"-"));
-             
-             list($rows_nb, $bus_length, $bus_height, $seats_html_arr) = $this->getBusSeatsHtml($sw, $sh, $iw, $ih, $driver_seat_width, $bus_num, $booking_seats_bus_arr, $booking_id, $can_edit);
-             
-             if(!$seats_html_arr) return "<div>صورة المقاعد غير متاحة $rows_nb</div>";
-             
-             $seats_html = "";
-             
-             foreach($seats_html_arr as $row => $seats_html_row)
-             {
-                  foreach($seats_html_row as $col => $seat_item_html)
-                  {
-                     $seats_html .= $seat_item_html ."\n";
-                  }
-             }
-             
-             $all_colors = array("blue","black","white","yellow");
-             
-             $col_index = rand(0,count($all_colors)-1);
-            
-             $buscolor = "white"; //$all_colors[$col_index];
-             
-             $bus_div_length = $bus_length + 20;
-             $bus_div_height = $bus_height + 80;
-
-             $roue_h = $sw*0.25;
-             $roue_w = $sw;
-             
-             $xb = ($sw+$iw)/2;
-             $xf = $xb+($sw+$iw)*($rows_nb-1);
-
-             $bus_body_padding = 10;
-             $bus_body_border = 3;
-             $bus_body_seats_num_selector_height = 24;
-             $bus_body_seats_num_selector_margin_bottom = 6;
-             $bus_body_seats_selector_height = $bus_body_seats_num_selector_height + $bus_body_seats_num_selector_margin_bottom;
-             $bus_internal_space = 2*($bus_body_padding+$bus_body_border) + $bus_body_seats_selector_height;
-
-             $roue_y_0 = -12;
-             $yl = $roue_y_0 - $roue_h;
-             $yr = $roue_y_0 + $bus_internal_space +($sh+$ih)*5;
-             //die("yr=$yr = $roue_y_0 + $bus_internal_space +($sh+$ih)*5");
-             
-             $frg_yl = 0;
-             $frg_height = 18;
-             $frg_yr = $frg_yl + ($sh+$ih)*5 + $bus_body_seats_selector_height - $frg_height;
-             
-             $brtv_yl = -12;
-             $brtv_yr = 37+($sh+$ih)*5;
-             $brtv_xl = 22+$driver_seat_width+($sw+$iw)*$rows_nb;
-             $brtv_xr = $brtv_xl;
-
-             $rtv_yl = $brtv_yl - 8;
-             $rtv_xl = $brtv_xl + 8;
-             $rtv_yr = $brtv_yr + 8;
-             $rtv_xr = $brtv_xl + 8;
-             
-             $driver_volan_zoom = $sw*2+20;
-             
-             $thisId = $this->getId();
-             if(!$thisId)
-             {
-                  $photo_galery = "<div class='alert'>لم يتم تخصيص باص لهذه الرحلة</div>";
-             }
-             else $photo_galery = $this->calcPhotoGalery();
-             
-
-             //die("bus_div_height = $bus_div_height"); 
-             return "<div class='hzm_abc bus_div' style='width:${bus_div_length}px;height:${bus_div_height}px'>
-                        <div id='bus_$thisId' class='the_bus'>
-                                <!--<p class='hzm_def btb_label'>الرجاء التظليل على كل المقاعد التي توافق على الجلوس عليها أنت ومن معك</p>-->
-                                <div class='bus_complete'>
-                                        <div class='hzm_y bus_body bus_$buscolor'>
-                                                <div class='driverSeat'>
-                                                        <span class='hzm_a driver_volan' style='zoom:${driver_volan_zoom}%'>
-                                                        </span>
-                                                </div>
-                                                <div class='hzm_b bus_seats_bloc' style='width: ${bus_length}px; height: ${bus_height}px;'>
-                                                        <div id='show_seats' class='hzm_c bus_body_header'>$seats_bus</div>
-                                                        <input type='hidden' name='seats_bus$bus_num'  id='seats_bus$bus_num' value='$seats_bus' />
-                                                        <span class='bus_roue_r_f' style='left:${xf}px !important;top:${yr}px !important; height: ${roue_h}px; width: ${roue_w}px;'>&nbsp;</span>
-                                                        <span class='bus_roue_r_b' style='left:${xb}px !important;top:${yr}px !important; height: ${roue_h}px; width: ${roue_w}px;'>&nbsp;</span>
-                                                        <span class='bus_roue_l_f' style='left:${xf}px !important;top:${yl}px !important; height: ${roue_h}px; width: ${roue_w}px;'>&nbsp;</span>
-                                                        <span class='bus_roue_l_b' style='left:${xb}px !important;top:${yl}px !important; height: ${roue_h}px; width: ${roue_w}px;'>&nbsp;</span>
-                                                        <span class='feu_rouge_l' style='top:${frg_yl}px !important'>&nbsp;</span>
-                                                        <span class='feu_rouge_r' style='top:${frg_yr}px !important'>&nbsp;</span>
-                                                        <!--
-                                                        <span class='retrov_l bb_$buscolor' style='left:${rtv_xl}px !important;top:${rtv_yl}px !important'>&nbsp;</span>
-                                                        <span class='retrov_bras_l' style='left:${brtv_xl}px !important;top:${brtv_yl}px !important'>&nbsp;</span>
-                                                        <span class='retrov_r bb_$buscolor' style='left:${rtv_xr}px !important;top:${rtv_yr}px !important'>&nbsp;</span>
-                                                        <span class='retrov_bras_r' style='left:${brtv_xr}px !important;top:${brtv_yr}px !important'>&nbsp;</span>-->
-                                                        
-                                                        $seats_html 
-                                                </div>
-                                        </div>
-                                        
-                                </div>
-                                
-                        </div>
-                                        
-                </div>
-                <div class='the_legend'>
-                      <ul class='seatType makeFlex hrtlCenter appendTop20 latoRegular darkGreyText' data-radium='true'>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_family'>
-                                        </span>
-                                        <span class='legend_label'>
-                                         متوفر (النوع عوائل)
-                                        </span> 
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_men' >
-                                        </span>
-                                        <span class='legend_label'>
-                                         متوفر (النوع عزاب)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_women' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          متوفر (النوع نساء)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_all' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          متوفر (مفتوح للجميع)
-                                        </span>
-                                </li>  
-                                
-                        </ul>
-                        
-                         
-                        <ul class='seatType makeFlex hrtlCenter appendTop20 latoRegular darkGreyText' data-radium='true'>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_family seat_booking'>
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          أنا حجزته (النوع عوائل)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_men seat_booking' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          أنا حجزته (النوع عزاب)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_women seat_booking' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          أنا حجزته (النوع نساء)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_all seat_booking' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                         أنا حجزته (مفتوح للجميع)
-                                        </span>
-                                </li>  
-                                
-                        </ul>
-                        <ul class='seatType makeFlex hrtlCenter appendTop20 latoRegular darkGreyText' data-radium='true'>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed_for_me seat_family'>
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                         مؤكد لي (النوع عوائل)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed_for_me seat_men' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          مؤكد لي (النوع عزاب)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed_for_me seat_women' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          مؤكد لي (النوع نساء)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed_for_me seat_all' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          مؤكد لي (مفتوح للجميع)
-                                        </span>
-                                </li>
-                        </ul>
-                        <ul class='seatType makeFlex hrtlCenter appendTop20 latoRegular darkGreyText' data-radium='true'>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_booked seat_family'>
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          محجوز لغيري (النوع عوائل)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_booked seat_men' >
-                                       
-                                        </span>
-                                        <span class='legend_label'>
-                                           محجوز لغيري (النوع عزاب)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_booked seat_women' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                         محجوز لغيري (النوع نساء)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_booked seat_all' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          محجوز لغيري (مفتوح للجميع)
-                                        </span>
-                                </li>
-                        </ul>
-                        
-                        <ul class='seatType makeFlex hrtlCenter appendTop20 latoRegular darkGreyText' data-radium='true'>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed seat_family'>
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          مؤكد لغيري (النوع عوائل)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed seat_men' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          مؤكد لغيري (النوع عزاب)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed seat_women' >
-                                         
-                                        </span>
-                                        <span class='legend_label'>
-                                         مؤكد لغيري (النوع نساء)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed seat_all' >
-                                       
-                                        </span>
-                                        <span class='legend_label'>
-                                           مؤكد لغيري (مفتوح للجميع)
-                                        </span>
-                                </li>
-                        </ul>
-                        
-                        
-                        
-                </div>
-                $photo_galery
-                
-                "; */
         }
 
 
         public function calcNb_seats()
         {
                 if ($this->nb_seats_from_template) return $this->nb_seats_from_template;
-                $templateObj = $this->hetTemplate();
+                $templateObj = $this->het("bus_template_id");
                 if (!$templateObj) return 0;
 
                 $this->nb_seats_from_template = $templateObj->calcNb_seats();
@@ -1790,7 +1584,7 @@ class Bus extends BtbObject
         {
                 $da = $this->nb_days_anticipate;
                 if (!$da) {
-                        $parent = $this->myparent;
+                        $parent = $this->het("parent_bus_id");
                         if ($parent) $da = $parent->nb_days_anticipate;
                 }
 
@@ -1804,7 +1598,7 @@ class Bus extends BtbObject
         {
                 if (!$this->pricesAreUpdatable())
                         return "<div class='btb_help2'>
-                        لا يمكن تحديث الأسعار من هنا حيث أن هذا الباص ينتمي إلى مجموعة معرفة بباص نموذج وبالتالي فجميع الأسعار تورث بشكل آلي من الباص النموذج.<br>
+                        لا يمكن تحديث الأسعار من هنا حيث أن هذه المركبة ينتمي إلى مجموعة معرفة بباص نموذج وبالتالي فجميع الأسعار تورث بشكل آلي من المركبة النموذج.<br>
                         لمزيد المعلومات الإطلاع على دليل المستخدم من هنا @todo<br>
                         </div>";
                 else return "";
@@ -1823,7 +1617,7 @@ class Bus extends BtbObject
 
         public function getMaxRows()
         {
-                $template = $this->hetTemplate();
+                $template = $this->het("bus_template_id");
                 if (!$template)  throw new RuntimeException("no bus template for this bus");
                 $nb_rows = intval($template->getVal("rows_nb"));
                 if ($nb_rows < 0) throw new RuntimeException("unknown number of rows for bus template");
@@ -1860,5 +1654,23 @@ class Bus extends BtbObject
                 if ($attribute == "definition") return true;
                 if ($attribute == "photoGalery") return true;
                 return false;
+        }
+
+        public function beforeMaj($id, $fields_updated)
+        {
+                // if not reel then must be example
+                if ($fields_updated["reel"] or true) {
+                        if (!$this->sureIs("reel")) {
+                                $this->set("example", "Y");
+                        }
+                }
+
+                // if not example then must be reel
+                if ($fields_updated["example"] or true) {
+                        if (!$this->sureIs("example")) {
+                                $this->set("reel", "Y");
+                        }
+                }
+                return true;
         }
 }

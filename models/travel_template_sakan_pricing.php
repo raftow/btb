@@ -1,6 +1,6 @@
 <?php
 // ------------------------------------------------------------------------------------
-// ----             auto generated php class of table travel_template_sakan_pricing : travel_template_sakan_pricing - أسعار الباصات 
+// ----             auto generated php class of table travel_template_sakan_pricing : travel_template_sakan_pricing - أسعار المركبات 
 // ------------------------------------------------------------------------------------
 
 
@@ -203,7 +203,7 @@ class TravelTemplateSakanPricing extends BtbObject
 
     public function beforeDelete($id, $id_replace)
     {
-        global $server_db_prefix;
+        $server_db_prefix = AfwSession::currentDBPrefix();
 
         if ($id) {
             if ($id_replace == 0) {

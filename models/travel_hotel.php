@@ -7,19 +7,19 @@ class TravelHotel extends BtbObject
 {
 
     public static $MY_ATABLE_ID = 13744;
-    // إجراء إحصائيات حول باصات الرحلة 
+    // إجراء إحصائيات حول مركبات الرحلة 
     public static $BF_STATS_TRAVEL_BUS = 104056;
-    // إدارة باصات الرحلة 
+    // إدارة مركبات الرحلة 
     public static $BF_QEDIT_TRAVEL_BUS = 104051;
-    // إنشاء باص رحلة 
+    // إنشاء مركبة رحلة 
     public static $BF_EDIT_TRAVEL_BUS = 104050;
-    // الاستعلام عن باص رحلة 
+    // الاستعلام عن مركبة رحلة 
     public static $BF_QSEARCH_TRAVEL_BUS = 104055;
-    // البحث في باصات الرحلة 
+    // البحث في مركبات الرحلة 
     public static $BF_SEARCH_TRAVEL_BUS = 104054;
-    // عرض تفاصيل باص رحلة 
+    // عرض تفاصيل مركبة رحلة 
     public static $BF_DISPLAY_TRAVEL_BUS = 104053;
-    // مسح باص رحلة 
+    // مسح مركبة رحلة 
     public static $BF_DELETE_TRAVEL_BUS = 104052;
 
 
@@ -523,7 +523,7 @@ class TravelHotel extends BtbObject
 
     public function beforeDelete($id, $id_replace)
     {
-        global $server_db_prefix;
+        $server_db_prefix = AfwSession::currentDBPrefix();
 
         if (!$id) {
             $id = $this->getId();
@@ -644,7 +644,7 @@ class TravelHotel extends BtbObject
         require_once "$file_dir_name/../btb/hroom.php";
         $hr = new Hroom();
         if (!$room_size) $room_size = 0;
-        global $server_db_prefix;
+        $server_db_prefix = AfwSession::currentDBPrefix();
 
         if ($room_size_exact) {
             $room_size_cond = "$room_size = capacity_default";
@@ -817,297 +817,7 @@ class TravelHotel extends BtbObject
     }
 
 
-    public function calcHotelDiv($sw = 66, $sh = 66, $iw = 5, $ih = 5, $driver_seat_width = 45, $hotel_num = 1, $seats_hotel = "-", $booking_id = 0, $can_edit = true)
-    {
-        /*
-             $booking_seats_hotel_arr = explode("-",trim($seats_hotel,"-"));
-             
-             list($rows_nb, $hotel_length, $hotel_height, $seats_html_arr) = $this->getHotelSeatsHtml($sw, $sh, $iw, $ih, $driver_seat_width, $hotel_num, $booking_seats_hotel_arr, $booking_id, $can_edit);
-             
-             if(!$seats_html_arr) return "<div>صورة المقاعد غير متاحة $rows_nb</div>";
-             
-             $seats_html = "";
-             
-             foreach($seats_html_arr as $row => $seats_html_row)
-             {
-                  foreach($seats_html_row as $col => $seat_item_html)
-                  {
-                     $seats_html .= $seat_item_html ."\n";
-                  }
-             }
-             
-             $all_colors = array("blue","black","white","yellow");
-             
-             $col_index = rand(0,count($all_colors)-1);
-            
-             $hotelcolor = "white"; //$all_colors[$col_index];
-             
-             $hotel_div_length = $hotel_length + 20;
-             $hotel_div_height = $hotel_height + 80;
-
-             $roue_h = $sw*0.25;
-             $roue_w = $sw;
-             
-             $xb = ($sw+$iw)/2;
-             $xf = $xb+($sw+$iw)*($rows_nb-1);
-
-             $hotel_body_padding = 10;
-             $hotel_body_border = 3;
-             $hotel_body_seats_num_selector_height = 24;
-             $hotel_body_seats_num_selector_margin_bottom = 6;
-             $hotel_body_seats_selector_height = $hotel_body_seats_num_selector_height + $hotel_body_seats_num_selector_margin_bottom;
-             $hotel_internal_space = 2*($hotel_body_padding+$hotel_body_border) + $hotel_body_seats_selector_height;
-
-             $roue_y_0 = -12;
-             $yl = $roue_y_0 - $roue_h;
-             $yr = $roue_y_0 + $hotel_internal_space +($sh+$ih)*5;
-             //die("yr=$yr = $roue_y_0 + $hotel_internal_space +($sh+$ih)*5");
-             
-             $frg_yl = 0;
-             $frg_height = 18;
-             $frg_yr = $frg_yl + ($sh+$ih)*5 + $hotel_body_seats_selector_height - $frg_height;
-             
-             $brtv_yl = -12;
-             $brtv_yr = 37+($sh+$ih)*5;
-             $brtv_xl = 22+$driver_seat_width+($sw+$iw)*$rows_nb;
-             $brtv_xr = $brtv_xl;
-
-             $rtv_yl = $brtv_yl - 8;
-             $rtv_xl = $brtv_xl + 8;
-             $rtv_yr = $brtv_yr + 8;
-             $rtv_xr = $brtv_xl + 8;
-             
-             $driver_volan_zoom = $sw*2+20;
-             
-             $hotelObj = $this->hetHotel();
-             if($hotelObj) 
-             {
-                  $hotelObjId = $hotelObj->getId();
-                  $photo_galery = $hotelObj->calcPhotoGalery();
-             }   
-             else
-             {
-                  $hotelObjId = 0;
-                  $photo_galery = "<div class='alert'>لم يتم تخصيص باص لهذه الرحلة</div>";
-             }
-             
-
-             //die("hotel_div_height = $hotel_div_height"); 
-             return "<div class='hzm_abc hotel_div' style='width:${hotel_div_length}px;height:${hotel_div_height}px'>
-                        <div id='hotel_$hotelObjId' class='the_hotel'>
-                                <!--<p class='hzm_def btb_label'>الرجاء التظليل على كل المقاعد التي توافق على الجلوس عليها أنت ومن معك</p>-->
-                                <div class='hotel_complete'>
-                                        <div class='hzm_y hotel_body hotel_$hotelcolor'>
-                                                <div class='driverSeat'>
-                                                        <span class='hzm_a driver_volan' style='zoom:${driver_volan_zoom}%'>
-                                                        </span>
-                                                </div>
-                                                <div class='hzm_b hotel_seats_bloc' style='width: ${hotel_length}px; height: ${hotel_height}px;'>
-                                                        <div id='show_seats' class='hzm_c hotel_body_header'>$seats_hotel</div>
-                                                        <input type='hidden' name='seats_hotel$hotel_num'  id='seats_hotel$hotel_num' value='$seats_hotel' />
-                                                        <span class='hotel_roue_r_f' style='left:${xf}px !important;top:${yr}px !important; height: ${roue_h}px; width: ${roue_w}px;'>&nbsp;</span>
-                                                        <span class='hotel_roue_r_b' style='left:${xb}px !important;top:${yr}px !important; height: ${roue_h}px; width: ${roue_w}px;'>&nbsp;</span>
-                                                        <span class='hotel_roue_l_f' style='left:${xf}px !important;top:${yl}px !important; height: ${roue_h}px; width: ${roue_w}px;'>&nbsp;</span>
-                                                        <span class='hotel_roue_l_b' style='left:${xb}px !important;top:${yl}px !important; height: ${roue_h}px; width: ${roue_w}px;'>&nbsp;</span>
-                                                        <span class='feu_rouge_l' style='top:${frg_yl}px !important'>&nbsp;</span>
-                                                        <span class='feu_rouge_r' style='top:${frg_yr}px !important'>&nbsp;</span>
-                                                        <!--
-                                                        <span class='retrov_l bb_$hotelcolor' style='left:${rtv_xl}px !important;top:${rtv_yl}px !important'>&nbsp;</span>
-                                                        <span class='retrov_bras_l' style='left:${brtv_xl}px !important;top:${brtv_yl}px !important'>&nbsp;</span>
-                                                        <span class='retrov_r bb_$hotelcolor' style='left:${rtv_xr}px !important;top:${rtv_yr}px !important'>&nbsp;</span>
-                                                        <span class='retrov_bras_r' style='left:${brtv_xr}px !important;top:${brtv_yr}px !important'>&nbsp;</span>-->
-                                                        
-                                                        $seats_html 
-                                                </div>
-                                        </div>
-                                        
-                                </div>
-                                
-                        </div>
-                                        
-                </div>
-                <div class='the_legend'>
-                      <ul class='seatType makeFlex hrtlCenter appendTop20 latoRegular darkGreyText' data-radium='true'>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_family'>
-                                        </span>
-                                        <span class='legend_label'>
-                                         متوفر (النوع عوائل)
-                                        </span> 
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_men' >
-                                        </span>
-                                        <span class='legend_label'>
-                                         متوفر (النوع عزاب)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_women' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          متوفر (النوع نساء)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_all' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          متوفر (مفتوح للجميع)
-                                        </span>
-                                </li>  
-                                
-                        </ul>
-                        
-                         
-                        <ul class='seatType makeFlex hrtlCenter appendTop20 latoRegular darkGreyText' data-radium='true'>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_family seat_booking'>
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          أنا حجزته (النوع عوائل)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_men seat_booking' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          أنا حجزته (النوع عزاب)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_women seat_booking' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          أنا حجزته (النوع نساء)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat available_seat seat_all seat_booking' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                         أنا حجزته (مفتوح للجميع)
-                                        </span>
-                                </li>  
-                                
-                        </ul>
-                        <ul class='seatType makeFlex hrtlCenter appendTop20 latoRegular darkGreyText' data-radium='true'>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed_for_me seat_family'>
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                         مؤكد لي (النوع عوائل)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed_for_me seat_men' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          مؤكد لي (النوع عزاب)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed_for_me seat_women' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          مؤكد لي (النوع نساء)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed_for_me seat_all' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          مؤكد لي (مفتوح للجميع)
-                                        </span>
-                                </li>
-                        </ul>
-                        <ul class='seatType makeFlex hrtlCenter appendTop20 latoRegular darkGreyText' data-radium='true'>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_booked seat_family'>
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          محجوز لغيري (النوع عوائل)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_booked seat_men' >
-                                       
-                                        </span>
-                                        <span class='legend_label'>
-                                           محجوز لغيري (النوع عزاب)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_booked seat_women' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                         محجوز لغيري (النوع نساء)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_booked seat_all' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          محجوز لغيري (مفتوح للجميع)
-                                        </span>
-                                </li>
-                        </ul>
-                        
-                        <ul class='seatType makeFlex hrtlCenter appendTop20 latoRegular darkGreyText' data-radium='true'>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed seat_family'>
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          مؤكد لغيري (النوع عوائل)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed seat_men' >
-                                        
-                                        </span>
-                                        <span class='legend_label'>
-                                          مؤكد لغيري (النوع عزاب)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed seat_women' >
-                                         
-                                        </span>
-                                        <span class='legend_label'>
-                                         مؤكد لغيري (النوع نساء)
-                                        </span>
-                                </li>
-                                <li class='makeFlex hrtlCenter' data-radium='true'>
-                                        <span class='legend_seat seat_confirmed seat_all' >
-                                       
-                                        </span>
-                                        <span class='legend_label'>
-                                           مؤكد لغيري (مفتوح للجميع)
-                                        </span>
-                                </li>
-                        </ul>
-                        
-                        
-                        
-                </div>
-                $photo_galery
-                
-                ";*/
-    }
+    public function calcHotelDiv($sw = 66, $sh = 66, $iw = 5, $ih = 5, $driver_seat_width = 45, $hotel_num = 1, $seats_hotel = "-", $booking_id = 0, $can_edit = true) {}
 
 
     public function hasEmptyRooms($nb_beds)

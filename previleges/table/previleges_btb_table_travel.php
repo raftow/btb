@@ -4,23 +4,23 @@
   'id' => '13989',
   'display' => 
   array (
-    'id' => -1,
+    'id' => '104679',
   ),
   'search' => 
   array (
-    'id' => -1,
+    'id' => '104680',
   ),
   'qsearch' => 
   array (
-    'id' => -1,
+    'id' => '104682',
   ),
   'edit' => 
   array (
-    'id' => -1,
+    'id' => '104677',
   ),
   'qedit' => 
   array (
-    'id' => -1,
+    'id' => '104681',
   ),
   'crossed' => 
   array (
@@ -40,7 +40,7 @@
   ),
   'delete' => 
   array (
-    'id' => -1,
+    'id' => '104678',
   ),
 );
 

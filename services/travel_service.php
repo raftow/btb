@@ -312,34 +312,34 @@ class TravelService
         ];
     }*/
 
-    public static function genereTravelSeatsAndPricesBlocInsert($work_branch_id, 
-                $travel_template_id=0,$travel_id=0,$travel_bus_id=0,
-                $update_price_also_for_confirmed_seats=false, 
-                $update_price_also_for_manuel_prices=false,
-                $reset_old_tt_seats=false
-                )
-    {
+    public static function genereTravelSeatsAndPricesBlocInsert(
+        $work_branch_id,
+        $travel_template_id = 0,
+        $travel_id = 0,
+        $travel_bus_id = 0,
+        $update_price_also_for_confirmed_seats = false,
+        $update_price_also_for_manuel_prices = false,
+        $reset_old_tt_seats = false
+    ) {
 
         $objme = AfwSession::getUserConnected();
-        if(!$objme) return array("not authenticated","");
-        
-        $me=$objme->id;
+        if (!$objme) return array("not authenticated", "");
+
+        $me = $objme->id;
         $cond_seats_for_travel_id = "";
-        if($travel_id)
-        {
+        if ($travel_id) {
             $cond_seats_for_travel_id = "travel_bus_id in (select id from c0btb.travel_bus where travel_id=$travel_id)";
         }
 
-        if($reset_old_tt_seats and $travel_template_id)
-        {
+        if ($reset_old_tt_seats and $travel_template_id) {
             $sql_delete_old_tt_seats = "delete from c0btb.travel_seat where travel_template_id = $travel_template_id 
                                           and (confirmed = 'N' or confirmed is null)
                                           and (manuel = 'N' or manuel is null)";
-            if($travel_id and $cond_seats_for_travel_id) $sql_delete_old_tt_seats .= " and " . $cond_seats_for_travel_id;
-            if($travel_bus_id) $sql_delete_old_tt_seats .= " and travel_bus_id = $travel_bus_id";
+            if ($travel_id and $cond_seats_for_travel_id) $sql_delete_old_tt_seats .= " and " . $cond_seats_for_travel_id;
+            if ($travel_bus_id) $sql_delete_old_tt_seats .= " and travel_bus_id = $travel_bus_id";
             list($resultdd, $ddrow_count, $ddaffected_row_count) = TravelSeat::executeQuery($sql_delete_old_tt_seats);
         }
-        
+
         // ALTER TABLE `travel_seat` ADD week_period_enum,period_type_enum,yperiod_id;
         $sql_bloc_insert = "insert into c0btb.travel_seat( created_by,created_at,updated_by,updated_at,
                     travel_bus_id, seat_code, seat_category, 
@@ -364,26 +364,21 @@ class TravelService
         $new_seats = $affected_row_count;
 
 
-        
+
 
         // update prices depending on categories of seats
         $ttList = array();
-        if($travel_template_id)
-        {
+        if ($travel_template_id) {
             $ttList[$travel_template_id] = TravelTemplate::loadById($travel_template_id);
-        }    
-        else
-        {
+        } else {
             $ttList = TravelTemplate::loadAllTTOfCompany($work_branch_id);
         }
-        
+
         $updated_prices = 0;
-        foreach($ttList as $ttObj)
-        {
+        foreach ($ttList as $ttObj) {
             $seatPricingList = $ttObj->get("seatPricingList");
 
-            foreach($seatPricingList as $seatPricingItem)
-            {
+            foreach ($seatPricingList as $seatPricingItem) {
                 $tsObj = new TravelSeat();
 
                 $sp_travel_template_id = $seatPricingItem->getVal("travel_template_id");
@@ -393,45 +388,38 @@ class TravelService
                 $sp_yperiod_id = $seatPricingItem->getVal("yperiod_id");
                 $sp_price = $seatPricingItem->getVal("price");
 
-                $tsObj->select("travel_template_id",$sp_travel_template_id);
-                if(!$update_price_also_for_confirmed_seats)
-                {
+                $tsObj->select("travel_template_id", $sp_travel_template_id);
+                if (!$update_price_also_for_confirmed_seats) {
                     $tsObj->where("confirmed = 'N' or confirmed is null");
                 }
-                if($travel_id and $cond_seats_for_travel_id)
-                {
-                    $tsObj->where($cond_seats_for_travel_id);    
+                if ($travel_id and $cond_seats_for_travel_id) {
+                    $tsObj->where($cond_seats_for_travel_id);
                 }
-                if($travel_bus_id)
-                {
-                    $tsObj->select("travel_bus_id",$travel_bus_id);   
+                if ($travel_bus_id) {
+                    $tsObj->select("travel_bus_id", $travel_bus_id);
                 }
-                $tsObj->select("seat_category",$sp_seat_category);
+                $tsObj->select("seat_category", $sp_seat_category);
 
-                if(!$update_price_also_for_manuel_prices)
-                {
-                    $tsObj->select("manuel","N");
+                if (!$update_price_also_for_manuel_prices) {
+                    $tsObj->select("manuel", "N");
                 }
 
-                if($sp_week_period_enum)
-                {
+                if ($sp_week_period_enum) {
                     $tsObj->where("week_period_enum = $sp_week_period_enum");
                 }
 
-                if($sp_period_type_enum)
-                {
+                if ($sp_period_type_enum) {
                     $tsObj->where("period_type_enum = $sp_period_type_enum");
                 }
 
-                if($sp_yperiod_id)
-                {
+                if ($sp_yperiod_id) {
                     $tsObj->where("yperiod_id = $sp_yperiod_id");
-                }    
-                $tsObj->set("price",$sp_price);
+                }
+                $tsObj->set("price", $sp_price);
                 $updated_prices += $tsObj->update(false);
             }
         }
-        
+
         return array($new_seats, $updated_prices);
     }
 
@@ -463,24 +451,18 @@ class TravelService
         $errors_arr = [];
         $infos_arr = [];
 
-        if ($objCompany) 
-        {
+        if ($objCompany) {
             $travelCompanyList = [];
             $travelCompanyList[] = $objCompany;
-        } 
-        elseif(!$job) 
-        {
+        } elseif (!$job) {
             // DISABLE BELOW because may be too much lourd
             // $travelCompanyList = self::allTravelCompanies();
             throw new AfwRuntimeException('move TravelsToNewStatus error : need to specify compamy');
-        }
-        else
-        {
+        } else {
             throw new AfwRuntimeException('@todo : case of job how to select list of companies');
         }
 
-        foreach ($travelCompanyList as $companyItem) 
-        {
+        foreach ($travelCompanyList as $companyItem) {
             $count_moves = 0;
             $count_travels = 0;
 
@@ -491,19 +473,17 @@ class TravelService
             // depending on rate of company we should allow a maximun of period of anticpating travels
             // @todo
             // I will do hard coded for the moment
-            if($nb_days_before_booking>15) $nb_days_before_booking = 15;
+            if ($nb_days_before_booking > 15) $nb_days_before_booking = 15;
 
             // if this run is not a job than only create 3 days anticipate the rest will be
             // performed by the job 
-            if(!$job)
-            {
-                if($nb_days_before_booking>3) $nb_days_before_booking = 3;
+            if (!$job) {
+                if ($nb_days_before_booking > 3) $nb_days_before_booking = 3;
             }
 
             // from : PREPARE - في طور الإعداد
-            // to : ORGANIZE - تم إعتماد الباصات
-            if ($managed_status[Travel::$TRAVEL_STATUS_ORGANIZE]) 
-            {
+            // to : ORGANIZE - تم إعتماد المركبات
+            if ($managed_status[Travel::$TRAVEL_STATUS_ORGANIZE]) {
                 $travelList = WorkBranchService::getTravelsByStatusAndRemainDays(
                     $companyItem,
                     Travel::$TRAVEL_STATUS_PREPARE,
@@ -511,23 +491,22 @@ class TravelService
                     '1',
                     $objTravelTemplateId
                 );
-                foreach ($travelList as $travelItem) 
-                {
+                foreach ($travelList as $travelItem) {
                     $count_travels++;
-                    
+
                     list($error_app, $info_app) = $travelItem->genereMyBuses(
                         $lang
                     );
                     if ($error_app) {
                         $errors_arr[] =
                             $travelItem->getShortDisplay($lang) .
-                            ' : خطأ أثناء تحديث الباصات ومقاعدها : ' .
+                            ' : خطأ أثناء تحديث المركبات ومقاعدها : ' .
                             $error_app;
                     }
                     if ($info_app) {
                         $infos_arr[] =
                             $travelItem->getShortDisplay($lang) .
-                            ' : ملاحظة أثناء تحديث الباصات ومقاعدها : ' .
+                            ' : ملاحظة أثناء تحديث المركبات ومقاعدها : ' .
                             $info_app;
                     }
 
@@ -551,15 +530,13 @@ class TravelService
                                 $info_app;
                         }
                     }*/
-
-                    
                 }
 
                 // @todo genere seats by @bloc-insert technique if not insert already by above level
                 list(
                     $error_app,
                     $info_app,
-                ) = TravelService::genereTravelSeatsAndPricesBlocInsert($companyItem->id,$objTravelTemplateId);
+                ) = TravelService::genereTravelSeatsAndPricesBlocInsert($companyItem->id, $objTravelTemplateId);
                 if ($error_app) {
                     $errors_arr[] =
                         $companyItem->getShortDisplay($lang) .
@@ -597,8 +574,8 @@ class TravelService
                 }
             }
 
-            // from : ORGANIZE - تم إعتماد الباصات
-            // أي تم اختيار الباصات بعينها أو أمثلتها
+            // from : ORGANIZE - تم إعتماد المركبات
+            // أي تم اختيار المركبات بعينها أو أمثلتها
 
             // والآن يتم تعيين الفنادق وحجز مبدئي لمجموعة من الغرف تخص هذه الرحلة
             // to : BOOKING - تم إعتماد السكن وتم اعتماد الأسعار وفتح الحجز
@@ -662,7 +639,7 @@ class TravelService
             }
             */
             if ($managed_status[Travel::$TRAVEL_STATUS_GOING]) {
-                TravelService::prepareTravelListToLeave($companyItem->id,$objTravelTemplateId);
+                TravelService::prepareTravelListToLeave($companyItem->id, $objTravelTemplateId);
             }
 
 
@@ -700,7 +677,7 @@ class TravelService
             }
             */
             if ($managed_status[Travel::$TRAVEL_STATUS_GONE]) {
-                TravelService::makeTravelListHasLeaved($companyItem->id,$objTravelTemplateId);
+                TravelService::makeTravelListHasLeaved($companyItem->id, $objTravelTemplateId);
             }
             // GONE - غادرت
 
@@ -750,7 +727,7 @@ class TravelService
             */
 
             if ($managed_status[Travel::$TRAVEL_STATUS_RETURNED]) {
-                TravelService::makeTravelListHasReturned($companyItem->id,$objTravelTemplateId);
+                TravelService::makeTravelListHasReturned($companyItem->id, $objTravelTemplateId);
             }
 
             $infos_arr[] =
@@ -768,7 +745,7 @@ class TravelService
         return [$errors_arr, $infos_arr];
     }
 
-    public static function makeTravelListHasLeaved($work_branch_id, $travel_template_id=0)
+    public static function makeTravelListHasLeaved($work_branch_id, $travel_template_id = 0)
     {
         $now = date('H:i:s');
         // @todo 00:30 max late time from settings
@@ -780,12 +757,12 @@ class TravelService
             $seconds = false,
             $sign = -1
         );
-        $hijri_current_date = AfwDateHelper::currentHijriDate(); 
-        
+        $hijri_current_date = AfwDateHelper::currentHijriDate();
+
         $cond_leaved = "travel_status_id in (30, 40) and ((travel_date<'$hijri_current_date') or (travel_date='$hijri_current_date' and planned_start_time <= '$new_time'))";
 
-                               
-                
+
+
         $tbObj = new TravelBus();
         $tbObj->where("travel_id in (select id from c0btb.travel where orgunit_id=$work_branch_id and $cond_leaved and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
         $tbObj->set("opened", "Z");
@@ -793,15 +770,14 @@ class TravelService
         $tbObj->update(false);
 
         $trvObj = new Travel();
-        $trvObj->select("orgunit_id",$work_branch_id);
+        $trvObj->select("orgunit_id", $work_branch_id);
         $trvObj->where($cond_leaved);
         $trvObj->where("($travel_template_id=0 or travel_template_id=$travel_template_id)");
-        $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_GONE);                
+        $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_GONE);
         $trvObj->update(false);
-                
     }
 
-    public static function makeTravelListHasReturned($work_branch_id, $travel_template_id=0)
+    public static function makeTravelListHasReturned($work_branch_id, $travel_template_id = 0)
     {
         $now = date('H:i:s');
         // @todo 01:30 min retard in return time from settings
@@ -813,16 +789,15 @@ class TravelService
             $sign = 1
         );
 
-        $hijri_current_date = AfwDateHelper::currentHijriDate();                        
+        $hijri_current_date = AfwDateHelper::currentHijriDate();
         if ($new_day > 0) {
             $hijri_current_date2 = AfwDateHelper::shiftHijriDate($hijri_current_date, $new_day);
-        }
-        else $hijri_current_date2 = $hijri_current_date;
+        } else $hijri_current_date2 = $hijri_current_date;
 
         $cond_returned = "(travel_status_id < 80) and ((return_date <'$hijri_current_date2') or (return_date ='$hijri_current_date2' and planned_end_time >= '$new_time'))";
 
 
-                
+
         $tbObj = new TravelBus();
         $tbObj->where("travel_id in (select id from c0btb.travel where orgunit_id=$work_branch_id and $cond_returned and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
         $tbObj->set("opened", "Z");
@@ -830,15 +805,14 @@ class TravelService
         $tbObj->update(false);
 
         $trvObj = new Travel();
-        $trvObj->select("orgunit_id",$work_branch_id);
+        $trvObj->select("orgunit_id", $work_branch_id);
         $trvObj->where($cond_returned);
         $trvObj->where("($travel_template_id=0 or travel_template_id=$travel_template_id)");
-        $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_RETURNED);                
+        $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_RETURNED);
         $trvObj->update(false);
-                
     }
 
-    public static function prepareTravelListToLeave($work_branch_id, $travel_template_id=0)
+    public static function prepareTravelListToLeave($work_branch_id, $travel_template_id = 0)
     {
         $now = date('H:i:s');
         // @todo 00:45 min prepare to leave time from settings
@@ -850,13 +824,12 @@ class TravelService
             $seconds = false,
             $sign = 1
         );
-        $hijri_current_date = AfwDateHelper::currentHijriDate();                        
+        $hijri_current_date = AfwDateHelper::currentHijriDate();
         if ($new_day > 0) {
             $hijri_current_date2 = AfwDateHelper::shiftHijriDate($hijri_current_date, $new_day);
-        }
-        else $hijri_current_date2 = $hijri_current_date;
+        } else $hijri_current_date2 = $hijri_current_date;
 
-        
+
         $cond_to_leave = "(travel_status_id<40) and travel_date='$hijri_current_date2' and planned_start_time <= '$new_time'";
 
         /*        
@@ -867,13 +840,10 @@ class TravelService
         $tbObj->update(false);*/
 
         $trvObj = new Travel();
-        $trvObj->select("orgunit_id",$work_branch_id);
+        $trvObj->select("orgunit_id", $work_branch_id);
         $trvObj->where($cond_to_leave);
         $trvObj->where("($travel_template_id=0 or travel_template_id=$travel_template_id)");
-        $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_GOING);                
+        $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_GOING);
         $trvObj->update(false);
-                
     }
-
-    
 }

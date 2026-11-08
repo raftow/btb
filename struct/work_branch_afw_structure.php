@@ -510,10 +510,10 @@ class BtbWorkBranchAfwStructure
 			'TYPE' => 'TEXT',
 			'FORMAT' => 'TOHTML',
 			'DEFAUT' => 'يجب الحضور قبل موعد الرحلة بنصف ساعة على الأقل
-يمنع التدخين في الباص منعا باتا
-يمنع رفع الصوت في الباص أثناء فترات النوم
+يمنع التدخين في المركبة منعا باتا
+يمنع رفع الصوت في المركبة أثناء فترات النوم
 يرجى الحفاظ على أغراضكم الشخصية وتخلي الشركة مسؤوليتها تماما في حال فقدانها
-نأمل مراعاة أوقات الاستراحة و تناول الوجبات وعدم التأخر في الرجوع إلى الباص',
+نأمل مراعاة أوقات الاستراحة و تناول الوجبات وعدم التأخر في الرجوع إلى المركبة',
 			'READONLY' => false,
 			'SEARCH-BY-ONE' => false,
 			'DISPLAY' => true,
@@ -573,14 +573,14 @@ class BtbWorkBranchAfwStructure
 			'CSS' => 'width_pct_100',
 		),
 
-		'exbusList' => array(
+		'exampleBusList' => array(
 			'STEP' => 5,
 			'TYPE' => 'FK',
 			'ANSWER' => 'bus',
 			'ANSMODULE' => 'btb',
 			'CATEGORY' => 'ITEMS',
-			'ITEM' => '',
-			'WHERE' => "example='Y' and work_branch_id in (0§parent_id§, 0§id§)",
+			'ITEM' => 'work_branch_id',
+			'WHERE' => "example='Y'",
 			'SHOW' => true,
 			'FORMAT' => 'retrieve',
 			'DO-NOT-RETRIEVE-COLS' => array(
@@ -607,7 +607,7 @@ class BtbWorkBranchAfwStructure
 			'ANSMODULE' => 'btb',
 			'CATEGORY' => 'ITEMS',
 			'ITEM' => 'work_branch_id',
-			'WHERE' => "example='N'",
+			'WHERE' => "reel='Y'",
 			'SHOW' => true,
 			'FORMAT' => 'retrieve',
 			'DO-NOT-RETRIEVE-COLS' => array(

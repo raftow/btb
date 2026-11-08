@@ -228,7 +228,7 @@ class Account extends BtbObject
 
     public function beforeDelete($id, $id_replace)
     {
-        global $server_db_prefix;
+        $server_db_prefix = AfwSession::currentDBPrefix();
 
         if (!$id) {
             $id = $this->getId();
@@ -270,7 +270,7 @@ class Account extends BtbObject
     public static function list_of_account_type_id()
     {
         $list_of_items = array();
-        $list_of_items[1] = "شركة باصات";
+        $list_of_items[1] = "شركة مركبات";
         $list_of_items[2] = "فندق";
 
         return  $list_of_items;
