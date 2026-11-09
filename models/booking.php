@@ -894,7 +894,7 @@ class Booking extends BtbObject
                                 }
                         }
                 }
-                //die("debugg rafik : ".var_export($fields_updated,true));
+                //throw new AfwRuntimeException("debugg rafik : ".var_export($fields_updated,true));
                 if (isset($fields_updated["seats_nb"]) or $fields_updated["nb_to_gether"]) {
                         list($bus_errors, $bus_infos) = $this->updateBuses($lang, false);
                         if (count($bus_errors) > 0) AfwSession::pushWarning(implode("<br>\n", $bus_errors));
@@ -1024,7 +1024,7 @@ class Booking extends BtbObject
 
                 $tsObj->setForce("booking_id", 0);
                 $tsObj->setForce("booked", "N");
-                //die(var_export($tsObj,true));
+                //throw new AfwRuntimeException(var_export($tsObj,true));
 
                 $return = $tsObj->update(false);
                 if ($return) {
@@ -1804,7 +1804,7 @@ class Booking extends BtbObject
                 if ($travel) $discount_max = $travel->calcStandard_benifit_pct() / 3.0;
                 else $discount_max = -100;
 
-                //die("fidelity_level = $fidelity_level");
+                //throw new AfwRuntimeException("fidelity_level = $fidelity_level");
                 return array($nb_max_bed_or_seat, round((10 * $fidelity_level * $discount_max * $nb_min_bed_or_seat / $nb_max_bed_or_seat) * $fidelity_level) / 10);
         }
 
@@ -1970,7 +1970,7 @@ class Booking extends BtbObject
                 $thObj->bookingTrip = $trip;
                 $thObj->rooms_arr = explode(",", trim($this->getVal("trip${trip}_room_mfk"), ","));
                 if ($thObj) list($html,) = $thObj->displayAttribute("roomDay1List");
-                //die("html = ".var_export($html,true));
+                //throw new AfwRuntimeException("html = ".var_export($html,true));
                 //
                 if ($html) return $html;
 

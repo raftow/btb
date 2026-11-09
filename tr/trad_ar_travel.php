@@ -2,7 +2,7 @@
 $trad["travel"]["travel.single"] = "رحلة";
 $trad["travel"]["travel.new"] = "جديد(ة)";
 $trad["travel"]["travel"] = "الرحلات";
-$trad["travel"]["orgunit_id"] = "شركة الأسفار";
+$trad["travel"]["work_branch_id"] = "شركة الأسفار";
 $trad["travel"]["travel_name"] = "مسمى الرحلة";
 $trad["travel"]["travel_date"] = "تاريخ المغادرة";
 $trad["travel"]["travel_gdate"] = "الموافق بالنصراني";
@@ -13,6 +13,11 @@ $trad["travel"]["end_time"] = "وقت العودة الحقيقي";
 $trad["travel"]["return_date"] = "تاريخ العودة";
 $trad["travel"]["return_gdate"] = "العودة بالنصراني";
 $trad["travel"]["travel_status_id"] = "حالة الرحلة";
+
+$trad["travel"]["week_period_enum"] = "الفترة في الأسبوع";
+$trad["travel"]["period_type_enum"] = "نوع الفترة";
+$trad["travel"]["yperiod_id"] = "الفترة السنوية";
+$trad["travel"]["days_nb"] = "عدد الأيام";
 $trad["travel"]["days_remain"] = "بقي على الرحلة";
 $trad["travel"]["data"] = "بيانات الرحلة";
 $trad["travel"]["start"] = "بداية الرحلة";

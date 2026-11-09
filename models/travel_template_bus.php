@@ -121,12 +121,12 @@ class TravelTemplateBus extends BtbObject
 
         public function assignAvailableBus($busObj, $needed_nb)
         {
-                if (!$busObj) $this->throwError("assignAvailableBus function should take not null busObj param");
-                if (!$needed_nb) $this->throwError("assignAvailableBus function should take not null needed_nb param");
+                if (!$busObj) throw new AfwRuntimeException("assignAvailableBus function should take not null busObj param");
+                if (!$needed_nb) throw new AfwRuntimeException("assignAvailableBus function should take not null needed_nb param");
                 // to be implemented @todo
                 $found_nb = 0;
                 // on cherche dans les bus d'une compagnie donnee 
-                if ($busObj->orgunit_id and $busObj->id) {
+                if ($busObj->getVal("work_branch_id") and $busObj->id) {
 
                         $this->set("bus_company_id", $busObj->getVal("orgunit_id"));
                         $this->set("bus_id", $busObj->id);
@@ -145,7 +145,7 @@ class TravelTemplateBus extends BtbObject
                 }
                 // on cherche dans tous les bus publiquement proposes
                 else {
-                        die("orgunit_id = " . $busObj->orgunit_id . " and id = " . $busObj->id);
+                        throw new AfwRuntimeException("work_branch_id = " . $busObj->getVal("work_branch_id") . " and id = " . $busObj->id);
                 }
                 return array($found_nb, "", "");
         }

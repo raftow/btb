@@ -196,7 +196,7 @@ class TravelService
 
             $tripArrivalCity = $travelTemplateTripItem->het('arrival_city_id');
             if ($tripArrivalCity) {
-                //if($travelTemplateTripItem->getId()==8) die("tripArrivalCity = $tripArrivalCity");
+                //if($travelTemplateTripItem->getId()==8) throw new AfwRuntimeException("tripArrivalCity = $tripArrivalCity");
                 unset($tstationObj);
                 $station_distance = $travelTemplateTripItem->getVal('distance');
                 $station_name =
@@ -298,7 +298,7 @@ class TravelService
 
                 $tstationObj->set('activities', $activities);
                 $tstationObj->commit();
-                //if($travelTemplateTripItem->getId()==8) die("tstationObj = $tstationObj id=".$tstationObj->getId());
+                //if($travelTemplateTripItem->getId()==8) throw new AfwRuntimeException("tstationObj = $tstationObj id=".$tstationObj->getId());
             } else {
                 $errors_arr[] =
                     'لم يتم إدخال مدينة الوصول للسفرة القصيرة : ' .
@@ -321,18 +321,18 @@ class TravelService
         $update_price_also_for_manuel_prices = false,
         $reset_old_tt_seats = false
     ) {
-
+        $server_db_prefix = AfwSession::currentDBPrefix();
         $objme = AfwSession::getUserConnected();
         if (!$objme) return array("not authenticated", "");
 
         $me = $objme->id;
         $cond_seats_for_travel_id = "";
         if ($travel_id) {
-            $cond_seats_for_travel_id = "travel_bus_id in (select id from c0btb.travel_bus where travel_id=$travel_id)";
+            $cond_seats_for_travel_id = "travel_bus_id in (select id from " . $server_db_prefix . "btb.travel_bus where travel_id=$travel_id)";
         }
 
         if ($reset_old_tt_seats and $travel_template_id) {
-            $sql_delete_old_tt_seats = "delete from c0btb.travel_seat where travel_template_id = $travel_template_id 
+            $sql_delete_old_tt_seats = "delete from " . $server_db_prefix . "btb.travel_seat where travel_template_id = $travel_template_id 
                                           and (confirmed = 'N' or confirmed is null)
                                           and (manuel = 'N' or manuel is null)";
             if ($travel_id and $cond_seats_for_travel_id) $sql_delete_old_tt_seats .= " and " . $cond_seats_for_travel_id;
@@ -340,8 +340,9 @@ class TravelService
             list($resultdd, $ddrow_count, $ddaffected_row_count) = TravelSeat::executeQuery($sql_delete_old_tt_seats);
         }
 
+
         // ALTER TABLE `travel_seat` ADD week_period_enum,period_type_enum,yperiod_id;
-        $sql_bloc_insert = "insert into c0btb.travel_seat( created_by,created_at,updated_by,updated_at,
+        $sql_bloc_insert = "insert into " . $server_db_prefix . "btb.travel_seat( created_by,created_at,updated_by,updated_at,
                     travel_bus_id, seat_code, seat_category, 
                     travel_template_id, week_period_enum, period_type_enum, yperiod_id, 
                     manuel, apply_for_all, active, version, booked, booking_id )
@@ -349,11 +350,11 @@ class TravelService
             tb.id,bs.seat_code,bs.seat_category,
             t.travel_template_id, t.week_period_enum, t.period_type_enum, t.yperiod_id,
             'N','N','Y',0,'N',0
-        from c0btb.travel t 
-          inner join c0btb.travel_bus tb on tb.travel_id = t.id
-          inner join c0btb.bus_seat bs on bs.bus_id = tb.bus_id  
-          left join c0btb.travel_seat ts on ts.travel_bus_id = tb.id and ts.seat_code = bs.seat_code
-        where t.orgunit_id = $work_branch_id
+        from " . $server_db_prefix . "btb.travel t 
+          inner join " . $server_db_prefix . "btb.travel_bus tb on tb.travel_id = t.id
+          inner join " . $server_db_prefix . "btb.bus_seat bs on bs.bus_id = tb.bus_id  
+          left join " . $server_db_prefix . "btb.travel_seat ts on ts.travel_bus_id = tb.id and ts.seat_code = bs.seat_code
+        where t.work_branch_id=$work_branch_id
           and (t.travel_template_id = $travel_template_id or '$travel_template_id'='0')
           and (t.id = $travel_id or '$travel_id'='0')
           and (tb.id = $travel_bus_id or '$travel_bus_id'='0')
@@ -441,7 +442,7 @@ class TravelService
         $lang = AfwLanguageHelper::getGlobalLanguage();
         if ($objTravelTemplate) {
             if (!$objCompany) {
-                $objCompany = $objTravelTemplate->het('orgunit_id');
+                $objCompany = $objTravelTemplate->het('work_branch_id');
             }
             $objTravelTemplateId = $objTravelTemplate->id;
         } else {
@@ -747,6 +748,7 @@ class TravelService
 
     public static function makeTravelListHasLeaved($work_branch_id, $travel_template_id = 0)
     {
+        $server_db_prefix = AfwSession::currentDBPrefix();
         $now = date('H:i:s');
         // @todo 00:30 max late time from settings
         // @manage case to,orrow travel time near midnight 00:00 +> very rare
@@ -764,13 +766,13 @@ class TravelService
 
 
         $tbObj = new TravelBus();
-        $tbObj->where("travel_id in (select id from c0btb.travel where orgunit_id=$work_branch_id and $cond_leaved and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
+        $tbObj->where("travel_id in (select id from " . $server_db_prefix . "btb.travel where work_branch_id=$work_branch_id and $cond_leaved and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
         $tbObj->set("opened", "Z");
         $tbObj->set("opened_date", $hijri_current_date);
         $tbObj->update(false);
 
         $trvObj = new Travel();
-        $trvObj->select("orgunit_id", $work_branch_id);
+        $trvObj->select("work_branch_id", $work_branch_id);
         $trvObj->where($cond_leaved);
         $trvObj->where("($travel_template_id=0 or travel_template_id=$travel_template_id)");
         $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_GONE);
@@ -779,6 +781,7 @@ class TravelService
 
     public static function makeTravelListHasReturned($work_branch_id, $travel_template_id = 0)
     {
+        $server_db_prefix = AfwSession::currentDBPrefix();
         $now = date('H:i:s');
         // @todo 01:30 min retard in return time from settings
         list($new_day, $new_time) = AfwDateHelper::addTimeToDayTime(
@@ -799,13 +802,13 @@ class TravelService
 
 
         $tbObj = new TravelBus();
-        $tbObj->where("travel_id in (select id from c0btb.travel where orgunit_id=$work_branch_id and $cond_returned and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
+        $tbObj->where("travel_id in (select id from " . $server_db_prefix . "btb.travel where work_branch_id=$work_branch_id and $cond_returned and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
         $tbObj->set("opened", "Z");
         $tbObj->set("opened_date", $hijri_current_date);
         $tbObj->update(false);
 
         $trvObj = new Travel();
-        $trvObj->select("orgunit_id", $work_branch_id);
+        $trvObj->select("work_branch_id", $work_branch_id);
         $trvObj->where($cond_returned);
         $trvObj->where("($travel_template_id=0 or travel_template_id=$travel_template_id)");
         $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_RETURNED);
@@ -834,13 +837,13 @@ class TravelService
 
         /*        
         $tbObj = new TravelBus();
-        $tbObj->where("travel_id in (select id from c0btb.travel where orgunit_id=$work_branch_id and $cond_to_leave and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
+        $tbObj->where("travel_id in (select id from " . $server_db_prefix . "btb.travel where work_branch_id=$work_branch_id and $cond_to_leave and ($travel_template_id=0 or travel_template_id=$travel_template_id))");
         $tbObj->set("opened", "Y");
         $tbObj->set("opened_date", $hijri_current_date);
         $tbObj->update(false);*/
 
         $trvObj = new Travel();
-        $trvObj->select("orgunit_id", $work_branch_id);
+        $trvObj->select("work_branch_id", $work_branch_id);
         $trvObj->where($cond_to_leave);
         $trvObj->where("($travel_template_id=0 or travel_template_id=$travel_template_id)");
         $trvObj->set("travel_status_id", Travel::$TRAVEL_STATUS_GOING);

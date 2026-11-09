@@ -16,12 +16,11 @@ class BtbTravelAfwStructure
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'work_branch_id' => array(
 			'FGROUP' => 'data',
-			'SHORTNAME' => 'company',
 			'SEARCH' => true,
 			'QSEARCH' => true,
 			'SHOW' => true,
@@ -43,7 +42,7 @@ class BtbTravelAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'travel_template_id' => array(
@@ -69,7 +68,7 @@ class BtbTravelAfwStructure
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'full_residence' => array(
@@ -83,8 +82,6 @@ class BtbTravelAfwStructure
 			'MANDATORY' => true,
 			'UTF8' => false,
 			'TYPE' => 'YN',
-			'CATEGORY' => 'SHORTCUT',
-			'SHORTCUT' => 'travel_template_id.full_residence',
 			'READONLY' => true,
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => true,
@@ -92,31 +89,10 @@ class BtbTravelAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
-		'template_name' => array(
-			'FGROUP' => 'data',
-			'SHORTNAME' => 'tname',
-			'SHOW' => true,
-			'RETRIEVE' => true,
-			'EDIT' => false,
-			'QEDIT' => false,
-			'SIZE' => 32,
-			'MANDATORY' => true,
-			'UTF8' => false,
-			'TYPE' => 'TEXT',
-			'CATEGORY' => 'SHORTCUT',
-			'SHORTCUT' => 'travel_template_id.travel_template_name',
-			'READONLY' => true,
-			'SEARCH-BY-ONE' => '',
-			'DISPLAY' => true,
-			'STEP' => 1,
-			'DISPLAY-UGROUPS' => '',
-			'EDIT-UGROUPS' => '',
-			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
-		),
+
 
 		'depart_city_id' => array(
 			'STEP' => 2,
@@ -254,7 +230,7 @@ class BtbTravelAfwStructure
 			'ERROR-CHECK' => true,
 		),
 
-		'travel_name' => array(
+		'travel_name_ar' => array(
 			'FGROUP' => 'data',
 			'SEARCH' => true,
 			'QSEARCH' => true,
@@ -275,7 +251,31 @@ class BtbTravelAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
+		),
+
+		'travel_name_en' => array(
+			'FGROUP' => 'data',
+			'SEARCH' => true,
+			'QSEARCH' => true,
+			'SHOW' => true,
+			'RETRIEVE' => false,
+			'EDIT' => true,
+			'QEDIT' => true,
+			'SIZE' => 48,
+			'MIN-SIZE' => 5,
+			'CHAR_TEMPLATE' => 'ARABIC-CHARS,SPACE',
+			'MANDATORY' => true,
+			'UTF8' => false,
+			'TYPE' => 'TEXT',
+			'READONLY' => false,
+			'SEARCH-BY-ONE' => true,
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'ERROR-CHECK' => true,
+			'CSS' => 'width_pct_50',
 		),
 
 		'travel_date' => array(
@@ -422,7 +422,7 @@ class BtbTravelAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'start_location' => array(
@@ -444,14 +444,14 @@ class BtbTravelAfwStructure
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		/*'travelStationList' => array('STEP' => 2,  'FGROUP' => 'travelStationList',  'SHORTNAME' => 'travelStations',  'SHOW' => true,  'FORMAT' => 'retrieve',  'ICONS' => true,  'DELETE-ICON' => true,  'BUTTONS' => true,  'SEARCH' => false,  'QSEARCH' => false,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => false,  'SIZE' => 32,  'MAXLENGTH' => 32,  'MANDATORY' => false,  'UTF8' => false,  
 				'TYPE' => 'FK',  'NO-LABEL' => true,  
 				'CATEGORY' => 'ITEMS',  'ANSWER' => 'travel_sta-tion',  'ANSMODULE' => 'btb',  'ITEM' => 'travel_id',  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
-				'CSS' => 'width_pct_100',),*/
+				'CSS' => 'width_pct_50',),*/
 
 		'return_date' => array(
 			'STEP' => 2,
@@ -597,7 +597,7 @@ class BtbTravelAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'arrival_location' => array(
@@ -619,7 +619,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'days_nb' => array(
@@ -640,7 +640,7 @@ class BtbTravelAfwStructure
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'week_period_enum' => array(
@@ -665,7 +665,7 @@ class BtbTravelAfwStructure
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'period_type_enum' => array(
@@ -690,7 +690,7 @@ class BtbTravelAfwStructure
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'yperiod_id' => array(
@@ -714,7 +714,7 @@ class BtbTravelAfwStructure
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'travelers_nb' => array(
@@ -755,7 +755,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'travelBusList' => array(
@@ -793,7 +793,7 @@ class BtbTravelAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'travelHotelList' => array(
@@ -836,7 +836,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'travelers_nb_total' => array(
@@ -873,7 +873,7 @@ class BtbTravelAfwStructure
 			'CATEGORY' => 'FORMULA',
 			'TYPE' => 'TEXT',
 			'INPUT_WIDE' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
@@ -934,7 +934,7 @@ class BtbTravelAfwStructure
 			'CATEGORY' => 'FORMULA',
 			'TYPE' => 'TEXT',
 			'INPUT_WIDE' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
@@ -951,7 +951,7 @@ class BtbTravelAfwStructure
 			'CATEGORY' => 'FORMULA',
 			'TYPE' => 'TEXT',
 			'INPUT_WIDE' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
@@ -968,7 +968,7 @@ class BtbTravelAfwStructure
 			'CATEGORY' => 'FORMULA',
 			'TYPE' => 'TEXT',
 			'INPUT_WIDE' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
@@ -1002,7 +1002,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'first_available_bus' => array(
@@ -1031,7 +1031,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'travelProgram' => array(
@@ -1050,7 +1050,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'sakan_prices_offer' => array(
@@ -1067,7 +1067,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'seats_prices_offer' => array(
@@ -1084,7 +1084,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'li_trips' => array(
@@ -1101,7 +1101,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'sakan_galery' => array(
@@ -1118,7 +1118,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'buses_galery' => array(
@@ -1135,7 +1135,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'photos_prices' => array(
@@ -1152,7 +1152,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'pricing_details' => array(
@@ -1169,7 +1169,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'travel_company_full_name' => array(
@@ -1185,7 +1185,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'regenerate' => array(
@@ -1201,7 +1201,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'trip01_title' => array(
@@ -1217,7 +1217,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'trip12_title' => array(
@@ -1233,7 +1233,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'trip23_title' => array(
@@ -1249,7 +1249,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'city2_disabled_s' => array(
@@ -1265,7 +1265,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'city2_disabled_e' => array(
@@ -1281,7 +1281,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'travel_company_logo' => array(
@@ -1298,7 +1298,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => false,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'active' => array(
@@ -1313,7 +1313,7 @@ class BtbTravelAfwStructure
 			'STEP' => 1,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'created_by'         => array(

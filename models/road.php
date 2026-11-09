@@ -297,7 +297,7 @@ class Road extends BtbObject
 
             default:
                 $methodFormule = "get" . ucfirst($attribute);
-                //die("methodFormule = $methodFormule");
+                //throw new AfwRuntimeException("methodFormule = $methodFormule");
                 return $this->$methodFormule();
                 break;
         }

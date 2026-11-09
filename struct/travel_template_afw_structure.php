@@ -667,7 +667,7 @@ class BtbTravelTemplateAfwStructure
                                             id = §tparent_id§ or  -- my parent 
                                             parent_id = §tco mpany_id§ or -- my children
                                             parent_id = §tparent_id§ or -- my brothers (same parent)
-                                            id in (select bus_branch_id from c0btb.bus _convention where tbranch_id in (§tparent_id§, §tcom pany_id§)) -- convention with me or with my parent
+                                            id in (select bus_branch_id from " . $server_db_prefix . "btb.bus _convention where tbranch_id in (§tparent_id§, §tcom pany_id§)) -- convention with me or with my parent
                                            ) 
                                            and 
                                            (work_service_mfk like '%,1,%' or work_service_mfk like '%,2,%')",*/
@@ -1159,8 +1159,8 @@ class BtbTravelTemplateAfwStructure
 			'FORMAT' => '*.2',
 			'UNIT' => 'يوم',
 			'SHOW' => true,
-			'EDIT' => false,
-			'READONLY' => true,
+			'EDIT' => true,
+			'READONLY' => false,
 			'RETRIEVE' => true,
 			'MINIBOX' => false,
 			'SEARCH-BY-ONE' => '',
@@ -1291,7 +1291,7 @@ class BtbTravelTemplateAfwStructure
 			'EDIT-UGROUPS' => '',
 		),
 
-		'busList' => array(
+		'travelTemplateBusList' => array(
 			'STEP' => 7,
 			'SHOW' => true,
 			'FORMAT' => 'retrieve',

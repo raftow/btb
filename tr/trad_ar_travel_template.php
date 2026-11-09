@@ -91,7 +91,7 @@ class TravelTemplateArTranslator
                 $trad["travel_template"]["travel_time"] = "وقت االمغادرة";
                 $trad["travel_template"]["distance_return"] = "مسافة العودة";
 
-                $trad["travel_template"]["travel_duration"] = "مدة الرحلة";
+                $trad["travel_template"]["travel_period"] = "مدة الرحلة المعلنة";
 
                 $trad["travel_template"]["road1_id"] = "الطريق بين مدينة 0 و مدينة 1";
                 $trad["travel_template"]["road2_id"] = "الطريق بين مدينة 1 و مدينة 2";
@@ -106,11 +106,11 @@ class TravelTemplateArTranslator
                 $trad["travel_template"]["active"] = "تنشيط التوليد الآلي للرحلات";
                 $trad["travel_template"]["travel_props"] = "خصائص الرحلة";
                 $trad["travel_template"]["options"] = "الخيارات الفنية";
-                $trad["travel_template"]["travel_period"] = "المدة الزمنية";
+                $trad["travel_template"]["travel_duration"] = "مدة الرحلة حسابيا";
                 $trad["travel_template"]["daily"] = "يوميا";
                 $trad["travel_template"]["dow"] = "يوم";
 
-                $trad["travel_template"]["busList"] = "قائمة المركبات لبرنامج هذه الرحلة";
+                $trad["travel_template"]["travelTemplateBusList"] = "قائمة المركبات لبرنامج هذه الرحلة";
                 $trad["travel_template"]["example_bus_id"] = "المركبة النموذج";
                 $trad["travel_template"]["bus_template_id"] = "قالب وعدد مقاعد المركبة";
                 $trad["travel_template"]["need_final_selection"] = "تعيين لوحة المركبة قبل السفر";

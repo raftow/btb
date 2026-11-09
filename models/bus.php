@@ -690,7 +690,7 @@ class Bus extends BtbObject
 
                                         
                                 } else {
-                                        //die("this->bus_brand_id = $this->bus_brand_id");
+                                        //throw new AfwRuntimeException("this->bus_brand_id = $this->bus_brand_id");
                                         $attributes = [
                                                 "owner_type_id",
                                                 "work_branch_id",
@@ -835,7 +835,7 @@ class Bus extends BtbObject
                 // except the one who is reel bus and make his prices customized than no-update 
                 // 
                 if ($this->sureIs("example") and $busPricingItem) {
-                        //die(var_export($busPricingItem,true));
+                        //throw new AfwRuntimeException(var_export($busPricingItem,true));
                         $ppObj = new BusPricing();
                         $bus_ids_arr = $this->relBusList()->resetWhere("reel != 'Y' or custom_prices = 'N'")->getArray("id");
                         $bus_ids_list_txt = implode(",", $bus_ids_arr);
@@ -937,11 +937,11 @@ class Bus extends BtbObject
                 /*
                if($attribute=="prices_expiry_date")
                {
-                     if(!$default_can_update) die("by default you can not update");
+                     if(!$default_can_update) throw new AfwRuntimeException("by default you can not update");
                      echo "<br> pricesInherited = ".$this->pricesInherited();
                      echo "<br> pricesCanBeCustomized = ".$this->pricesCanBeCustomized();
                      echo "<br> estCustomized = ".$this->sureIs("customized");
-                     die("<br> default_can_update = ".var_export($default_can_update,true));
+                     throw new AfwRuntimeException("<br> default_can_update = ".var_export($default_can_update,true));
 
                }*/
 
@@ -1036,33 +1036,39 @@ class Bus extends BtbObject
                 return array($candObj, implode("<br>\n", $reason_arr));
         }
 
+
+        /**
+         * @param string $lang
+         * @param string $booking_start_date
+         * @param string $booking_start_time
+         * @param string $booking_end_date
+         * @param string $booking_end_time
+         * @param int $travel_id
+         */
+
+
         public function isAvailableForPeriod($lang, $booking_start_date, $booking_start_time, $booking_end_date, $booking_end_time, $travel_id)
         {
                 $isAvail = true;
                 $reason = "";
-                if (!$this->sureIs("example")) {
+                if ($this->sureIs("reel")) {
+                        // هل يوجد رحلة باص
                         $obj = new TravelBus();
-                        if ($this->sureIs("reel")) {
-
-                                $obj->select("bus_id", $this->getId());
-                                $obj->where("not(((booking_start_date > '$booking_end_date') or ((booking_start_date = '$booking_end_date') and (booking_start_time >= '$booking_end_time'))) or
-                                        ((booking_end_date < '$booking_start_date') or ((booking_end_date = '$booking_start_date') and (booking_end_time <= '$booking_start_time'))))
-                                        and ((booking_needed='N') or (approval != 'N'))");
-
-                                $travel_competitor = "هذه الرحلة : " . $obj->getDisplay($lang);
-                        } else {
-                                $obj->select("bus_id", $this->getId());
-                                $obj->select("travel_id", $travel_id);
-                                $travel_competitor = "نفس الرحلة";
-                        }
+                        // مختلفة عن الرحلة الحالية
+                        $obj->selectNotIn("travel_id", [$travel_id]);
+                        // تستخدم نفس الباص
+                        $obj->select("bus_id", $this->getId());
+                        // في فترة تتقاطع مع الفترة المطلوبة
+                        $obj->whereNotUsedInPeriod($booking_start_date, $booking_start_time, $booking_end_date, $booking_end_time);
 
                         if ($obj->load()) {
                                 $isAvail = false;
+                                $travel_competitor = "هذه الرحلة : " . $obj->getDisplay($lang);
                                 $reason = "تم حجزه سابقا في " . $travel_competitor;
                         }
                 } else {
                         $isAvail = false;
-                        $reason = "المركبة النموذج لا يحجز";
+                        $reason = "المركبة مجرد مثال غير حقيقي فلا يمكن حجزها";
                 }
 
 
@@ -1462,7 +1468,7 @@ class Bus extends BtbObject
                                 }
                         }
 
-                        // die("bus_id = $this->id, bus_template_id=$bus_template_id, seat_list_val=$seat_list_val => seat_code_arr=".var_export($seat_code_arr,true));
+                        // throw new AfwRuntimeException("bus_id = $this->id, bus_template_id=$bus_template_id, seat_list_val=$seat_list_val => seat_code_arr=".var_export($seat_code_arr,true));
                         $tmp_category_arr = array();
                         foreach ($seat_code_arr as $seat_code) {
                                 $tmp_category_arr[$seat_code] = $categ;
@@ -1476,7 +1482,7 @@ class Bus extends BtbObject
                         $template->category_arr = array_merge($template->category_arr, $tmp_category_arr);
                 }
 
-                //die("template->category_arr=".var_export($template->category_arr,true));
+                //throw new AfwRuntimeException("template->category_arr=".var_export($template->category_arr,true));
 
                 return $template;
         }
@@ -1498,7 +1504,7 @@ class Bus extends BtbObject
         public function getTheSeatCategoryCode($seat_code, $return_name = false, $reset_generation = false)
         {
                 $template = $this->genereSeatsCateg($reset_generation);
-                // die("template->category_arr = ".var_export($template->category_arr,true));
+                // throw new AfwRuntimeException("template->category_arr = ".var_export($template->category_arr,true));
                 if ($template->category_arr[$seat_code]) $return = $template->category_arr[$seat_code];
                 else $return = 'normal';
 
@@ -1558,7 +1564,7 @@ class Bus extends BtbObject
                 foreach ($this->busSeatCategoryListCache as $busSeatCategoryItem) {
                         list($categories[$busSeatCategoryItem->getVal("seat_category_enum")],) = $busSeatCategoryItem->displayAttribute("seat_category_enum", false, $lang);;
                 }
-                // die("categories all of bus = ".var_export($categories,true));
+                // throw new AfwRuntimeException("categories all of bus = ".var_export($categories,true));
                 return $categories;
         }
 

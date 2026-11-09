@@ -2,6 +2,7 @@
 $messages["new travel(s) inserted"] = "رحلات جديدة تم انشاؤها";
 $messages["existing travel(s) updated"] = "رحلات موجودة سابقا تم تعديلها";
 $messages["can not genere buses, no bus available with this bus template"] = "لا يمكن تحديث المركبات حيث لا يوجد مركبات متوفرة لهذا النموذج ";
+$messages["can not update buses, the bus template is not defined"] = "لا يمكن تحديث المركبات إذا لم يتم تحديد القالب ";
 $messages["for companies who have convention with you (bus provider)"] = "في الشركات التي لديك معها اتفاقيات (مزود المركبات)";
 
 

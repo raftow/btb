@@ -153,7 +153,7 @@ class Yperiod extends BtbObject
             if (!$date_from) $date_from = "0101";
             if (!$date_to) $date_to = "1229";
             $date_to = $hijri_year . $date_to;
-            // die("$date_to = $hijri_year . $date_to_old");
+            // throw new AfwRuntimeException("$date_to = $hijri_year . $date_to_old");
 
             $date_from = $hijri_year . $date_from;
         } else {
@@ -162,7 +162,7 @@ class Yperiod extends BtbObject
             if (!$date_from) $date_from = "01-01";
             if (!$date_to) $date_to = "12-31";
             $date_to = AfwDateHelper::to_hijri($greg_year . $date_to);
-            // die("$date_to = to_hijri($greg_year . $date_to_old);");
+            // throw new AfwRuntimeException("$date_to = to_hijri($greg_year . $date_to_old);");
             $date_from = AfwDateHelper::to_hijri($greg_year . $date_from);
         }
 

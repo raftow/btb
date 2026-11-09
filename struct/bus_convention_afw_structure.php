@@ -1,5 +1,6 @@
 
 <?php
+/*
 class BtbBusConventionAfwStructure
 {
 	public static $DB_STRUCTURE = array(
@@ -18,7 +19,7 @@ class BtbBusConventionAfwStructure
 			'CSS' => 'width_pct_100',
 		),
 
-		'orgunit_id' => array(
+		'orguni t_id' => array(
 			'SHORTNAME' => 'tcompany',
 			'SEARCH' => true,
 			'QSEARCH' => false,
@@ -181,7 +182,7 @@ class BtbBusConventionAfwStructure
 			'ANSWER' => 'bus',
 			'ANSMODULE' => 'btb',
 			'AUTOCOMPLETE' => false,
-			'WHERE' => "(orgunit_id = §bus_company_id§ or orgunit_id = §bus_branch_id§) and active = 'Y' and publish = 'Y'",
+			'WHERE' => "(or gunit_id = §bus_company_id§ or org unit_id = §bus_branch_id§) and active = 'Y' and publish = 'Y'",
 
 			'DEPENDENCIES' => array(
 				0 => 'bus_company_id',
@@ -384,9 +385,7 @@ class BtbBusConventionAfwStructure
 			'FGROUP' => 'tech_fields'
 		),
 
-		/* 'active'                   => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 'EDIT' => false, 
-                                                                'QEDIT' => false, "DEFAULT" => 'Y', 'TYPE' => 'YN', 'FGROUP' => 'tech_fields'),*/
-
+		
 		'version'                  => array(
 			'STEP' => 99,
 			'HIDE_IF_NEW' => true,
@@ -451,7 +450,7 @@ class BtbBusConventionAfwStructure
 			'SHOW' => true,
 			'RETRIEVE' => false,
 			'QEDIT' => false,
-			'TYPE' => 'INT', /*stepnum-not-the-object*/
+			'TYPE' => 'INT', 
 			'FGROUP' => 'tech_fields'
 		),
 
@@ -467,5 +466,5 @@ class BtbBusConventionAfwStructure
 			'FGROUP' => 'tech_fields'
 		),
 	);
-}
+}*/
 ?>

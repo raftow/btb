@@ -1,67 +1,72 @@
 <?php
-      $file_dir_name = dirname(__FILE__); 
-      
-      
-      
+$file_dir_name = dirname(__FILE__);
 
-      $uri_items = explode("/",$_SERVER[REQUEST_URI]);
-      if($uri_items[0]) $module = $uri_items[0];
-        else $module = $uri_items[1];
 
-       if(($objme) and ($objme->popup))
-       {
-            $target = "target='popup'";
-            $popup_t = "on";  
-       }
-       else
-       {
-            $target = "";
-            $popup_t = ""; 
-       }
-        
-      include_once("$file_dir_name/../pag/const.php");
-      
-      $nummenu = 1;
-      $numtheme = 0;
-      $numsubtheme = 0;
-      $numfrontclass = 4;
 
-      
-      $theme[$numtheme] = "إدارة البيانات";
-      $subtheme_class[$numtheme][$numsubtheme] = "front";
-      $subtheme_title_class[$numtheme][$numsubtheme] = "database"; 
-      $subtheme[$numtheme][$numsubtheme] = "إدارة بياناتي الشخصية";
-      
-      if($mySemplObj)
-      {
-              $sempl_me = $mySemplObj->getId();   
-              $menu[$numtheme][$numsubtheme][$nummenu++] = array("page"=>"main.php?Main_Page=afw_mode_edit.php&cl=Sempl&id=$sempl_me&currmod=sdd", "png"=>"../lib/images/emprofile.png", "titre"=>"إدارة سيرتي الذاتية", "id"=>"", "class"=>"${"front_$numfrontclass"}", "subtheme"=>0);
-              $numfrontclass = ($numfrontclass + 1) % 15;  
-      }
-      $menu[$numtheme][$numsubtheme][$nummenu++] = array("page"=>"afw_my_files.php?popup=$popup_t", "target"=>"$target", "png"=>"../lib/images/attachements.png", "titre"=>"إدارة المرفقات", "id"=>"", "class"=>"${"front_$numfrontclass"}", "subtheme"=>0);
-      $numfrontclass = ($numfrontclass + 1) % 15;
 
-      $numsubtheme++;
-      $subtheme_class[$numtheme][$numsubtheme] = "front";
-      $subtheme_title_class[$numtheme][$numsubtheme] = "database"; 
-      $subtheme[$numtheme][$numsubtheme] = "إدارة الموظفين";
-      
-      $menu[$numtheme][$numsubtheme][$nummenu++] = array("page"=>"main.php?Main_Page=afw_mode_qsearch.php&cl=Sempl&currmod=sdd", "png"=>"../lib/images/emsearch.png", "titre"=>"الإستعلام عن موظف", "id"=>"", "class"=>"${"front_$numfrontclass"}", "subtheme"=>0, 
-                                                         "afw"=>"Sempl", "mod"=>"sdd", "operation"=>"search");
-      $numfrontclass = ($numfrontclass + 1) % 15;
-      
-      $menu[$numtheme][$numsubtheme][$nummenu++] = array("page"=>"main.php?Main_Page=job-elig.php", "png"=>"../lib/images/career.png", "titre"=>"السلم الوظيفي", "id"=>"", "class"=>"${"front_$numfrontclass"}", "subtheme"=>0, "afw"=>"Sempl", "mod"=>"sdd", "operation"=>"search");
-      $numfrontclass = ($numfrontclass + 1) % 15;
+$uri_items = explode("/", $_SERVER[REQUEST_URI]);
+if ($uri_items[0]) $module = $uri_items[0];
+else $module = $uri_items[1];
 
-      $menu[$numtheme][$numsubtheme][$nummenu++] = array("page"=>"main.php?Main_Page=sempl_need_ppp.php", "png"=>"../lib/images/profile.png", "titre"=>"إستكمال الصفات الشخصية للموظفين", "id"=>"", "class"=>"${"front_$numfrontclass"}", "subtheme"=>0, "afw"=>"Sempl", "mod"=>"sdd", "operation"=>"search");
-      $numfrontclass = ($numfrontclass + 1) % 15;
-      
-      $menu[$numtheme][$numsubtheme][$nummenu++] = array("page"=>"main.php?Main_Page=afw_mode_qedit.php&ids=all&cl=Jobsdd&currmod=sdd&fixm=id_domain=3,id_sh_org=3,id_sh_div=33&sel_id_domain=3&sel_id_sh_org=3&sel_id_sh_div=33&fixmdisable=1", "png"=>"../lib/images/profile.png", "titre"=>"الوظائف", "id"=>"", "class"=>"${"front_$numfrontclass"}", "subtheme"=>0, "afw"=>"Jobsdd", "mod"=>"sdd", "operation"=>"edit");
-      $numfrontclass = ($numfrontclass + 1) % 15;
-      
-      
-      
-      /*
+if (($objme) and ($objme->popup)) {
+        $target = "target='popup'";
+        $popup_t = "on";
+} else {
+        $target = "";
+        $popup_t = "";
+}
+
+include_once("$file_dir_name/../pag/const.php");
+
+$nummenu = 1;
+$numtheme = 0;
+$numsubtheme = 0;
+$numfrontclass = 4;
+
+
+$theme[$numtheme] = "إدارة البيانات";
+$subtheme_class[$numtheme][$numsubtheme] = "front";
+$subtheme_title_class[$numtheme][$numsubtheme] = "database";
+$subtheme[$numtheme][$numsubtheme] = "إدارة بياناتي الشخصية";
+
+if ($mySemplObj) {
+        $sempl_me = $mySemplObj->getId();
+        $menu[$numtheme][$numsubtheme][$nummenu++] = array("page" => "main.php?Main_Page=afw_mode_edit.php&cl=Sempl&id=$sempl_me&currmod=sdd", "png" => "../lib/images/emprofile.png", "titre" => "إدارة سيرتي الذاتية", "id" => "", "class" => "${"front_$numfrontclass"}", "subtheme" => 0);
+        $numfrontclass = ($numfrontclass + 1) % 15;
+}
+$menu[$numtheme][$numsubtheme][$nummenu++] = array("page" => "afw_my_files.php?popup=$popup_t", "target" => "$target", "png" => "../lib/images/attachements.png", "titre" => "إدارة المرفقات", "id" => "", "class" => "${"front_$numfrontclass"}", "subtheme" => 0);
+$numfrontclass = ($numfrontclass + 1) % 15;
+
+$numsubtheme++;
+$subtheme_class[$numtheme][$numsubtheme] = "front";
+$subtheme_title_class[$numtheme][$numsubtheme] = "database";
+$subtheme[$numtheme][$numsubtheme] = "إدارة الموظفين";
+
+$menu[$numtheme][$numsubtheme][$nummenu++] = array(
+        "page" => "main.php?Main_Page=afw_mode_qsearch.php&cl=Sempl&currmod=sdd",
+        "png" => "../lib/images/emsearch.png",
+        "titre" => "الإستعلام عن موظف",
+        "id" => "",
+        "class" => "${"front_$numfrontclass"}",
+        "subtheme" => 0,
+        "afw" => "Sempl",
+        "mod" => "sdd",
+        "operation" => "search"
+);
+$numfrontclass = ($numfrontclass + 1) % 15;
+
+$menu[$numtheme][$numsubtheme][$nummenu++] = array("page" => "main.php?Main_Page=job-elig.php", "png" => "../lib/images/career.png", "titre" => "السلم الوظيفي", "id" => "", "class" => "${"front_$numfrontclass"}", "subtheme" => 0, "afw" => "Sempl", "mod" => "sdd", "operation" => "search");
+$numfrontclass = ($numfrontclass + 1) % 15;
+
+$menu[$numtheme][$numsubtheme][$nummenu++] = array("page" => "main.php?Main_Page=sempl_need_ppp.php", "png" => "../lib/images/profile.png", "titre" => "إستكمال الصفات الشخصية للموظفين", "id" => "", "class" => "${"front_$numfrontclass"}", "subtheme" => 0, "afw" => "Sempl", "mod" => "sdd", "operation" => "search");
+$numfrontclass = ($numfrontclass + 1) % 15;
+
+$menu[$numtheme][$numsubtheme][$nummenu++] = array("page" => "main.php?Main_Page=afw_mode_qedit.php&ids=all&cl=Jobsdd&currmod=sdd&fixm=id_domain=3,id_sh_org=3,id_sh_div=33&sel_id_domain=3&sel_id_sh_org=3&sel_id_sh_div=33&fixmdisable=1", "png" => "../lib/images/profile.png", "titre" => "الوظائف", "id" => "", "class" => "${"front_$numfrontclass"}", "subtheme" => 0, "afw" => "Jobsdd", "mod" => "sdd", "operation" => "edit");
+$numfrontclass = ($numfrontclass + 1) % 15;
+
+
+
+/*
       $module_id = 1067;
       $module_obj = new Module();
       $module_obj->load($module_id);
@@ -102,7 +107,7 @@
                                                          $can_edit = $myObjClass->userCan($objme, $currmod,"edit");
                                                          // list($can_edit,$bf_id, $can_edit_reason)
                                                 }
-                                                else die("failed to load afw class $atb_obj_class from module $currmod");
+                                                else throw new AfwRuntimeException("failed to load afw class $atb_obj_class from module $currmod");
                                      }
                                         
                                         
@@ -134,14 +139,6 @@
       }
       $numtheme++;
       */
-      
-      
-      include "../pag/menu_constructor.php";
-      
-       
-      
-      
 
 
-?>
-
+include "../pag/menu_constructor.php";

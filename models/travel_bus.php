@@ -65,6 +65,25 @@ class TravelBus extends BtbObject
         }
 
 
+        /**
+         * @param string $booking_start_date
+         * @param string $booking_start_time
+         * @param string $booking_end_date
+         * @param string $booking_end_time
+         */
+        public function whereIsUsedInPeriod($booking_start_date, $booking_start_time, $booking_end_date, $booking_end_time)
+        {
+                $this->whereIsBooked();
+                $this->where("not(((booking_start_date > '$booking_end_date') or ((booking_start_date = '$booking_end_date') and (booking_start_time >= '$booking_end_time'))) or
+                                ((booking_end_date < '$booking_start_date') or ((booking_end_date = '$booking_start_date') and (booking_end_time <= '$booking_start_time'))))");
+        }
+
+        public function whereIsBooked()
+        {
+                $this->where("((booking_needed='N') or (approval != 'N'))");
+        }
+
+
         // rafik/2020-09-21-10:30 : for me this is not correct way to check if bus is reserved already
         /*
         public static function loadByMainIndex($bus_company_id, $bus_id, $bus_booking_type_id, $booking_start_date, $booking_start_time, $booking_end_date, $booking_end_time,$create_obj_if_not_found=false)
@@ -509,7 +528,7 @@ class TravelBus extends BtbObject
                 foreach($seats_arr as $seat_code)
                 {
                         $tsObj = TravelSeat::loadByMainIndex($travel_bus_id, $seat_code, $create_obj_if_not_found=true);
-                        //die(var_export($tsObj,true));
+                        //throw new AfwRuntimeException(var_export($tsObj,true));
                         $can_update_price = ((!$tsObj->estConfirmed()) or $update_price_also_for_confirmed_seats);
                         if($tsObj and ($tsObj->is_new or ($update_price_also_for_manuel_prices and $can_update_price)))
                         {
@@ -517,7 +536,7 @@ class TravelBus extends BtbObject
                                 
                                 $price = $arrPrice[$seat_code]["price"];
                                 $categId = $arrPrice[$seat_code]["categ_id"];
-                                //if(!$price) die("arrPrice=".var_export($arrPrice,true));
+                                //if(!$price) throw new AfwRuntimeException("arrPrice=".var_export($arrPrice,true));
                                 $price_report = $arrPrice[$seat_code]["price_report"];
                                 if($tsObj->is_new)
                                 {
@@ -882,9 +901,9 @@ class TravelBus extends BtbObject
                 $seat_bloc_length = ($sw + $iw) * $rows_nb;
 
                 $bus_length = $driver_seat_width + $seat_bloc_length;
-                // die("$bus_length = $driver_seat_width + $seat_bloc_length");
+                // throw new AfwRuntimeException("$bus_length = $driver_seat_width + $seat_bloc_length");
                 $bus_height = ($sh + $ih) * count($all_cols) + 30;
-                //die("$bus_height = ($sh+$ih) * 5 + 80");
+                //throw new AfwRuntimeException("$bus_height = ($sh+$ih) * 5 + 80");
                 $stop = 30;
                 $sleft = $seat_bloc_length;
 
@@ -904,7 +923,7 @@ class TravelBus extends BtbObject
 
                 for ($row = 1; $row <= $rows_nb; $row++) {
                         $btr = BusTemplateRow::loadByMainIndex($bus_template_id, $row);
-                        if (!$btr) die("no btr for ($bus_template_id, $row)");
+                        if (!$btr) throw new AfwRuntimeException("no BusTemplateRow : (bt-id=$bus_template_id, row=$row)");
                         if ($btr) {
                                 foreach ($all_cols as $icol => $col) {
                                         $lowerCol = strtolower($col);
@@ -932,7 +951,7 @@ class TravelBus extends BtbObject
                                                                 /*
                                                 if($tsObj->estBooked() and $tsObj->estBookedForOthers($booking_id))
                                                 {
-                                                        die($tsObj->getDisplay("ar")." seat  is estBookedForOthers($booking_id) ".var_export($tsObj,true));
+                                                        throw new AfwRuntimeException($tsObj->getDisplay("ar")." seat  is estBookedForOthers($booking_id) ".var_export($tsObj,true));
                                                 }*/
                                                                 if ($vertical_turn) {
                                                                         $vertical_turn_sens = $vertical_turn["sens"];
@@ -1209,7 +1228,7 @@ class TravelBus extends BtbObject
                         $nb_seats,
                         $booking_ongoing
                 );
-                // die("legend_seat_class_show_arr = ".var_export($legend_seat_class_show_arr,true));
+                // throw new AfwRuntimeException("legend_seat_class_show_arr = ".var_export($legend_seat_class_show_arr,true));
                 if (!$seats_html_arr) return "<div>صورة المقاعد غير متاحة مع وجود $rows_nb من الصفوف</div>";
 
                 $seats_html = "";
@@ -1274,7 +1293,7 @@ class TravelBus extends BtbObject
                         $roue_y_0 = -12;
                         $yl = $roue_y_0 - $roue_h;
                         $yr = $roue_y_0 + $bus_internal_space + ($sh + $ih) * 5;
-                        //die("yr=$yr = $roue_y_0 + $bus_internal_space +($sh+$ih)*5");
+                        //throw new AfwRuntimeException("yr=$yr = $roue_y_0 + $bus_internal_space +($sh+$ih)*5");
 
                         $frg_yl = 0;
                         $frg_height = 18;
@@ -1842,10 +1861,10 @@ class TravelBus extends BtbObject
                         // only category of seat code wanted and passed by param
                         $scatg = $bus->getTheSeatCategoryCode($seat_code);
                         $scatg_id = Bus::decode_of_seat_category($scatg);
-                        if (!$scatg_id) die("no decode for seat cat = $scatg");
+                        if (!$scatg_id) throw new AfwRuntimeException("Decode not defined for seat cat = $scatg");
                         // decodage of $scatg
                         $categories[$scatg_id] = $this->seatsCategoriesList[$scatg_id];
-                        //if($seat_code=="R1") die("categories[$scatg] =".var_export($categories,true));
+                        //if($seat_code=="R1") throw new AfwRuntimeException("categories[$scatg] =".var_export($categories,true));
                 } else {
                         // take all categories of seats in this bus
                         $categories = $this->seatsCategoriesList;
@@ -1902,7 +1921,7 @@ class TravelBus extends BtbObject
                 }*/
                 if (true) {
                         foreach ($categories as $categoryId => $categoryName) {
-                                //if(!$categoryId) die("categories = ".var_export($categories,true));
+                                //if(!$categoryId) throw new AfwRuntimeException("categories = ".var_export($categories,true));
                                 $spr = TravelTemplateSeatPricing::loadByMainIndex(
                                         $travelObj->getVal("travel_template_id"),
                                         $categoryId,
@@ -1912,7 +1931,7 @@ class TravelBus extends BtbObject
                                         $create_obj_if_not_found = false
                                 );
 
-                                //if($seat_code=="R1") die("seat pricing of (cat=$categoryId, wnd=$week_period_enum, per=$period_type_enum, yp=$yperiod_id,) = ".var_export($spr,true));
+                                //if($seat_code=="R1") throw new AfwRuntimeException("seat pricing of (cat=$categoryId, wnd=$week_period_enum, per=$period_type_enum, yp=$yperiod_id,) = ".var_export($spr,true));
                                 if ($spr) {
                                         $prices_row = array();
                                         $prices_row["unit_type"] = "seat";
@@ -1929,7 +1948,7 @@ class TravelBus extends BtbObject
                         }
                 }
 
-                // if($seat_code=="B3") die("recalcSeatsPrices($seat_code) = ".var_export($prices_arr,true));
+                // if($seat_code=="B3") throw new AfwRuntimeException("recalcSeatsPrices($seat_code) = ".var_export($prices_arr,true));
 
                 return $prices_arr;
         }
@@ -2019,7 +2038,7 @@ class TravelBus extends BtbObject
 
         protected function afterSetAttribute($attribute)
         {
-                //if(($attribute=="booking_needed") and ($this->getVal("booking_needed")=="N")) $this->throwError("ah hahi");
+                //if(($attribute=="booking_needed") and ($this->getVal("booking_needed")=="N")) throw new AfwRuntimeException("ah hahi");
                 // It is to be rewritten in sub classes 
         }
 
@@ -2146,7 +2165,7 @@ class TravelBus extends BtbObject
 
         protected function attributeCanBeEditedBy($attribute, $user, $desc)
         {
-                // die("return ".(!$this->estBooked()));
+                // throw new AfwRuntimeException("return ".(!$this->estBooked()));
                 if ($attribute == "booking_comment") return array((!$this->estBooked()), "after bus is booked can't be edited");
                 if ($attribute == "total_price") return array((!$this->estPriced()), "after bus is price approved price can't be edited");
 
@@ -2210,10 +2229,10 @@ class TravelBus extends BtbObject
                                 }
                         }
                 }
-                //die(var_export($toCancelBookingSeatsArr,true));
+                //throw new AfwRuntimeException(var_export($toCancelBookingSeatsArr,true));
                 foreach ($toCancelBookingSeatsArr[$busNum] as $toCancelBookingSeatsItem) {
                         $canceled = $toCancelBookingSeatsItem->cancelMyBooking($lang, true);
-                        //die("[$canceled] = $toCancelBookingSeatsItem -> cancelMyBooking($lang,true)");
+                        //throw new AfwRuntimeException("[$canceled] = $toCancelBookingSeatsItem -> cancelMyBooking($lang,true)");
                         $seat_code = $toCancelBookingSeatsItem->getVal("seat_code");
                         if ($canceled) $information .= "تم إلغاء حجز المقعد " . $seat_code . "<br>\n";
                 }
@@ -2284,7 +2303,7 @@ class TravelBus extends BtbObject
                 $seats_found = 0;
                 $seats_to_found = round(1.7 * $nb_seats);
                 if ($seats_to_found < 3) $seats_to_found = 3;
-                //die("seats-policy-debugg : seats_to_found=$seats_to_found, (start_row=$start_row, end_row=$end_row, sens=$sens) effectiveRows_arr=".var_export($effectiveRows_arr,true));
+                //throw new AfwRuntimeException("seats-policy-debugg : seats_to_found=$seats_to_found, (start_row=$start_row, end_row=$end_row, sens=$sens) effectiveRows_arr=".var_export($effectiveRows_arr,true));
                 for ($row = $start_row; $row * $sens <= $sens * $end_row; $row += $sens) {
                         if ($seats_to_found > 0) {
                                 if (($effectiveRows_arr[$row]["type"] == "all") or ($effectiveRows_arr[$row]["type"] == $wanted_seat_type)) {
@@ -2297,7 +2316,7 @@ class TravelBus extends BtbObject
                                 $this->rows_policy[$wanted_seat_type][$row] = self::inverseSeatType($wanted_seat_type);
                         }
                 }
-                // die("seats-policy-debugg : seats_to_found=$seats_to_found, (start_row=$start_row, end_row=$end_row, sens=$sens) this->rows_policy=".var_export($this->rows_policy,true));
+                // throw new AfwRuntimeException("seats-policy-debugg : seats_to_found=$seats_to_found, (start_row=$start_row, end_row=$end_row, sens=$sens) this->rows_policy=".var_export($this->rows_policy,true));
 
                 return $this->rows_policy[$wanted_seat_type];
         }

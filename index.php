@@ -4,7 +4,7 @@ include("$file_dir_name/btb_start.php");
 
 $objme = AfwSession::getUserConnected();
 $customerMe = AfwSession::getCustomerConnected();
-// die("objme = $objme , customerMe = $customerMe");
+// throw new AfwRuntimeException("objme = $objme , customerMe = $customerMe");
 if ($objme) {
         list($nb_i, $nb_u) = WorkBranch::loadAllFromHrm();
         AfwSession::pushInformation("$nb_i work branch inserted, $nb_u work branch updated");

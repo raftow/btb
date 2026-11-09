@@ -162,7 +162,7 @@ class TravelSeat extends BtbObject
         if (!$travelObj) throw new RuntimeException("travel bus [$travelBusObj->id] with no travel defined, btb integrity error");
 
         $rows_policy = $travelBusObj->applySeatsFillingPolicy($travelObj, $wanted_seat_type, $nb_seats);
-        // die("rows_policy($wanted_seat_type) = ".var_export($rows_policy,true));
+        // throw new AfwRuntimeException("rows_policy($wanted_seat_type) = ".var_export($rows_policy,true));
 
         return $rows_policy[$this->getMyRow()];
     }
@@ -333,7 +333,7 @@ class TravelSeat extends BtbObject
         } elseif ($nb_rows == 0) {
             $info = "no booking to cancel";
         } else {
-            $this->throwError("strange error : more than one set canceled");
+            throw new AfwRuntimeException("strange error : more than one set canceled");
         }
 
         if ($return_status) return ($nb_rows == 1);

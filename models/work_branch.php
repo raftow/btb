@@ -17,6 +17,8 @@ class WorkBranch extends BtbObject
     public static $TABLE            = "";
     public static $DB_STRUCTURE = null;
 
+    private static $myPeriodList = [];
+
     public static $fromOrgunitIdToWorkbranchId = [];
 
     public function __construct()
@@ -139,7 +141,7 @@ class WorkBranch extends BtbObject
             $orgunitObj->set("titre", $this->getVal("name_ar"));
             $orgunitObj->set("id_domain", 15);
             $orgunitObj->commit();
-            if (!$orgunitObj->getId()) $this->throwError("failed to insert orgunit (crm_code = $crm_code) ");
+            if (!$orgunitObj->getId()) throw new AfwRuntimeException("failed to insert orgunit (crm_code = $crm_code) ");
         }
 
         if ($this->getVal("orgunit_id") != $orgunitObj->getId()) {
@@ -1265,10 +1267,10 @@ class WorkBranch extends BtbObject
 
     public function getDateInfo($hdate)
     {
-        global $myPeriodList;
 
+        $lang = AfwLanguageHelper::getGlobalLanguage();
         $report_arr = array();
-        list($weekday, $weekdayname) = AfwDateHelper::weekDayOfHijriDate($hdate);
+        list($weekday, $weekdayname) = AfwDateHelper::weekDayOfHijriDate($hdate, $lang);
 
         // when we consider a day is weekend for hotel
         // my choice is : thursday, friday, saturday
@@ -1286,7 +1288,7 @@ class WorkBranch extends BtbObject
 
         // require_once("$file_dir_name/../btb/yperiod.php");
 
-        list($period_type_enum, $yperiod_id, $yperiod_name, $myPeriodList[$this->getId()]) = Yperiod::getLocalHoliday($hdate, $this->getId(), $myPeriodList[$this->getId()]);
+        list($period_type_enum, $yperiod_id, $yperiod_name, self::$myPeriodList[$this->getId()]) = Yperiod::getLocalHoliday($hdate, $this->getId(), self::$myPeriodList[$this->getId()]);
         $report_arr[] = "الفترة : " . $yperiod_name;
 
         return array($week_period_enum, $period_type_enum, $yperiod_id, implode(" &larr; ", $report_arr));
@@ -1299,22 +1301,32 @@ class WorkBranch extends BtbObject
         return $this->getPeriodInfo($departure_date, $departure_time, $arrival_date, $arrival_time);
     }
 
+    /**
+     * @param string $departure_date in hijri format
+     * @param string $departure_time in 24h format
+     * @param string $arrival_date in hijri format
+     * @param string $arrival_time in 24h format
+     * @return array [$week_period_enum, $period_type_enum, $yperiod_id, $days_nb, $report_str]
+     */
+
     public function getPeriodInfo($departure_date, $departure_time, $arrival_date, $arrival_time)
     {
-        global $myPeriodList;
+        $lang = AfwLanguageHelper::getGlobalLanguage();
         $report_arr = array();
         // @todo
         // decide depending on options if we consider $departure_date or $arrival_date or middle between them to decide if weekend/mawssem etc...
         $consider_date = $departure_date;
         $consider_time = $departure_time;
 
+
+
         $days_nb = 0;
-        list($weekday, $weekdayname) = AfwDateHelper::weekDayOfHijriDate($consider_date);
-        $report_arr[] = "التاريخ الهجري: $consider_date &larr; ($weekday, $weekdayname)";
+        list($weekday, $weekdayname) = AfwDateHelper::weekDayOfHijriDate($consider_date, $lang);
+        $report_arr[] = "التاريخ الهجري: $consider_date &larr; (weekday=$weekday, weekdayname=$weekdayname)";
         // @todo متى تعتبر الرحلة الويكاند
-        // اختياري يوم الاربعاء بعد العصر 
+        // إذا كان يوم الانطلاق يوم الاربعاء أو الخميس أو الجمعة  
         // weekend in KSA
-        $weekend = ((($weekday == 4) and ($consider_time >= "15:00")) or ($weekday == 5) or ($weekday == 6) or ($weekday == 7));
+        $weekend = (($weekday == 4) or ($weekday == 5) or ($weekday == 6));
 
         if ($weekend) {
             $week_period_enum = 1;
@@ -1331,7 +1343,7 @@ class WorkBranch extends BtbObject
 
         // require_once("$file_dir_name/../btb/yperiod.php");
 
-        list($period_type_enum, $yperiod_id, $yperiod_name, $myPeriodList[$this->getId()]) = Yperiod::getLocalHoliday($consider_date, $this->getId(), $myPeriodList[$this->getId()]);
+        list($period_type_enum, $yperiod_id, $yperiod_name, $myPeriodList[$this->getId()]) = Yperiod::getLocalHoliday($consider_date, $this->getId(), self::$myPeriodList[$this->getId()]);
         $report_arr[] = "الفترة : " . $yperiod_name;
         // @todo
         $days_nb = AfwDateHelper::hijriDateDiff($arrival_date, $departure_date, $round = true);
@@ -1415,14 +1427,14 @@ class WorkBranch extends BtbObject
     public function importDefaultBusTemplates($lang = "ar")
     {
         list($err_arr, $inf_arr) = BusTemplate::importDefaultBusTemplatesTo($this->id, $lang);
-        // die(var_export($inf_arr,true));
+        // throw new AfwRuntimeException(var_export($inf_arr,true));
         return AfwFormatHelper::pbm_result($err_arr, $inf_arr, $sep = "<br>\n");
     }
 
     public function moveTravelsToNewStatus($lang = "ar")
     {
         list($err_arr, $inf_arr) = TravelService::moveTravelsToNewStatus(null, $this, $managed_status = array(10 => true, 20 => true, 30 => true, 40 => true, 50 => true, 60 => true, 70 => true, 80 => true,));
-        // die(var_export($inf_arr,true));
+        // throw new AfwRuntimeException(var_export($inf_arr,true));
         return AfwFormatHelper::pbm_result($err_arr, $inf_arr, $sep = "<br>\n");
     }
 

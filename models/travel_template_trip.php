@@ -314,17 +314,20 @@ class TravelTemplateTrip extends BtbObject
              return $tripStationList2;
         }*/
 
+
+
         public function setOrder($order)
         {
                 $travel_template_id = $this->getVal("travel_template_id");
                 $this->set("trip_num", $order);
                 $ttObj = $this->het("travel_template_id");
                 if (!$ttObj) return array("travel template not defined", "");
-                $compObj = $ttObj->het("orgunit_id");
+                // $compObj = $ttObj->het("work_branch_id");
                 $trips_nb = intval($ttObj->getVal("trips_nb"));
                 $log_arr = array();
                 $log_arr[] = "----------------------------------------------------";
                 $log_arr[] = "السفرة : $order ";
+
                 if (true) {
                         if ($order == 1) {
                                 if ($ttObj) {
@@ -333,12 +336,13 @@ class TravelTemplateTrip extends BtbObject
                                         $this->set("departure_day", $departure_day);
                                         $this->set("departure_time", $departure_time);
                                         $road1 = $ttObj->hetRoad1();
+                                        $avg_bus_speed = 80;
                                         if ($road1) $avg_bus_speed = intval($road1->getVal("medium_bus_speed"));
-                                        if (!$avg_bus_speed) $avg_bus_speed = 80;
                                         $log_arr[] = "متوسط سرعة المركبة =$avg_bus_speed";
                                         $log_arr[] = "يؤخذ متوسط سرعة المركبة من الأقل بين قدرات نوعية مركبات الرحلة والحد المسموح به في هذه الطريق مع أخذ بعين الإعتبار كثرة التوقفات أو المطبات أو التفتيشات ونحو ذلك";
                                         $distance_c1 = intval($ttObj->getVal("distance_c1"));
                                         $log_arr[] = "المسافة = $distance_c1";
+
                                         $time_of_drive = ($distance_c1 / $avg_bus_speed);
                                         $log_arr[] = "مدة القيادة = $time_of_drive س";
                                         $time_of_road_stations = $ttObj->getTotalTimeOfRoadStations($distance_c1, "1") / 60.0;
@@ -370,22 +374,22 @@ class TravelTemplateTrip extends BtbObject
                                         $log_arr[] = "حساب يوم ووقت المغادرة";
                                         $log_arr[] = "($departure_day,$departure_time) = السابق ($previous_arrival_day, $previous_arrival_time) + مدة الاقامة = $city1_hours_nb س";
 
-                                        //die("list($departure_day,$departure_time) = AfwDateHelper::addTimeToDayTime($previous_arrival_day, $previous_arrival_time, $city1_hours_nb)");
+                                        //throw new AfwRuntimeException("list($departure_day,$departure_time) = AfwDateHelper::addTimeToDayTime($previous_arrival_day, $previous_arrival_time, $city1_hours_nb)");
                                         $this->set("departure_day", $departure_day);
                                         $this->set("departure_time", $departure_time);
                                         $log_arr[] = "يوم المغادرة $departure_day وقت المغادرة $departure_time";
-
+                                        $avg_bus_speed = 80;
                                         if ($order == $trips_nb) {
                                                 $road1 = $ttObj->hetRoad1();
                                                 if ($road1) $avg_bus_speed = intval($road1->getVal("medium_bus_speed"));
-                                                if (!$avg_bus_speed) $avg_bus_speed = 80;
+
 
                                                 $distance_c2 = intval($ttObj->getVal("distance_c1"));
                                         } else {
 
                                                 $road2 = $ttObj->hetRoad2();
                                                 if ($road2) $avg_bus_speed = intval($road2->getVal("medium_bus_speed"));
-                                                if (!$avg_bus_speed) $avg_bus_speed = 80;
+
 
                                                 $distance_c2 = intval($ttObj->getVal("distance_c2"));
                                         }
@@ -424,7 +428,7 @@ class TravelTemplateTrip extends BtbObject
                                         $this->set("departure_day", $departure_day);
                                         $this->set("departure_time", $departure_time);
                                         $log_arr[] = "يوم المغادرة $departure_day وقت المغادرة $departure_time";
-
+                                        $avg_bus_speed = 80;
                                         if ($order == $trips_nb) {
                                                 $roadr = $ttObj->hetRoadr();
                                                 if ($roadr) $avg_bus_speed = intval($roadr->getVal("medium_bus_speed"));
@@ -479,6 +483,7 @@ class TravelTemplateTrip extends BtbObject
                                         $log_arr[] = "يوم المغادرة $departure_day وقت المغادرة $departure_time";
 
                                         $roadr = $ttObj->hetRoadr();
+                                        $avg_bus_speed = 80;
                                         if ($roadr) $avg_bus_speed = intval($roadr->getVal("medium_bus_speed"));
                                         if (!$avg_bus_speed) $avg_bus_speed = 80;
                                         $distance_c4 = intval($ttObj->getVal("distance_return"));
@@ -555,7 +560,14 @@ class TravelTemplateTrip extends BtbObject
                 }
         }
 
-
+        /**
+         * @param string $attribute
+         * @param string $val_attribute
+         * @param string $lang
+         * @return string
+         */
+        /* code n'importe quoi pour le moment, à revoir plus tard */
+        /*
         public function specialDecode($attribute, $val_attribute, $lang = "ar")
         {
                 if (($attribute == "departure_day") or ($attribute == "arrival_day")) {
@@ -566,12 +578,14 @@ class TravelTemplateTrip extends BtbObject
                         if ($first_travel_date) $first_travel_date_greg = AfwDateHelper::hijriToGreg($first_travel_date);
                         else $first_travel_date_greg = "";
 
+                        -4 c quoi 4
+                        et difference string - entier to review
                         if ($first_travel_date_greg) $travel_day_of_week = AfwDateHelper::dayNameForDate($first_travel_date_greg) - 4;
                         else $travel_day_of_week = 0;
 
                         if ($travel_day_of_week < 0)  $travel_day_of_week += 7;
 
-                        //die("$travel_day_of_week = AfwDateHelper::dayNameForDate($first_travel_date, $first_travel_date_greg)");
+                        //throw new AfwRuntimeException("$travel_day_of_week = AfwDateHelper::dayNameForDate($first_travel_date, $first_travel_date_greg)");
 
                         $day_attribute = $val_attribute + $travel_day_of_week;
                         if ($day_attribute > 7) $day_attribute = $day_attribute - 7;
@@ -603,7 +617,7 @@ class TravelTemplateTrip extends BtbObject
                 }
 
                 return $val_attribute;
-        }
+        }*/
 
         public function beforeMAJ($id, $fields_updated)
         {

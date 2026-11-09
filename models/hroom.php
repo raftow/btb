@@ -201,7 +201,7 @@ class Hroom extends BtbObject
 
     public function checkBookingPossibility($date_from, $date_to, $work_branch_id, $travel_hotel_id, $booking_id = 0, $nb_beds = 0, $book = false, $room_size_exact = true)
     {
-        if (!$date_to) $this->throwError("date_to=null");
+        if (!$date_to) throw new AfwRuntimeException("date_to=null");
         /*
               global $checkBookingPossibilityCount;
               if(!$checkBookingPossibilityCount) $checkBookingPossibilityCount = 0;
@@ -228,7 +228,7 @@ class Hroom extends BtbObject
         // require_once("$file_dir_name/../btb/room_day.php");
 
         $period_arr = AfwDateHelper::genereHijriPeriod($date_from, $date_to, $we_arr = array(6, 7), $system = "GREG", $increment_days = 1, $increment_months = 0, $increment_years = 0, $calc_greg = true);
-        //if(count($period_arr)>10) die(var_export($period_arr,true));
+        //if(count($period_arr)>10) throw new AfwRuntimeException(var_export($period_arr,true));
         $rdObjCount = 0;
         foreach ($period_arr as $period_row) {
             if ($booking_success) {
@@ -237,13 +237,13 @@ class Hroom extends BtbObject
                 if (!$this->rdObj[$sakan_gdate]) $this->rdObj[$sakan_gdate] = RoomDay::loadByMainIndex($hroom_id, $sakan_gdate, $create_obj_if_not_found = true);
                 if ($this->rdObj[$sakan_gdate]) {
                     $rdObjCount++;
-                    // if($rdObjCount>10) die("period : $date_from, $date_to, sakan_gdate=$sakan_gdate, rdObj = ".var_export($this->rdObj[$sakan_gdate],true)." period_arr = ".var_export($period_arr,true));
+                    // if($rdObjCount>10) throw new AfwRuntimeException("period : $date_from, $date_to, sakan_gdate=$sakan_gdate, rdObj = ".var_export($this->rdObj[$sakan_gdate],true)." period_arr = ".var_export($period_arr,true));
                     list($success, $reason) = $this->rdObj[$sakan_gdate]->bookFor($work_branch_id, $travel_hotel_id, $booking_id, $nb_beds, (!$book));
                     if ($success) {
                         $this->rdObj[$sakan_gdate]->optimizeMemory();
                         $rdObjArray[] = $this->rdObj[$sakan_gdate];
                     } else {
-                        //die("fail booking of $this->rdObj[$sakan_gdate] for date $sakan_gdate reason =[$reason]");
+                        //throw new AfwRuntimeException("fail booking of $this->rdObj[$sakan_gdate] for date $sakan_gdate reason =[$reason]");
                         $booking_success = false;
                         $reason_booking_fail = $reason;
                         break;
@@ -266,7 +266,7 @@ class Hroom extends BtbObject
 
 
         $return =  array($booking_success, $reason_booking_fail, $rdObjArray);
-        //if(!in_array($this->getId(), [17,2,3])) die("checkBookingPossibility[$checkBookingPossibilityCount] : return = ".var_export($return,true));
+        //if(!in_array($this->getId(), [17,2,3])) throw new AfwRuntimeException("checkBookingPossibility[$checkBookingPossibilityCount] : return = ".var_export($return,true));
         return $return;
     }
 }

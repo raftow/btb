@@ -140,7 +140,7 @@ class BookingController extends AfwStepsController
                                 $data["customer_origin"] = "صاحب الحجز";
                                 $data["traveler_type_id"] = $bookingObj->getVal("traveler_type_id");
                         } else {
-                                // die("request=".var_export($request,true));
+                                // throw new AfwRuntimeException("request=".var_export($request,true));
                                 $customerObj = AfwSession::getCustomerConnected();
                                 $data["customer_origin"] = "المتصل";
                         }
@@ -149,7 +149,7 @@ class BookingController extends AfwStepsController
                         if($bookingObj) $die_log .= " bookingObj.importants=".var_export($bookingObj->importants(),true);
                         else $die_log .= " bookingObj=null";
                         $die_log .= " data=".var_export($data,true);
-                        die($die_log);*/
+                        throw new AfwRuntimeException($die_log);*/
 
                         if ($customerObj) {
                                 $data["city_id"] = $customerObj->getVal("city_id");
@@ -220,7 +220,7 @@ class BookingController extends AfwStepsController
         {
                 // echo("request = ".var_export($request,true)."<br><br>");
                 $data = $this->initCustomerData($request);
-                // die("data = ".var_export($data,true)."<br><br>");
+                // throw new AfwRuntimeException("data = ".var_export($data,true)."<br><br>");
                 // foreach($data as $key => $value) $$key = $value;
                 $data["travelObj"] = self::getTravelObject($request);
                 $data["step_name"] = "العميل";
@@ -265,9 +265,9 @@ class BookingController extends AfwStepsController
                         if (!$traveler_type_id) $this->renderError("initSeatsData-traveler_type_id lost : is mandatory for the current step : 'select seats'");
 
                         // create a booking for this travel and this customer 
-                        //die("traveler_type_id = $traveler_type_id");
+                        //throw new AfwRuntimeException("traveler_type_id = $traveler_type_id");
                         list($bookingObj, $message) = Booking::createOrUpdateBooking($tid, $customer_id, $traveler_type_id, $travelers, $beds);
-                        //die("traveler_type_id = $traveler_type_id, booking->ttid = ".$bookingObj->getVal("traveler_type_id")."");
+                        //throw new AfwRuntimeException("traveler_type_id = $traveler_type_id, booking->ttid = ".$bookingObj->getVal("traveler_type_id")."");
                         if ($message or (!$bookingObj)) $this->renderError("initSeatsData-createNewBooking : $message ");
                         $this->setObject($bookingObj);
                         $request["booking_id"] = $bookingObj->id;
@@ -540,7 +540,7 @@ class BookingController extends AfwStepsController
                 $data["max_steps"] = $this->maxSteps();
 
                 $total_amount = $bookingObj->myTotalAmount();
-                // die("$total_amount = $bookingObj ->myTotalAmount()");
+                // throw new AfwRuntimeException("$total_amount = $bookingObj ->myTotalAmount()");
                 // if(!$total_amount) list($errors, $infos, $total_amount) = 
                 $bookingObj->genereBilling($lang);
 

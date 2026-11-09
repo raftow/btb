@@ -883,7 +883,7 @@ class BtbWorkBranchAfwStructure
 			'ANSWER' => 'travel',
 			'ANSMODULE' => 'btb',
 			'CATEGORY' => 'ITEMS',
-			'ITEM' => 'orgunit_id',
+			'ITEM' => 'work_branch_id',
 			'WHERE' => "travel_gdate >= now() and travel_gdate <= '§tomorrow_15§' and travel_status_id between 30 and 60",
 			'SHOW' => true,
 			'FORMAT' => 'retrieve',

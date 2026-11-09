@@ -214,10 +214,10 @@ class Billing extends BtbObject
     public function billingTotalAmount()
     {
         list($brow,) = $this->relRowList()->resetWhere("unit_code='total'")->getFirst();
-        //if($this->id==57) die("brow(total) = ".var_export($brow,true));
+        //if($this->id==57) throw new AfwRuntimeException("brow(total) = ".var_export($brow,true));
         if ($brow) $return =  $brow->getFloatVal("row_amount");
         else return 0.0;
-        // if($this->id==57) die("brow(total) = ".var_export($brow,true)." $return =  brow->getFloatVal(row_amount)");
+        // if($this->id==57) throw new AfwRuntimeException("brow(total) = ".var_export($brow,true)." $return =  brow->getFloatVal(row_amount)");
 
         return $return;
     }

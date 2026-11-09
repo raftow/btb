@@ -503,7 +503,7 @@ class BusTemplate extends BtbObject
                                                                 $seat_num = $col . $row;
 
                                                                 if ($seat_num == "L9") {
-                                                                        // die("categ_only=$categ_only L9 : left=$left, top=$top:(margin_top:$margin_top + (nbCols:$nbCols - 1 - icol:$icol) * (sh:$sh + ih:$ih)), wd=$wd, hg=$hg, lhg=$lhg");
+                                                                        // throw new AfwRuntimeException("categ_only=$categ_only L9 : left=$left, top=$top:(margin_top:$margin_top + (nbCols:$nbCols - 1 - icol:$icol) * (sh:$sh + ih:$ih)), wd=$wd, hg=$hg, lhg=$lhg");
                                                                 }
 
                                                                 if ($this->category_arr) {
@@ -540,7 +540,7 @@ class BusTemplate extends BtbObject
                                                                 } else {
                                                                         if ($categ_only) {
                                                                                 if ($seat_num == "L9") {
-                                                                                        // die("self::getSeatCategHtml(seat_num=$seat_num, type=$type, '', price=$price, curr=$curr, left=$left, top=$top, wd=$wd, hg=$hg, lhg=$lhg, false, $bkd, $conf, true, (!$bkd))");
+                                                                                        // throw new AfwRuntimeException("self::getSeatCategHtml(seat_num=$seat_num, type=$type, '', price=$price, curr=$curr, left=$left, top=$top, wd=$wd, hg=$hg, lhg=$lhg, false, $bkd, $conf, true, (!$bkd))");
                                                                                 }
 
                                                                                 list($legend_seat_class_show, $seats_html_arr[$row][$col]) = self::getSeatCategHtml($seat_num, $type, "", $price, $curr, $left, $top, $wd, $hg, $lhg, false, $bkd, $conf, true, (!$bkd), 0, "x", "", $bus_type);
@@ -593,7 +593,7 @@ class BusTemplate extends BtbObject
                 }
 
 
-                //die("all_categories = ".var_export($this->all_categories,true)." category_arr = ".var_export($this->category_arr,true));
+                //throw new AfwRuntimeException("all_categories = ".var_export($this->all_categories,true)." category_arr = ".var_export($this->category_arr,true));
                 if (isset($this->category_arr)) {
                         $legend = "<div class='the_legend_vertical'>
                                               <ul class='seatType makeGrid hrtlCenter appendTop20 latoRegular darkGreyText' data-radium='true'>";

@@ -758,14 +758,14 @@ class TravelHotel extends BtbObject
 
         // NOTE : all dates returned by getHotelSakanDetails are greg
         $rowHotelSakanDetails = $travel->getHotelSakanDetails($hotel);
-        //die("$travel ->getHotelSakanDetails($hotel) = ".var_export($rowHotelSakanDetails,true));
+        //throw new AfwRuntimeException("$travel ->getHotelSakanDetails($hotel) = ".var_export($rowHotelSakanDetails,true));
         $arrival_date = $rowHotelSakanDetails["arrival_date"];
         $leave_date = $rowHotelSakanDetails["leave_date"];
         $date_to = AfwDateHelper::addXDaysToGregDate(-1, $leave_date);
         $arrival_time = $rowHotelSakanDetails["arrival_time"];
         $leave_time = $rowHotelSakanDetails["leave_time"];
         $sakan_duration = $rowHotelSakanDetails["sakan_duration"];
-        //die("$travel ->getHotelSakanDetails($hotel) = [arrival_date=$arrival_date, leave_date=$leave_date, arrival_time=$arrival_time, leave_time=$leave_time, sakan_duration=$sakan_duration]");
+        //throw new AfwRuntimeException("$travel ->getHotelSakanDetails($hotel) = [arrival_date=$arrival_date, leave_date=$leave_date, arrival_time=$arrival_time, leave_time=$leave_time, sakan_duration=$sakan_duration]");
         $new_rooms = 0;
         $updated_rooms = 0;
         $updated_prices = 0;
@@ -783,7 +783,7 @@ class TravelHotel extends BtbObject
                 foreach ($hroom_arr as $hroomObj) {
                     if ($hroomObj->is_new) $new_rooms++;
                     else $updated_rooms++;
-                    //if(!$leave_date) die("$travel ->getHotelSakanDetails($hotel) = [arrival_date=$arrival_date, leave_date=$leave_date, arrival_time=$arrival_time, leave_time=$leave_time, sakan_duration=$sakan_duration] from ".var_export($rowHotelSakanDetails,true));
+                    //if(!$leave_date) throw new AfwRuntimeException("$travel ->getHotelSakanDetails($hotel) = [arrival_date=$arrival_date, leave_date=$leave_date, arrival_time=$arrival_time, leave_time=$leave_time, sakan_duration=$sakan_duration] from ".var_export($rowHotelSakanDetails,true));
 
                     list($booking_success, $reason_booking_fail, $rdObjArray) = $hroomObj->checkBookingPossibility($arrival_date, $date_to, $work_branch_id, $travel_hotel_id, $booking_id = 0, $rs, $book = true, $room_size_exact = true);
                     if ($booking_success) {
@@ -825,7 +825,7 @@ class TravelHotel extends BtbObject
         if (!$this->estOpened()) return -99;
 
         // ...
-        $this->throwError("to implement");
+        throw new AfwRuntimeException("to implement");
     }
 
 
@@ -833,20 +833,20 @@ class TravelHotel extends BtbObject
     public function getMyCurrentBedsAndRooms($booking_id, $traveler_id = 0)
     {
         // ...
-        $this->throwError("to implement");
+        throw new AfwRuntimeException("to implement");
     }
 
     public function countBedsAndRoomsBookedForMe($booking_id, $traveler_id = 0)
     {
         // ...
-        $this->throwError("to implement");
+        throw new AfwRuntimeException("to implement");
     }
 
 
     public function countBedsAndRoomsAvailable()
     {
         // ...
-        $this->throwError("to implement");
+        throw new AfwRuntimeException("to implement");
     }
 
 
@@ -868,7 +868,7 @@ class TravelHotel extends BtbObject
              if((!$hrObj) or (!$hrObj->getId())) return array('STATUS' =>'SEAT_NOT_FOUND', 'MESSAGE' =>"booking error : room $room_num not defined in hotel $hotel_id !");
              */
         // ...
-        $this->throwError("to implement");
+        throw new AfwRuntimeException("to implement");
 
         /*
              if((!$tsObj->estBooked()) or ($tsObj->getVal("booking_id") != $booking_id) or ($tsObj->getVal("traveler_id") != $traveler_id))
@@ -1183,7 +1183,7 @@ class TravelHotel extends BtbObject
             if (true) {
                 // 5. أسعار الغرف موجودة ومدخلة 
                 list($pricesIsReady, $pricesNotReadyReport) = $this->pricesReady();
-                //die("list($pricesIsReady, $pricesNotReadyReport)");
+                //throw new AfwRuntimeException("list($pricesIsReady, $pricesNotReadyReport)");
                 if (!$pricesIsReady) {
                     $pbHtml = "<br>يوجد أخطاء في تسعير الفندق  : " . $this->getShortDisplay($lang) . " : $pricesNotReadyReport";
                     $MyLinkHtml = $this->showMyLink($cstep = 3);
@@ -1283,7 +1283,7 @@ class TravelHotel extends BtbObject
         // 3azzabi room size
         $azzabi_room_size = 5;
         list($room_price,) = $this->calcPrice($azzabi_room_size);
-        //die("($room_price / $azzabi_room_size) + 0.4");
+        //throw new AfwRuntimeException("($room_price / $azzabi_room_size) + 0.4");
         $return = round(($room_price / $azzabi_room_size) + 0.4);
         return $return;
     }
@@ -1644,5 +1644,42 @@ class TravelHotel extends BtbObject
 
         $data_to_display .= "</div><!-- hotel_booking_picture -->\n"; // .var_export($this->rooms_arr,true);
         return array($data_to_display, $ids);
+    }
+
+
+    public function shouldBeCalculatedField($attribute)
+    {
+        if ($attribute == "city_id") return true;
+        if ($attribute == "avail_beds") return true;
+        if ($attribute == "rooms2_math") return true;
+        if ($attribute == "rooms3_math") return true;
+        if ($attribute == "rooms4_math") return true;
+        if ($attribute == "rooms5_math") return true;
+        if ($attribute == "rooms6_math") return true;
+        if ($attribute == "user_math") return true;
+        if ($attribute == "complete") return true;
+        if ($attribute == "user_help") return true;
+        if ($attribute == "complete2_report") return true;
+        if ($attribute == "complete3_report") return true;
+        if ($attribute == "complete4_report") return true;
+        if ($attribute == "complete5_report") return true;
+        if ($attribute == "complete6_report") return true;
+        if ($attribute == "price1") return true;
+        if ($attribute == "price2") return true;
+        if ($attribute == "price3") return true;
+        if ($attribute == "price4") return true;
+        if ($attribute == "price5") return true;
+        if ($attribute == "price6") return true;
+        if ($attribute == "price1_report") return true;
+        if ($attribute == "price2_report") return true;
+        if ($attribute == "price3_report") return true;
+        if ($attribute == "price4_report") return true;
+        if ($attribute == "price5_report") return true;
+        if ($attribute == "price6_report") return true;
+        if ($attribute == "day_gdate1") return true;
+        if ($attribute == "day_gdate2") return true;
+        if ($attribute == "day_gdate3") return true;
+        if ($attribute == "day_gdate4") return true;
+        return false;
     }
 }

@@ -83,33 +83,28 @@ class WbranchEmployee extends BtbObject
                 $this->select_visibilite_horizontale_default($dropdown, $selects);
         }
 
-        public static function loadByEmail($orgunit_id, $email,$create_obj_if_not_found=false)
+        public static function loadByEmail($orgunit_id, $email, $create_obj_if_not_found = false)
         {
-           if(!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
-           if(!$email) throw new AfwRuntimeException("loadByMainIndex : email is mandatory field");
+                if (!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
+                if (!$email) throw new AfwRuntimeException("loadByMainIndex : email is mandatory field");
 
 
-           $obj = new WbranchEmployee();
-           $obj->select("orgunit_id",$orgunit_id);
-           $obj->select("email",$email);
+                $obj = new WbranchEmployee();
+                $obj->select("orgunit_id", $orgunit_id);
+                $obj->select("email", $email);
 
-           if($obj->load())
-           {
-                if($create_obj_if_not_found) $obj->activate();
-                return $obj;
-           }
-           elseif($create_obj_if_not_found)
-           {
-                $obj->set("orgunit_id",$orgunit_id);
-                $obj->set("email",$email);
+                if ($obj->load()) {
+                        if ($create_obj_if_not_found) $obj->activate();
+                        return $obj;
+                } elseif ($create_obj_if_not_found) {
+                        $obj->set("orgunit_id", $orgunit_id);
+                        $obj->set("email", $email);
 
-                $obj->insertNew();
-                if(!$obj->id) return null; // means beforeInsert rejected insert operation
-                $obj->is_new = true;
-                return $obj;
-           }
-           else return null;
-           
+                        $obj->insertNew();
+                        if (!$obj->id) return null; // means beforeInsert rejected insert operation
+                        $obj->is_new = true;
+                        return $obj;
+                } else return null;
         }
 
         /**
@@ -478,7 +473,7 @@ class WbranchEmployee extends BtbObject
 
                         // if($tech) $tech_arr[] = $tech;
 
-                        // die('xxx1  rafik : err_arr=' . implode(',', $err_arr) . ' inf_arr=' . implode(',', $inf_arr) . ' war_arr = ' . implode(',', $war_arr));
+                        // throw new AfwRuntimeException('xxx1  rafik : err_arr=' . implode(',', $err_arr) . ' inf_arr=' . implode(',', $inf_arr) . ' war_arr = ' . implode(',', $war_arr));
 
                         $auserObj = $objEmployee->het('auser_id');
                         if ($auserObj) {
@@ -727,7 +722,7 @@ class WbranchEmployee extends BtbObject
                 if ($orgunit_id) $obj->select('orgunit_id', $orgunit_id);
                 if ($except_employee_id) $obj->where("employee_id != $except_employee_id");
                 if ($have_one_of_roles) $obj->where("wrole_mfk like '%," . implode(",%' or wrole_mfk like '%,", $have_one_of_roles) . ",%'");
-                
+
 
                 if ($hrm) $objList = AfwLoadHelper::loadList($obj, 'employee_id');
                 else $objList = $obj->loadMany();
@@ -862,7 +857,7 @@ class WbranchEmployee extends BtbObject
                         $return = null;
 
                 $log = "strict=$strict sql=$sql stats_arr = " . var_export($stats_arr, true) . " employeeList = " . var_export($employeeList, true) . " after self::getEmployeeArray(orgunit_id=$orgunit_id, wscope_id=$wscope_id, except_employee_id=$except_employee_id, accepted_roles=" . var_export($accepted_roles, true) . ")";
-                // die("best_employee_id = $best_employee_id , return = ".var_export($return,true).", employeeList = ".var_export($employeeList,true));
+                // throw new AfwRuntimeException("best_employee_id = $best_employee_id , return = ".var_export($return,true).", employeeList = ".var_export($employeeList,true));
 
                 return array($best_employee_id, $return, $employeeList, $log);
         }*/
@@ -1039,7 +1034,7 @@ class WbranchEmployee extends BtbObject
                 $development_mode = AfwSession::devMode();
                 $receiver = array();
 
-                $receiver['id'] = "employee-".$employeeObj->id;
+                $receiver['id'] = "employee-" . $employeeObj->id;
                 $receiver['mobile'] = $employeeObj->getVal('mobile');
                 $receiver['email'] = $employeeObj->getVal('email');
                 // $receiver["mobile"] = "0598988330";
@@ -1092,7 +1087,7 @@ class WbranchEmployee extends BtbObject
 
 
                                 // FK not part of me - replaceable 
-                                
+
 
 
 
@@ -1102,7 +1097,6 @@ class WbranchEmployee extends BtbObject
                                 // FK on me 
                                 // btb.btb_commitee-سكرتير اللجنة	secretary_employee_id  حقل يفلتر به
                                 if (!$simul) {
-                                        
                                 }
 
 

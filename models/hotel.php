@@ -291,7 +291,7 @@ class Hotel extends BtbObject
     public function genereRoomNums($rooms_in_floors_spec, $room_size, $nb_rooms, $room_size_max = 0)
     {
         $lang = AfwLanguageHelper::getGlobalLanguage();
-        //if(!$nb_rooms) $this->throwError("hotel::genereRoomNums(rooms_spec=$rooms_spec, room_size=$room_size, nb_rooms=$nb_rooms)")
+        //if(!$nb_rooms) throw new AfwRuntimeException("hotel::genereRoomNums(rooms_spec=$rooms_spec, room_size=$room_size, nb_rooms=$nb_rooms)")
         if (!$room_size_max) $room_size_max = $room_size + 1; // room size max by default is one bed more than standard size
         if ($room_size_max > 6) $room_size_max = 6;
         $hotel_id = $this->getId();
@@ -695,7 +695,7 @@ class Hotel extends BtbObject
                 } else {
                     $fail_counter++;
                     $fail_log[] = $reason_booking_fail;
-                    if ($fail_counter > 10) $this->throwError("$roomItem -> checkBookingPossibility(from=$arrival_date, to=$date_to, branch=$work_branch_id, travel_hotel_id=$travel_hotel_id, booking_id=$booking_id, size=$room_size, book=$book) failed : " . implode("\n<br>", $fail_log));
+                    if ($fail_counter > 10) throw new AfwRuntimeException("$roomItem -> checkBookingPossibility(from=$arrival_date, to=$date_to, branch=$work_branch_id, travel_hotel_id=$travel_hotel_id, booking_id=$booking_id, size=$room_size, book=$book) failed : " . implode("\n<br>", $fail_log));
                 }
             } else break;
         }
@@ -715,7 +715,7 @@ class Hotel extends BtbObject
 
         /* if($this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]=="PRICE_NOT_FOUND")
               {
-                  die("case PRICE_NOT_FOUND in my cache");
+                  throw new AfwRuntimeException("case PRICE_NOT_FOUND in my cache");
               }*/
 
         if ($this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
