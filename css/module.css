@@ -3747,12 +3747,12 @@ label {
 
 .booking_filter_header {
     font-family: saharat, maghreb !important;
-    color: #0e0e0e;
-    text-shadow: -4px 0px 3px #ffffff;
+    color: #ffffff;
+    text-shadow: -4px 0px 3px #635f5f;
     font-size: 26px;
     padding: 10px;
     font-weight: normal;
-    background-color: #ffffff9c;
+    background-color: #000;
 }
 
 .booking_filter_header.banner1 {
@@ -4935,7 +4935,7 @@ other style
 */
 
 .row.booking_filter {
-    background: #f8fdffd9;
+    background: #000;
     /* border: #163460 2px solid; */
     padding: 4px 4px 4px 4px;
     /* box-shadow: 4px 4px #81888a8c; */
