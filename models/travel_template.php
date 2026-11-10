@@ -268,7 +268,7 @@ class TravelTemplate extends BtbObject
 
         $color = "green";
         $title_ar = "تحديث مركبات البرنامج";
-        $pbms["As458Y"] = array("METHOD" => "genereBusList", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'MODE' => array("mode_busList" => true), 'STEP' => 7);
+        $pbms["As458Y"] = array("METHOD" => "genereBusList", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => $this->stepOfAttribute("travelTemplateBusList"),);
 
         $color = "red";
         $title_ar = "إعادة حساب أسعار المقاعد";
