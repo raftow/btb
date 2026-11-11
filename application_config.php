@@ -21,10 +21,12 @@ $config_arr = [
         ),
 
         'cust_type_list' => array(
-                1 => "مسافر",
-                3 => "مالك مركبات",
-                4 => "مالك فنادق",
-                5 => "مكتب رحلات"
+                1 => ['ar' => "مسافر",     'en' => "Traveler",    'code' => "Traveler",   'canBecome' => [3, 4, 5]],
+
+                3 => ['ar' => "مالك مركبات",   'en' => "Vehicle Owner",    'code' => "vehcl-owner",   'canBecome' => [1, 4, 5]],
+
+                4 => ['ar' => "مالك فنادق",   'en' => "Hotel Owner",    'code' => "hotel-owner",   'canBecome' => [1, 3, 5]],
+                5 => ['ar' => "مكتب رحلات",   'en' => "Travel Agency",    'code' => "travel-agency",   'canBecome' => [1, 3, 4]],
         ),
 
         'btb-application-name' => ['ar' => "تنظيم وتسويق الرحلات السياحية", 'en' => "Turism Travel Management",],

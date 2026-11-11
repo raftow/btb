@@ -2041,9 +2041,23 @@ div.hzm_data.hzm_data_hotelPricingList td {
 }
 
 span.sysswitch {
-    padding-right: 3px;
-    padding-left: 3px;
-    color: #1c83d1;
+    padding: 3px 8px;
+    color: #627380;
+    float: left;
+    border: none;
+    font-size: 12px;
+    margin-top: -6px;
+    font-weight: normal;
+}
+
+span#switch_to_greg {
+    background-color: blue;
+    color: white;
+}
+
+span#switch_to_hijri {
+    background-color: rgb(12, 157, 34);
+    color: white;
 }
 
 .quick_filter_container,
@@ -6705,6 +6719,8 @@ label {
     color: #000;
     background: #feffff;
     border-color: #d8d5d5 !important;
+    float: left;
+    width: 100%;
 }
 
 .dd .ddTitle .ddTitleText {
@@ -6731,11 +6747,13 @@ label {
 span#madina_destination_city_id_title,
 span#makka_destination_city_id_title {
     background-image: url(../../lib/images/gmap.png);
-    background-position-x: 3px;
+    background-position-x: 0px;
     background-position-y: center;
     background-repeat: no-repeat;
     background-color: white;
     min-height: 24px;
+    float: right;
+    width: 50%;
 }
 
 
