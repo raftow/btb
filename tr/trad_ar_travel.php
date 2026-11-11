@@ -38,8 +38,8 @@ $trad["travel"]["end_day_part.night"] = "ليلا";
 $trad["travel"]["start_place"] = "مكان المغادرة";
 $trad["travel"]["start_location"] = "رابط مكان المغادرة على الخريطة";
 
-$trad["travel"]["arrival_place"] = "مكان الوصول والعودة";
-$trad["travel"]["arrival_location"] = "رابط مكان الوصول والعودة على الخريطة";
+$trad["travel"]["arrival_place"] = "نقطة اللقاء للعودة";
+$trad["travel"]["arrival_location"] = "رابط نقطة اللقاء للعودة على الخريطة";
 
 $trad["travel"]["travel_template_id"] = "برنامج نموذج الرحلة";
 $trad["travel"]["travelStationList"] = "قائمة محطات التوقف";

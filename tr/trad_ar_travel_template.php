@@ -49,8 +49,8 @@ class TravelTemplateArTranslator
                 $trad["travel_template"]["start_place"] = "مكان المغادرة";
                 $trad["travel_template"]["start_location"] = "رابط مكان المغادرة على الخريطة";
 
-                $trad["travel_template"]["arrival_place"] = "مكان الوصول والعودة";
-                $trad["travel_template"]["arrival_location"] = "رابط مكان الوصول والعودة على الخريطة";
+                $trad["travel_template"]["arrival_place"] = "نقطة اللقاء للعودة";
+                $trad["travel_template"]["arrival_location"] = "رابط نقطة اللقاء للعودة على الخريطة";
 
 
                 $trad["travel_template"]["trip1"] = "الرحلة الأولى";

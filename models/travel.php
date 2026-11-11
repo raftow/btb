@@ -195,7 +195,7 @@ class Travel extends BtbObject
                 if ($mode == "mode_travelBusList") {
                         unset($link);
                         $link = array();
-                        $title = "إضافة مركبة جديد يدويا";
+                        $title = "إضافة مركبة جديدة يدويا";
                         $title_detailed = $title . "لـ : " . $displ;
                         $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=TravelBus&currmod=btb&sel_travel_id=$my_id";
                         $link["TITLE"] = $title;

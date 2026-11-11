@@ -23,16 +23,16 @@ class WorkBranchArTranslator
                 $trad["work_branch"]["nb_days_before_booking_tooltip"] = "عدد الأيام السابقة عن تاريخ الرحلة لفتح حجز المقاعد";
 
                 $trad["work_branch"]["nb_days_auto_bus_middle"] = "فترة استعجال غلق المركبات";
-                $trad["work_branch"]["nb_days_auto_bus_middle_tooltip"] = "عدد الأيام السابقة لمنع الفتح الآلي لمركبة جديد إلا بعد حجز جميع المقاعد للمركبات السابقة. وهي نفسها فترة اعتماد حجز المركبات المكتملة والمحجوزة بالاتفاق مع شركة المركبة";
+                $trad["work_branch"]["nb_days_auto_bus_middle_tooltip"] = "عدد الأيام السابقة لمنع الفتح الآلي لمركبة جديدة إلا بعد حجز جميع المقاعد للمركبات السابقة. وهي نفسها فترة اعتماد حجز المركبات المكتملة والمحجوزة بالاتفاق مع شركة المركبة";
                 $trad["work_branch"]["nb_days_auto_bus_stop"] = "مدة فترة الاستعداد النهائي للرحلة";
                 $trad["work_branch"]["nb_days_auto_bus_stop_tooltip"] = "عدد الأيام السابقة لمنع فتح مركبات جديدة مطلقا لا بشكل آلي ولا بشكل يدوي إلا بتدخل المدير نفسه";
-                $trad["work_branch"]["pct_before_new_bus"] = "نسبة الامتلاء قبل فتح مركبة جديد";
+                $trad["work_branch"]["pct_before_new_bus"] = "نسبة الامتلاء قبل فتح مركبة جديدة";
                 //$trad["work_branch"]["pct_before_new_bus_title_after"] = "من امتلاء حجز المركبات السابقة";
-                $trad["work_branch"]["pct_before_new_bus_tooltip"] = "نسبة امتلاء المقاعد قبل الفتح الآلي لمركبة جديد.\n يستثنى من ذلك فترة استعجال غلق المركبات";
+                $trad["work_branch"]["pct_before_new_bus_tooltip"] = "نسبة امتلاء المقاعد قبل الفتح الآلي لمركبة جديدة.\n يستثنى من ذلك فترة استعجال غلق المركبات";
 
-                $trad["work_branch"]["pct_authorise_new_bus"] = "مركبة جديد يدويا بعد";
+                $trad["work_branch"]["pct_authorise_new_bus"] = "مركبة جديدة يدويا بعد";
                 //$trad["work_branch"]["pct_authorise_new_bus_title_after"] = "من امتلاء حجز المركبات السابقة";
-                $trad["work_branch"]["pct_authorise_new_bus_tooltip"] = "نسبة امتلاء المقاعد قبل السماح بالفتح اليدوي لمركبة جديد";
+                $trad["work_branch"]["pct_authorise_new_bus_tooltip"] = "نسبة امتلاء المقاعد قبل السماح بالفتح اليدوي لمركبة جديدة";
 
 
                 $trad["work_branch"]["parent_id"] = "الشركة الأم";

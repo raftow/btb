@@ -1636,7 +1636,7 @@ textarea#conditions {
 .in-group-param2,
 .in-group-param3,
 .in-group-conds {
-    min-height: 405px;
+    min-height: 185px;
 }
 
 .hzm-method.hzm-method-icon-container.only-border.border-primary {
@@ -2183,6 +2183,7 @@ ul.nav.nav-pills:before,
 
 .animate-page .flipInX,
 .flipOutY {
+    backface-visibility: visible !important;
     -webkit-backface-visibility: visible !important;
 }
 
@@ -2225,6 +2226,7 @@ ul.nav.nav-pills:before,
 
 .affix,
 .fadeIn {
+    animation-name: fadeIn;
     -webkit-animation-name: fadeIn;
 }
 
@@ -2775,7 +2777,6 @@ div#omraAvailabilityTab {
     font-weight: 400 !important;
     font-variant: normal !important;
     text-transform: none !important;
-    speak: none;
     line-height: 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -3352,6 +3353,7 @@ label.metro-checkbox {
     width: 1px;
     height: 1px;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 }
 
 .carousel.slide.exploreourbestofferscarousel,
@@ -3493,6 +3495,7 @@ input[type=radio] {
 .ui-datepicker,
 .ui-slider-pips .ui-slider-pip {
     -webkit-touch-callout: none;
+    user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;

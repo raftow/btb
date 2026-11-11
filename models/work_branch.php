@@ -259,7 +259,7 @@ class WorkBranch extends BtbObject
         if ($mode == "mode_busList") {
             unset($link);
             $link = array();
-            $title = "إضافة مركبة جديد";
+            $title = "إضافة مركبة جديدة";
             $title_detailed = $title . "لـ : " . $displ;
             $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=Bus&currmod=btb&sel_work_branch_id=$my_id&sel_example=N";
             $link["TITLE"] = $title;
@@ -271,7 +271,7 @@ class WorkBranch extends BtbObject
         if ($mode == "mode_exbusList") {
             unset($link);
             $link = array();
-            $title = "إضافة نموذج مركبة جديد";
+            $title = "إضافة نموذج مركبة جديدة";
             $title_detailed = $title . "لـ : " . $displ;
             if ($parent_id and ($parent_id != $my_id)) {
                 $title .= " خاص بهذا الفرع";
@@ -1249,14 +1249,14 @@ class WorkBranch extends BtbObject
     public static function list_of_work_service_mfk()
     {
         $list_of_items = array();
-        $list_of_items[1] = "تأجير مركباتي إلى شركائي";  //   
-        $list_of_items[2] = "تأجير مركباتي إلى جميع شركات الأسفار";  //   
+        $list_of_items[1] = "وجود اسطول مركبات حقيقية تحت تصرفي";  //   
+        $list_of_items[2] = "استخدام مركبات افتراضية تحدد لاحقا";  //   
         $list_of_items[3] = "رحلات بدون إقامة";  //   
         $list_of_items[4] = "رحلات مع إقامة";  //   
         $list_of_items[5] = "رحلات مخصصة من العميل";  //   
         $list_of_items[6] = "رحلات العمرة";  //   
         $list_of_items[7] = "رحلات الحج";  //
-        //$list_of_items[8] = "إعادة تأجير فنادق";  //   
+        $list_of_items[8] = "إعادة تأجير غرف الفنادق";  //
         return  $list_of_items;
     }
 

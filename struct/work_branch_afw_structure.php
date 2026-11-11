@@ -251,7 +251,7 @@ class BtbWorkBranchAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'nb_travel_anticipate' => array(
@@ -274,7 +274,7 @@ class BtbWorkBranchAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'nb_days_before_booking' => array(
@@ -298,7 +298,7 @@ class BtbWorkBranchAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'nb_days_auto_bus_stop' => array(
@@ -322,7 +322,7 @@ class BtbWorkBranchAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'pct_authorise_new_bus' => array(
@@ -346,7 +346,7 @@ class BtbWorkBranchAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'start_open_bus' => array(
@@ -370,7 +370,7 @@ class BtbWorkBranchAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'pct_before_new_bus' => array(
@@ -394,7 +394,7 @@ class BtbWorkBranchAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'nb_days_auto_bus_middle' => array(
@@ -418,7 +418,7 @@ class BtbWorkBranchAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'bus_reel_booked' => array(
@@ -442,7 +442,7 @@ class BtbWorkBranchAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'city_mfk' => array(
@@ -491,7 +491,7 @@ class BtbWorkBranchAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_100',
+			'CSS' => 'width_pct_50',
 		),
 
 		'conditions' => array(

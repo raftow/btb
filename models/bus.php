@@ -396,7 +396,7 @@ class Bus extends BtbObject
                 if ($mode == "mode_busSeatCategoryList") {
                         unset($link);
                         $link = array();
-                        $title = "إضافة تصنيف مقاعد المركبة جديد";
+                        $title = "إضافة تصنيف مقاعد المركبة الجديدة";
                         $title_detailed = $title . "لـ : " . $displ;
                         $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=BusSeatCategory&currmod=btb&sel_bus_id=$my_id";
                         $link["TITLE"] = $title;
