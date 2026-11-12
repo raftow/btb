@@ -60,7 +60,7 @@ class WorkBranchArTranslator
                 $trad["work_branch"]["branchSeatPriceList"] = "الزيادات حسب صنف المقعد";
                 $trad["work_branch"]["yperiodList"] = "قائمة المواسم";
                 $trad["work_branch"]["workBenifitList"] = "نسب الأرباح المبرمجة";
-                $trad["work_branch"]["bus_reel_booked"] = "استخدام مركبات معينة وحجزها";
+                $trad["work_branch"]["bus_reel_booked"] = "إدارة تعيين وحجز المركبات عبر المنصة";
                 $trad["work_branch"]["bus_reel_booked_tooltip"] = "أثناء تنظيم الرحلات نقوم باستخدام مركبات معينة ذات لوحة حقيقية و يتم حجزها مبدئيا. لا ينصح باستخدام هذا الخيار للشركات التي لا تملك اسطول خاص بها أو التي لا تزال في بداية استخدامها للمنصة";
 
 

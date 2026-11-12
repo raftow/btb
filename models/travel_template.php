@@ -1102,6 +1102,10 @@ class TravelTemplate extends BtbObject
             return "محطات التوقف " . $road_name;
         }
 
+        if (($attribute == "city1_id") and ($this->getVal("trips_nb") == 2)) {
+            return "مدينة الوصول";
+        }
+
 
         return $this->translate($attribute, $lang);
     }
@@ -1196,6 +1200,10 @@ class TravelTemplate extends BtbObject
 
     public function genereBusList($lang = "ar")
     {
+        $bus_category_enum = $this->getVal("bus_category_enum");
+        if ($bus_category_enum == 2) {
+            throw new AfwBusinessException($this->tm("The auto-generation of vehicles for this category of vehicle is not implemented yet", $lang));
+        }
         $work_branch_id = $this->getVal("work_branch_id");
         $bus_id = $this->getVal("example_bus_id");
 
@@ -1205,24 +1213,48 @@ class TravelTemplate extends BtbObject
 
         $busList = array();
 
+        /**
+         * @var Bus $busExampleObj
+         */
         $busExampleObj = $this->het("example_bus_id");
 
         if ($busExampleObj) {
             $nb_seats_source = $busExampleObj->getDisplay($lang);
-            $nb_seats = intval($busExampleObj->nb_seats);
+            $nb_seats = intval($busExampleObj->getVal("nb_seats"));
         } elseif ($busTemplateObj) {
             $nb_seats_source = $busTemplateObj->getDisplay($lang);
-            $nb_seats = intval($busTemplateObj->nb_seats);
+            $nb_seats = intval($busTemplateObj->getVal("nb_seats"));
         } else return array($this->translateMessage("can not genere buses, the bus template or example are not defined", $lang), "");
 
         if (!$nb_seats) return array($this->translateMessage("can not genere buses, the source below : have not seat number", $lang) . ":<br> $nb_seats_source", "");
 
-        $tr_temp_id = $this->getId();
-        $travelers_nb = intval($this->travelers_nb);
+        $travel_template_id = $this->getId();
+        $travelers_nb = intval($this->getVal("travelers_nb"));
         $log_arr = array();
         $log_arr[] = "عدد المركبات التي نحتاج إليها في الرحلة حسب التقدير :";
-        $bus_nb = round(($travelers_nb / $nb_seats));
-        // $pct_bus_spare keep or remove ?
+
+        // already there :
+        $travelTemplateBusCount = $this->getRelation("travelTemplateBusList")->count();
+        $taux = 1.3; // on genere un peu plus mieux que moins
+        $bus_nb = round(($travelers_nb / $nb_seats) * $taux) - $travelTemplateBusCount;
+
+        $new_instance_nb = round($bus_nb / 2);
+        if (!$new_instance_nb) $new_instance_nb = $bus_nb;
+
+
+        if ($bus_category_enum == 1) {
+            if (!$busExampleObj) return array($this->translateMessage("Please define the vehicle example", $lang), "");
+
+            list($err, $info, $warn, $tech, $newBusList) = $busExampleObj->genereRealBusListFromThisExample($lang, $params = array('new_instance_nb' => $new_instance_nb, 'return' => 'new', 'bus_code' => "", 'bus_color' => 0), $commit = true);
+            foreach ($newBusList as $bus_order => $busItem) {
+                $travelTemplateBusItem = TravelTemplateBus::loadByMainIndex($travel_template_id, $bus_order + 1, $busItem->id, $create_obj_if_not_found = true);
+            }
+        }
+
+        if ($bus_category_enum == 2) {
+            // usine a gaz below, for the moment we will not support this category to review later
+            /*
+            // $pct_bus_spare keep or remove ?
         $pct_bus_spare = 0.0;  // 0 %
         $taux = (1 + $pct_bus_spare / 100.0);
         // taux des bus affectes a un group de bus prioritaire (groupe de bus ou une companie fournisseur)
@@ -1231,7 +1263,6 @@ class TravelTemplate extends BtbObject
 
         $to_book_bus_nb = round($taux * $bus_nb);
         $log_arr[] = "نحتاج $to_book_bus_nb مركبة =~  (1+$pct_bus_spare/100.0) * $travelers_nb / $nb_seats ";
-
         // if we impose a specific example we keep it alone
         if ($busExampleObj) {
             $busList[$busExampleObj->id] = $busExampleObj;
@@ -1244,7 +1275,7 @@ class TravelTemplate extends BtbObject
             $bus_template_id = $busTemplateObj->getId();
             $b = new Bus();
             if (!$list_bus_company_mfk) $list_bus_company_mfk = ",";
-            $b->where("work_branch_id in (0 $list_bus_company_mfk 0) and bus_template_id=$bus_template_id");
+            $b->where("work_branch_id in (0 $list_bus_company_mfk 0) and bus_template_id=$bus_template_id and reel='Y'");
             //@todo : $bus_priority_order_by should be from company config
             $bus_priority_order_by = "example desc, bus_num asc";
             $busList = $b->loadMany($limit = $to_book_bus_nb, $bus_priority_order_by);
@@ -1289,11 +1320,12 @@ class TravelTemplate extends BtbObject
                     $bus_order++;
                 }
             }
+        } */
         }
 
         $log = implode("\n<br>", $log_arr);
 
-        return array("", "$log \n<br> $found_all مركبة تم العثور عليهم");
+        return array("", $log);
     }
 
     // public estExpert()bus_reel_booked

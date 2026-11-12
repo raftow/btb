@@ -30,3 +30,4 @@ $messages["approve hotels ignored : remain="] = "تم تجاهل اعتماد ت
 $messages["too early for opening booking"] = "الوقت مبكر جدا على فتح الحجز على هذه الرحلة حسب سياسة عمل الشركة";
 
 $messages["related_object_title"] = "الحجز/التذكرة المتعلقة بالطلب";
+$messages["The auto-generation of vehicles for this category of vehicle is not implemented yet"] = "لم يتم بعد تطوير خاصية التوليد التلقائي للمركبات لهذه الفئة من المركبات";

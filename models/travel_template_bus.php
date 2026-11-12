@@ -24,17 +24,7 @@ class TravelTemplateBus extends BtbObject
         public function __construct()
         {
                 parent::__construct("travel_template_bus", "id", "btb");
-                $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-                $this->DISPLAY_FIELD = "";
-                $this->ORDER_BY_FIELDS = "travel_template_id, bus_num";
-                $this->horizontalTabs = true;
-
-
-                $this->UNIQUE_KEY = array('travel_template_id', 'bus_num');
-
-                $this->showQeditErrors = true;
-                $this->showRetrieveErrors = true;
-                $this->after_save_edit = array("class" => 'TravelTemplate', "attribute" => 'travel_template_id', "currmod" => 'btb', "currstep" => 7);
+                BtbTravelTemplateBusAfwStructure::initInstance($this);
         }
 
         public static function loadById($id)
@@ -48,7 +38,7 @@ class TravelTemplateBus extends BtbObject
 
 
 
-        public static function loadByMainIndex($travel_template_id, $bus_num, $create_obj_if_not_found = false)
+        public static function loadByMainIndex($travel_template_id, $bus_num, $bus_id = 0, $create_obj_if_not_found = false)
         {
                 $obj = new TravelTemplateBus();
                 if (!$travel_template_id) throw new AfwRuntimeException("loadByMainIndex : travel_template_id is mandatory field");
@@ -59,11 +49,15 @@ class TravelTemplateBus extends BtbObject
                 $obj->select("bus_num", $bus_num);
 
                 if ($obj->load()) {
-                        if ($create_obj_if_not_found) $obj->activate();
+                        if ($create_obj_if_not_found) {
+                                $obj->set("bus_id", $bus_id);
+                                $obj->activate();
+                        }
                         return $obj;
                 } elseif ($create_obj_if_not_found) {
                         $obj->set("travel_template_id", $travel_template_id);
                         $obj->set("bus_num", $bus_num);
+                        $obj->set("bus_id", $bus_id);
 
                         $obj->insert();
                         $obj->is_new = true;

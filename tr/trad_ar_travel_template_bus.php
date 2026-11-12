@@ -11,8 +11,7 @@ $trad["travel_template_bus"]["city2_hotel_mfk"] = "الفنادق بالمدين
 $trad["travel_template_bus"]["city3_hotel_mfk"] = "الفنادق بالمدينة 3";
 
 $trad["travel_template_bus"]["definition"] = "رقم اللوحة";
-$trad["travel_template_bus"]["bus_count"] = "العدد المخصص";
-$trad["travel_template_bus"]["bus_count_tooltip"] = "عدد  المركبات الأقصى المخصص لهذه الرحلة";
+
 $trad["travel_template_bus"]["active"] = "المركبة مفعلة في هذه الرحلة";
 $trad["travel_template_bus"]["draft"] = "المركبة خاص لبعض المسافرين";
 

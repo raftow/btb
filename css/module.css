@@ -6871,3 +6871,35 @@ span.picture-span>div.hzm-user-account.hzm-container-center.hzm-custom-icon-cont
     left: 100px;
     text-align: left;
 }
+
+span.bus_category {
+    display: block;
+    width: 32px;
+    height: 24px;
+    margin: auto;
+}
+
+span.bus_category.bus_category_reel {
+    background-image: url(../pic/bus_reel.png);
+    background-size: 100%;
+}
+
+span.bus_category.bus_category_joker {
+    background-image: url(../pic/bus_joker.png);
+    background-size: 100%;
+}
+
+span.bus_category.bus_category_template {
+    background-image: url(../pic/bus_template.png);
+    background-size: 100%;
+}
+
+select.hzm_time {
+    font-family: digi, arial !important;
+    color: #3e77bd;
+    font-size: 22px !important;
+    font-weight: bold;
+    background-color: #fff;
+    padding: 2px 6px;
+    border: 1px #8885856b solid;
+}

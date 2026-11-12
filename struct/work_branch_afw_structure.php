@@ -611,7 +611,9 @@ class BtbWorkBranchAfwStructure
 			'SHOW' => true,
 			'FORMAT' => 'retrieve',
 			'DO-NOT-RETRIEVE-COLS' => array(
-				0 => 'instance_nb',
+				0 => 'bus_color',
+				1 => 'instance_nb',
+				// 2 => 'bus_code',
 			),
 			'EDIT' => true,
 			'READONLY' => true,

@@ -161,12 +161,25 @@ class BtbObject extends AfwMomkenObject
                 return  $list_of_items;
         }
 
-        public static function list_of_travel_level() { 
-                $list_of_items = array(); 
+        public static function list_of_travel_level()
+        {
+                $list_of_items = array();
                 $list_of_items[1] = "الإقتصادية";
                 $list_of_items[2] = "الفاخرة";
                 $list_of_items[3] = "الأعمال";
-                 
-               return  $list_of_items;
+
+                return  $list_of_items;
+        }
+
+
+        public static function list_of_bus_category_enum()
+        {
+                $list_of_items = array();
+                $list_of_items[1] = "جوكر";
+                $list_of_items[2] = "حقيقي بلوحة حقيقية";
+
+
+
+                return  $list_of_items;
         }
 }

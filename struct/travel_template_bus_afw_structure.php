@@ -2,6 +2,35 @@
 <?php
 class BtbTravelTemplateBusAfwStructure
 {
+
+
+	// token separator = §
+	public static function initInstance(&$obj)
+	{
+		if ($obj instanceof TravelTemplate) {
+			$obj->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
+			$obj->DISPLAY_FIELD = "";
+			$obj->ORDER_BY_FIELDS = "travel_template_id, bus_num";
+			$obj->horizontalTabs = true;
+
+
+			$obj->UNIQUE_KEY = array('travel_template_id', 'bus_num');
+
+			$obj->showQeditErrors = true;
+			$obj->showRetrieveErrors = true;
+			$obj->after_save_edit = array("class" => 'TravelTemplate', "attribute" => 'travel_template_id', "currmod" => 'btb', "currstep" => 7);
+		} else {
+			//TravelTemplateBusArTranslator::initData();
+			//TravelTemplateBusEnTranslator::initData();
+		}
+	}
+
+	/**
+	 * DB_STRUCTURE is the main source of configuration for the class 
+	 *    it is used in all the modules and methods to know how 
+	 *    to handle the class attributes
+	 * @var array
+	 */
 	public static $DB_STRUCTURE = array(
 
 
@@ -162,28 +191,7 @@ class BtbTravelTemplateBusAfwStructure
 			'EDIT-UGROUPS' => '',
 		),
 
-		'bus_count' => array(
-			'FGROUP' => 'tbus',
-			'SEARCH' => true,
-			'QSEARCH' => false,
-			'SHOW' => true,
-			'RETRIEVE' => true,
-			'EDIT' => true,
-			'QEDIT' => true,
-			'CSS' => 'width_pct_50',
-			'SIZE' => 32,
-			'MAXLENGTH' => 32,
-			'REQUIRED' => true,
-			'UTF8' => false,
-			'TYPE' => 'INT',
-			'SEARCH-BY-ONE' => false,
-			'DISPLAY' => true,
-			'STEP' => 1,
-			'DISPLAY-UGROUPS' => '',
-			'EDIT-UGROUPS' => '',
-			'MANDATORY' => true,
-			'ERROR-CHECK' => true,
-		),
+
 
 		'active' => array(
 			'FGROUP' => 'tbus',

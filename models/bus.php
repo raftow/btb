@@ -233,19 +233,19 @@ class Bus extends BtbObject
 
 
 
-        public function calcCategory($translate = true, $short = true)
+        public function calcCategory($what = 'value', $html = true, $translate = false, $short = true, $tooltip = false)
         {
                 $lang = AfwLanguageHelper::getGlobalLanguage();
                 //    example = Y , reel = Y     ===>   unique bus (not generated from an example) because not member of group with same parent bus example (said also bus template), but he is example of him self 
-                if ($this->sureIs("example") and $this->sureIs("reel")) {
-                        $category = "reel_unique";
+                if ($this->sureIs("reel") and $this->matriculeIsReal()) {
+                        $category = "reel";
                 }
                 //    example = N , reel = Y     ===>   bus reel generated from an example and matricule (bus code) is entered                    
-                elseif ((!$this->sureIs("example")) and $this->sureIs("reel")) {
-                        $category = "reel_from_example";
+                elseif ($this->sureIs("reel") and $this->matriculeIsNotReal()) {
+                        $category = "joker";
                 }
                 //    example = Y , reel = N     ===>   bus example (not reel used to generate group of buses from same bus template)
-                elseif ($this->sureIs("example") and (!$this->sureIs("reel"))) {
+                elseif ($this->sureIs("example")) {
                         $category = "template";
                 }
                 //    example = N , reel = N     ===>   bus generated from an example not at yet reel => not yet with matricule (bus code)                    
@@ -255,10 +255,12 @@ class Bus extends BtbObject
                         // should not happen 
                         throw new AfwRuntimeException("Bus::calcCategory : bus with id " . $this->getId() . " is not example and not reel, this should not happen");
                 }
-
+                $tooltip_text = $this->translate($category . "_tooltip", $lang);
+                $short_text = $this->translate($category . ".short", $lang);
+                if ($html) return "<span class='bus_category bus_category_$category' title='$tooltip_text'>&nbsp;</span>";
                 if (!$translate) return $category;
-
-                if ($short) return $this->translate($category . ".short", $lang);
+                if ($tooltip) return $tooltip_text;
+                if ($short) return $short_text;
                 return $this->translate($category, $lang);
         }
 
@@ -281,7 +283,7 @@ class Bus extends BtbObject
                 $data = array();
                 $link = array();
 
-                $data[0] = $this->calcCategory($translate = true, $short = true);
+                $data[0] = $this->calcCategory('value', false, true, true);
                 list($data[1], $link[1]) = $this->displayAttribute("bus_brand_id", false, $lang);
                 list($data[2], $link[2]) = $this->displayAttribute("bus_model_id", false, $lang);
                 list($data[3], $link[3]) = $this->displayAttribute("work_branch_id", false, $lang);
@@ -300,7 +302,7 @@ class Bus extends BtbObject
                 list($data[0], $link[0]) = $this->displayAttribute("work_branch_id", false, $lang);
                 list($data[1], $link[1]) = $this->displayAttribute("bus_brand_id", false, $lang);
                 list($data[2], $link[2]) = $this->displayAttribute("bus_model_id", false, $lang);
-                $data[3] = $this->calcCategory($translate = true, $short = true);
+                $data[3] = $this->calcCategory('value', false, true, true);
 
                 if ($this->sureIs("reel")) {
                         list($data[4], $link[4]) = $this->displayAttribute("bus_color", false, $lang);
@@ -666,11 +668,15 @@ class Bus extends BtbObject
                 return $cg_nb;
         }
 
-        public function genereRealBusListFromThisExample($lang = "ar", $params = array('bus_code' => "", 'bus_color' => 0), $commit = true)
+        public function genereRealBusListFromThisExample($lang = "ar", $params = array('new_instance_nb' => 0, 'return' => 'all', 'bus_code' => "", 'bus_color' => 0), $commit = true)
         {
                 $errors_arr = array();
                 $infos_arr = array();
-                $nb_buses = intval($this->getVal("instance_nb"));
+                $new_instance_nb = $params['new_instance_nb'];
+
+                $busGeneratedList = [];
+
+                $nb_buses = intval($this->getVal("instance_nb")) + $new_instance_nb;
                 if ($this->getId() and ($nb_buses > 0)) {
                         for ($bus_num = 1; $bus_num <= $nb_buses; $bus_num++) {
                                 $code_example = $this->getId() + $bus_num % 10000;
@@ -679,7 +685,11 @@ class Bus extends BtbObject
                                 $params["example"] = "N";
                                 $params["bus_num"] = $bus_num;
                                 $params["bus_code"] = $bus_code;
-                                list($err, $info, $action) = $this->createOrUpdateFromThisExample(null, $lang, $params, $commit);
+                                list($err, $info, $action, $busItem) = $this->createOrUpdateFromThisExample(null, $lang, $params, $commit);
+                                if ($params['return'] == 'all' or ($bus_num > $this->getVal("instance_nb"))) {
+                                        $busGeneratedList[] = $busItem;
+                                }
+
                                 if ($err) {
                                         $errors_arr[] = "خطأ أثناء إنشاء/تحديث المركبة رقم $bus_num  في الأسطول : " . $err;
                                 } else {
@@ -715,7 +725,9 @@ class Bus extends BtbObject
                 } else {
                         $errors_arr[] = "مركبة غير مكتملة البيانات أو لم يتم تحديد كمية هذا النموذج في الأسطول لذلك تعذرت عملية تحديث الأسطول";
                 }
-                return array(implode("<br>\n", $errors_arr), implode("<br>\n", $infos_arr));
+                $this->set("instance_nb", $nb_buses);
+                $this->commit();
+                return AfwFormatHelper::pbm_result($errors_arr, $infos_arr, "", "<br>\n", null, $busGeneratedList);
         }
 
         public function updateMyPropertiesFromMyParent($lang = "ar", $updated_properties = "")
@@ -769,7 +781,12 @@ class Bus extends BtbObject
 
         public function matriculeIsNotReal()
         {
-                return AfwStringHelper::stringStartsWith($this->getVal("bus_code"), "EXM ");
+                return (!$this->getVal("bus_code") or AfwStringHelper::stringStartsWith($this->getVal("bus_code"), "EXM "));
+        }
+
+        public function matriculeIsReal()
+        {
+                return ($this->getVal("bus_code") and !AfwStringHelper::stringStartsWith($this->getVal("bus_code"), "EXM "));
         }
 
         /**
@@ -825,7 +842,7 @@ class Bus extends BtbObject
                 }
                 $action = $busObj->is_new ? "تم إنشاء مركبة جديدة" : "تم تحديث المركبة";
                 //$this->commit();
-                return array(implode("<br>\n", $errors_arr), implode("<br>\n", $infos_arr), $action);
+                return array(implode("<br>\n", $errors_arr), implode("<br>\n", $infos_arr), $action, $busObj);
         }
 
         // trigger the bus that this bus pricing item has been changed
@@ -979,14 +996,14 @@ class Bus extends BtbObject
         public function attributeIsApplicable($attribute)
         {
                 if ($attribute == "booking_infos")  return $this->propertiesCanBeCustomized(); //!$this->sureIs("mine");
-                if ($attribute == "bus_code")       return ((!$this->sureIs("example")) and ($this->sureIs("reel")));
-                if ($attribute == "bus_color")      return ((!$this->sureIs("example")) and ($this->sureIs("reel")));
-                if ($attribute == "bus_num")        return ((!$this->sureIs("example")) and (!$this->sureIs("reel")));
+                if ($attribute == "bus_code")       return (($this->sureIs("reel")));
+                if ($attribute == "bus_color")      return (($this->sureIs("reel")));
+                if ($attribute == "bus_num")        return false;
                 if ($attribute == "instance_nb")    return ($this->sureIs("example"));
                 if ($attribute == "mine")          return ($this->ownerIsParent());
                 if ($attribute == "publish")       return ($this->ownerIsBranch());
                 if ($attribute == "responsible_id") return $this->propertiesCanBeCustomized();
-                if ($attribute == "driver_id")      return ((!$this->sureIs("example")) and ($this->sureIs("reel")));
+                if ($attribute == "driver_id")      return ($this->matriculeIsReal());
                 if ($attribute == "parent_bus_id")  return (!$this->sureIs("example"));
                 if ($attribute == "busList")        return ($this->sureIs("example"));
                 if ($attribute == "travelBusList")        return (!$this->sureIs("example"));

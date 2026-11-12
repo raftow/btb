@@ -39,7 +39,7 @@ $trad["travel"]["start_place"] = "مكان المغادرة";
 $trad["travel"]["start_location"] = "رابط مكان المغادرة على الخريطة";
 
 $trad["travel"]["arrival_place"] = "نقطة اللقاء للعودة";
-$trad["travel"]["arrival_location"] = "رابط نقطة اللقاء للعودة على الخريطة";
+$trad["travel"]["arrival_location"] = "رابط موقع نقطة اللقاء للعودة ";
 
 $trad["travel"]["travel_template_id"] = "برنامج نموذج الرحلة";
 $trad["travel"]["travelStationList"] = "قائمة محطات التوقف";
