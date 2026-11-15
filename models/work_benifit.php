@@ -22,17 +22,7 @@ class WorkBenifit extends BtbObject
    public function __construct()
    {
       parent::__construct("work_benifit", "id", "btb");
-      $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-      $this->DISPLAY_FIELD = "";
-      $this->ORDER_BY_FIELDS = "branch_id, level_enum, travel_program_id, days_nb, week_period_enum, period_type_enum, yperiod_id";
-      $this->horizontalTabs = true;
-
-
-      $this->UNIQUE_KEY = array('branch_id', 'level_enum', 'travel_program_id', 'days_nb', 'week_period_enum', 'period_type_enum', 'yperiod_id');
-
-      $this->showQeditErrors = true;
-      $this->showRetrieveErrors = true;
-      $this->after_save_edit = array("class" => 'WorkBranch', "attribute" => 'branch_id', "currmod" => 'btb', "currstep" => 10);
+      BtbWorkBenifitAfwStructure::initInstance($this);
    }
 
    public static function list_of_week_period_enum()
@@ -72,43 +62,50 @@ class WorkBenifit extends BtbObject
       } else return null;
    }
 
-
-
-   public static function loadByMainIndex($branch_id, $level_enum, $travel_program_id, $days_nb, $week_period_enum, $period_type_enum, $yperiod_id, $create_obj_if_not_found = false)
+   /**
+    * @param int $work_branch_id
+    * @param int $level_enum
+    * @param int $travel_program_id
+    * @param int $week_period_enum
+    * @param int $period_type_enum
+    * @param int $yperiod_id
+    */
+   public static function loadByMainIndex($work_branch_id, $level_enum, $travel_program_id, $week_period_enum, $period_type_enum, $yperiod_id, $days_nb = 0, $create_obj_if_not_found = false)
    {
+      if (!$work_branch_id) throw new AfwRuntimeException("loadByMainIndex : work_branch_id is mandatory field");
+
+
       $obj = new WorkBenifit();
-      if (!$branch_id) throw new AfwRuntimeException("loadByMainIndex : branch_id is mandatory field");
-      if (!$travel_program_id) throw new AfwRuntimeException("loadByMainIndex : travel_program_id is mandatory field");
-      if (!$days_nb) throw new AfwRuntimeException("loadByMainIndex : days_nb is mandatory field");
-      //if(!$week_period_enum) throw new AfwRuntimeException("loadByMainIndex : week_period_enum is mandatory field");
-      //if(!$period_type_enum) throw new AfwRuntimeException("loadByMainIndex : period_type_enum is mandatory field");
-
-
-      $obj->select("branch_id", $branch_id);
+      $obj->select("work_branch_id", $work_branch_id);
       $obj->select("level_enum", $level_enum);
       $obj->select("travel_program_id", $travel_program_id);
-      $obj->select("days_nb", $days_nb);
       $obj->select("week_period_enum", $week_period_enum);
       $obj->select("period_type_enum", $period_type_enum);
       $obj->select("yperiod_id", $yperiod_id);
 
       if ($obj->load()) {
-         if ($create_obj_if_not_found) $obj->activate();
+         if ($create_obj_if_not_found) {
+            $obj->set("days_nb", $days_nb);
+            $obj->activate();
+         }
          return $obj;
       } elseif ($create_obj_if_not_found) {
-         $obj->set("branch_id", $branch_id);
+         $obj->set("work_branch_id", $work_branch_id);
          $obj->set("level_enum", $level_enum);
          $obj->set("travel_program_id", $travel_program_id);
-         $obj->set("days_nb", $days_nb);
          $obj->set("week_period_enum", $week_period_enum);
          $obj->set("period_type_enum", $period_type_enum);
          $obj->set("yperiod_id", $yperiod_id);
+         $obj->set("days_nb", $days_nb);
 
-         $obj->insert();
+         $obj->insertNew();
+         if (!$obj->id) return null; // means beforeInsert rejected insert operation
          $obj->is_new = true;
          return $obj;
       } else return null;
    }
+
+
 
 
    public function getDisplay($lang = "ar")
@@ -120,7 +117,7 @@ class WorkBenifit extends BtbObject
       if (!$this->getId()) return "إنشاء نسبة جديدة";
 
 
-      list($data[0], $link[0]) = $this->displayAttribute("branch_id", false, $lang);
+      list($data[0], $link[0]) = $this->displayAttribute("work_branch_id", false, $lang);
       list($data[1], $link[1]) = $this->displayAttribute("level_enum", false, $lang);
       list($data[2], $link[2]) = $this->displayAttribute("travel_program_id", false, $lang);
       list($data[3], $link[3]) = $this->displayAttribute("days_nb", false, $lang);
@@ -181,7 +178,14 @@ class WorkBenifit extends BtbObject
       }
    }
 
-
+   /**
+    * @param int  $level_enum, 
+    * @param int  $travel_program_id, 
+    * @param int  $days_nb, 
+    * @param int  $week_period_enum, 
+    * @param int  $period_type_enum, 
+    * @param int  $yperiod_id
+    */
    public function feets($level_enum, $travel_program_id, $days_nb, $week_period_enum, $period_type_enum, $yperiod_id)
    {
       $my_level_enum = $this->getVal("level_enum");
@@ -208,9 +212,10 @@ class WorkBenifit extends BtbObject
       list($travel_program, $link) = $this->displayAttribute("travel_program_id", false, $lang);
       list($level_enum_disp, $link) = $this->displayAttribute("level_enum", false, $lang);
       $days_nb = $this->getVal("days_nb");
-      if ($days_nb == 1) $days_nb_title = "يوم واحد";
-      if ($days_nb == 2) $days_nb_title = "يومين";
-      if ($days_nb >= 3) $days_nb_title = "$days_nb أيام";
+      if ($days_nb == 0) $days_nb_title = "مدة غير محددة";
+      elseif ($days_nb == 1) $days_nb_title = "يوم واحد";
+      elseif ($days_nb == 2) $days_nb_title = "يومين";
+      else $days_nb_title = "$days_nb أيام";
       return $travel_program . "-" . $days_nb_title . "-" . $level_enum_disp;
    }
 

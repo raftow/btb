@@ -169,20 +169,30 @@ class BusTemplateRow extends BtbObject
                 return $erase_me;
         }
 
-        public function isAvaialableSeat($i_col_sel, $col_sel)
+        /**
+         * @return boolean
+         */
+
+        public function isAvailableSeat($col_sel)
         {
-                $bt = $this->het("bus_template_id");
-                list($all_cols,  $empty_columns_arr) = $bt->getCols();
-                $row_num = $this->getVal("row_num");
+                $col_sel = strtolower($col_sel);
+                /**
+                 * var BusTemplate $busTemplate
+                 */
+                //if (!$busTemplate) $busTemplate = $this->het("bus_template_id");
+                //list($all_cols,  $empty_columns_arr) = $busTemplate->getCols();
+                //$row_num = $this->getVal("row_num");
 
 
+                return (($this->getVal("${col_sel}_width") > 0) and ($this->getVal("${col_sel}_length") > 0));
 
+                /* complex algo not clear so obsolete for the moment
                 foreach ($all_cols as $i => $col) {
                         $lowerCol = strtolower($col_sel);
                         if (!(($this->getVal("${lowerCol}_width") > 0) and ($this->getVal("${lowerCol}_length") > 0) and ((!$this->seatEraseMe($i_col_sel, $col)) and $bt and (!$bt->columnEraseMe($i_col_sel, $col, $row_num))))) return false;
-                }
-
-                return true;
+                } 
+                return true;        
+                */
         }
 
         public function attributeIsApplicable($attribute)

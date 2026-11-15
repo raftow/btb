@@ -6,7 +6,7 @@
   'level' => '999',
   'public' => false,
   'module_id' => '1272',
-  'menu_name_ar' => 'إنشاء',
+  'menu_name_ar' => 'إنشاء سكن رحلة',
   'menu_name_en' => 'create Travel hotel',
   'page' => 'main.php?Main_Page=afw_mode_edit.php&cl=TravelHotel&currmod=btb',
   'css' => 'bf',

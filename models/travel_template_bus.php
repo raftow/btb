@@ -38,7 +38,7 @@ class TravelTemplateBus extends BtbObject
 
 
 
-        public static function loadByMainIndex($travel_template_id, $bus_num, $bus_id = 0, $create_obj_if_not_found = false)
+        public static function loadByMainIndex($travel_template_id, $bus_num, $bus_id = 0, $bus_company_id = 0, $create_obj_if_not_found = false)
         {
                 $obj = new TravelTemplateBus();
                 if (!$travel_template_id) throw new AfwRuntimeException("loadByMainIndex : travel_template_id is mandatory field");
@@ -51,6 +51,7 @@ class TravelTemplateBus extends BtbObject
                 if ($obj->load()) {
                         if ($create_obj_if_not_found) {
                                 $obj->set("bus_id", $bus_id);
+                                $obj->set("bus_company_id", $bus_company_id);
                                 $obj->activate();
                         }
                         return $obj;
@@ -58,7 +59,7 @@ class TravelTemplateBus extends BtbObject
                         $obj->set("travel_template_id", $travel_template_id);
                         $obj->set("bus_num", $bus_num);
                         $obj->set("bus_id", $bus_id);
-
+                        $obj->set("bus_company_id", $bus_company_id);
                         $obj->insert();
                         $obj->is_new = true;
                         return $obj;
@@ -122,7 +123,7 @@ class TravelTemplateBus extends BtbObject
                 // on cherche dans les bus d'une compagnie donnee 
                 if ($busObj->getVal("work_branch_id") and $busObj->id) {
 
-                        $this->set("bus_company_id", $busObj->getVal("orgunit_id"));
+                        $this->set("bus_company_id", $busObj->getVal("work_branch_id"));
                         $this->set("bus_id", $busObj->id);
 
                         if ($busObj->estExample()) {

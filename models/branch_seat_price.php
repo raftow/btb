@@ -17,44 +17,7 @@ class BranchSeatPrice extends BtbObject
     public static $DATABASE        = "";
     public static $MODULE            = "btb";
     public static $TABLE            = "";
-    public static $DB_STRUCTURE = null; /* = array(
-                id => array(SHOW => true, RETRIEVE => true, EDIT => true, TYPE => PK),
-
-		
-		work_branch_id => array(SHORTNAME => branch,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb,  AUTOCOMPLETE => true,  
-				RELATION => OneToMany,  READONLY => false, ),
-
-		seat_category_enum => array(SHORTNAME => category,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => ENUM,  ANSWER => "FUNCTION",  READONLY => false, ),
-
-		supp_pct => array(SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "PCTG",  UNIT => "%",  READONLY => false, ),
-
-                
-                created_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                created_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                updated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                updated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                validated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                validated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                active => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                draft => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                version => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => INT),
-                update_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                delete_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                display_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                sci_id => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => scenario_item, ANSMODULE => pag),
-                tech_notes 	    => array(TYPE => TEXT, CATEGORY => FORMULA, "SHOW-ADMIN" => true, 'STEP' =>"all", TOKEN_SEP=>"§", READONLY=>true, "NO-ERROR-CHECK"=>true),
-	);
-	
-	*/
+    public static $DB_STRUCTURE = null;
     public function __construct()
     {
         parent::__construct("branch_seat_price", "id", "btb");
@@ -80,7 +43,10 @@ class BranchSeatPrice extends BtbObject
         } else return null;
     }
 
-
+    /**
+     * @param int $work_branch_id, 
+     * @param int $seat_category_enum
+     */
 
     public static function loadByMainIndex($work_branch_id, $seat_category_enum, $create_obj_if_not_found = false)
     {
@@ -121,18 +87,7 @@ class BranchSeatPrice extends BtbObject
 
 
 
-    public static function list_of_seat_category_enum()
-    {
-        $list_of_items = array();
-        $list_of_items[5] = "مقعد سرير";  //     code : BED 
-        $list_of_items[7] = "بجانب الباب";  //     code : DOOR 
-        $list_of_items[2] = "مقعد أمامي";  //     code : FRONT 
-        $list_of_items[4] = "الدرجة الذهبية";  //     code : GOLDEN 
-        $list_of_items[1] = "عادي";  //     code : NORMAL 
-        $list_of_items[3] = "الدرجة الفضية";  //     code : SILVER 
-        $list_of_items[6] = "بجانب النافذة";  //     code : WINDOW 
-        return  $list_of_items;
-    }
+
 
 
 

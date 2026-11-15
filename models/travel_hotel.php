@@ -624,7 +624,7 @@ class TravelHotel extends BtbObject
         $travel = $this->hetTravel();
         if (!$travel)  return array("travel not defined can't book rooms and room days. Contact admin of plateform", $room_nums, $roomBooked_arr, $log_arr);
 
-        $work_branch_id = $travel->getVal("orgunit_id");
+        $work_branch_id = $travel->getVal("work_branch_id");
         $travel_hotel_id = $this->getId();
         $hotel_id = $hotel->getId();
         $travel_id = $travel->getId();
@@ -754,7 +754,7 @@ class TravelHotel extends BtbObject
         $travel = $this->hetTravel();
         if (!$travel)  return array("travel not defined can't generate rooms and room days. Contact admin of plateform", "");
 
-        $work_branch_id = $travel->getVal("orgunit_id");
+        $work_branch_id = $travel->getVal("work_branch_id");
 
         // NOTE : all dates returned by getHotelSakanDetails are greg
         $rowHotelSakanDetails = $travel->getHotelSakanDetails($hotel);

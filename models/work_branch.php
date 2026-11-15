@@ -54,13 +54,13 @@ class WorkBranch extends BtbObject
     }
 
     /**
-     * @param int $orgunit_id
+     * @param int $org_unit_id
      */
-    public static function fromOrgunitIdToWorkbranchId($orgunit_id)
+    public static function fromOrgunitIdToWorkbranchId($org_unit_id)
     {
-        if (!$orgunit_id) return 0;
-        if (!self::$fromOrgunitIdToWorkbranchId[$orgunit_id]) {
-            $objOrgItem = Orgunit::loadById($orgunit_id);
+        if (!$org_unit_id) return 0;
+        if (!self::$fromOrgunitIdToWorkbranchId[$org_unit_id]) {
+            $objOrgItem = Orgunit::loadById($org_unit_id);
             $parent_id = $objOrgItem->getVal("id_sh_parent");
             $parentOrg = $objOrgItem->het("id_sh_parent");
             if (!$parent_id or !$parentOrg) $wb_parent_id = 0;
@@ -73,12 +73,12 @@ class WorkBranch extends BtbObject
             $objWorkbranchId = $objWorkbranch ? $objWorkbranch->id : 0;
             if (!$objWorkbranchId) $objWorkbranchId = "not-found";
 
-            self::$fromOrgunitIdToWorkbranchId[$orgunit_id] = $objWorkbranchId;
+            self::$fromOrgunitIdToWorkbranchId[$org_unit_id] = $objWorkbranchId;
         }
 
-        if (self::$fromOrgunitIdToWorkbranchId[$orgunit_id] == "not-found") return 0;
+        if (self::$fromOrgunitIdToWorkbranchId[$org_unit_id] == "not-found") return 0;
 
-        return self::$fromOrgunitIdToWorkbranchId[$orgunit_id];
+        return self::$fromOrgunitIdToWorkbranchId[$org_unit_id];
     }
 
     /**
@@ -144,8 +144,8 @@ class WorkBranch extends BtbObject
             if (!$orgunitObj->getId()) throw new AfwRuntimeException("failed to insert orgunit (crm_code = $crm_code) ");
         }
 
-        if ($this->getVal("orgunit_id") != $orgunitObj->getId()) {
-            $this->set("orgunit_id", $orgunitObj->getId());
+        if ($this->getVal("org" . "unit_id") != $orgunitObj->getId()) {
+            $this->set("org" . "unit_id", $orgunitObj->getId());
         }
 
         if ($commit) $this->commit();
@@ -189,24 +189,24 @@ class WorkBranch extends BtbObject
     }
 
     /**
-     * @param int $orgunit_id
+     * @param int $org_unit_id
      */
-    public static function OrunitIdToMyId($orgunit_id)
+    public static function OrunitIdToMyId($org_unit_id)
     {
-        $wbObj = self::loadByOrgunitId($orgunit_id);
+        $wbObj = self::loadByOrgunitId($org_unit_id);
         return $wbObj->id;
     }
 
     /**
-     * @param int $orgunit_id
+     * @param int $org_unit_id
      */
-    public static function loadByOrgunitId($orgunit_id)
+    public static function loadByOrgunitId($org_unit_id)
     {
-        if (!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
+        if (!$org_unit_id) throw new AfwRuntimeException("loadByMainIndex : org_unit_id is mandatory field");
 
 
         $obj = new WorkBranch();
-        $obj->select("orgunit_id", $orgunit_id);
+        $obj->select("org" . "unit_id", $org_unit_id);
 
         if ($obj->load()) {
             return $obj;
@@ -252,7 +252,7 @@ class WorkBranch extends BtbObject
         $otherLinksArray = $this->getOtherLinksArrayStandard($mode);
         $my_id = $this->getId();
         $parent_id = $this->getVal("parent_id");
-        $orgunit_id = $this->getVal("orgunit_id");
+        $org_unit_id = $this->getVal("org" . "unit_id");
         if (!$parent_id) $parent_id = $my_id;
         $displ = $this->getDisplay($lang);
 
@@ -298,7 +298,7 @@ class WorkBranch extends BtbObject
             $link = array();
             $title = "إضافة موظف جديد للفرع";
             $title_detailed = $title . "لـ : " . $displ;
-            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=WbranchEmployee&currmod=btb&sel_orgunit_id=$orgunit_id";
+            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=WbranchEmployee&currmod=btb&sel_org" . "unit_id=$org_unit_id";
             $link["TITLE"] = $title;
             $link["BF-ID"] = 104071;
             $otherLinksArray[] = $link;
@@ -309,7 +309,7 @@ class WorkBranch extends BtbObject
             $link = array();
             $title = "إضافة اتفاقية جديدة";
             $title_detailed = $title . "لـ : " . $displ;
-            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=BusConvention&currmod=btb&sel_tbranch_id=$my_id&sel_orgunit_id=$parent_id";
+            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=BusConvention&currmod=btb&sel_tbranch_id=$my_id&sel_org" . "unit_id=$parent_id";
             $link["TITLE"] = $title;
             $link["UGROUPS"] = array();
             $otherLinksArray[] = $link;
@@ -353,7 +353,7 @@ class WorkBranch extends BtbObject
             $link = array();
             $title = "تعديل نسب الأرباح المبرمجة ";
             $title_detailed = $title . "لـ : " . $displ;
-            $link["URL"] = "main.php?Main_Page=afw_mode_qedit.php&cl=WorkBenifit&currmod=btb&id_origin=$my_id&class_origin=WorkBranch&module_origin=btb&newo=-1&limit=30&ids=all&fixmtit=$title_detailed&fixmdisable=1&fixm=branch_id=$my_id&sel_branch_id=$my_id&return_mode=1";
+            $link["URL"] = "main.php?Main_Page=afw_mode_qedit.php&cl=WorkBenifit&currmod=btb&id_origin=$my_id&class_origin=WorkBranch&module_origin=btb&newo=-1&limit=30&ids=all&fixmtit=$title_detailed&fixmdisable=1&fixm=work_branch_id=$my_id&sel_work_branch_id=$my_id&return_mode=1";
             $link["TITLE"] = $title;
             $link["UGROUPS"] = array();
             $otherLinksArray[] = $link;
@@ -362,7 +362,7 @@ class WorkBranch extends BtbObject
             $link = array();
             $title = "إضافة نسبة ربح مبرمجة جديدة";
             $title_detailed = $title . "لـ : " . $displ;
-            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=WorkBenifit&currmod=btb&sel_branch_id=$my_id";
+            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=WorkBenifit&currmod=btb&sel_work_branch_id=$my_id";
             $link["TITLE"] = $title;
             $link["UGROUPS"] = array();
             $otherLinksArray[] = $link;
@@ -465,7 +465,7 @@ class WorkBranch extends BtbObject
         if ($parentObj) {
 
 
-            $except_fields = array("orgunit_id" => true, "parent_id" => true, "name_ar" => true);
+            $except_fields = array("org" . "unit_id" => true, "parent_id" => true, "name_ar" => true);
             $except_if_filled_fields = array("city_id" => true,);
             $this->copyDataFrom($parentObj, $except_fields, $except_if_filled_fields);
             if ($commit) $this->commit();
@@ -643,144 +643,124 @@ class WorkBranch extends BtbObject
         return $companyList;
     }
     // should be only called by bus owner company ==> hasBusActivity()
-    /*
-        osolete trop complique, a repenser !
-        public function genere BusProgramsAndPricings($lang="ar", $return_program_list=false, $busUnique=null, $travelCompanyUnique=null, $travelTemplateUnique=null)
-        {
-             $errors_arr = array();
-             $infos_arr = array();
-             
-             $bpCount = 0;
-             $bpCountUpdate = 0;
-             
-             $bprCount = 0;
-             $bprCountUpdate = 0;
-             
-             $programList = array();
-             
-             if(true)
-             {
-                        // if bus owner company is not travel company we will not find travel templates here
-                        // we should look for "travel conventions" companies also and take their travel templates
-                        
-                        if($this->hasBusActivity())
-                        {
-                             if($busUnique) $busUniqueId = $busUnique->id;
-                             else $busUniqueId = 0;
-                             if($travelCompanyUnique)
-                             {
-                                  $travelCompanyList = array();
-                                  $travelCompanyList[] = $travelCompanyUnique;
-                             }
-                             else $travelCompanyList = $this->getMyConventionnedCompanyList($busUnique, $go_to_parent=true, "travel");
-                        }
-                        else $travelCompanyList = array();
 
-                        if($this->hasTravelActivity()) $travelCompanyList[] = $this;
-                        
-                        $travelTemplateListCount = 0;
-                        
-                        foreach($travelCompanyList as $travelCompanyItem)
-                        {
-                                if($travelTemplateUnique)
-                                {
-                                        $travelTemplateList = array();
-                                        if($travelTemplateUnique->getVal("orgunit_id") == $travelCompanyItem->id)
-                                        {
-                                                $travelTemplateList[] = $travelTemplateUnique;
-                                        }
+    // osolete trop complique, a repenser !
+    /**
+     * @param Bus $busUnique
+     * @param WorkBranch $travelCompanyUnique
+     */
+    public function genereTravelProgramsAndBusPricings($lang = "ar", $return_program_list = false, $busUnique = null, $travelCompanyUnique = null, $travelTemplateUnique = null)
+    {
+        $errors_arr = array();
+        $infos_arr = array();
+
+        $bpCount = 0;
+        $bpCountUpdate = 0;
+
+        $bprCount = 0;
+        $bprCountUpdate = 0;
+
+        $programList = array();
+
+        if (true) {
+
+            $wbYperiodList = $this->get("yperiodList");
+            $travelCompanyList = array();
+            if (!$travelCompanyUnique) $travelCompanyList[] = $this;
+            else $travelCompanyList[] = $travelCompanyUnique;
+
+
+            $travelTemplateListCount = 0;
+
+            foreach ($travelCompanyList as $travelCompanyItem) {
+                if ($travelTemplateUnique) {
+                    $travelTemplateList = array();
+                    $travelTemplateList[] = $travelTemplateUnique;
+                } else $travelTemplateList = $travelCompanyItem->get("travelTemplateList");
+                $travelTemplateListCount += count($travelTemplateList);
+
+                foreach ($travelTemplateList as $travelTemplateItem) {
+                    /**
+                     * @param TravelTemplate $travelTemplateItem
+                     */
+                    list($error, $info, $travelProgramObj, $travel_duration) = $travelTemplateItem->genereMyTravelProgram();
+                    $travel_duration_r = round($travel_duration);
+                    if ($travelProgramObj) {
+                        $travelProgramObj->genereNames();
+                        $programList[$travelProgramObj->getDisplay($lang) . "-" . $travel_duration_r . "days"] = array('travelProgram' => $travelProgramObj, 'duration' => $travel_duration_r);
+                        $infos_arr[] = "تم انشاء برنامج " . $travelProgramObj->getDisplay($lang) . " لمدة " . $travel_duration_r . " يوم";
+                    }
+                    if ($error) $errors_arr[] = $error;
+                    if ($travelProgramObj->is_new) $bpCount++;
+                    else $bpCountUpdate++;
+                }
+                // $file_dir_name = dirname(__FILE__);
+                // require_once("$file_dir_name/../btb/bus_pricing.php");
+                if ($busUnique) {
+                    $busList = array();
+                    $busList[$busUnique->getId()] = $busUnique;
+                } else {
+                    $busList = $this->get("busList");
+                }
+
+                $workedBuses = [];
+
+                foreach ($busList as $busItem) {
+                    $parent_bus_id = $busItem->getVal("parent_bus_id");
+                    if ($parent_bus_id > 0) {
+                        $busForWork = $busItem->het("parent_bus_id");
+                    } else {
+                        $busForWork = $busItem;
+                    }
+                    if ($busForWork and $busForWork->id and !$workedBuses[$busForWork->id]) {
+                        foreach ($programList as $programItem) {
+                            for ($weekPeriod = 1; $weekPeriod <= 2; $weekPeriod++) {
+                                for ($typePeriod = 1; $typePeriod <= 2; $typePeriod++) {
+                                    if ($typePeriod == 2) {
+                                        $yperiodList = $wbYperiodList;
+                                    } else {
+                                        $yperiodList = [0 => null];
+                                    }
+                                    foreach ($yperiodList as $yperiodItemId => $yperiodItem) {
+                                        $travelProgramObject = $programItem["travelProgram"];
+                                        $bprObj = BusPricing::loadByMainIndex($busForWork->id, $travelProgramObject->id, $programItem["duration"], $weekPeriod, $typePeriod, $yperiodItemId, $create_obj_if_not_found = true);
+                                        if ($bprObj->is_new) $bprCount++;
+                                        else $bprCountUpdate++;
+                                    }
                                 }
-                                else $travelTemplateList = $travelCompanyItem->get("travelTemplateList");
-                                $travelTemplateListCount += count($travelTemplateList);
-                                foreach($travelTemplateList as $travelTemplateItem)
-                                {
-                                        list($error,$info, $bpObj, $travel_duration) = $travelTemplateItem->genereMyBusProgram();
-                                        $travel_duration_r = round($travel_duration);
-                                        if($bpObj)
-                                        {
-                                                $programList[$bpObj->getDisplay($lang)."-".$travel_duration_r."days"] = array(busprog=>$bpObj, duration=>$travel_duration_r);
-                                                $infos_arr[] = "تم انشاء برنامج " . $bpObj->getDisplay($lang)." لمدة ".$travel_duration_r." يوم";
-                                        } 
-                                        if($error) $errors_arr[] = $error;
-                                        if($bpObj->is_new) $bpCount++;
-                                        else $bpCountUpdate++;
-                                }
-                                $file_dir_name = dirname(__FILE__); 
-                                // require_once("$file_dir_name/../btb/bus_pricing.php");
-                                if($busUnique)
-                                {
-                                        $busList = array();
-                                        $busList[$busUnique->getId()] = $busUnique;
-                                }
-                                else
-                                {
-                                        $busList = $this->get("busList");
-                                }   
-                                foreach($busList as $busItem)
-                                {
-                                        foreach($programList as $programItem)
-                                        {
-                                                for($weekPeriod=1;$weekPeriod<=2;$weekPeriod++)
-                                                {
-                                                        for($typePeriod=1;$typePeriod<=2;$typePeriod++)
-                                                        {
-                                                                
-                                                                $bprObj = BusPricing::loadByMainIndex($busItem->getId(), $programItem["busprog"]->getId(), $programItem["duration"], $weekPeriod, $typePeriod, $yperiod_id=0, $create_obj_if_not_found=true);
-                                                                if($bprObj->is_new) $bprCount++;
-                                                                else $bprCountUpdate++;                                              
-                                                        }
-                                                }
-                                        }
-                                }   
+                            }
                         }
-                     
-                     
-                     
-                     if($return_program_list)  return $programList;
-                     else
-                     {
-                                if(count($errors_arr)>0) return array(implode("<br>\n",$errors_arr), implode("<br>\n",$infos_arr));
-                                else 
-                                {
-                                        $infos_arr[] = "تم بحمد الله  : <br>";
-                                        $infos_arr[] = "1. مراجعة $travelTemplateListCount برنامج رحلة<br>"; 
-                                        $infos_arr[] = "2. انشاء $bpCount  من فئات البرامج الجدد <br>";
-                                        $infos_arr[] = "3. تحديث $bpCountUpdate  من فئات البرامج الموجودة سابقا <br>";
-                                        $infos_arr[] = "4. انشاء $bprCount  من جداول التسعيرات الجديدة التي تحتاج ادخال الأسعار فيها<br>";
-                                        $infos_arr[] = "5. العثور على $bprCountUpdate  من الجدوال مسعرة سابقا <br>";
-                                        
-                                        return array("",implode("<br>\n",$infos_arr));
-                                }
-                     }
-             
-             }
-             else
-             {
-             
-                  return array("please .....","");
-             }
-             
-        
-        }*/
+                        $workedBuses[$busForWork->id] = true;
+                    }
+                }
+            }
+
+
+
+            if ($return_program_list)  return $programList;
+            else {
+                if (count($errors_arr) > 0) return array(implode("<br>\n", $errors_arr), implode("<br>\n", $infos_arr));
+                else {
+                    $infos_arr[] = "تم بحمد الله  : <br>";
+                    $infos_arr[] = "1. مراجعة $travelTemplateListCount برنامج رحلة<br>";
+                    $infos_arr[] = "2. انشاء $bpCount  من فئات البرامج الجدد <br>";
+                    $infos_arr[] = "3. تحديث $bpCountUpdate  من فئات البرامج الموجودة سابقا <br>";
+                    $infos_arr[] = "4. انشاء $bprCount  من جداول التسعيرات الجديدة التي تحتاج ادخال الأسعار فيها<br>";
+                    $infos_arr[] = "5. العثور على $bprCountUpdate  من الجدوال مسعرة سابقا <br>";
+
+                    return array("", implode("<br>\n", $infos_arr));
+                }
+            }
+        } else {
+
+            return array("please .....", "");
+        }
+    }
 
     protected function getPublicMethods()
     {
         $objme = AfwSession::getUserConnected();
         $pbms = array();
-
-        if (true) {
-            /*
-                if($this->_isDraft())
-                {    
-                    $color = "green";
-                    $title_ar = "التثبت من الأخطاء"; 
-                    $pbms["xc123B"] = array("METHOD"=>"validatePracticeContent",
-                           "COLOR"=>$color, "LABEL_AR"=>$title_ar, 
-                           "PUBLIC"=>true, "BF-ID"=>"", "HZM-SIZE" =>12,
-                           'MODE' =>array("mode_draft_hh"=>true),);
-                }*/
-        }
-
 
         if (true) {
             if ($this->estActive()) {
@@ -866,14 +846,19 @@ class WorkBranch extends BtbObject
                 }
 
                 if (($objme->isAdmin()) or ($objme->hasRole("btb", 333))) {
-                    /*
-                            $color = "green";
-                            $title_ar = "تحديث البرامج وجدول تسعيرات المركبات"; 
-                            $pbms["hhAxd4"] = array("METHOD"=>"genere BusProgramsAndPricings",
-                                                 "COLOR"=>$color, 
-                                                 "LABEL_AR"=>$title_ar, 
-                                                 "PUBLIC"=>true, "BF-ID"=>"", "HZM-SIZE" =>12, "STEP" => 8, 
-                                                 );*/
+
+                    $color = "green";
+                    $title_ar = "تحديث البرامج وجدول تسعيرات المركبات";
+                    $methodName = "genereTravelProgramsAndBusPricings";
+                    $pbms["aadf78"] = array(
+                        "METHOD" => $methodName,
+                        "COLOR" => $color,
+                        "LABEL_AR" => $title_ar,
+                        "PUBLIC" => true,
+                        "HZM-SIZE" => 12,
+                        "STEP" => 1,
+                        // "STEP" => $this->stepOfAttribute("busPricingList"),
+                    );
 
                     $color = "green";
                     $title_ar = "تحديث إعدادات أسعار المقاعد المصنفة";
@@ -948,8 +933,8 @@ class WorkBranch extends BtbObject
                         "HZM-SIZE" => 12,
                         "STEP" => 5,
                     );*/
-                }
-            }
+                } else die("rafik 12345");
+            } else die("rafik 123456789");
             /*
                  if((!$this->estDraft()) and (!$this->estSubmitted()))
                  {
@@ -976,16 +961,16 @@ class WorkBranch extends BtbObject
         if ($id) {
             if ($id_replace == 0) {
                 // FK part of me - not deletable 
-                // btb.bus-الشركة المالكة للمركبة	orgunit_id  أنا تفاصيل لها-OneToMany
+                // btb.bus-الشركة المالكة للمركبة	org unit_id  أنا تفاصيل لها-OneToMany
 
                 $obj = new Bus();
-                $obj->where("orgunit_id = '$id' and active='Y' ");
+                $obj->where("org" . "unit_id = '$id' and active='Y' ");
                 $nbRecords = $obj->count();
                 if ($nbRecords > 0) {
                     $this->deleteNotAllowedReason = "Used in some Buss(s) as Orgunit";
                     return false;
                 }
-                $this->execQuery("delete from ${server_db_prefix}btb.bus where orgunit_id = '$id' and active='N'");
+                $this->execQuery("delete from ${server_db_prefix}btb.bus where org" . "unit_id = '$id' and active='N'");
 
                 // btb.work_branch-الشركة الأم	parent_id  أنا تفاصيل لها-OneToMany
                 $obj = new WorkBranch();
@@ -997,16 +982,16 @@ class WorkBranch extends BtbObject
                 }
                 $this->execQuery("delete from ${server_db_prefix}btb.work_branch where parent_id = '$id' and active='N'");
 
-                // btb.bus _convention-المؤسسة	orgunit_id  أنا تفاصيل لها-OneToMany
+                // btb.bus _convention-المؤسسة	org unit_id  أنا تفاصيل لها-OneToMany
                 /*
                 $obj = new BusConvention();
-                $obj->where("orgunit_id = '$id' and active='Y' ");
+                $obj->where("org"."unit_id = '$id' and active='Y' ");
                 $nbRecords = $obj->count();
                 if ($nbRecords > 0) {
                     $this->deleteNotAllowedReason = "Used in some Bus conditions(s) as company";
                     return false;
                 }
-                $this->execQuery("delete from ${server_db_prefix}btb.bus _convention where orgunit_id = '$id' and active='N'");
+                $this->execQuery("delete from ${server_db_prefix}btb.bus _convention where work_branch_id = '$id' and active='N'");
 
                 // btb.bus _convention-الفرع	tbranch_id  أنا تفاصيل لها-OneToMany
 
@@ -1056,8 +1041,8 @@ class WorkBranch extends BtbObject
             } else {
                 // FK on me 
                 /*
-                // btb.bus _convention-المؤسسة	orgunit_id  أنا تفاصيل لها-OneToMany
-                $this->execQuery("update ${server_db_prefix}btb.bus _convention set orgunit_id='$id_replace' where orgunit_id='$id' ");
+                // btb.bus _convention-المؤسسة	work_branch_id  أنا تفاصيل لها-OneToMany
+                $this->execQuery("update ${server_db_prefix}btb.bus _convention set work_branch_id='$id_replace' where work_branch_id='$id' ");
                 // btb.bus _convention-الفرع	tbranch_id  أنا تفاصيل لها-OneToMany
                 $this->execQuery("update ${server_db_prefix}btb.bus _convention set tbranch_id='$id_replace' where tbranch_id='$id' ");
                 // btb.bus _convention-مؤسسة المركبة	bus_company_id  أنا تفاصيل لها-OneToMany
@@ -1065,8 +1050,8 @@ class WorkBranch extends BtbObject
                 // btb.bus _convention-فرع مؤسسة المركبة	bus_branch_id  أنا تفاصيل لها-OneToMany
                 $this->execQuery("update ${server_db_prefix}btb.bus _convention set bus_branch_id='$id_replace' where bus_branch_id='$id' ");
                 */
-                // btb.bus-الشركة المالكة للمركبة	orgunit_id  أنا تفاصيل لها-OneToMany
-                $this->execQuery("update ${server_db_prefix}btb.bus set orgunit_id='$id_replace' where orgunit_id='$id' ");
+                // btb.bus-الشركة المالكة للمركبة	work_branch_id  أنا تفاصيل لها-OneToMany
+                $this->execQuery("update ${server_db_prefix}btb.bus set work_branch_id='$id_replace' where work_branch_id='$id' ");
                 // btb.work_branch-الشركة الأم	parent_id  أنا تفاصيل لها-OneToMany
                 $this->execQuery("update ${server_db_prefix}btb.work_branch set parent_id='$id_replace' where parent_id='$id' ");
 
@@ -1352,7 +1337,14 @@ class WorkBranch extends BtbObject
     }
 
 
-
+    /**
+     * @param int  $level_enum, 
+     * @param int  $travel_program_id, 
+     * @param int  $days_nb, 
+     * @param int  $week_period_enum, 
+     * @param int  $period_type_enum, 
+     * @param int  $yperiod_id
+     */
     public function getWorkBenifit($level_enum, $travel_program_id, $days_nb, $week_period_enum, $period_type_enum, $yperiod_id)
     {
         $workBenifit = 0.0;

@@ -23,6 +23,10 @@ $trad["travel"]["data"] = "بيانات الرحلة";
 $trad["travel"]["start"] = "بداية الرحلة";
 $trad["travel"]["arrival"] = "العودة من الرحلة";
 $trad["travel"]["full_residence"] = "يوجد سكن؟";
+$trad["travel"]["full_residence.YES"] = "يوجد سكن";
+$trad["travel"]["full_residence.EUH"] = "يوجد سكن في بعض المدن";
+$trad["travel"]["full_residence.NO"] = "لا يوجد سكن";
+
 $trad["travel"]["travelers_nb"] = "عدد المسافرين المتوقع";
 $trad["travel"]["travelers_nb_approved"] = "إعتماد عدد المسافرين المقدر";
 $trad["travel"]["travelers_nb_total"] = "عدد السراير المقدر";

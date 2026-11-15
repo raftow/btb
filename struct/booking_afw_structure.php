@@ -506,7 +506,7 @@ class BtbBookingAfwStructure
 			'ERROR-CHECK' => true,
 		),
 
-		'branch_id' => array(
+		'work_branch_id' => array(
 			'SHORTNAME' => 'branch',
 			'TYPE' => 'FK',
 			'ANSWER' => 'work_branch',

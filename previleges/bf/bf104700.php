@@ -6,7 +6,7 @@
   'level' => '999',
   'public' => false,
   'module_id' => '1272',
-  'menu_name_ar' => 'travel_program',
+  'menu_name_ar' => 'برامج سياحية',
   'menu_name_en' => 'Travel programs',
   'page' => 'main.php?Main_Page=afw_mode_qsearch.php&cl=TravelProgram&currmod=btb',
   'css' => 'bf',

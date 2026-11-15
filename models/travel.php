@@ -1561,7 +1561,7 @@ class Travel extends BtbObject
                         $leave_date_hijri = AfwDateHelper::gregToHijri($leave_date);
 
                         $travel_level_enum = $travelTemplateObj->getVal("travel_level");
-                        list($err, $info, $travelProgramObj, $travel_duration) = $travelTemplateObj->genereMyBusProgram();
+                        list($err, $info, $travelProgramObj, $travel_duration) = $travelTemplateObj->genereMyTravelProgram();
 
                         // room total price 
                         list($room_total_price, $rep) = $hotelObj->getTotalPrice($room_size, $arrival_date, $arrival_date_hijri, $arrival_time, $leave_date, $leave_date_hijri, $leave_time);
@@ -2379,7 +2379,7 @@ class Travel extends BtbObject
                 if ($companyObj) {
                         //@todo we need here a short name
                         $branch_name = $companyObj->name;
-                        $branch_id = $companyObj->id;
+                        $work_branch_id = $companyObj->id;
                         if ($companyObj->isBranch()) $companyObj = $companyObj->hetParent();
                         if ($companyObj) $orgunitObj = $companyObj->hetOrgunit();
                 }
@@ -2393,7 +2393,7 @@ class Travel extends BtbObject
                         $return = "<img src=\"../btb/pic/logo-company-$crm_code.png\" alt=\"\" style=\"margin-top:5px;height: ${height}px;border-radius: 40%;\">";
                 }
 
-                if ($branch_name and $showBranchName) $return .= "<div class=\"travel_company_name company-$crm_code branch-$branch_id\">$branch_name</div>";
+                if ($branch_name and $showBranchName) $return .= "<div class=\"travel_company_name company-$crm_code branch-$work_branch_id\">$branch_name</div>";
 
                 return $return;
         }

@@ -37,19 +37,19 @@ $message_destination_city_id_title = "توضيح";
 $message_destination_city_id_content = "إذا كنت تريد تعديل مدينة الوصول فعليك بتعديل اختيارك لنوع الرحلة عمرة إلى مكة أو زيارة للمدينة أو كلاهما في أول معايير البحث";
 
 $calendar_tr =
-        'monthNames: ["January","February","March","April","May","June", "July","August","September","October","November","December"],
+        '["January","February","March","April","May","June", "July","August","September","October","November","December"],
         monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
         dayNamesShort: [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ],
-        dayNamesMin: [ "Su","Mo","Tu","We","Th","Fr","Sa" ],';
+        dayNamesMin: [ "Su","Mo","Tu","We","Th","Fr","Sa" ]';
 
 
 $calendar_tr =
-        'monthNames: ["يناير","فبراير","مارس","أبريل","ماي","يونيو", "يوليو","أغسطس","سبتمير","أكتوبر","نوفمبر","ديسمبر"],
+        '["يناير","فبراير","مارس","أبريل","ماي","يونيو", "يوليو","أغسطس","سبتمير","أكتوبر","نوفمبر","ديسمبر"],
         monthNamesShort: ["يناير","فبراير","مارس","أبريل","ماي","يونيو", "يوليو","أغسطس","سبتمير","أكتوبر","نوفمبر","ديسمبر"],
         dayNames: ["الأحد", "الأثنين", "الثلاثاء", "الاربعاء", "الخميس", "الجمعة", "السبت" ],
         dayNamesShort: ["أحد", "أثنين", "ثلاثاء", "اربعاء", "خميس", "جمعة", "سبت" ],
-        dayNamesMin: [ "أحد","اثن","ثلث","ربع","خمس","جمع","سبت" ],';
+        dayNamesMin: [ "أحد","اثن","ثلث","ربع","خمس","جمع","سبت" ]';
 
 
 
@@ -82,7 +82,7 @@ $calendar_tr =
                                                                                                 <a id="option_omra" role="button" tabindex="0" class="noir mini-booker-link booker-type-link <?php echo $omra_active ?>" onClick="changeOmraType('omra')">عمرة فقط</a>
                                                                                                 <a id="option_ziara" role="button" tabindex="0" class="noir mini-booker-link booker-type-link <?php echo $ziara_active ?>" onClick="changeOmraType('ziara')">زيارة فقط</a>
 
-                                                                                                <a id="option_omra_sakan" role="button" tabindex="0" class="noir mini-booker-link award-link pull-right-sm <?php echo $sakan_checked ?>" onClick="toggleOmraSakan()">رحلة مع سكن</a>
+
 
                                                                                         </div>
                                                                                 </div>
@@ -153,15 +153,15 @@ $calendar_tr =
                                                                                                                                         /*monthsToShow: [1, 1], 
                                                                                                                                         showOtherMonths: true,*/
                                                                                                                                         minDate: 0,
-                                                                                                                                        <?php echo $calendar_tr ?>
-                                                                                                                                        <?php echo "onSelect:" ?>
+                                                                                                                                        monthNames: <?php echo $calendar_tr ?>,
+                                                                                                                                        onSelect:
 
-                                                                                                                                        function(date) {
-                                                                                                                                                if (date[0] < '<?php echo $hijri_today_formatted ?>') {
-                                                                                                                                                        atalert('تنبيه', 'لقد اخترت تاريخا في الماضي ' + date[0] + ' الرجاء اختيار تاريخ آخر');
-                                                                                                                                                        $('#departure_date').val("");
+                                                                                                                                                function(date) {
+                                                                                                                                                        if (date[0] < '<?php echo $hijri_today_formatted ?>') {
+                                                                                                                                                                atalert('تنبيه', 'لقد اخترت تاريخا في الماضي ' + date[0] + ' الرجاء اختيار تاريخ آخر');
+                                                                                                                                                                $('#departure_date').val("");
+                                                                                                                                                        }
                                                                                                                                                 }
-                                                                                                                                        }
                                                                                                                                 });
                                                                                                                         </script>
                                                                                                                 </div>
@@ -181,7 +181,7 @@ $calendar_tr =
                                                                                                                                                 changeMonth: true,
                                                                                                                                                 changeYear: true,
                                                                                                                                                 minDate: 0,
-                                                                                                                                                <?php echo $calendar_tr ?>
+                                                                                                                                                monthNames: <?php echo $calendar_tr ?>,
                                                                                                                                         });
                                                                                                                                 });
                                                                                                                         </script>
@@ -323,6 +323,11 @@ $calendar_tr =
 
                                                                                                                         </div>
                                                                                                                 </div>
+                                                                                                        </div>
+                                                                                                </div>
+                                                                                                <div class="col-xs-12 booker-menu-wrapper">
+                                                                                                        <div class="booker-menu">
+                                                                                                                <a id="option_omra_sakan" role="button" tabindex="0" class="noir mini-booker-link award-link pull-right-sm <?php echo $sakan_checked ?>" onClick="toggleOmraSakan()">رحلة مع سكن</a>
                                                                                                         </div>
                                                                                                 </div>
                                                                                                 <div class="col-xs-12 col-sm-1">

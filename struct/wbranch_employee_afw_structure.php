@@ -11,12 +11,12 @@ class BtbWbranchEmployeeAfwStructure
 		if ($obj instanceof WbranchEmployee) {
 			$obj->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
 			$obj->DISPLAY_FIELD = 'CONCAT(firstname," ",lastname)';
-			$obj->ORDER_BY_FIELDS = 'orgunit_id, employee_id';
+			$obj->ORDER_BY_FIELDS = 'org' . 'unit_id, employee_id';
 			// $obj->IS_LOOKUP = true;
 			// $obj->IS_SMALL_LOOKUP = true;
 
-			$obj->UNIQUE_KEY = array('orgunit_id', 'email');
-			$obj->UNIQUE_KEY2 = array('orgunit_id', 'employee_id');
+			$obj->UNIQUE_KEY = array('org' . 'unit_id', 'email');
+			$obj->UNIQUE_KEY2 = array('org' . 'unit_id', 'employee_id');
 			$obj->IS_LOOKUP = true;
 			$obj->showQeditErrors = true;
 			$obj->showRetrieveErrors = true;
@@ -48,7 +48,7 @@ class BtbWbranchEmployeeAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 		),
-		'orgunit_id' => array(
+		'org' . 'unit_id' => array(
 			'STEP' => 1,
 			'SHORTNAME' => 'orgunit',
 			'SEARCH' => true,
@@ -66,7 +66,7 @@ class BtbWbranchEmployeeAfwStructure
 			'ANSWER' => 'orgunit',
 			'ANSMODULE' => 'hrm',
 			'DEPENDENT_OFME' => ['employee_id'],
-			// 'WHERE' => "me.id in (select orgunit_id from §DBPREFIX§wbranch.work_branch where active='Y')",
+			// 'WHERE' => "me.id in (select orgu nit_id from §DBPREFIX§wbranch.work_branch where active='Y')",
 			'RELATION' => 'ManyToOne',
 			'READONLY' => true,
 			'EDIT_IF_ATTRIBUTE_EMPTY' => true,
@@ -128,8 +128,8 @@ class BtbWbranchEmployeeAfwStructure
 			'TYPE' => 'FK',
 			'ANSWER' => 'employee',
 			'ANSMODULE' => 'hrm',
-			// 'WHERE' => "id_sh_div = §orgunit_id§ or id_sh_dep = §orgunit_id§", /* and jobrole_mfk like '%,117,%'*/
-			'DEPENDENCY' => 'orgunit_id',
+			// 'WHERE' => "id_sh_div = §orgu nit_id§ or id_sh_dep = §orgu nit_id§", /* and jobrole_mfk like '%,117,%'*/
+			// 'DEPENDENCY' => 'orgu nit_id',
 			'RELATION' => 'ManyToOne',
 			'READONLY' => true,
 			'SEARCH-BY-ONE' => false,
@@ -431,7 +431,7 @@ class BtbWbranchEmployeeAfwStructure
 			'ANSWER' => 'wbranch_request',
 			'ANSMODULE' => 'btb',
 			'CATEGORY' => 'ITEMS',
-			'ITEM' => '', //'HIDE_COLS' => ['employee_id','orgunit_id'],
+			'ITEM' => '', //'HIDE_COLS' => ['employee_id','org unit_id'],
 			'WHERE' => "::whereInboxEager",
 			'LIMIT' => 300,
 			'EAGER' => true, // load many records with eager joins to avoid too much queries  
@@ -563,7 +563,7 @@ class BtbWbranchEmployeeAfwStructure
 		 * 	'ANSMODULE' => 'btb',
 		 * 	'CATEGORY' => 'ITEMS',
 		 * 	'ITEM' => '',
-		 * 	'WHERE' => "((orgunit_id = §orgunit_id§ and employee_id = §employee_id§) or (§orgunit_id§ = '70' and supervi sor_id = §employee_id§)) and status_id in (5,6,7,8,9) and request_date >= §archive_date§",
+		 * 	'WHERE' => "((orgu nit_id = §orgu nit_id§ and employee_id = §employee_id§) or (§orgu nit_id§ = '70' and supervi sor_id = §employee_id§)) and status_id in (5,6,7,8,9) and request_date >= §archive_date§",
 		 * 	'FORMAT' => 'retrieve',
 		 * 	'SHOW' => true,
 		 * 	'EDIT' => false,

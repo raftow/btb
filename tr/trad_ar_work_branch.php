@@ -6,9 +6,9 @@ class WorkBranchArTranslator
         {
                 $trad = [];
 
-                $trad["work_branch"]["workbranch.single"] = "فرع شركة";
-                $trad["work_branch"]["workbranch.new"] = "جديد";
-                $trad["work_branch"]["work_branch"] = "فروع الشركة";
+                $trad["work_branch"]["workbranch.single"] = "شركة سياحية";
+                $trad["work_branch"]["workbranch.new"] = "جديدة";
+                $trad["work_branch"]["work_branch"] = "الشركات السياحية";
                 $trad["work_branch"]["nb_days_anticipate"] = "عدد الأيام السابقة لتنظيم الرحلات";
                 $trad["work_branch"]["city_mfk"] = "المدن التي تخدمها الشركة";
                 $trad["work_branch"]["seat_category_men"] = "أصناف المقاعد المعتبرة في التسعير";
@@ -40,7 +40,7 @@ class WorkBranchArTranslator
                 $trad["work_branch"]["company_code"] = "رمز الشركة";
                 $trad["work_branch"]["name_ar"] = "اسم الشركة عربي";
                 $trad["work_branch"]["name_en"] = "اسم الشركة انجليزي";
-                $trad["work_branch"]["orgunit_id"] = "الوحدة في الموارد البشرية";
+                $trad["work_branch"]["org'.'unit_id"] = "الوحدة في الموارد البشرية";
                 $trad["work_branch"]["workBranchList"] = "قائمة فروع الشركة";
                 $trad["work_branch"]["busList"] = "قائمة المركبات الخاصة بهذا الفرع فقط";
                 $trad["work_branch"]["exampleBusList"] = "نماذج المركبات";

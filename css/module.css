@@ -1260,9 +1260,9 @@ textarea#booking_spec {
 }
 
 
-/*************************     login/home/header nice can be published ans reused for all  **************************/
+/***     login/home/header nice can be published for all   */
 
-@media screen and (max-width: 575px) {
+@media screen and (max-width: 1000px) {
     .calendar_bloc_g {
         display: none;
         visibility: hidden;
@@ -1271,40 +1271,9 @@ textarea#booking_spec {
     }
 }
 
-@media screen and (max-width: 970px) {
-    .title_company_user {
-        display: none;
-        visibility: hidden;
-        width: 0px !important;
-        height: 0px !important;
-    }
-}
-
-/*
-@media screen and (max-width: 84.5em)
-{
-    margin-right: 250px;
-}*/
-
-.title_company_user {
-    padding-right: 15px;
-    padding-left: 15px;
-    padding-top: 16px;
-    vertical-align: bottom;
-    font-weight: bold;
-    color: #03467c;
-    width: 160px;
-    float: right;
-}
-
-.title_company_user p {
-    display: none;
-}
-
-
 .calendar_bloc_g {
     height: 96px;
-    background-image: url(../pic/calendar_bus_zz.png);
+    background-image: url(../../lib/images/calendar_school.png) !important;
     background-repeat: no-repeat;
     background-size: 60%;
     background-position: 10px 10px;
@@ -1317,36 +1286,63 @@ textarea#booking_spec {
     margin-top: -4px;
 }
 
+.calendar_bloc_g {
+    background-image: url(../../lib/images/calendar_school.png) !important;
+}
+
 .calendar_year {
     text-align: center;
-    color: #0c92cc;
-    font-family: Montserrat !important;
-    font-weight: bold;
-    font-size: 12px;
+    color: #09709c;
+    font-family: digi, Montserrat !important;
+    font-weight: normal !important;
+    font-size: 14px !important;
     margin-left: -32px !important;
-    margin-top: 2px;
+    margin-top: 11px !important;
 }
 
 .calendar_day {
     height: 60px;
     text-align: center;
-    color: #453a3a;
-    margin-left: -32px !important;
+    color: #0670bb !important;
     font-family: title, courrier, arial, rgt;
-    font-weight: bold;
-    font-size: 12px;
-    padding-top: 5px;
-    line-height: 13px;
+    font-weight: normal !important;
+    font-size: 12px !important;
+    padding-top: 0px !important;
+    line-height: 11px;
 }
 
 span.dday {
     font-size: 12px;
-    font-family: Montserrat !important;
-    color: #ff7f27;
-    padding: 0px 2px;
+    font-family: digi, Montserrat !important;
+    background-color: #0670bb !important;
+    padding: 0px 3px !important;
+    color: white !important;
 }
 
-/*************************     login/home/header nice can be published ans reused for all -end  **************************/
+
+.btnbtsp {
+    font-size: 18px;
+}
+
+.grid tr.alterr td {
+    background-color: rgba(255, 255, 255, 0.61) !important;
+    padding: 10px 6px !important;
+    color: #8d1616 !important;
+}
+
+.grid tr.err td {
+    background-color: rgba(247, 197, 138, 0.1) !important;
+    padding: 10px 6px !important;
+    color: #8f3409 !important;
+}
+
+div.modal-dialog {
+    margin-top: 0 !important;
+    pointer-events: auto;
+}
+
+/***     login/home/header nice can be published for all   */
+
 
 /*********************** login/logout/register can be reused *********************************/
 
@@ -1369,7 +1365,7 @@ span.dday {
     background-position-y: -40px;
     width: 100%;
     min-height: 1120px;
-    border-top: 1px solid #256885a3;
+    border-top: none;
     margin-bottom: 35px;
     border-bottom: 1px solid #7dace1;
 }
@@ -1790,6 +1786,27 @@ a.hzm3-button.hzm3-light-grey.hzm3-block {
     content: "\f00c";
     font-size: 24px;
 }
+
+.icon-379:before {
+    content: "\f1c0";
+}
+
+.icon-332:before {
+    content: "\f207";
+}
+
+.icon-336:before {
+    content: "\f61f";
+}
+
+.icon-333:before {
+    content: "\f5b0";
+}
+
+.icon-381:before {
+    content: "\f1ad";
+}
+
 
 div.hzm-menu>i.hzm-container-center.hzm-vertical-align-middle.hzm-icon-bus::before {
     font-size: 72px !important;
@@ -2450,6 +2467,7 @@ h1.zz-booker-tab-btn-head {
 
 .mini-booker-link.checked {
     border-bottom: 3px solid #5e9506;
+    font-weight: bold !important;
 }
 
 /*
@@ -2468,8 +2486,15 @@ a#option_sakan.award-link.checked {
     border-bottom: 3px solid #158ede;
 }
 
+a#option_omra_sakan {
+    width: 140px;
+    float: right;
+    margin-right: calc(50% - 70px);
+    font-size: 16px;
+}
+
 .noir {
-    color: #0d83d1 !important;
+    color: #545151 !important
 }
 
 a.noir.active {
@@ -2489,10 +2514,18 @@ a.noir.checked {
     display: inline-block;
     font-family: saharat, maghreb !important;
     font-size: 13px;
-    font-weight: bold;
+    font-weight: normal;
     /* old style comment this */
     margin-bottom: 10px;
     padding: 5px;
+}
+
+a.mini-booker-link:focus,
+a.mini-booker-link:hover {
+    color: #0f0f0f;
+    font-size: 100%;
+    font-weight: normal;
+    /* text-decoration: underline !important; */
 }
 
 div#omraAvailabilityTab {
@@ -3077,6 +3110,24 @@ cite {
     font-size: 14px;
 }
 
+.onebtn.btn-input-red.lh_booker_submit {
+    background: #ff7f27 !important;
+    border: none !important;
+    color: #fff !important;
+    border-bottom: none !important;
+    opacity: 1 !important;
+    cursor: pointer;
+    display: block;
+    height: 65px;
+    text-align: center;
+    text-decoration: none;
+    /* margin-top: 10px; */
+    padding-top: 0px !important;
+    font-size: 18px !important;
+}
+
+
+/*
 .btn-input-red {
     background: #E81932 !important;
     border: none !important;
@@ -3088,9 +3139,8 @@ cite {
     height: 65px;
     text-align: center;
     text-decoration: none;
-    /* margin-top: 10px; */
     padding: 0px 8px;
-}
+}*/
 
 .btn-input-blue {
     background: #00a2e8 !important;
@@ -3812,6 +3862,26 @@ div#additionalServices {
 .additional-rentACar .additional-badge i,
 .additional-travelInsurance .additional-badge i {
     font-size: 24px;
+}
+
+.fa-booking:before {
+    content: "\f274";
+}
+
+.fa-contact:before {
+    content: "\f098";
+}
+
+.fa-aboutus:before {
+    content: "\f05a";
+}
+
+.fa-qa:before {
+    content: "\f059";
+}
+
+.fa-company:before {
+    content: "\f1ad";
 }
 
 .fa-umbrella:before {

@@ -52,7 +52,7 @@ class WorkRole extends BtbObject
 
         public function shouldBeCalculatedField($attribute)
         {
-                
+
                 return false;
         }
 
@@ -61,7 +61,7 @@ class WorkRole extends BtbObject
                 if ($fields_updated["jobrole_mfk"]) {
                         UfwQueryAnalyzer::startProcessLourdMode();
                         $arr_roles = [$this->id];
-                        $wEmplList = WbranchEmployee::getEmployeeList($orgunit_id = 0, $except_employee_id = 0, $arr_roles, $hrm = false);
+                        $wEmplList = WbranchEmployee::getEmployeeList($org_unit_id = 0, $except_employee_id = 0, $arr_roles, $hrm = false);
 
                         $count = 0;
                         $counterr = 0;

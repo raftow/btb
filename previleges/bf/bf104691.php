@@ -6,7 +6,7 @@
   'level' => '999',
   'public' => false,
   'module_id' => '1272',
-  'menu_name_ar' => 'عرض تفاصيل',
+  'menu_name_ar' => 'عرض تفاصيل سكن رحلة',
   'menu_name_en' => 'display details of Travel hotel',
   'page' => 'main.php?Main_Page=afw_mode_display.php&cl=TravelHotel&currmod=btb',
   'css' => 'bf',

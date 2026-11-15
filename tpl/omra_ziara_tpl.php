@@ -27,19 +27,19 @@ if ($departure_gdate_formatted <= date("Y-m-d")) $shift_remove_disabled = "-disa
 else $shift_remove_disabled = "";
 
 $calendar_tr =
-        'monthNames: ["January","February","March","April","May","June", "July","August","September","October","November","December"],
+        '["January","February","March","April","May","June", "July","August","September","October","November","December"],
         monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
         dayNamesShort: [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ],
-        dayNamesMin: [ "Su","Mo","Tu","We","Th","Fr","Sa" ],';
+        dayNamesMin: [ "Su","Mo","Tu","We","Th","Fr","Sa" ]';
 
 
 $calendar_tr =
-        'monthNames: ["يناير","فبراير","مارس","أبريل","ماي","يونيو", "يوليو","أغسطس","سبتمير","أكتوبر","نوفمبر","ديسمبر"],
+        '["يناير","فبراير","مارس","أبريل","ماي","يونيو", "يوليو","أغسطس","سبتمير","أكتوبر","نوفمبر","ديسمبر"],
         monthNamesShort: ["يناير","فبراير","مارس","أبريل","ماي","يونيو", "يوليو","أغسطس","سبتمير","أكتوبر","نوفمبر","ديسمبر"],
         dayNames: ["الأحد", "الأثنين", "الثلاثاء", "الاربعاء", "الخميس", "الجمعة", "السبت" ],
         dayNamesShort: ["أحد", "أثنين", "ثلاثاء", "اربعاء", "خميس", "جمعة", "سبت" ],
-        dayNamesMin: [ "أحد","اثن","ثلث","ربع","خمس","جمع","سبت" ],';
+        dayNamesMin: [ "أحد","اثن","ثلث","ربع","خمس","جمع","سبت" ]';
 
 
 
@@ -235,7 +235,7 @@ $calendar_tr =
                                                                                                                         changeMonth: true,
                                                                                                                         changeYear: true,
                                                                                                                         minDate: 0,
-                                                                                                                        <?php echo $calendar_tr ?>
+                                                                                                                        monthNames: <?php echo $calendar_tr ?>,
                                                                                                                 });
                                                                                                         });
                                                                                                 </script>

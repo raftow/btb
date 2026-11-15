@@ -9,7 +9,7 @@ class BtbWorkBranchAfwStructure
 			$obj->DISPLAY_FIELD_BY_LANG = ['ar' => "name_ar", 'en' => "name_en"];
 			// $obj->ENABLE_DISPLAY_MODE_IN_QEDIT=true;
 			$obj->ORDER_BY_FIELDS = "parent_id, name_ar";
-			$obj->UNIQUE_KEY = array('orgunit_id');
+			$obj->UNIQUE_KEY = array('org' . 'unit_id');
 			$obj->UNIQUE_KEY2 = array('parent_id', 'company_code');
 			$obj->editByStep = true;
 			$obj->editNbSteps = 11;
@@ -163,11 +163,11 @@ class BtbWorkBranchAfwStructure
 			'ERROR-CHECK' => true,
 		),
 
-		'orgunit_id' => array(
+		'org' . 'unit_id' => array(
 			'STEP' => 99,
 			'SHORTNAME' => 'orgunit',
 			'SEARCH' => true,
-			'QSEARCH' => true,
+			'QSEARCH' => false,
 			'SHOW' => true,
 			'RETRIEVE' => false,
 			'EDIT' => true,
@@ -530,7 +530,7 @@ class BtbWorkBranchAfwStructure
 			'ANSMODULE' => 'btb',
 			'CATEGORY' => 'ITEMS',
 			'ITEM' => '',
-			'WHERE' => "orgunit_id = §orgunit_id§",
+			'WHERE' => "org" . "unit_id = §org" . "unit_id§",
 			'SHOW' => true,
 			'FORMAT' => 'retrieve',
 			'EDIT' => true,
@@ -811,7 +811,7 @@ class BtbWorkBranchAfwStructure
 			'CATEGORY' => 'ITEMS',
 			'ANSWER' => 'work_benifit',
 			'ANSMODULE' => 'btb',
-			'ITEM' => 'branch_id',
+			'ITEM' => 'work_branch_id',
 			'READONLY' => true,
 			'CAN-BE-SETTED' => true,
 			'SEARCH-BY-ONE' => false,

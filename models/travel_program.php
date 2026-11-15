@@ -1,225 +1,244 @@
 <?php
-                
-$file_dir_name = dirname(__FILE__); 
-                
+
+$file_dir_name = dirname(__FILE__);
+
 // old include of afw.php
 
-class TravelProgram extends BtbObject{
+class TravelProgram extends BtbObject
+{
 
-       public static $DATABASE		= ""; public static $MODULE		    = "btb"; public static $TABLE			= ""; public static $DB_STRUCTURE = null; /* = array(
+        public static $DATABASE                = "";
+        public static $MODULE                    = "btb";
+        public static $TABLE                        = "";
+        /**
+         * DB_STRUCTURE is the main source of configuration for the class 
+         *    it is used in all the modules and methods to know how 
+         *    to handle the class attributes
+         * @var array|null
+         */
+        public static $DB_STRUCTURE = null;
 
-                id => array(SHOW => true, RETRIEVE => true, EDIT => false, TYPE => PK),
+        public function __construct()
+        {
+                parent::__construct("travel_program", "id", "btb");
+                BtbTravelProgramAfwStructure::initInstance($this);
+        }
 
-		travel_program_name => array(FGROUP=>travel_props, SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  MINIBOX =>true, 
-				EDIT => true,  QEDIT => true,  
-				SIZE => 48,  "MIN-SIZE" => 5,  CHAR_TEMPLATE => "ARABIC-CHARS,SPACE",  REQUIRED => true,  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
-
-                trips_nb => array(FGROUP=>travel_props, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false, CSS => width_pct_50,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => "INT",  READONLY => false, ),
-
-
-                depart_city_id => array('STEP' =>2, SHORTNAME => city,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,
-				SIZE => 40,  MANDATORY => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => city,  ANSMODULE => pag,  AUTOCOMPLETE => false,  
-                                WHERE=>"avail='Y'",  
-				RELATION => ManyToOne,  READONLY => false, ),
- 
-		city1_id => array('STEP' =>2, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 40,  MANDATORY => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => city,  ANSMODULE => pag,  AUTOCOMPLETE => false,  
-                                WHERE=>"avail='Y'",  
-				RELATION => ManyToOne,  READONLY => false, ),
- 
-		city2_id => array('STEP' =>2, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => city,  ANSMODULE => pag,  AUTOCOMPLETE => false,  
-                                WHERE=>"avail='Y'",  
-				RELATION => ManyToOne,  READONLY => false, ),
- 
-		city3_id => array('STEP' =>2, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 40,  MANDATORY => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => city,  ANSMODULE => pag,  AUTOCOMPLETE => false,  
-                                WHERE=>"avail='Y'",  
-				RELATION => ManyToOne,  READONLY => false, ),
-
-                full_distance => array('STEP' => 5, FGROUP=>trip1,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 64,  MANDATORY => true,  UTF8 => false,  
-				TYPE => "INT",  UNIT => "كم",  READONLY => false, ),
-
-
-                active => array(FGROUP=>options, "SHOW-ADMIN" => true, RETRIEVE => false, EDIT => true, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                created_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                created_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                updated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                updated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                validated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                validated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                version => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => INT),
-                update_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                delete_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                display_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                sci_id => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => scenario_item, ANSMODULE => pag),
-                tech_notes 	    => array(TYPE => TEXT, CATEGORY => FORMULA, "SHOW-ADMIN" => true, 'STEP' =>"all", TOKEN_SEP=>"§", READONLY=>true, "NO-ERROR-CHECK"=>true),
-        );
-	
-	*/ public function __construct(){
-		parent::__construct("travel_program","id","btb");
-                $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-                $this->DISPLAY_FIELD = "travel_program_name";
-                $this->ORDER_BY_FIELDS = "travel_program_name";
-                $this->horizontalTabs = true; 
-                
-                $this->UNIQUE_KEY = array('travel_program_name');
-                
-                $this->showQeditErrors = true;
-                $this->showRetrieveErrors = true;
-	}
-        
         public static function loadById($id)
         {
-           $obj = new TravelProgram();
-           $obj->select_visibilite_horizontale();
-           if($obj->load($id))
-           {
-                return $obj;
-           }
-           else return null;
+                $obj = new TravelProgram();
+                $obj->select_visibilite_horizontale();
+                if ($obj->load($id)) {
+                        return $obj;
+                } else return null;
         }
-        
-        public function getDisplay($lang="ar")
+
+        public function getDisplay($lang = "ar")
         {
-               if($this->getVal("travel_program_name")) return $this->getVal("travel_program_name");
-               $data = array();
-               $link = array();
- 
- 
-               list($data[0],$link[0]) = $this->displayAttribute("depart_city_id",false, $lang);
-               list($data[1],$link[1]) = $this->displayAttribute("city1_id",false, $lang);
-               list($data[2],$link[2]) = $this->displayAttribute("city2_id",false, $lang);
-               list($data[3],$link[3]) = $this->displayAttribute("city3_id",false, $lang);
-               if(!$data[2]) unset($data[2]);
-               if(!$data[3]) unset($data[3]);
- 
- 
-               return implode(" ",$data);
+                return $this->getVal("name_$lang");
         }
-        
-        public static function loadByMainIndex($depart_city_id, $city1_id, $city2_id, $city3_id, $trips_nb, $full_distance, $create_obj_if_not_found=false)
+
+        /*
+        public function genereNamesOtherWay()
         {
-           $obj = new TravelProgram();
- 
- 
-           $obj->select("depart_city_id",$depart_city_id);
-           $obj->select("city1_id",$city1_id);
-           $obj->select("city2_id",$city2_id);
-           $obj->select("city3_id",$city3_id);
- 
-           if($obj->load())
-           {
-                if($create_obj_if_not_found) $obj->activate();
-                $obj->set("trips_nb",$trips_nb);
-                $obj->set("full_distance",$full_distance);
-                
-                $obj->genereName();
-                return $obj;
-           }
-           elseif($create_obj_if_not_found)
-           {
-                $obj->set("depart_city_id",$depart_city_id);
-                $obj->set("city1_id",$city1_id);
-                $obj->set("city2_id",$city2_id);
-                $obj->set("city3_id",$city3_id);
-                $obj->set("trips_nb",$trips_nb);
-                $obj->set("full_distance",$full_distance);
-                $obj->genereName();
-                $obj->insert();
-                $obj->is_new = true;
-                return $obj;
-           }
-           else return null;
- 
+                $langs = ['ar', 'en'];
+
+
+                foreach ($langs as $lang) {
+                        $data = array();
+                        $link = array();
+
+
+                        list($data[0], $link[0]) = $this->displayAttribute("depart_city_id", false, $lang);
+                        list($data[1], $link[1]) = $this->displayAttribute("city1_id", false, $lang);
+                        list($data[2], $link[2]) = $this->displayAttribute("city2_id", false, $lang);
+                        list($data[3], $link[3]) = $this->displayAttribute("city3_id", false, $lang);
+                        list($data[4], $link[4]) = $this->displayAttribute("full_residence", false, $lang);
+                        if (!$data[2]) unset($data[2]);
+                        if (!$data[3]) unset($data[3]);
+
+
+                        $this->set("name_$lang", implode("-", $data));
+                }
+                $this->commit();
+        }*/
+
+        /**
+         * @param int $trips_nb, 
+         * @param int $depart_city_id, 
+         * @param int $city1_id
+         * @param string $full_residence
+         */
+        public static function loadByMainIndex($trips_nb, $full_residence, $depart_city_id, $city1_id, $city2_id = 0, $city3_id = 0, $create_obj_if_not_found = false)
+        {
+                if (!$trips_nb or ($trips_nb < 2)) throw new AfwRuntimeException("loadByMainIndex : trips_nb is invalid");
+                if (!$depart_city_id) throw new AfwRuntimeException("loadByMainIndex : depart_city_id is mandatory field");
+                if (!$city1_id) throw new AfwRuntimeException("loadByMainIndex : city1_id is mandatory field");
+                if (!$city2_id and ($trips_nb > 2)) throw new AfwRuntimeException("loadByMainIndex : city2_id is mandatory field because trips_nb=$trips_nb");
+                if (!$city3_id and ($trips_nb > 3)) throw new AfwRuntimeException("loadByMainIndex : city3_id is mandatory field because trips_nb=$trips_nb");
+                if (!$full_residence) throw new AfwRuntimeException("loadByMainIndex : full_residence is mandatory field");
+
+
+                $obj = new TravelProgram();
+                $obj->select("trips_nb", $trips_nb);
+                $obj->select("depart_city_id", $depart_city_id);
+                $obj->select("city1_id", $city1_id);
+                $obj->select("city2_id", $city2_id);
+                $obj->select("city3_id", $city3_id);
+                $obj->select("full_residence", $full_residence);
+
+                if ($obj->load()) {
+                        if ($create_obj_if_not_found) $obj->activate();
+                        return $obj;
+                } elseif ($create_obj_if_not_found) {
+                        $obj->set("trips_nb", $trips_nb);
+                        $obj->set("depart_city_id", $depart_city_id);
+                        $obj->set("city1_id", $city1_id);
+                        $obj->set("city2_id", $city2_id);
+                        $obj->set("city3_id", $city3_id);
+                        $obj->set("full_residence", $full_residence);
+
+                        $obj->insertNew();
+                        if (!$obj->id) return null; // means beforeInsert rejected insert operation
+                        $obj->is_new = true;
+                        return $obj;
+                } else return null;
         }
-        
+
         public function attributeIsApplicable($attribute)
         {
-              for($i=1;$i<=3;$i++)
-              {
-                      if($attribute=="city${i}_id") 
-                      {
-                          return (intval($this->getVal("trips_nb"))>$i) ;
-                      }
-              }
-              
-              return true;
-         }
-         
-         public function genereName()
-         {
-               $data = array();
-               $link = array();
-               
-               $trips_nb = intval($this->getVal("trips_nb"));
-               list($data[],$link[]) = $this->displayAttribute("depart_city_id",false, $lang);
-               
-               if($trips_nb>1) list($data[],$link[]) = $this->displayAttribute("city1_id",false, $lang);
-               if($trips_nb>2) list($data[],$link[]) = $this->displayAttribute("city2_id",false, $lang);
-               if($trips_nb>3) list($data[],$link[]) = $this->displayAttribute("city3_id",false, $lang);
- 
- 
-               $this->set("travel_program_name", implode("-",$data));
-         
-         }
+                for ($i = 1; $i <= 3; $i++) {
+                        if ($attribute == "city${i}_id") {
+                                return (intval($this->getVal("trips_nb")) > $i);
+                        }
+                }
 
-         public function fld_CREATION_USER_ID()
-        {
-                return "created_by";
+                return true;
         }
 
-        public function fld_CREATION_DATE()
+        public function afterUpdate($id, $fields_updated, $disableAfterCommitDBEvent = false)
         {
-                return "created_at";
+                $this->genereNames();
         }
 
-        public function fld_UPDATE_USER_ID()
+        public function genereNames()
         {
-        	return "updated_by";
+                $langs = ['ar', 'en'];
+
+
+                foreach ($langs as $lang) {
+                        $data = array();
+                        $link = array();
+                        $trips_nb = intval($this->getVal("trips_nb"));
+                        list($data[], $link[]) = $this->displayAttribute("depart_city_id", false, $lang);
+
+                        if ($trips_nb > 1) list($data[], $link[]) = $this->displayAttribute("city1_id", false, $lang);
+                        if ($trips_nb > 2) list($data[], $link[]) = $this->displayAttribute("city2_id", false, $lang);
+                        if ($trips_nb > 3) list($data[], $link[]) = $this->displayAttribute("city3_id", false, $lang);
+                        list($data[], $link[]) = $this->displayAttribute("full_residence", false, $lang);
+
+                        $this->set("name_$lang", implode("-", $data));
+                }
+                $this->commit();
         }
 
-        public function fld_UPDATE_DATE()
+
+
+        protected function getPublicMethods()
         {
-        	return "updated_at";
-        }
-        
-        public function fld_VALIDATION_USER_ID()
-        {
-        	return "validated_by";
+
+                $pbms = array();
+
+                $color = "green";
+                $title_ar = "xxxxxxxxxxxxxxxxxxxx";
+                $title_en = "xxxxxxxxxxxxxxxxxxxx";
+                $methodName = "mmmmmmmmmmmmmmmmmmmmmmm";
+                //$pbms[AfwStringHelper::hzmEncode($methodName)] = 
+                array(
+                        "METHOD" => $methodName,
+                        "COLOR" => $color,
+                        "LABEL_AR" => $title_ar,
+                        "LABEL_EN" => $title_en,
+                        "ADMIN-ONLY" => true,
+                        "BF-ID" => "",
+                        'STEP' => $this->stepOfAttribute("xxyy")
+                );
+
+
+
+                return $pbms;
         }
 
-        public function fld_VALIDATION_DATE()
+        public function beforeDelete($id, $id_replace)
         {
-                return "validated_at";
-        }
-        
-        public function fld_VERSION()
-        {
-        	return "version";
-        }
+                $server_db_prefix = AfwSession::config("db_prefix", "bisat_");
 
-        public function fld_ACTIVE()
-        {
-        	return  "active";
+                if (!$id) {
+                        $id = $this->getId();
+                        $simul = true;
+                } else {
+                        $simul = false;
+                }
+
+                if ($id) {
+                        if ($id_replace == 0) {
+                                // FK part of me - not deletable 
+                                // btb.bus_pricing-البرنامج	travel_program_id  حقل يفلتر به (required field)
+                                // require_once "../btb/bus_pricing.php";
+                                $obj = new BusPricing();
+                                $obj->where("travel_program_id = '$id' and active='Y' ");
+                                $nbRecords = $obj->count();
+                                // check if there's no record that block the delete operation
+                                if ($nbRecords > 0) {
+                                        $this->deleteNotAllowedReason = "Used in some Bus pricings(s) as The travel program";
+                                        return false;
+                                }
+                                // if there's no record that block the delete operation perform the delete of the other records linked with me and deletable
+                                if (!$simul) $obj->deleteWhere("travel_program_id = '$id' and active='N'");
+
+
+
+                                // FK part of me - deletable 
+
+
+                                // FK not part of me - replaceable 
+                                // btb.work_benifit-البرنامج	travel_program_id  حقل يفلتر به
+                                if (!$simul) {
+                                        // require_once "../btb/work_benifit.php";
+                                        WorkBenifit::updateWhere(array('travel_program_id' => $id_replace), "travel_program_id='$id'");
+                                        // $this->execQuery("update ${server_db_prefix}btb.work_benifit set travel_program_id='$id_replace' where travel_program_id='$id' ");
+                                }
+
+
+
+                                // MFK
+
+                        } else {
+                                // FK on me 
+
+
+                                // btb.bus_pricing-البرنامج	travel_program_id  حقل يفلتر به (required field)
+                                if (!$simul) {
+                                        // require_once "../btb/bus_pricing.php";
+                                        BusPricing::updateWhere(array('travel_program_id' => $id_replace), "travel_program_id='$id'");
+                                        // $this->execQuery("update ${server_db_prefix}btb.bus_pricing set travel_program_id='$id_replace' where travel_program_id='$id' ");
+
+                                }
+
+
+                                // btb.work_benifit-البرنامج	travel_program_id  حقل يفلتر به
+                                if (!$simul) {
+                                        // require_once "../btb/work_benifit.php";
+                                        WorkBenifit::updateWhere(array('travel_program_id' => $id_replace), "travel_program_id='$id'");
+                                        // $this->execQuery("update ${server_db_prefix}btb.work_benifit set travel_program_id='$id_replace' where travel_program_id='$id' ");
+                                }
+
+
+                                // MFK
+
+
+                        }
+                        return true;
+                }
         }
-        
-         
-        
 }
-
-?>

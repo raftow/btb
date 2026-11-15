@@ -1,14 +1,14 @@
 <?php
 
-	$role_info[336] = array (
+$role_info[336] = array(
   'code' => 'goal-template-manage',
-  'name' => 
-  array (
+  'name' =>
+  array(
     'ar' => 'النماذج',
     'en' => 'arole.336',
   ),
-  'menu' => 
-  array (
+  'menu' =>
+  array(
     'need_admin' => false,
     'id' => '336',
     'menu_name_ar' => 'النماذج',
@@ -17,15 +17,29 @@
     'css' => 'info',
     'icon' => ' icon-336',
     'showme' => true,
-    'items' => 
-    array (
-      103999 => '999',
-      104004 => '999',
-      104067 => '999',
-      104069 => '999',
+    'items' =>
+    array(
+      104706 => '999',
+      104652 => '999',
+      104700 => '999',
     ),
-    'otherbfs' => 
-    array (
+    'otherbfs' =>
+    array(
+      104647 => '999',
+      104648 => '999',
+      104649 => '999',
+      104650 => '999',
+      104652 => '999',
+      104695 => '999',
+      104696 => '999',
+      104697 => '999',
+      104698 => '999',
+      104700 => '999',
+      104701 => '999',
+      104702 => '999',
+      104703 => '999',
+      104704 => '999',
+      104706 => '999',
       103999 => '999',
       104001 => '999',
       104002 => '999',
@@ -45,9 +59,8 @@
       104027 => '999',
       104028 => '999',
     ),
-    'sub-folders' => 
-    array (
-    ),
+    'sub-folders' =>
+    array(),
   ),
 );
-	include "previleges_btb_role336_special.php";
+include "previleges_btb_role336_special.php";

@@ -22,36 +22,10 @@ class BusPricing extends BtbObject
     public function __construct()
     {
         parent::__construct("bus_pricing", "id", "btb");
-        $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-        $this->DISPLAY_FIELD = "";
-        $this->ORDER_BY_FIELDS = "bus_id, travel_program_id, days_nb, week_period_enum, period_type_enum, yperiod_id";
-        $this->horizontalTabs = true;
-
-
-        $this->UNIQUE_KEY = array('bus_id', 'travel_program_id', 'days_nb', 'week_period_enum', 'period_type_enum', 'yperiod_id');
-
-        $this->showQeditErrors = true;
-        $this->showRetrieveErrors = true;
-        // $this->after_save_edit = array("class"=>Road,"attribute"=>road_id, "currmod"=> 'btb',"currstep"=>9);
+        BtbBusPricingAfwStructure::initInstance($this);
     }
 
-    public static function list_of_week_period_enum()
-    {
-        $list_of_items = array();
-        $list_of_items[1] = "ويكاند";
-        $list_of_items[2] = "وسط الأسبوع";
 
-        return  $list_of_items;
-    }
-
-    public static function list_of_period_type_enum()
-    {
-        $list_of_items = array();
-        $list_of_items[1] = "فترة عادية";
-        $list_of_items[2] = "فترة موسمية";
-
-        return  $list_of_items;
-    }
 
     public static function loadById($id)
     {
@@ -176,9 +150,10 @@ class BusPricing extends BtbObject
         $lang = AfwLanguageHelper::getGlobalLanguage();
         list($travel_program, $link) = $this->displayAttribute("travel_program_id", false, $lang);
         $days_nb = $this->getVal("days_nb");
-        if ($days_nb == 1) $days_nb_title = "يوم واحد";
-        if ($days_nb == 2) $days_nb_title = "يومين";
-        if ($days_nb >= 3) $days_nb_title = "$days_nb أيام";
+        if ($days_nb == 0) $days_nb_title = "أيا كان عدد الأيام";
+        elseif ($days_nb == 1) $days_nb_title = "يوم واحد";
+        elseif ($days_nb == 2) $days_nb_title = "يومين";
+        else $days_nb_title = "$days_nb أيام";
         return $travel_program . "-" . $days_nb_title;
     }
 
@@ -191,7 +166,7 @@ class BusPricing extends BtbObject
 
         list($data[], $link[]) = $this->displayAttribute("week_period_enum", false, $lang);
         list($data[], $link[]) = $this->displayAttribute("period_type_enum", false, $lang);
-        //list($data[],$link[]) = $this->displayAttribute("yperiod_id",false, $lang);
+        list($data[], $link[]) = $this->displayAttribute("yperiod_id", false, $lang);
         return implode("-", $data);
     }
 

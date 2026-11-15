@@ -17,62 +17,8 @@ class TravelTemplateSeatPricing extends BtbObject
         public static $DATABASE                = "";
         public static $MODULE                    = "btb";
         public static $TABLE                        = "";
-        public static $DB_STRUCTURE = null; /* = array(
-                id => array(SHOW => true, RETRIEVE => true, EDIT => true, TYPE => PK),
+        public static $DB_STRUCTURE = null;
 
-		
-		travel_template_id => array(SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true, SHORTNAME => template, 
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => travel_template,  ANSMODULE => btb,  AUTOCOMPLETE => true,  
-				RELATION => OneToMany,  READONLY => true,  DNA => true, ),
-
-		seat_category_enum => array(SHORTNAME => category,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-                                EDIT => true,  QEDIT => true,  
-                                SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-                                TYPE => ENUM,  ANSWER => "FUNCTION", READONLY => false, ),
-
-		week_period_enum => array(SHORTNAME => period,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => false,  UTF8 => false,  
-				TYPE => ENUM,  ANSWER => "FUNCTION",  READONLY => true,  "EDIT-SHORT-LIST" => true, ),
-                                  
-		period_type_enum => array(SHORTNAME => type,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => false,  UTF8 => false,  
-				TYPE => ENUM,  ANSWER => "FUNCTION",  READONLY => true,  "EDIT-SHORT-LIST" => true, ),
-
-		yperiod_id => array(SHORTNAME => yperiod,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => FK,  ANSWER => yperiod,  ANSMODULE => btb,  
-				RELATION => ManyToOne,  READONLY => true, ),
-                
-                period_title  => array(SHOW => true, EDIT => true,  QEDIT => true,  READONLY => true, MANDATORY => true, CATEGORY => FORMULA,  TYPE => TEXT),
-
-		'price' => array(SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => "FLOAT",  UNIT => "ريال",  UNIT_EN => "SAR", FORMAT=>"*.2" ,  READONLY => false, ),
-
-                
-                created_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                created_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                updated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                updated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                validated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                validated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                active => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                draft => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                version => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => INT),
-                update_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                delete_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                display_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                sci_id => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => scenario_item, ANSMODULE => pag),
-                tech_notes 	    => array(TYPE => TEXT, CATEGORY => FORMULA, "SHOW-ADMIN" => true, 'STEP' =>"all", TOKEN_SEP=>"§", READONLY=>true, "NO-ERROR-CHECK"=>true),
-	);
-	
-	*/
         public function __construct()
         {
                 parent::__construct("travel_template_seat_pricing", "id", "btb");

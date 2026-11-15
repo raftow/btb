@@ -1,14 +1,15 @@
 <?php
 
-class TravelTemplateEnTranslator{
-    public static function initData()
-    {
-        $trad = [];
+class TravelTemplateEnTranslator
+{
+	public static function initData()
+	{
+		$trad = [];
 
 		$trad["travel_template"]["traveltemplate.single"] = "Travel template";
 		$trad["travel_template"]["traveltemplate.new"] = "new";
 		$trad["travel_template"]["travel_template"] = "Travel templates";
-		$trad["travel_template"]["orgunit_id"] = "Orgunit";
+		$trad["travel_template"]["work_branch_id"] = "Orgunit";
 		$trad["travel_template"]["travel_template_name"] = "Travel template name";
 		$trad["travel_template"]["full_residence"] = "Full residence";
 		$trad["travel_template"]["travelers_nb"] = "Travelers nb";
@@ -32,7 +33,7 @@ class TravelTemplateEnTranslator{
 		$trad["travel_template"]["city3_hotel_mfk"] = "City3 hotel mfk";
 		$trad["travel_template"]["distance_return"] = "Distance return";
 		$trad["travel_template"]["travelTemplateTripList"] = "List of Travel template trips";
-        // steps
+		// steps
 		$trad["travel_template"]["step1"] = "Definition";
 		$trad["travel_template"]["step2"] = "Advanced Information";
 		$trad["travel_template"]["step3"] = "step3";
@@ -44,12 +45,12 @@ class TravelTemplateEnTranslator{
 		$trad["travel_template"]["step9"] = "step9";
 		$trad["travel_template"]["step10"] = "step10";
 		$trad["travel_template"]["step11"] = "step11";
-        return $trad;
-    }
+		return $trad;
+	}
 
-    public static function getInstance()
+	public static function getInstance()
 	{
-        if(false) return new TravelTemplateArTranslator();
+		if (false) return new TravelTemplateArTranslator();
 		return new TravelTemplate();
 	}
 }

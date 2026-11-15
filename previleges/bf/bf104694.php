@@ -6,7 +6,7 @@
   'level' => '999',
   'public' => false,
   'module_id' => '1272',
-  'menu_name_ar' => 'travel_hotel',
+  'menu_name_ar' => 'فنادق الرحلة',
   'menu_name_en' => 'Travel hotels',
   'page' => 'main.php?Main_Page=afw_mode_qsearch.php&cl=TravelHotel&currmod=btb',
   'css' => 'bf',

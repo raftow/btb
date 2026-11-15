@@ -2,7 +2,8 @@
 // ------------------------------------------------------------------------------------
 // ----             auto generated php class of table road : road - الطرق بين المدن 
 // ------------------------------------------------------------------------------------
-
+/* 
+obsolete for the moment
 
 $file_dir_name = dirname(__FILE__);
 
@@ -22,62 +23,7 @@ class Road extends BtbObject
     public static $DATABASE        = "";
     public static $MODULE            = "btb";
     public static $TABLE            = "";
-    public static $DB_STRUCTURE = null; /* = array(
-                id => array(SHOW => true, RETRIEVE => true, EDIT => true, TYPE => PK),
-
-		
-		road_name => array(SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 48,  "MIN-SIZE" => 5,  CHAR_TEMPLATE => "ARABIC-CHARS,SPACE",  REQUIRED => true,  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
-                
-                city_mfk => array(CATEGORY => FORMULA, TYPE => MFK, ANSWER => city, ANSMODULE => pag, "NO-COTE"=>true),
-                
-		depart_city_id => array(SHORTNAME => city,  
-				 SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 40,  REQUIRED => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => city,  ANSMODULE => pag,  AUTOCOMPLETE => false,
-                                WHERE => "avail='Y' and id in (0§city_mfk§0)",  
-				RELATION => ManyToOne,  READONLY => false, ),
-
-		arrival_city_id => array(SHORTNAME => city,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 40,  REQUIRED => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => city,  ANSMODULE => pag,  AUTOCOMPLETE => false,
-                                WHERE => "avail='Y' and id in (0§city_mfk§0)",  
-				RELATION => ManyToOne,  READONLY => false, ),
-
-		distance => array(SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => "INT",  UNIT => "كم",  READONLY => false, ),
-
-		medium_bus_speed => array(SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => "INT",  UNIT => "كم/س",  READONLY => false, ),
-
-                roadStationList => array(TYPE => FK, ANSWER => road_station, ANSMODULE => btb, CATEGORY => ITEMS, ITEM => 'road_id', 
-                                           WHERE=>'', SHOW => true, FORMAT=>retrieve, EDIT => false, READONLY=> true, ICONS=>true, 
-                                           'DELETE-ICON'=>true, BUTTONS=>true, "NO-LABEL"=>false),
-                
-                created_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                created_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                updated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                updated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                validated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                validated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                active => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => true, QEDIT => true, "DEFAULT" => Y, TYPE => YN),
-                version => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => INT),
-                update_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                delete_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                display_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                sci_id => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => scenario_item, ANSMODULE => pag),
-                tech_notes 	    => array(TYPE => TEXT, CATEGORY => FORMULA, "SHOW-ADMIN" => true, 'STEP' =>"all", TOKEN_SEP=>"§", READONLY=>true, "NO-ERROR-CHECK"=>true),
-	);
-	
-	*/
+    public static $DB_STRUCTURE = null; 
     public function __construct()
     {
         parent::__construct("road", "id", "btb");
@@ -284,8 +230,8 @@ class Road extends BtbObject
         global $server_db_prefix, $images;
         $objme = AfwSession::getUserConnected();
 
-        $orgunit_id = $objme->getMyOrganizationId();
-        if ($orgunit_id) $woObj = WorkBranch::loadById($orgunit_id);
+        $org unit_id = $objme->getMyOrganizationId();
+        if ($org unit_id) $woObj = WorkBranch::loadById($org unit_id);
         else $woObj = null;
 
         switch ($attribute) {
@@ -303,3 +249,4 @@ class Road extends BtbObject
         }
     }
 }
+*/

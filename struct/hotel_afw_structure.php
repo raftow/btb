@@ -23,7 +23,7 @@ class BtbHotelAfwStructure
 			$obj->showQeditErrors = true;
 			$obj->showRetrieveErrors = true;
 			$obj->general_check_errors = true;
-			$obj->after_save_edit = array("class" => 'WorkBranch', "attribute" => 'work_branch_id', "currmod" => 'btb', "currstep" => 8);
+			$obj->after_save_edit = array("class" => 'WorkBranch', "attribute" => 'work_branch_id', "currmod" => 'btb', "currstep" => 9);
 			// $obj->after_save_edit = array("mode"=>"qsearch", "currmod"=>'btb', "class"=>'Hotel',"submit"=>true);
 		} else {
 			HotelArTranslator::initData();

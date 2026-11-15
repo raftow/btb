@@ -9,8 +9,8 @@ class WbranchEmployeeEnTranslator
 		$trad["wbranch_employee"]["wbranchemployee.single"] = "Employee";
 		$trad["wbranch_employee"]["wbranchemployee.new"] = "new";
 		$trad["wbranch_employee"]["wbranch_employee"] = "Employees";
-		$trad["wbranch_employee"]["orgunit_id"] = "Organization / Department";
-		$trad["wbranch_employee"]["wbranch_orgunit_id"] = "Wbranch Organization / Department";
+		$trad["wbranch_employee"]["org" . "unit_id"] = "Organization / Department";
+		$trad["wbranch_employee"]["wbranch_org" . "unit_id"] = "Wbranch Organization / Department";
 		$trad["wbranch_employee"]["employee_id"] = "The Employee";
 		$trad["wbranch_employee"]["email"] = "e-mail";
 		$trad["wbranch_employee"]["approved"] = "approved";

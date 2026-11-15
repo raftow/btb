@@ -5,6 +5,7 @@
 	include('previleges/table/previleges_btb_table_booking.php');
 	include('previleges/table/previleges_btb_table_branch_seat_price.php');
 	include('previleges/table/previleges_btb_table_bus.php');
+	include('previleges/table/previleges_btb_table_bus_booking_type.php');
 	include('previleges/table/previleges_btb_table_bus_brand.php');
 	include('previleges/table/previleges_btb_table_bus_convention.php');
 	include('previleges/table/previleges_btb_table_bus_file.php');
@@ -22,10 +23,13 @@
 	include('previleges/table/previleges_btb_table_owner_type.php');
 	include('previleges/table/previleges_btb_table_road.php');
 	include('previleges/table/previleges_btb_table_road_station.php');
+	include('previleges/table/previleges_btb_table_room_day.php');
 	include('previleges/table/previleges_btb_table_travel.php');
+	include('previleges/table/previleges_btb_table_traveler.php');
 	include('previleges/table/previleges_btb_table_travel_bus.php');
 	include('previleges/table/previleges_btb_table_travel_hotel.php');
 	include('previleges/table/previleges_btb_table_travel_program.php');
+	include('previleges/table/previleges_btb_table_travel_seat.php');
 	include('previleges/table/previleges_btb_table_travel_status.php');
 	include('previleges/table/previleges_btb_table_travel_template.php');
 	include('previleges/table/previleges_btb_table_travel_template_bus.php');

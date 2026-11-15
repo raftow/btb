@@ -4,6 +4,9 @@
 // ------------------------------------------------------------------------------------
 
 
+
+/* 
+obsolete for the moment
 $file_dir_name = dirname(__FILE__);
 
 // old include of afw.php
@@ -23,11 +26,11 @@ class BusConvention extends BtbObject
                 parent::__construct("bus_convention", "id", "btb");
                 $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
                 $this->DISPLAY_FIELD = "";
-                $this->ORDER_BY_FIELDS = "orgunit_id, tbranch_id, condition_num";
+                $this->ORDER_BY_FIELDS = "orgun it_id, tbranch_id, condition_num";
                 $this->horizontalTabs = true;
 
 
-                $this->UNIQUE_KEY = array('orgunit_id', 'tbranch_id', 'condition_num');
+                $this->UNIQUE_KEY = array('orguni t_id', 'tbranch_id', 'condition_num');
 
                 $this->showQeditErrors = true;
                 $this->showRetrieveErrors = true;
@@ -45,15 +48,15 @@ class BusConvention extends BtbObject
 
 
 
-        public static function loadByMainIndex($orgunit_id, $tbranch_id, $condition_num, $create_obj_if_not_found = false)
+        public static function loadByMainIndex($org unit_id, $tbranch_id, $condition_num, $create_obj_if_not_found = false)
         {
                 $obj = new BusConvention();
-                if (!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
+                if (!$org unit_id) throw new AfwRuntimeException("loadByMainIndex : org unit_id is mandatory field");
                 if (!$tbranch_id) throw new AfwRuntimeException("loadByMainIndex : tbranch_id is mandatory field");
                 if (!$condition_num) throw new AfwRuntimeException("loadByMainIndex : condition_num is mandatory field");
 
 
-                $obj->select("orgunit_id", $orgunit_id);
+                $obj->select("org unit_id", $org unit_id);
                 $obj->select("tbranch_id", $tbranch_id);
                 $obj->select("condition_num", $condition_num);
 
@@ -61,7 +64,7 @@ class BusConvention extends BtbObject
                         if ($create_obj_if_not_found) $obj->activate();
                         return $obj;
                 } elseif ($create_obj_if_not_found) {
-                        $obj->set("orgunit_id", $orgunit_id);
+                        $obj->set("org unit_id", $org unit_id);
                         $obj->set("tbranch_id", $tbranch_id);
                         $obj->set("condition_num", $condition_num);
 
@@ -79,7 +82,7 @@ class BusConvention extends BtbObject
                 $link = array();
 
 
-                list($data[0], $link[0]) = $this->displayAttribute("orgunit_id", false, $lang);
+                list($data[0], $link[0]) = $this->displayAttribute("org unit_id", false, $lang);
                 list($data[1], $link[1]) = $this->displayAttribute("tbranch_id", false, $lang);
                 list($data[2], $link[2]) = $this->displayAttribute("condition_num", false, $lang);
 
@@ -155,3 +158,4 @@ class BusConvention extends BtbObject
                 return (($bus_id == 0) or ($this->bus_id == $bus_id));
         }
 }
+*/

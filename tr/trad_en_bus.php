@@ -1,9 +1,10 @@
 <?php
 
-class BusEnTranslator{
-    public static function initData()
-    {
-        $trad = [];
+class BusEnTranslator
+{
+	public static function initData()
+	{
+		$trad = [];
 
 		$trad["bus"]["bus.single"] = "Bus";
 		$trad["bus"]["bus.new"] = "new";
@@ -17,7 +18,7 @@ class BusEnTranslator{
 		$trad["bus"]["example"] = "Example";
 		$trad["bus"]["reel"] = "Reel";
 		$trad["bus"]["owner_parent_id"] = "The owner parent";
-		$trad["bus"]["orgunit_id"] = "Orgunit";
+		$trad["bus"]["work_branch_id"] = "Branch";
 		$trad["bus"]["owner_type_id"] = "Owner type";
 		$trad["bus"]["parent_bus_id"] = "The parent bus";
 		$trad["bus"]["bus_num"] = "Bus name";
@@ -52,7 +53,7 @@ class BusEnTranslator{
 		$trad["bus"]["busList"] = "List of Buss";
 		$trad["bus"]["travelTemplateBusList"] = "Travel template bus list";
 		$trad["bus"]["travelBusList"] = "Travel bus list";
-        // steps
+		// steps
 		$trad["bus"]["step1"] = "Definition";
 		$trad["bus"]["step2"] = "Advanced Information";
 		$trad["bus"]["step3"] = "step3";
@@ -63,12 +64,12 @@ class BusEnTranslator{
 		$trad["bus"]["step8"] = "step8";
 		$trad["bus"]["step9"] = "step9";
 		$trad["bus"]["step10"] = "step10";
-        return $trad;
-    }
+		return $trad;
+	}
 
-    public static function getInstance()
+	public static function getInstance()
 	{
-        if(false) return new BusArTranslator();
+		if (false) return new BusArTranslator();
 		return new Bus();
 	}
 }

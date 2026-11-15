@@ -14,7 +14,7 @@ class WorkBranchEnTranslator
 		$trad["work_branch"]["name_en"] = "Name en";
 		$trad["work_branch"]["city_id"] = "The city";
 		$trad["work_branch"]["work_service_mfk"] = "Work service mfk";
-		$trad["work_branch"]["orgunit_id"] = "The orgunit";
+		$trad["work_branch"]["org" . "unit_id"] = "The organization";
 		$trad["work_branch"]["parent_id"] = "The parent";
 		$trad["work_branch"]["account_in_parent"] = "Account in parent";
 		$trad["work_branch"]["tomorrow_15"] = "Tomorrow 15";

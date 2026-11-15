@@ -26,12 +26,13 @@ class Yperiod extends BtbObject
     {
         parent::__construct("yperiod", "id", "btb");
         $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-        $this->DISPLAY_FIELD = "yperiod_name_ar";
-        $this->ORDER_BY_FIELDS = "lookup_code";
+
+        $this->DISPLAY_FIELD_BY_LANG = ['ar' => "yperiod_name_ar", 'en' => "yperiod_name_en"];
+        $this->ORDER_BY_FIELDS = "work_branch_id, lookup_code";
         $this->horizontalTabs = true;
         $this->IS_LOOKUP = true;
         $this->ignore_insert_doublon = true;
-        $this->UNIQUE_KEY = array('lookup_code');
+        $this->UNIQUE_KEY = array('work_branch_id', 'lookup_code');
 
         $this->showQeditErrors = true;
         $this->showRetrieveErrors = true;
@@ -72,15 +73,7 @@ class Yperiod extends BtbObject
 
     public function getDisplay($lang = "ar")
     {
-
-        $data = array();
-        $link = array();
-
-
-        list($data["ar"], $link["ar"]) = $this->displayAttribute("yperiod_name_ar", false, $lang);
-
-
-        return $data[$lang];
+        return $this->getVal("yperiod_name_$lang");
     }
 
 
@@ -147,37 +140,81 @@ class Yperiod extends BtbObject
         $date_to = trim($date_to, ">");
         $date_to = trim($date_to, "<");
 
+        $log = "";
+
         if ($this->estHijri()) {
             $hijri_year = substr(AfwDateHelper::currentHijriDate(), 0, 4);
-            $date_to_old = $date_to;
-            if (!$date_from) $date_from = "0101";
-            if (!$date_to) $date_to = "1229";
+            // $date_to_old = $date_to;
             $date_to = $hijri_year . $date_to;
-            // throw new AfwRuntimeException("$date_to = $hijri_year . $date_to_old");
-
             $date_from = $hijri_year . $date_from;
+            $errors = false;
+            try {
+                $date_to_greg = AfwDateHelper::hijriToGreg($date_to);
+                // throw new AfwRuntimeException("$date_to = to_hijri($greg_year . $date_to_old);");
+
+            } catch (Exception $e) {
+                $date_to = "";
+                $this->set("errors_txt", "حصل الخطأ التالي أثناء حساب تاريخ النهاية : \n" . $e->getMessage());
+                $errors = true;
+            }
+
+            try {
+                $date_from_greg = AfwDateHelper::hijriToGreg($date_from);
+            } catch (Exception $e) {
+                $date_from = "";
+                $this->set("errors_txt", "حصل الخطأ التالي أثناء حساب تاريخ البداية : \n" . $e->getMessage());
+                $errors = true;
+            }
+
+            if (!$errors) {
+                $this->set("errors_txt", "لا يوجد أخطاء");
+            }
         } else {
             $greg_year = date("Y-");
-            $date_to_old = $date_to;
-            if (!$date_from) $date_from = "01-01";
-            if (!$date_to) $date_to = "12-31";
-            $date_to = AfwDateHelper::to_hijri($greg_year . $date_to);
-            // throw new AfwRuntimeException("$date_to = to_hijri($greg_year . $date_to_old);");
-            $date_from = AfwDateHelper::to_hijri($greg_year . $date_from);
+            // $date_to_old = $date_to;
+            $errors = false;
+            try {
+                $greg_date = $greg_year . $date_to;
+                $date_to = AfwDateHelper::to_hijri($greg_date);
+                $log .= " / $date_to = AfwDateHelper::to_hijri($greg_date)";
+                // throw new AfwRuntimeException("$date_to = to_hijri($greg_year . $date_to_old);");
+
+            } catch (Exception $e) {
+                $date_to = "";
+                $this->set("errors_txt", "حصل الخطأ التالي أثناء حساب تاريخ النهاية : \n" . $e->getMessage());
+                $errors = true;
+            }
+
+            try {
+                $greg_date = $greg_year . $date_from;
+                $date_from = AfwDateHelper::to_hijri($greg_date);
+                $log .= " / $date_from = AfwDateHelper::to_hijri($greg_date)";
+            } catch (Exception $e) {
+                $date_from = "";
+                $this->set("errors_txt", "حصل الخطأ التالي أثناء حساب تاريخ البداية : \n" . $e->getMessage());
+                $errors = true;
+            }
+
+            if (!$errors) {
+                $this->set("errors_txt", "لا يوجد أخطاء &star;<!-- $log -->");
+            }
         }
 
-        return array($date_from, $date_to);
+        // die("from-to return array($date_from, $date_to, $errors)");
+        return array($date_from, $date_to, $errors);
     }
 
     public function calcHijri_from()
     {
         list($date_from, $date_to) = $this->getFromTo();
+        if ($date_from == "error") $date_from = "";
         return $date_from;
     }
 
     public function calcHijri_to()
     {
         list($date_from, $date_to) = $this->getFromTo();
+        if ($date_to == "error") $date_to = "";
         return $date_to;
     }
 
@@ -201,5 +238,15 @@ class Yperiod extends BtbObject
         }
 
         return array(1, 0, "فترة عادية", $ypList);
+    }
+
+    public function afterUpdate($id, $fields_updated, $disableAfterCommitDBEvent = false)
+    {
+        /*
+        $work_branch_id = $this->getVal("work_branch_id");
+        $lang = AfwLanguageHelper::getGlobalLanguage();
+        if ($fields_updated["floors _spec"]) {
+            WorkBenifit::loadByMainIndex()
+        }*/
     }
 }

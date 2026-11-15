@@ -12,7 +12,7 @@ class WbranchEmployeeArTranslator
         $trad['wbranch_employee']['wbranch_employee_'] = 'الموظفين';
         $trad['wbranch_employee']['wbranch_employee_.short'] = 'الموظفين';
         $trad['wbranch_employee']['wbranch_employee.short'] = 'الموظفون';
-        $trad['wbranch_employee']['orgunit_id'] = 'الشركة/الفرع';
+        $trad['wbranch_employee']['org' . 'unit_id'] = 'الشركة/الفرع';
         $trad['wbranch_employee']['work_branch_id'] = 'الشركة/الفرع';
 
         $trad['wbranch_employee']['wrole_mfk'] = 'المسؤوليات المناطة به';

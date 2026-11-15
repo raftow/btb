@@ -781,7 +781,7 @@ class BusTemplate extends BtbObject
                         if ($btr) {
                                 foreach ($all_cols as $i_col_sel => $col_sel) {
                                         $lowerCol = strtolower($col_sel);
-                                        if ($btr->isAvaialableSeat($i_col_sel, $col_sel)) {
+                                        if ($btr->isAvailableSeat($lowerCol)) {
                                                 $nb_seats++;
                                         }
                                 }

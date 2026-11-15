@@ -6,7 +6,7 @@
   'level' => '999',
   'public' => false,
   'module_id' => '1272',
-  'menu_name_ar' => 'مسح',
+  'menu_name_ar' => 'مسح سكن رحلة',
   'menu_name_en' => 'delete Travel hotel',
   'page' => 'main.php?Main_Page=afw_mode_delete.php&cl=TravelHotel&currmod=btb',
   'css' => 'bf',

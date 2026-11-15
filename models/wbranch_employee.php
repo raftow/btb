@@ -46,13 +46,13 @@ class WbranchEmployee extends BtbObject
                         return null;
         }
 
-        public static function getAuthenticatedEmployeeObject($orgunit_id = 0)
+        public static function getAuthenticatedEmployeeObject($org_unit_id = 0)
         {
                 $objme = AfwSession::getUserConnected();
                 if ($objme) {
                         $employee_id = $objme->getEmployeeId();
                         if ($employee_id) {
-                                return WbranchEmployee::findWbranchEmployee($employee_id, $orgunit_id);
+                                return WbranchEmployee::findWbranchEmployee($employee_id, $org_unit_id);
                         }
                 }
                 return null;
@@ -83,21 +83,25 @@ class WbranchEmployee extends BtbObject
                 $this->select_visibilite_horizontale_default($dropdown, $selects);
         }
 
-        public static function loadByEmail($orgunit_id, $email, $create_obj_if_not_found = false)
+        /**
+         * @param int $org_unit_id, 
+         * @param string $email
+         */
+        public static function loadByEmail($org_unit_id, $email, $create_obj_if_not_found = false)
         {
-                if (!$orgunit_id) throw new AfwRuntimeException("loadByMainIndex : orgunit_id is mandatory field");
+                if (!$org_unit_id) throw new AfwRuntimeException("loadByMainIndex : org_unit_id is mandatory field");
                 if (!$email) throw new AfwRuntimeException("loadByMainIndex : email is mandatory field");
 
 
                 $obj = new WbranchEmployee();
-                $obj->select("orgunit_id", $orgunit_id);
+                $obj->select("org" . "unit_id", $org_unit_id);
                 $obj->select("email", $email);
 
                 if ($obj->load()) {
                         if ($create_obj_if_not_found) $obj->activate();
                         return $obj;
                 } elseif ($create_obj_if_not_found) {
-                        $obj->set("orgunit_id", $orgunit_id);
+                        $obj->set("org" . "unit_id", $org_unit_id);
                         $obj->set("email", $email);
 
                         $obj->insertNew();
@@ -108,17 +112,19 @@ class WbranchEmployee extends BtbObject
         }
 
         /**
+         * @param int $org_unit_id, 
+         * @param int $employee_id, 
          * @return WbranchEmployee
          */
-        public static function loadByEmployeeId($orgunit_id, $employee_id, $create_obj_if_not_found = false)
+        public static function loadByEmployeeId($org_unit_id, $employee_id, $create_obj_if_not_found = false)
         {
                 $obj = new WbranchEmployee();
-                if (!$orgunit_id)
-                        throw new AfwRuntimeException('loadByMainIndex : orgunit_id is mandatory field');
+                if (!$org_unit_id)
+                        throw new AfwRuntimeException('loadByMainIndex : org_unit_id is mandatory field');
                 if (!$employee_id)
                         throw new AfwRuntimeException('loadByMainIndex : employee_id is mandatory field');
 
-                $obj->select('orgunit_id', $orgunit_id);
+                $obj->select('org' . 'unit_id', $org_unit_id);
                 $obj->select('employee_id', $employee_id);
 
                 if ($obj->load()) {
@@ -126,7 +132,7 @@ class WbranchEmployee extends BtbObject
                                 $obj->activate();
                         return $obj;
                 } elseif ($create_obj_if_not_found) {
-                        $obj->set('orgunit_id', $orgunit_id);
+                        $obj->set('org' . 'unit_id', $org_unit_id);
                         $obj->set('employee_id', $employee_id);
 
                         $obj->insert();
@@ -137,26 +143,30 @@ class WbranchEmployee extends BtbObject
         }
 
         /**
+         * @param int $org_unit_id, 
+         * @param int $employee_id, 
          * @return WbranchEmployee
          */
-        public static function findWbranchEmployee($employee_id, $orgunit_id = 0)
+        public static function findWbranchEmployee($employee_id, $org_unit_id = 0)
         {
-                if (!$orgunit_id)
-                        $orgunit_id = WbranchEmployee::orgOfEmployee($employee_id, false, true);
-                return WbranchEmployee::checkExistance($orgunit_id, $employee_id);
+                if (!$org_unit_id)
+                        $org_unit_id = WbranchEmployee::orgOfEmployee($employee_id, false, true);
+                return WbranchEmployee::checkExistance($org_unit_id, $employee_id);
         }
 
         /**
+         * @param int $org_unit_id, 
+         * @param int $employee_id,
          * @return WbranchEmployee
          */
-        public static function checkExistance($orgunit_id, $employee_id)
+        public static function checkExistance($org_unit_id, $employee_id)
         {
-                if (!$orgunit_id)
+                if (!$org_unit_id)
                         return null;
                 if (!$employee_id)
                         return null;
 
-                return self::loadByEmployeeId($orgunit_id, $employee_id, $create_obj_if_not_found = false);
+                return self::loadByEmployeeId($org_unit_id, $employee_id, $create_obj_if_not_found = false);
         }
 
         public function getDisplay($lang = 'ar')
@@ -165,7 +175,7 @@ class WbranchEmployee extends BtbObject
                 $link = array();
 
                 list($data[0], $link[0]) = $this->displayAttribute('employee_id', false, $lang);
-                list($data[1], $link[1]) = $this->displayAttribute('orgunit_id', false, $lang);
+                list($data[1], $link[1]) = $this->displayAttribute('org' . 'unit_id', false, $lang);
 
                 return implode(' - ', $data);
         }
@@ -274,7 +284,7 @@ class WbranchEmployee extends BtbObject
                 $obj = new WbranchRequest();
 
                 $me_id = $this->getVal('employee_id');
-                $me_org_id = $this->getVal('orgunit_id');
+                $me_org_id = $this->getVal('org'.'unit_id');
 
                 /*
                  * $obj->where("superv isor_id = $me_id");
@@ -283,10 +293,10 @@ class WbranchEmployee extends BtbObject
                  * $obj->update(false);
                  *
 
-                $obj->where("(employee_id = $me_id and orgunit_id = $me_org_id)");
+                $obj->where("(employee_id = $me_id and org"."unit_id = $me_org_id)");
                 $obj->where('status_id in (2,4,)');
                 $obj->setForce('employee_id', 0);
-                $obj->setForce('orgunit_id', 0);
+                $obj->setForce('org'.'unit_id', 0);
                 $status_comment = 'removeMeAllAssigned me_id=' . $me_id;
                 $obj->setForce('status_comment', $status_comment);
                 $obj->update(false);
@@ -303,7 +313,7 @@ class WbranchEmployee extends BtbObject
         public function beforeMaj($id, $fields_updated)
         {
                 $lang = AfwLanguageHelper::getGlobalLanguage();
-                $main_orgunit_id = AfwSession::config('main_orgunit_id', 1);
+                $main_org_unit_id = AfwSession::config('main_org_unit_id', 1);
                 $email = $this->getVal('email');
                 $objEmployee = null;
 
@@ -311,8 +321,8 @@ class WbranchEmployee extends BtbObject
                         $objEmployee = $this->het('employee_id');
                 }
 
-                if ($fields_updated['email'] and $main_orgunit_id and $email) {
-                        $objEmployee = Employee::loadByEmail($main_orgunit_id, $email);
+                if ($fields_updated['email'] and $main_org_unit_id and $email) {
+                        $objEmployee = Employee::loadByEmail($main_org_unit_id, $email);
                 }
 
                 if ($objEmployee and $objEmployee->getVal('firstname')) {
@@ -593,9 +603,9 @@ class WbranchEmployee extends BtbObject
 
         public function calcWork_branch_id()
         {
-                if (!$this->getVal('orgunit_id'))
+                if (!$this->getVal('org' . 'unit_id'))
                         return null;
-                $obj = WorkBranch::loadByOrgunitId($this->getVal('orgunit_id'));
+                $obj = WorkBranch::loadByOrgunitId($this->getVal('org' . 'unit_id'));
                 return $obj;
         }
 
@@ -606,11 +616,11 @@ class WbranchEmployee extends BtbObject
                         return null;
 
                 $employee_id = $this->getVal('employee_id');
-                $orgunit_id = $this->getVal('orgunit_id');
+                $org_unit_id = $this->getVal('org'.'unit_id');
 
                 $obj = new WbranchRequest();
                 $obj->select('employee_id', $employee_id);
-                $obj->select('orgunit_id', $orgunit_id);
+                $obj->select('org'.'unit_id', $org_unit_id);
 
                 if ($only_done)
                         $obj->where("done='Y'");
@@ -657,28 +667,7 @@ class WbranchEmployee extends BtbObject
                 return round($satisfied_only_count * 100 / $all_count);
         }
 
-        public static function getCommiteeArray($orgunit_id, $commitee_id)
-        {
-                $obj = new WbranchEmployee();
-                // $obj->select_visibilite_horizontale();
-                $obj->select('orgunit_id', $orgunit_id);
-                $obj->select('commitee_id', $commitee_id);
-                $obj->select('active', 'Y');
-
-                return $obj->loadMany();
-        }
-
-        public static function getCommiteeList($orgunit_id, $commitee_id)
-        {
-                $objList = self::getCommiteeArray($orgunit_id, $commitee_id);
-
-                $supervList = array();
-
-                foreach ($objList as $objItem) {
-                        $supervList[$objItem->getVal('employee_id')] = array('obj' => $objItem, 'curr' => 0);  // ->getDisplay("ar")
-                }
-                return $supervList;
-        }*/
+        */
 
         /*
          * public static function isAdmin($employee_id)
@@ -703,9 +692,9 @@ class WbranchEmployee extends BtbObject
          * }
          */
 
-        public static function getEmployeeListOfIds($orgunit_id, $wscope_id, $except_employee_id = 0, $accepted_roles = [1])
+        public static function getEmployeeListOfIds($org_unit_id, $wscope_id, $except_employee_id = 0, $accepted_roles = [1])
         {
-                $empList = self::getEmployeeList($orgunit_id, $wscope_id, $except_employee_id, $accepted_roles);
+                $empList = self::getEmployeeList($org_unit_id, $wscope_id, $except_employee_id, $accepted_roles);
 
                 $empListIds = array();
                 foreach ($empList as $id => $empObj) {
@@ -715,11 +704,11 @@ class WbranchEmployee extends BtbObject
                 return array($empListIds, $empList);
         }
 
-        public static function getEmployeeList($orgunit_id = 0, $except_employee_id = 0, $have_one_of_roles = [1], $hrm = true)
+        public static function getEmployeeList($org_unit_id = 0, $except_employee_id = 0, $have_one_of_roles = [1], $hrm = true)
         {
                 $obj = new WbranchEmployee();
                 $obj->select('active', 'Y');
-                if ($orgunit_id) $obj->select('orgunit_id', $orgunit_id);
+                if ($org_unit_id) $obj->select('org' . 'unit_id', $org_unit_id);
                 if ($except_employee_id) $obj->where("employee_id != $except_employee_id");
                 if ($have_one_of_roles) $obj->where("wrole_mfk like '%," . implode(",%' or wrole_mfk like '%,", $have_one_of_roles) . ",%'");
 
@@ -730,9 +719,9 @@ class WbranchEmployee extends BtbObject
                 return $objList;
         }
 
-        public static function getEmployeeArray($orgunit_id, $wscope_id, $except_employee_id = 0, $accepted_roles = [1])
+        public static function getEmployeeArray($org_unit_id, $wscope_id, $except_employee_id = 0, $accepted_roles = [1])
         {
-                $objList = self::getEmployeeList($orgunit_id, $wscope_id, $except_employee_id, $accepted_roles, false);
+                $objList = self::getEmployeeList($org_unit_id, $wscope_id, $except_employee_id, $accepted_roles, false);
 
                 $empList = array();
 
@@ -750,7 +739,7 @@ class WbranchEmployee extends BtbObject
                         $obj->select('employee_id', $employee_id);
                         $obj->select('active', 'Y');
 
-                        self::$orgListOfEmployee[$employee_id] = AfwLoadHelper::loadList($obj, 'orgunit_id');
+                        self::$orgListOfEmployee[$employee_id] = AfwLoadHelper::loadList($obj, 'org' . 'unit_id');
                 }
 
                 $objList = self::$orgListOfEmployee[$employee_id];
@@ -794,9 +783,9 @@ class WbranchEmployee extends BtbObject
         }
 
         /*
-        public static function getBestAvailableEmployee($orgunit_id, $wscope_id, $except_employee_id = 0, $strict = false, $accepted_roles = [1])
+        public static function getBestAvailableEmployee($org_unit_id, $wscope_id, $except_employee_id = 0, $strict = false, $accepted_roles = [1])
         {
-                $employeeList = self::getEmployeeArray($orgunit_id, $wscope_id, $except_employee_id, $accepted_roles);
+                $employeeList = self::getEmployeeArray($org_unit_id, $wscope_id, $except_employee_id, $accepted_roles);
                 if ($except_employee_id)
                         unset($employeeList[$except_employee_id]);
                 else
@@ -806,7 +795,7 @@ class WbranchEmployee extends BtbObject
                         $function = 'count(*)',
                         $where = " active='Y' 
                                                                                 and done != 'Y'
-                                                                                and orgunit_id=$orgunit_id 
+                                                                                and org_unit_id=$org_unit_id 
                                                                                 and employee_id > 0 
                                                                                 and employee_id != $except_employee_id",
                         $group_by = 'employee_id',
@@ -856,17 +845,17 @@ class WbranchEmployee extends BtbObject
                 else
                         $return = null;
 
-                $log = "strict=$strict sql=$sql stats_arr = " . var_export($stats_arr, true) . " employeeList = " . var_export($employeeList, true) . " after self::getEmployeeArray(orgunit_id=$orgunit_id, wscope_id=$wscope_id, except_employee_id=$except_employee_id, accepted_roles=" . var_export($accepted_roles, true) . ")";
+                $log = "strict=$strict sql=$sql stats_arr = " . var_export($stats_arr, true) . " employeeList = " . var_export($employeeList, true) . " after self::getEmployeeArray(org"."unit_id=$org_unit_id, wscope_id=$wscope_id, except_employee_id=$except_employee_id, accepted_roles=" . var_export($accepted_roles, true) . ")";
                 // throw new AfwRuntimeException("best_employee_id = $best_employee_id , return = ".var_export($return,true).", employeeList = ".var_export($employeeList,true));
 
                 return array($best_employee_id, $return, $employeeList, $log);
         }*/
 
         /*
-         * public static function getBestAvailableCommitee($orgunit_id, $except_supervisor_id=0, $re_distribution=false)
+         * public static function getBestAvailableCommitee($org_unit_id, $except_supervisor_id=0, $re_distribution=false)
          * {
          *         global $allCommiteeList;
-         *         if(!$allCommiteeList) $allCommiteeList = self::getCommiteeList($orgunit_id);
+         *         if(!$allCommiteeList) $allCommiteeList = self::getCommiteeList($org_unit_id);
          *         $supervisorList = $allCommiteeList;
          *         if($except_supervisor_id) unset($supervisorList[$except_supervisor_id]);
          *         else $except_supervisor_id=0;
@@ -919,9 +908,9 @@ class WbranchEmployee extends BtbObject
          * }
          *
          *
-         * public function assignMeAsWbranchRequestCommitee($requestObj, $commit = true) // , $orgunit_id
+         * public function assignMeAsWbranchRequestCommitee($requestObj, $commit = true) // , $org_unit_id
          * {
-         *         // $requestObj->set("orgunit_id", $orgunit_id);
+         *         // $requestObj->set("org_unit_id", $org_unit_id);
          *         $requestObj->set("superv isor_id", $this->getVal("employee_id"));
          *         if($commit) $requestObj->commit();
          * }
@@ -969,7 +958,7 @@ class WbranchEmployee extends BtbObject
         public static function notifyWbranchEmployees($silent = false, $lang = 'ar')
         {
                 $server_db_prefix = AfwSession::config('db_prefix', 'default_db_');
-                $sql_inbox = "select orgunit_id, employee_id, count(*) as waiting from $server_db_prefix" . 'btb.request where status_id in (201,4) group by orgunit_id, employee_id order by count(*) desc';
+                $sql_inbox = "select org" . "unit_id, employee_id, count(*) as waiting from $server_db_prefix" . 'btb.request where status_id in (201,4) group by org' . 'unit_id, employee_id order by count(*) desc';
                 // $sql_inbox .= " limit 30";
 
                 $inbox_data = AfwDatabase::db_recup_rows($sql_inbox);
@@ -983,7 +972,7 @@ class WbranchEmployee extends BtbObject
                         $token_arr['[btb_site_url]'] = AfwSession::config('btb_site_url', '[btb-site]');
                         $token_arr['[btb_general_admin]'] = AfwSession::config('btb_general_admin', 'rboubaker@ttc.gov.sa');
 
-                        $wbranchEmployeeObj = WbranchEmployee::loadByEmployeeId($inbox_row['orgunit_id'], $inbox_row['employee_id']);
+                        $wbranchEmployeeObj = WbranchEmployee::loadByEmployeeId($inbox_row['org' . 'unit_id'], $inbox_row['employee_id']);
                         list($err, $info) = $wbranchEmployeeObj->notifyMe($lang, $token_arr);
                         if ($err)
                                 $errors_arr[] = $err;
@@ -1016,7 +1005,7 @@ class WbranchEmployee extends BtbObject
                 if (count($token_arr) == 0) {
                         $token_arr = [];
                         $server_db_prefix = AfwSession::config('db_prefix', 'default_db_');
-                        $sql_inbox = "select orgunit_id, employee_id, count(*) as waiting from $server_db_prefix" . "btb.request where employee_id = $my_employee_id and status_id in (201,4) group by orgunit_id, employee_id";
+                        $sql_inbox = "select org" . "unit_id, employee_id, count(*) as waiting from $server_db_prefix" . "btb.request where employee_id = $my_employee_id and status_id in (201,4) group by org" . "unit_id, employee_id";
 
                         $inbox_row = AfwDatabase::db_recup_row($sql_inbox);
                         $token_arr['[waiting]'] = $inbox_row['waiting'];
@@ -1024,7 +1013,7 @@ class WbranchEmployee extends BtbObject
                         $token_arr['[btb_general_admin]'] = AfwSession::config('btb_general_admin', 'rboubaker@ttc.gov.sa');
                 }
 
-                $token_arr['[the_orgunit]'] = $this->showAttribute('orgunit_id', null, true, $lang);
+                $token_arr['[the_orgunit]'] = $this->showAttribute('org' . 'unit_id', null, true, $lang);
 
                 $errors_arr = array();
                 $infos_arr = array();

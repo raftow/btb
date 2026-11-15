@@ -182,4 +182,35 @@ class BtbObject extends AfwMomkenObject
 
                 return  $list_of_items;
         }
+
+        public static function list_of_week_period_enum()
+        {
+                $list_of_items = array();
+                $list_of_items[1] = "ويكاند";
+                $list_of_items[2] = "وسط الأسبوع";
+
+                return  $list_of_items;
+        }
+
+        public static function list_of_period_type_enum()
+        {
+                $list_of_items = array();
+                $list_of_items[1] = "فترة عادية";
+                $list_of_items[2] = "فترة موسمية";
+
+                return  $list_of_items;
+        }
+
+        public static function list_of_seat_category_enum()
+        {
+                $list_of_items = array();
+                $list_of_items[5] = "مقعد سرير";  //     code : BED 
+                $list_of_items[7] = "بجانب الباب";  //     code : DOOR 
+                $list_of_items[2] = "مقعد أمامي";  //     code : FRONT 
+                $list_of_items[4] = "الدرجة الذهبية";  //     code : GOLDEN 
+                $list_of_items[1] = "عادي";  //     code : NORMAL 
+                $list_of_items[3] = "الدرجة الفضية";  //     code : SILVER 
+                $list_of_items[6] = "بجانب النافذة";  //     code : WINDOW 
+                return  $list_of_items;
+        }
 }

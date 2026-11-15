@@ -63,7 +63,7 @@ class BtbBusConventionAfwStructure
 			'ANSWER' => 'work_branch',
 			'ANSMODULE' => 'btb',
 			'AUTOCOMPLETE' => true,
-			'WHERE' => "(parent_id = §orgunit_id§ or id = §orgunit_id§)",
+			'WHERE' => "(parent_id = §orgun it_id§ or id = §orgu nit_id§)",
 
 			'RELATION' => 'OneToMany',
 			'READONLY' => true,
@@ -112,7 +112,7 @@ class BtbBusConventionAfwStructure
 			'MAXLENGTH' => 32,
 			'REQUIRED' => true,
 			'UTF8' => false,
-			'WHERE' => "id != §orgunit_id§ and parent_id = 0 and (work_service_mfk like '%,1,%' or work_service_mfk like '%,2,%')",
+			'WHERE' => "id != §orgun it_id§ and parent_id = 0 and (work_service_mfk like '%,1,%' or work_service_mfk like '%,2,%')",
 
 			'DEPENDENT_OFME' => array(
 				0 => 'bus_branch_id',

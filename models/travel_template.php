@@ -6,6 +6,10 @@ $file_dir_name = dirname(__FILE__);
 
 class TravelTemplate extends BtbObject
 {
+    /**
+     * @var array
+     */
+    private $generated_bus_program;
 
     public static $MY_ATABLE_ID = 13742;
     // إجراء إحصائيات حول برامج الرحلات 
@@ -72,9 +76,9 @@ class TravelTemplate extends BtbObject
         $objme = AfwSession::getUserConnected();
 
         if ($objme) {
-            $orgunit_id = $objme->getMyDepartmentId();
-            if (!$orgunit_id) $orgunit_id = $objme->getMyOrganizationId();
-            $work_branch_id = WorkBranch::fromOrgunitIdToWorkbranchId($orgunit_id);
+            $org_unit_id = $objme->getMyDepartmentId();
+            if (!$org_unit_id) $org_unit_id = $objme->getMyOrganizationId();
+            $work_branch_id = WorkBranch::fromOrgunitIdToWorkbranchId($org_unit_id);
             $this->set("work_branch_id", $work_branch_id);
             $this->silentField("work_branch_id");
             $compObj = $this->het("work_branch_id");
@@ -315,43 +319,105 @@ class TravelTemplate extends BtbObject
         return [1, 2];
     }
 
+    /**
+     * @return float
+     */
+    public function calcSeatBasePrice($what = "value", $returnReport = false)
+    {
+        $lang = AfwLanguageHelper::getGlobalLanguage();
+        /**
+         * @var Bus $busExampleObj 
+         */
+        $busExampleObj = $this->het("example_bus_id");
+        if (!$busExampleObj) return 0.0;
+        $report_bus_example = "نموذج الباص : " . $busExampleObj->getDisplay($lang) . " <br> الرقم التسلسلي : " . $busExampleObj->id;
+        $travelProgramObj = $this->calcTravel_program_id($what = 'object');
+        $report_travel_prog = "قالب الرحلة : " . $travelProgramObj->getDisplay($lang);
+
+        $travel_program_id = $travelProgramObj->id;
+
+        $company_name = $this->decode("work_branch_id", '', false, "ar");
+
+        $days_nb = $this->calcTravel_duration();
+        $nbSeats = $busExampleObj->calcNb_seats();
+
+        list($busTotalPrice, $errors_arr, $report_arr,) = $busExampleObj->getBusTotalPrice($travel_program_id, $days_nb, $company_name);
+        if ($busTotalPrice < 0) $report = implode(" => ", $report_arr) . "; " . implode(" => ", $errors_arr);
+        else $report = "$busTotalPrice = busExampleObj->getBusTotalPrice($travel_program_id, $days_nb, $company_name), nbSeats=$nbSeats";
+
+        if (!$nbSeats) $base_price = 0.0;
+        else $base_price = round(100 * $busTotalPrice / $nbSeats) / 100;
+
+        if (!$returnReport) return $base_price;
+        else return [$base_price, $report_bus_example . "<br>" . $report_travel_prog . "<br>" . $report];
+    }
+
     public function updateSeatPricing($lang = "ar", $reset_all = false)
     {
         $ttsprCount = 0;
         $ttsprCountUpdate = 0;
         list($wp_min, $wp_max) = $this->myWeekPeriod();
-        for ($seat_categ = 1; $seat_categ <= 2; $seat_categ++) {
+        $workBranchObj = $this->het("work_branch_id");
+        $wbYperiodList = $workBranchObj->get("yperiodList");
+        $price_report_arr = [];
+        $seat_category_men = $workBranchObj->getVal("seat_category_men");
+        $seat_category_men = trim($seat_category_men, ",");
+        if (!$seat_category_men) $seat_category_men = "1,2";
+        $seat_category_arr = explode(",", $seat_category_men);
+        // calculer le prix de base d un seat selon les params
+        list($seatBasePrice, $seatBasePriceReport) = $this->calcSeatBasePrice('value', true);
+        $price_report_arr[] = "  سعر تكلفة المقعد : $seatBasePrice ريال ";
+        $price_report_arr[] = $seatBasePriceReport;
+        foreach ($seat_category_arr as $seat_categ) {
             for ($weekPeriod = $wp_min; $weekPeriod <= $wp_max; $weekPeriod++) {
                 for ($typePeriod = 1; $typePeriod <= 2; $typePeriod++) {
+                    if ($typePeriod == 2) {
+                        $yperiodList = $wbYperiodList;
+                    } else {
+                        $yperiodList = [0 => null];
+                    }
+                    foreach ($yperiodList as $yperiodItemId => $yperiodItem) {
+                        $price_report_arr[] = "-----------------------------------------------------------------------";
+                        $ttsprObj = TravelTemplateSeatPricing::loadByMainIndex($this->id, $seat_categ, $weekPeriod, $typePeriod, $yperiodItemId, $create_obj_if_not_found = true);
+                        $price_report_arr[] = "حساب سعر المقعد للسياق التالي : " . $ttsprObj->getDisplay($lang);
+                        if ($ttsprObj->is_new) {
+                            $ttsprCount++;
+                        } else $ttsprCountUpdate++;
 
-                    $ttsprObj = TravelTemplateSeatPricing::loadByMainIndex($this->id, $seat_categ, $weekPeriod, $typePeriod, 0, $create_obj_if_not_found = true);
-                    if ($ttsprObj->is_new) {
-                        $ttsprCount++;
-                    } else $ttsprCountUpdate++;
+                        if ($ttsprObj->is_new or $reset_all) {
+                            // add supplement for seat category
+                            $branchSeatPriceObj = BranchSeatPrice::loadByMainIndex($workBranchObj->id, $seat_categ);
+                            $seat_auppl = floatval($branchSeatPriceObj ? $branchSeatPriceObj->getVal("supp_pct") : 0);
+                            $price_report_arr[] = "  نسبة زيادة المقعد : $seat_auppl % ";
 
-                    if ($ttsprObj->is_new or $reset_all) {
-                        // @todo calculer le prix selon les params
+                            $seatCategorizedBasePrice = (1 + $seat_auppl / 100) * $seatBasePrice;
+                            $price_report_arr[] = "  سعر صنف المقعد : $seatCategorizedBasePrice ريال ";
+                            // get benefit rules
+                            $travel_level_enum = $this->getVal("travel_level");
+                            list($err, $info, $travelProgramObj, $travel_duration) = $this->genereMyTravelProgram();
 
-                        // first calc total cost of bus and basic cost of seat
+                            $benifit_pct = $workBranchObj->getWorkBenifit($travel_level_enum, $travelProgramObj->getId(), $travel_duration, $weekPeriod, $typePeriod, $yperiodItemId);
+                            $price_report_arr[] = "  نسبة ربح الشركة : $benifit_pct % ";
+                            // apply benefit rules
+                            $price_with_benefit = (1 + $benifit_pct / 100.0) * $seatCategorizedBasePrice;
+                            $price_report_arr[] = "  سعر صنف المقعد : $price_with_benefit ريال ";
 
-                        // add benfinit by applying benefit rules
-
-                        // add supplement for seat category
-
-                        // simulation
-                        $price_basic = (1 + (2 - $weekPeriod) * 0.1) * (1 + ($typePeriod - 1) * 0.1) * 70.0;
-                        $pct_supplement = ($seat_categ - 1) * 0.1;
-                        $benifit = 1.1;
-                        $seat_category_supplement = 1 + $pct_supplement;
-                        $price = round($price_basic * $benifit * $seat_category_supplement);
-                        $ttsprObj->set("price", $price);
-                        $ttsprObj->commit();
+                            $ttsprObj->set("price", $price_with_benefit);
+                            $ttsprObj->commit();
+                        }
                     }
                 }
             }
         }
 
-        return array("", " بحمد الله التقرير كالتالي $ttsprCountUpdate موجودة مسيقا $ttsprCount تسعيرة جديدة تم انشاؤها. الرجاء مراجعة السعر واعتماده للرحلات القادمة");
+        $price_report = implode("<br>\n", $price_report_arr);
+
+        return array("", " بحمد الله التقرير كالتالي <br>\n
+        $ttsprCountUpdate موجودة مسيقا <br>\n
+        $ttsprCount تسعيرة جديدة تم انشاؤها.<br>\n
+        تم الاعتماد في حساب الأسعار على التفاصيل التالية <br>\n
+        $price_report
+        الرجاء مراجعة السعر واعتماده للرحلات القادمة");
     }
 
 
@@ -1122,6 +1188,7 @@ class TravelTemplate extends BtbObject
         if ($trips_nb > 4) $trips_nb = 4;
         $this->set("trips_nb", $trips_nb);
 
+        /*::ro-ad
         $road_name = Road::$DEFAULT_ROAD_NAME;
 
         $depart_city = $this->getVal("depart_city_id");
@@ -1131,7 +1198,7 @@ class TravelTemplate extends BtbObject
 
         $last_city       = $this->lastTripCityId();
 
-        /*::ro-ad
+        
         if ($depart_city and $city1 and ($trips_nb > 1)) Ro-ad::setRoadInfos($road_name, $depart_city, $city1, $this->getVal("distance_c1"));
         if ($city1 and $city2 and ($trips_nb > 2)) Ro-ad::setRoadInfos($road_name, $city1,       $city2, $this->getVal("distance_c2"));
         if ($city2 and $city3 and ($trips_nb > 3)) Ro-ad::setRoadInfos($road_name, $city2,       $city3, $this->getVal("distance_c3"));
@@ -1231,15 +1298,21 @@ class TravelTemplate extends BtbObject
         $travel_template_id = $this->getId();
         $travelers_nb = intval($this->getVal("travelers_nb"));
         $log_arr = array();
-        $log_arr[] = "عدد المركبات التي نحتاج إليها في الرحلة حسب التقدير :";
+
 
         // already there :
         $travelTemplateBusCount = $this->getRelation("travelTemplateBusList")->count();
         $taux = 1.3; // on genere un peu plus mieux que moins
-        $bus_nb = round(($travelers_nb / $nb_seats) * $taux) - $travelTemplateBusCount;
-
+        $required_nb_buses = round(($travelers_nb / $nb_seats) * $taux);
+        $bus_nb = $required_nb_buses - $travelTemplateBusCount;
         $new_instance_nb = round($bus_nb / 2);
         if (!$new_instance_nb) $new_instance_nb = $bus_nb;
+        $log_arr[] = "عدد المركبات التي نحتاج إليها في الرحلة حسب التقدير : $required_nb_buses = round(($travelers_nb / $nb_seats) * $taux)";
+        $log_arr[] = "عدد المركبات التي نحتاج إلى إضافتها : $bus_nb = $required_nb_buses - $travelTemplateBusCount";
+        $log_arr[] = "عدد المركبات سيتم إضافتها : $new_instance_nb نقريب إلى ($bus_nb / 2)";
+
+
+
 
 
         if ($bus_category_enum == 1) {
@@ -1247,7 +1320,7 @@ class TravelTemplate extends BtbObject
 
             list($err, $info, $warn, $tech, $newBusList) = $busExampleObj->genereRealBusListFromThisExample($lang, $params = array('new_instance_nb' => $new_instance_nb, 'return' => 'new', 'bus_code' => "", 'bus_color' => 0), $commit = true);
             foreach ($newBusList as $bus_order => $busItem) {
-                $travelTemplateBusItem = TravelTemplateBus::loadByMainIndex($travel_template_id, $bus_order + 1, $busItem->id, $create_obj_if_not_found = true);
+                $travelTemplateBusItem = TravelTemplateBus::loadByMainIndex($travel_template_id, $travelTemplateBusCount + $bus_order + 1, $busItem->id, $busItem->getVal("work_branch_id"), $create_obj_if_not_found = true);
             }
         }
 
@@ -1299,7 +1372,7 @@ class TravelTemplate extends BtbObject
             if ($this_bus_qty <= 2) $this_bus_qty = 2;
             $needed_nb = ($to_book_bus_nb >= $this_bus_qty) ? $this_bus_qty : $to_book_bus_nb;
             if ($needed_nb) {
-                $travelTemplateBusItem = TravelTemplateBus::loadByMainIndex($tr_temp_id, $bus_order, $create_obj_if_not_found = true);
+                $travelTemplateBusItem = Travel TemplateBus::loadByMainIndex($tr_temp_id, $bus_order, $create_obj_if_not_found = true);
                 list($found, $err, $log0) = $travelTemplateBusItem->assignAvailableBus($busItem, $needed_nb);
                 if ($err) return array("genereBusList > $bus_order :      " . $err, "");
                 if (!$found) {
@@ -1670,10 +1743,17 @@ class TravelTemplate extends BtbObject
         return array("", "done", $ttNew);
     }
 
-    public function genereMyBusProgram()
+    public function calcTravel_program_id($what = 'value')
+    {
+        list($x, $y, $travelProgramObj,) = $this->genereMyTravelProgram();
+
+        return AfwLoadHelper::giveWhat($travelProgramObj, $what);
+    }
+
+    public function genereMyTravelProgram()
     {
         if ($this->generated_bus_program) return $this->generated_bus_program;
-        $file_dir_name = dirname(__FILE__);
+        // $file_dir_name = dirname(__FILE__);
         // require_once("$file_dir_name/../btb/travel_program.php");
         $depart_city_id = $this->getVal("depart_city_id");
         $city1_id = $this->getVal("city1_id");
@@ -1689,8 +1769,10 @@ class TravelTemplate extends BtbObject
         if ($trips_nb == 2) $full_distance += $distance_c1;
         if ($trips_nb == 3) $full_distance += ($distance_c2 + $distance_return);
         if ($trips_nb == 4) $full_distance += ($distance_c2 + $distance_c3 + $distance_return);
-
-        $travelProgramObj = TravelProgram::loadByMainIndex($depart_city_id, $city1_id, $city2_id, $city3_id, $trips_nb, $full_distance, $create_obj_if_not_found = true);
+        $full_residence = $this->getVal("full_residence");
+        $travelProgramObj = TravelProgram::loadByMainIndex($trips_nb, $full_residence, $depart_city_id, $city1_id, $city2_id, $city3_id, $create_obj_if_not_found = true);
+        $travelProgramObj->set("full_distance", $full_distance);
+        $travelProgramObj->commit();
         $travel_duration = $this->updateMyTravelPeriod();
 
         $this->generated_bus_program = array("", "", $travelProgramObj, $travel_duration);

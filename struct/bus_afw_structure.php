@@ -827,7 +827,7 @@ class BtbBusAfwStructure
 			'ANSWER' => 'employee',
 			'ANSMODULE' => 'hrm',
 			'AUTOCOMPLETE' => false,
-			'WHERE' => "me.id in (select employee_id from §DBPREFIX§btb.wbranch_employee we inner join §DBPREFIX§btb.work_branch wb on wb.orgunit_id = we.orgunit_id where we.active='Y' and wb.id = §work_branch_id§)",
+			'WHERE' => "me.id in (select employee_id from §DBPREFIX§btb.wbranch_employee we inner join §DBPREFIX§btb.work_branch wb on wb.org" . "unit_id = we.org" . "unit_id where we.active='Y' and wb.id = §work_branch_id§)",
 
 			'RELATION' => 'ManyToOne',
 			'READONLY' => false,

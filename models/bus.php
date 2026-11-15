@@ -172,8 +172,19 @@ class Bus extends BtbObject
                 return $accountCompanyObj;
         }
 
+        /**
+         * @param int $travel_program_id
+         * @param string $departure_date, 
+         * @param string $departure_time, 
+         * @param string $arrival_date, 
+         * @param string $arrival_time, 
+         * @param int $days_nb, 
+         * @param string $company_name 
+         * 
+         * @return float
+         */
 
-        public function getBusTotalPrice($travel_program_id, $departure_date, $departure_time, $arrival_date, $arrival_time, $days_nb, $company_name)
+        public function getBusTotalPrice($travel_program_id, $days_nb, $company_name = "", $departure_date = "", $departure_time = "", $arrival_date = "", $arrival_time = "")
         {
                 $errors_arr = array();
                 $report_arr = array();
@@ -182,20 +193,21 @@ class Bus extends BtbObject
 
                 if (!$this_id) {
                         $errors_arr[] = "هذه المركبة غير مكتمل البيانات";
-                        return array(-1, $errors_arr, $report_arr, null, null);
+                        return array(-1111, $errors_arr, $report_arr, null, null);
                 }
 
                 $busOwner = $this->het("work_branch_id");
                 if (!$busOwner) {
                         $errors_arr[] = "هذه المركبة لم يتم تحديد ملكيته لأي مؤسسة";
-                        return array(-1, $errors_arr, $report_arr, null, null);
+                        return array(-2222, $errors_arr, $report_arr, null, null);
                 }
 
-                list($week_period_enum, $period_type_enum, $yperiod_id, $days_nb2, $report) = $busOwner->getPeriodInfo($departure_date, $departure_time, $arrival_date, $arrival_time);
-                $report_arr[] = $report;
+
 
                 //@todo
                 if (!$days_nb) {
+                        list($week_period_enum, $period_type_enum, $yperiod_id, $days_nb2, $report) = $busOwner->getPeriodInfo($departure_date, $departure_time, $arrival_date, $arrival_time);
+                        $report_arr[] = $report;
                         $days_nb = $days_nb2;
                         $report_arr[] = "تمت إعادة حساب طول مدة الرحلة إلى $days_nb يوم";
                 }
@@ -286,6 +298,8 @@ class Bus extends BtbObject
                 $data[0] = $this->calcCategory('value', false, true, true);
                 list($data[1], $link[1]) = $this->displayAttribute("bus_brand_id", false, $lang);
                 list($data[2], $link[2]) = $this->displayAttribute("bus_model_id", false, $lang);
+                $factory_year = $this->getVal("factory_year");
+                $data[2] = trim($data[2] . " " . $factory_year);
                 list($data[3], $link[3]) = $this->displayAttribute("work_branch_id", false, $lang);
 
 
@@ -302,6 +316,8 @@ class Bus extends BtbObject
                 list($data[0], $link[0]) = $this->displayAttribute("work_branch_id", false, $lang);
                 list($data[1], $link[1]) = $this->displayAttribute("bus_brand_id", false, $lang);
                 list($data[2], $link[2]) = $this->displayAttribute("bus_model_id", false, $lang);
+                $factory_year = $this->getVal("factory_year");
+                $data[2] = trim($data[2] . " " . $factory_year);
                 $data[3] = $this->calcCategory('value', false, true, true);
 
                 if ($this->sureIs("reel")) {
@@ -408,16 +424,7 @@ class Bus extends BtbObject
 
                 return $otherLinksArray;
         }
-        public function genereMyPricings($lang = "ar")
-        {
-                return array("obsolete", "");
-                /*
-              
-                $ownerObj = $this->het("work_branch_id");
-                if($ownerObj) return $ownerObj->genere BusProgramsAndPricings($lang, $return_program_list=false, $this);
-                else return array("الشركة المالكة للباص غير معروفة","");
-                */
-        }
+
 
         public function UpdateChildFromThisExample($lang = "ar")
         {
@@ -446,6 +453,19 @@ class Bus extends BtbObject
         public function hasParent()
         {
                 return intval($this->getVal("parent_bus_id"));
+        }
+
+        public function genereBusProgramsAndPricings($lang = 'ar')
+        {
+                /**
+                 * @var WorkBranch $wBranchObj
+                 */
+                $wBranchObj = $this->het("work_branch_id");
+                if (!$wBranchObj) {
+                        return ["This bus have no branch owner", ""];
+                }
+
+                return $wBranchObj->genereTravelProgramsAndBusPricings($lang, false, $this);
         }
 
         protected function getPublicMethods()
@@ -499,14 +519,18 @@ class Bus extends BtbObject
 
                         );
                 }
-                /*
-            $color = "green";
-            $title_ar = "تحديث جدول تسعيرات المركبة"; 
-            $pbms["hhAxd4"] = array("METHOD"=>"genereMyPricings",
-                                 "COLOR"=>$color, 
-                                 "LABEL_AR"=>$title_ar, 
-                                 "PUBLIC"=>true, "BF-ID"=>"", "HZM-SIZE" =>12, 'STEP' => 4, 
-                                 );*/
+
+                $color = "green";
+                $title_ar = "تحديث جدول تسعيرات المركبة";
+                $pbms["hhAxd4"] = array(
+                        "METHOD" => "genereBusProgramsAndPricings",
+                        "COLOR" => $color,
+                        "LABEL_AR" => $title_ar,
+                        "PUBLIC" => true,
+                        "BF-ID" => "",
+                        "HZM-SIZE" => 12,
+                        'STEP' => 4,
+                );
 
                 if ($this->sureIs("example")) {
                         $color = "yellow";
@@ -1396,27 +1420,30 @@ class Bus extends BtbObject
 
         public function afterInsert($id, $fields_updated, $disableAfterCommitDBEvent = false)
         {
-                $this->genereMyPricings($lang = "ar");
+                // $this->genereBusProgramsAndPricings($lang = "ar");
         }
 
 
 
         public function busReelSeatsCateg()
         {
-                $template = $this->het("bus_template_id");
-                $template->all_categories = BusSeatCategory::getAllActivatedCategories([1, 2, 8]);
-                $seats_arr = $template->getSeatCodes();
-                $template->category_arr = array();
+                /**
+                 * @var BusTemplate $busTemplate
+                 */
+                $busTemplate = $this->het("bus_template_id");
+                $busTemplate->all_categories = BusSeatCategory::getAllActivatedCategories([1, 2, 8]);
+                $seats_arr = $busTemplate->getSeatCodes();
+                $busTemplate->category_arr = array();
                 foreach ($seats_arr as $seat_code) {
                         $bsObj = BusSeat::loadByMainIndex($this->id, $seat_code);
                         if ($bsObj) {
-                                $template->category_arr[$seat_code] = BusSeat::code_of_seat_category($bsObj->getVal("seat_category"));
+                                $busTemplate->category_arr[$seat_code] = BusSeat::code_of_seat_category($bsObj->getVal("seat_category"));
                         } else {
-                                $template->category_arr[$seat_code] = "togenerate";
+                                $busTemplate->category_arr[$seat_code] = "togenerate";
                         }
                 }
 
-                return $template;
+                return $busTemplate;
         }
 
         public function genereSeatsCateg($reset_generation = false)
@@ -1558,10 +1585,13 @@ class Bus extends BtbObject
         public function calcNb_seats()
         {
                 if ($this->nb_seats_from_template) return $this->nb_seats_from_template;
-                $templateObj = $this->het("bus_template_id");
-                if (!$templateObj) return 0;
+                /**
+                 * @var BusTemplate $busTemplateObj
+                 */
+                $busTemplateObj = $this->het("bus_template_id");
+                if (!$busTemplateObj) return 0;
 
-                $this->nb_seats_from_template = $templateObj->calcNb_seats();
+                $this->nb_seats_from_template = $busTemplateObj->calcNb_seats();
                 return $this->nb_seats_from_template;
         }
 
