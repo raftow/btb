@@ -35,23 +35,7 @@ class TravelTemplateSeatPricing extends BtbObject
                 $this->after_save_edit = array("class" => 'TravelTemplate', "attribute" => 'travel_template_id', "currmod" => 'btb', "currstep" => 8);
         }
 
-        public static function list_of_week_period_enum()
-        {
-                $list_of_items = array();
-                $list_of_items[1] = "ويكاند";
-                $list_of_items[2] = "وسط الأسبوع";
 
-                return  $list_of_items;
-        }
-
-        public static function list_of_period_type_enum()
-        {
-                $list_of_items = array();
-                $list_of_items[1] = "فترة عادية";
-                $list_of_items[2] = "فترة موسمية";
-
-                return  $list_of_items;
-        }
 
         public static function loadById($id)
         {
@@ -252,7 +236,7 @@ class TravelTemplateSeatPricing extends BtbObject
                 return self::code_of_seat_category($seat_category);
         }
 
-        public function getAllCategories($activated_categs = array())
+        public function getAllCategoriesCodeAndTitle($activated_categs = array())
         {
                 $list_of_seat_category = $this->list_of_seat_category_enum();
                 $all_arr = array();

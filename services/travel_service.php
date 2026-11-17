@@ -312,6 +312,9 @@ class TravelService
         ];
     }*/
 
+    /**
+     * @param int $work_branch_id
+     */
     public static function genereTravelSeatsAndPricesBlocInsert(
         $work_branch_id,
         $travel_template_id = 0,
@@ -476,10 +479,10 @@ class TravelService
             // I will do hard coded for the moment
             if ($nb_days_before_booking > 15) $nb_days_before_booking = 15;
 
-            // if this run is not a job than only create 3 days anticipate the rest will be
+            // if this run is not a job than only create 10 days anticipate the rest will be
             // performed by the job 
             if (!$job) {
-                if ($nb_days_before_booking > 3) $nb_days_before_booking = 3;
+                if ($nb_days_before_booking > 10) $nb_days_before_booking = 10;
             }
 
             // from : PREPARE - في طور الإعداد

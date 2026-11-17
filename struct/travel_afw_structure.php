@@ -451,7 +451,7 @@ class BtbTravelAfwStructure
 				'TYPE' => 'FK',  'NO-LABEL' => true,  
 				'CATEGORY' => 'ITEMS',  'ANSWER' => 'travel_sta-tion',  'ANSMODULE' => 'btb',  'ITEM' => 'travel_id',  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  
 				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
-				'CSS' => 'width_pct_50',),*/
+				'CSS' => 'width_pct_100',),*/
 
 		'return_date' => array(
 			'STEP' => 2,
@@ -793,7 +793,7 @@ class BtbTravelAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'ERROR-CHECK' => true,
-			'CSS' => 'width_pct_50',
+			'CSS' => 'width_pct_100',
 		),
 
 		'travelHotelList' => array(
@@ -836,7 +836,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_50',
+			'CSS' => 'width_pct_100',
 		),
 
 		'travelers_nb_total' => array(
@@ -1002,7 +1002,7 @@ class BtbTravelAfwStructure
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
-			'CSS' => 'width_pct_50',
+			'CSS' => 'width_pct_100',
 		),
 
 		'first_available_bus' => array(

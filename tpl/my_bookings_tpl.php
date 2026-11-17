@@ -3,7 +3,7 @@
                 <?
                 foreach ($ticketList as $ticketObj) {
                         $my_status = $ticketObj->calcStatus($lang, $translate = false);
-                        $travelObj = $ticketObj->hetTravel();
+                        $travelObj = $ticketObj->het("travel_id");
                         if (!$travelObj) throw new AfwRuntimeException("This travel has been deleted");
 
                         $full_travel_date = ($ds == "hijri") ? $travelObj->fullHijriDate("travel_date") : $travelObj->fullGregDate("travel_gdate");

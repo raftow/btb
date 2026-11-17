@@ -15,7 +15,7 @@ $trad['travel_bus']['opened.NO'] = 'انتهى الحجز';
 $trad['travel_bus']['opened.EUH'] = 'لم يفتح بعد';
 $trad['travel_bus']['opened.Z'] = 'رحلة مغلقة';
 $trad['travel_bus']['opened_date'] = 'تاريخ بدأ حجز المقاعد';
-$trad['travel_bus']['booking_needed'] = 'المركبة يحتاج طلب تأجير';
+$trad['travel_bus']['booking_needed'] = 'المركبة تحتاج طلب تأجير';
 $trad['travel_bus']['booking_needed_now'] = 'حان موعد التأجير ؟';
 
 $trad['travel_bus']['booked'] = 'تم طلب تأجير مبدئي للمركبة';

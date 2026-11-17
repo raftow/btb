@@ -17,72 +17,8 @@ class RoomDay extends BtbObject
         public static $DATABASE                = "";
         public static $MODULE                    = "btb";
         public static $TABLE                        = "";
-        public static $DB_STRUCTURE = null; /* = array(
-                id => array(SHOW => true, RETRIEVE => true, EDIT => true, TYPE => PK),
+        public static $DB_STRUCTURE = null;
 
-		
-		hroom_id => array(SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 40,  MAXLENGTH => 40,  REQUIRED => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => hroom,  ANSMODULE => btb,  
-				RELATION => OneToMany,  READONLY => true, ),
-
-		day_date => array(SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => "GDAT",  READONLY => true, ),
-
-		work_branch_id => array(SHORTNAME => branch,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => FK,  ANSWER => work_branch,  ANSMODULE => btb,  AUTOCOMPLETE => true,  
-				RELATION => ManyToOne,  READONLY => true, ),
-                
-		travel_hotel_id => array(SHORTNAME => thotel,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => FK,  ANSWER => travel_hotel,  ANSMODULE => btb,  AUTOCOMPLETE => true,  
-				RELATION => OneToMany,  READONLY => true, ),
-                
-		'booking_id' => array(SHORTNAME => booking,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => FK,  ANSWER => booking,  ANSMODULE => btb,  AUTOCOMPLETE => true,  
-				RELATION => OneToMany,  READONLY => true, ),
-
-                booking_datetime => array(SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 10,  MAXLENGTH => 10,  UTF8 => false,  
-				TYPE => "GDAT",  READONLY => true, ),
- 
-		nb_'beds' => array(SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "INT",  READONLY => true, ),
-                                
-		'price' => array(SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => "FLOAT", UNIT=>"ريال", READONLY => true, ),
-
-                
-                created_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                created_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                updated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                updated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                validated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                validated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                active => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                draft => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                version => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => INT),
-                update_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                delete_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                display_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                sci_id => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => scenario_item, ANSMODULE => pag),
-                tech_notes 	    => array(TYPE => TEXT, CATEGORY => FORMULA, "SHOW-ADMIN" => true, 'STEP' =>"all", TOKEN_SEP=>"§", READONLY=>true, "NO-ERROR-CHECK"=>true),
-	);
-	
-	*/
         public function __construct()
         {
                 parent::__construct("room_day", "id", "btb");

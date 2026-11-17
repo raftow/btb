@@ -322,7 +322,7 @@ class TravelTemplate extends BtbObject
     /**
      * @return float
      */
-    public function calcSeatBasePrice($what = "value", $returnReport = false)
+    public function calcSeatBasePrice($what = "value", $week_period_enum = 0, $period_type_enum = 0, $yperiod_id = 0, $returnReport = false)
     {
         $lang = AfwLanguageHelper::getGlobalLanguage();
         /**
@@ -341,9 +341,9 @@ class TravelTemplate extends BtbObject
         $days_nb = $this->calcTravel_duration();
         $nbSeats = $busExampleObj->calcNb_seats();
 
-        list($busTotalPrice, $errors_arr, $report_arr,) = $busExampleObj->getBusTotalPrice($travel_program_id, $days_nb, $company_name);
+        list($busTotalPrice, $errors_arr, $report_arr,) = $busExampleObj->getBusTotalPrice($travel_program_id, $days_nb, $week_period_enum, $period_type_enum, $yperiod_id, $company_name);
         if ($busTotalPrice < 0) $report = implode(" => ", $report_arr) . "; " . implode(" => ", $errors_arr);
-        else $report = "$busTotalPrice = busExampleObj->getBusTotalPrice($travel_program_id, $days_nb, $company_name), nbSeats=$nbSeats";
+        else $report = "<pre class='php'>$busTotalPrice = busExampleObj->getBusTotalPrice($travel_program_id, $week_period_enum, $period_type_enum, $yperiod_id, $days_nb, $company_name), nbSeats=$nbSeats</pre>";
 
         if (!$nbSeats) $base_price = 0.0;
         else $base_price = round(100 * $busTotalPrice / $nbSeats) / 100;
@@ -352,7 +352,7 @@ class TravelTemplate extends BtbObject
         else return [$base_price, $report_bus_example . "<br>" . $report_travel_prog . "<br>" . $report];
     }
 
-    public function updateSeatPricing($lang = "ar", $reset_all = false)
+    public function updateSeatPricing($lang = "ar", $reset_all = true)
     {
         $ttsprCount = 0;
         $ttsprCountUpdate = 0;
@@ -364,10 +364,6 @@ class TravelTemplate extends BtbObject
         $seat_category_men = trim($seat_category_men, ",");
         if (!$seat_category_men) $seat_category_men = "1,2";
         $seat_category_arr = explode(",", $seat_category_men);
-        // calculer le prix de base d un seat selon les params
-        list($seatBasePrice, $seatBasePriceReport) = $this->calcSeatBasePrice('value', true);
-        $price_report_arr[] = "  سعر تكلفة المقعد : $seatBasePrice ريال ";
-        $price_report_arr[] = $seatBasePriceReport;
         foreach ($seat_category_arr as $seat_categ) {
             for ($weekPeriod = $wp_min; $weekPeriod <= $wp_max; $weekPeriod++) {
                 for ($typePeriod = 1; $typePeriod <= 2; $typePeriod++) {
@@ -378,6 +374,10 @@ class TravelTemplate extends BtbObject
                     }
                     foreach ($yperiodList as $yperiodItemId => $yperiodItem) {
                         $price_report_arr[] = "-----------------------------------------------------------------------";
+                        // calculer le prix de base d un seat selon les params
+                        list($seatBasePrice, $seatBasePriceReport) = $this->calcSeatBasePrice('value', $weekPeriod, $typePeriod, $yperiodItemId, true);
+                        $price_report_arr[] = "  سعر تكلفة المقعد : $seatBasePrice ريال for settings[$weekPeriod, $typePeriod, $yperiodItemId]";
+                        $price_report_arr[] = $seatBasePriceReport;
                         $ttsprObj = TravelTemplateSeatPricing::loadByMainIndex($this->id, $seat_categ, $weekPeriod, $typePeriod, $yperiodItemId, $create_obj_if_not_found = true);
                         $price_report_arr[] = "حساب سعر المقعد للسياق التالي : " . $ttsprObj->getDisplay($lang);
                         if ($ttsprObj->is_new) {
@@ -399,8 +399,8 @@ class TravelTemplate extends BtbObject
                             $benifit_pct = $workBranchObj->getWorkBenifit($travel_level_enum, $travelProgramObj->getId(), $travel_duration, $weekPeriod, $typePeriod, $yperiodItemId);
                             $price_report_arr[] = "  نسبة ربح الشركة : $benifit_pct % ";
                             // apply benefit rules
-                            $price_with_benefit = (1 + $benifit_pct / 100.0) * $seatCategorizedBasePrice;
-                            $price_report_arr[] = "  سعر صنف المقعد : $price_with_benefit ريال ";
+                            $price_with_benefit = round((1 + $benifit_pct / 100.0) * $seatCategorizedBasePrice);
+                            $price_report_arr[] = "  السعر بعد ربح الشركة : $price_with_benefit ريال ";
 
                             $ttsprObj->set("price", $price_with_benefit);
                             $ttsprObj->commit();
@@ -806,7 +806,7 @@ class TravelTemplate extends BtbObject
         $info_arr[] = "$nb_upd " . $this->tm("existing travel(s) updated", $lang);
         $info_arr[] = $this->tm("period of generation", $lang) . " : [$first_travel_date &larr; $last_travel_date] ";
 
-        return array(implode("\n<br>", $err_arr), implode("\n<br>", $info_arr));
+        return AfwFormatHelper::pbm_result($err_arr, $info_arr);
     }
 
     public function afterUpdate($id, $fields_updated, $disableAfterCommitDBEvent = false)
@@ -1401,6 +1401,15 @@ class TravelTemplate extends BtbObject
         return array("", $log);
     }
 
+    public function getBusJokerFromOstool($bus_num)
+    {
+        $travelTemplateBusObj = TravelTemplateBus::loadByMainIndex($this->id, $bus_num);
+        if (!$travelTemplateBusObj) return [null, "No Joker bus num $bus_num for this travel template"];
+        $busFound = $travelTemplateBusObj->het("bus_id");
+        if (!$busFound) return [null, "Joker bus num $bus_num not defined in this travel template"];
+        return [$busFound, ""];
+    }
+
     // public estExpert()bus_reel_booked
 
     public function getBusCandidate($lang, $booking_start_date, $booking_start_time, $booking_end_date, $booking_end_time, $travel_id)
@@ -1419,14 +1428,14 @@ class TravelTemplate extends BtbObject
              * @var Bus $bus
              */
             $bus = $travelTemplateBusItem->het("bus_id");
-            $bnum = $travelTemplateBusItem->getVal("bus_num");
+            $bus_num = $travelTemplateBusItem->getVal("bus_num");
 
 
             if ($bus) {
                 //$log_arr[] = "تم اختيار المركبة ". $bus;
                 if (!$bus->sureIs("reel")) {
 
-                    $log_arr[] = "حالة خطأ الباص رقم  " . $bnum . "رغم كونها مجرد مثال ليست مركبة حقيقية تم إدرجها في برنامج الرحلة";
+                    $log_arr[] = "حالة خطأ الباص رقم  " . $bus_num . "رغم كونها مجرد مثال ليست مركبة حقيقية تم إدرجها في برنامج الرحلة";
                 } else {
                     list($isAvail, $reason) = $bus->isAvailableForPeriod($lang, $booking_start_date, $booking_start_time, $booking_end_date, $booking_end_time, $travel_id);
                     if (!$isAvail) {
@@ -1436,7 +1445,7 @@ class TravelTemplate extends BtbObject
                     }
                 }
             } else {
-                $log_arr[] = "لا يوجد رقم تسلسلي للمركبة رقم $bnum في برنامج الرحلة";
+                $log_arr[] = "لا يوجد رقم تسلسلي للمركبة رقم $bus_num في برنامج الرحلة";
             }
 
             if ($busCand) {
@@ -2014,15 +2023,15 @@ class TravelTemplate extends BtbObject
     {
         $sakanPriceList = $this->relSakanPricingList()->resetWhere("week_period_enum=$week_period_enum and period_type_enum=$period_type_enum and yperiod_id = $yperiod_id")->getList();
         $sakan_price_arr = array();
-        // @todo from settings, to avoid errors
+        // @todo from settings, to ignore eventual bad entered prices
         $price_min = 15.00;
         $price_max = 3000.00;
         foreach ($sakanPriceList as $sakanPriceItem) {
-            if (($sakanPriceItem->price >= $price_min) and ($sakanPriceItem->price <= $price_max)) {
-                $sakan_price_arr[$sakanPriceItem->roomsize]  = round($sakanPriceItem->price * $nb_nights * (100.0 - $this->getDiscountForNbNights($nb_nights))) / 100.0;
+            if (($sakanPriceItem->getVal("price") >= $price_min) and ($sakanPriceItem->getVal("price") <= $price_max)) {
+                $sakan_price_arr[$sakanPriceItem->getVal("roombed_enum")]  = round($sakanPriceItem->getVal("price") * $nb_nights * (100.0 - $this->getDiscountForNbNights($nb_nights))) / 100.0;
             }
         }
-        //throw new AfwRuntimeException("sakanPriceList=".var_export($sakanPriceList,true)."\n sakan_price_arr=".var_export($sakan_price_arr,true) );
+        // throw new AfwRuntimeException("<pre class='php'>sakanPriceList=" . var_export($sakanPriceList, true) . "\n sakan_price_arr=" . var_export($sakan_price_arr, true) . "</pre>");
         return $sakan_price_arr;
     }
 

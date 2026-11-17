@@ -201,6 +201,8 @@ class BtbObject extends AfwMomkenObject
                 return  $list_of_items;
         }
 
+
+
         public static function list_of_seat_category_enum()
         {
                 $list_of_items = array();

@@ -63,8 +63,9 @@ class Hotel extends BtbObject
     public function score()
     {
         $stars = intval($this->getVal("stars"));
+        if (!$stars) $stars = 1;
         $satisfaction = floatval($this->getVal("satisfaction"));
-
+        if (!$satisfaction) $satisfaction = 50.0; // 50.0 % because percentage
         $return = ($stars * $satisfaction / 5.0);
 
         return $return;
@@ -654,31 +655,29 @@ class Hotel extends BtbObject
         $thObj = TravelHotel::loadByMainIndex($hotel_id, $travel_id, $create_obj_if_not_found = false);
         //dd("thObj = TravelHotel::loadByMainIndex($hotel_id, $travel_id) => ",$thObj);
 
+        $hotelRoomList = [];
         // اللهم أعني على ذكرك وشكرك وحسن عبادتك
-
-        $travel_hotel_id = $thObj->getId();
-
         if ($thObj and ($thObj->bookedTemporary() or (!$book))) {
             $travel_hotel_id = $thObj->getId();
-            if ((!$this->hotelRoomList) or (!count($this->hotelRoomList))) {
+            if ((!$hotelRoomList) or (!count($hotelRoomList))) {
                 if ($room_size_exact) $where = "capacity_default = $room_size";
                 else $where = "$room_size between capacity_default and capacity_max";
-
-                $this->hotelRoomList = $this->relRooms()->resetWhere($where)->getList();
+                // الموفق من وفقه الله
+                $hotelRoomList = $this->getRelation("roomList")->resetWhere($where)->getList();
             }
         } else {
             $travel_hotel_id = 0;
-            unset($this->hotelRoomList);
-            $this->hotelRoomList = array();
+            unset($hotelRoomList);
+            $hotelRoomList = array();
         }
 
-
+        // اللهم لا سهل إلا ما جعلته سهلا وأنت تجعل الحزن إذا شئت سهلا
 
         $roomBooked_arr = array();
         $roomObj = null;
         $date_to = AfwDateHelper::addXDaysToGregDate(-1, $leave_date);
         $freeCount = 0;
-        foreach ($this->hotelRoomList as $roomItem) {
+        foreach ($hotelRoomList as $roomItem) {
             if ($freeCount < $limit) {
                 list($booking_success, $reason_booking_fail, $rdObjArray) = $roomItem->checkBookingPossibility($arrival_date, $date_to, $work_branch_id, $travel_hotel_id, $booking_id = 0, $room_size, $book, $room_size_exact);
                 for ($i = 0; $i < count($rdObjArray); $i++) {
@@ -901,11 +900,11 @@ class Hotel extends BtbObject
         $hotel_id = $this->getId();
         $hroomObject = $first_item;
         /*
-             $hotel = $this->hetHotel();
+             $hotel = $this->het("hotel_id");
              if(!$hotel)  return array("hotel not defined can't book rooms and room days. Contact admin of plateform", $ids);
               
              
-             $travel = $this->hetTravel();
+             $travel = $this->het("travel_id");
              if(!$travel)  return array("travel not defined can't book rooms and room days. Contact admin of plateform", $ids);
              */
 

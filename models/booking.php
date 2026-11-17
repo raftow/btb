@@ -367,44 +367,44 @@ class Booking extends BtbObject
         {
                 for ($k = 1; $k <= 3; $k++) {
                         if ($attribute == "bookHotel$k") {
-                                $hotel = $this->het("hotel$k");
-                                list($city_name,) = $hotel->displayAttribute("city_id", false, $lang);
-
-                                return "اختيار الغرف من فندق $city_name : " . $hotel->getShortDisplay($lang);
+                                $hotel = $this->het("hotel$k" . "_id");
+                                list($city_name,) = $hotel ? $hotel->displayAttribute("city_id", false, $lang) : "المدينة $k";
+                                $hotel_disp = $hotel ? $hotel->getShortDisplay($lang) : "";
+                                return "اختيار الغرف من الفندق $city_name : " . $hotel_disp;
                         }
                 }
 
 
                 if ($attribute == "hotel1_id") {
-                        $travel = $this->hetTravel();
-                        $travelTemp = $travel->hetTemplate();
+                        $travel = $this->het("travel_id");
+                        $travelTemp = $travel ? $travel->het("travel_template_id") : null;
 
-                        list($city1, $link) = $travelTemp->displayAttribute("city1_id", false, $lang);
+                        list($city1, $link) = $travelTemp ? $travelTemp->displayAttribute("city1_id", false, $lang) : ["", ""];
 
                         return "الفندق في " . $city1;
                 }
 
                 if ($attribute == "hotel2_id") {
-                        $travel = $this->hetTravel();
-                        $travelTemp = $travel->hetTemplate();
+                        $travel = $this->het("travel_id");
+                        $travelTemp = $travel ? $travel->het("travel_template_id") : null;
 
-                        list($city2, $link) = $travelTemp->displayAttribute("city2_id", false, $lang);
+                        list($city2, $link) = $travelTemp ? $travelTemp->displayAttribute("city2_id", false, $lang) : ["", ""];
 
                         return "الفندق في " . $city2;
                 }
 
                 if ($attribute == "hotel3_id") {
-                        $travel = $this->hetTravel();
-                        $travelTemp = $travel->hetTemplate();
+                        $travel = $this->het("travel_id");
+                        $travelTemp = $travel ? $travel->het("travel_template_id") : null;
 
-                        list($city3, $link) = $travelTemp->displayAttribute("city3_id", false, $lang);
+                        list($city3, $link) = $travelTemp ? $travelTemp->displayAttribute("city3_id", false, $lang) : ["", ""];
 
                         return "الفندق في " . $city3;
                 }
 
                 for ($k = 1; $k <= 3; $k++) {
                         if (($attribute == "div_seats_bus$k") or ($attribute == "my_seats_bus$k")) {
-                                $tbus = $this->het("bus$k");
+                                //$tbus = $this->het("bus$k");
                                 return "اختيار المقاعد من المركبة "; // .$tbus->getShortDisplay($lang);
                         }
                 }
@@ -437,9 +437,9 @@ class Booking extends BtbObject
 
                 for ($i = 1; $i <= 3; $i++) {
                         if (($attribute == "hotel${i}_id") or ($attribute == "bookHotel${i}")) {
-                                $travel = $this->hetTravel();
+                                $travel = $this->het("travel_id");
                                 $travelTemp = null;
-                                if ($travel) $travelTemp = $travel->hetTemplate();
+                                if ($travel) $travelTemp = $travel->het("travel_template_id");
                                 return ($travelTemp and ($this->nb_beds > 0) and $this->containResidence() and (intval($travelTemp->getVal("trips_nb")) > $i));
                         }
                 }
@@ -530,7 +530,7 @@ class Booking extends BtbObject
                 $removed = 0;
                 $updated = 0;
 
-                $travel = $this->hetTravel();
+                $travel = $this->het("travel_id");
                 if ($travel) {
                         $seats_nb = intval($this->getVal("seats_nb"));
                         $nb_to_gether = $seats_nb; //@todo intval($this->getVal("nb_to_gether"));
@@ -646,7 +646,7 @@ class Booking extends BtbObject
 
         public function getCode()
         {
-                $travelObj = $this->hetTravel();
+                $travelObj = $this->het("travel_id");
                 if (!$travelObj) return "ERROR-NO-TRAVEL";
                 return $travelObj->getCode() . "-B" . $this->id;
         }
@@ -985,7 +985,7 @@ class Booking extends BtbObject
               $nb_room5 = intval($this->getTripOptionCountBySize($trip,5));
               $nb_room6 = intval($this->getTripOptionCountBySize($trip,6));
               
-              $travel = $this->hetTravel();
+              $travel = $this->het("travel_id");
               if(!$travel) return array("travel object not defined can't book rooms and beds","");
               
               $travel->bookSingleBeds($this->getId(), $nb_room1);
@@ -1045,11 +1045,11 @@ class Booking extends BtbObject
         public function confirmBooking($lang = "ar")
         {
                 $log_arr = array();
-                $travel = $this->hetTravel();
+                $travel = $this->het("travel_id");
                 if (!$travel) return array("الرحلة غير معرفة", "");
                 $travel_id = $travel->getId();
 
-                $travelTemp = $travel->hetTemplate();
+                $travelTemp = $travel->het("travel_template_id");
                 if (!$travelTemp) return array("برنامج الرحلة غير معرف يتعذر حجز الغرف", "");
 
                 $booking_id = $this->getId();
@@ -1185,7 +1185,7 @@ class Booking extends BtbObject
                 $file_dir_name = dirname(__FILE__);
                 $travelObj = $this->het("travel_id");
                 if (!$travelObj) return array(" الرحلة غير معرفة يتعذر حجز الغرف", "");
-                if (!$travelTemp) $travelTemp = $travelObj->hetTemplate();
+                if (!$travelTemp) $travelTemp = $travelObj->het("travel_template_id");
                 if (!$travelTemp) return array("برنامج الرحلة غير معرف يتعذر حجز الغرف", "");
 
                 // require_once("$file_dir_name/../btb/travel_hotel.php");
@@ -1219,11 +1219,11 @@ class Booking extends BtbObject
 
         public function cancelConfirmBooking($lang = "ar")
         {
-                $travel = $this->hetTravel();
+                $travel = $this->het("travel_id");
                 if (!$travel) return array("الرحلة غير معرفة", "");
                 $travel_id = $travel->getId();
 
-                $travelTemp = $travel->hetTemplate();
+                $travelTemp = $travel->het("travel_template_id");
                 if (!$travelTemp) return array("برنامج الرحلة غير معرف يتعذر حجز الغرف", "");
 
                 $booking_id = $this->getId();
@@ -1416,9 +1416,9 @@ class Booking extends BtbObject
                 $crm_customer_id = $this->getVal("crm_customer_id");
                 if (!$crm_customer_id) return array("يجب تعريف العميل ليتم طباعة الفاتورة", "");
 
-                $travel = $this->hetTravel();
+                $travel = $this->het("travel_id");
                 if (!$travel) return array("الرحلة غير معرفة", "");
-                $travelTemp = $travel->hetTemplate();
+                $travelTemp = $travel->het("travel_template_id");
                 if (!$travelTemp) return array("برنامج الرحلة غير معرف", "");
 
                 // the bill
@@ -1800,7 +1800,7 @@ class Booking extends BtbObject
                 if (!$nb_max_bed_or_seat) return array(0, 0.0);
 
                 // discount_max = 1/3 du benifit standard
-                $travel = $this->hetTravel();
+                $travel = $this->het("travel_id");
                 if ($travel) $discount_max = $travel->calcStandard_benifit_pct() / 3.0;
                 else $discount_max = -100;
 
@@ -1865,7 +1865,7 @@ class Booking extends BtbObject
         {
                 $objme = AfwSession::getUserConnected();
                 list($original_can_be_updated, $original_reason) = [true, ''];
-                $travel = $this->hetTravel();
+                $travel = $this->het("travel_id");
                 if (!$travel) return array(false, "no travel assigned");
                 if ($travel->isGone()) {
                         /*
@@ -1950,7 +1950,7 @@ class Booking extends BtbObject
         {
                 $file_dir_name = dirname(__FILE__);
 
-                $travel = $this->hetTravel();
+                $travel = $this->het("travel_id");
                 if (!$travel) return "الرحلة غير معرفة";
                 $hotel = $this->het("hotel$trip");
                 if (!$hotel) return "الفندق غير معرف";
@@ -2002,10 +2002,10 @@ class Booking extends BtbObject
         public function getTripsCount()
         {
                 $this_id = $this->id;
-                $travelObj = $this->hetTravel();
+                $travelObj = $this->het("travel_id");
                 $travelObjId = $this->getVal("travel_id");
                 if (!$travelObj) throw new RuntimeException("booking $this_id without travel object (id=$travelObjId) !!!");
-                $templateObj = $travelObj->hetTemplate();
+                $templateObj = $travelObj->het("travel_template_id");
                 if (!$templateObj) throw new RuntimeException("travel $travelObjId without template object !!!");
                 return $templateObj->trips_nb;
         }
@@ -2015,10 +2015,10 @@ class Booking extends BtbObject
         {
                 $this_id = $this->id;
                 $descr = "";
-                $travelObj = $this->hetTravel();
+                $travelObj = $this->het("travel_id");
                 $travelObjId = $this->getVal("travel_id");
                 if (!$travelObj) throw new RuntimeException("getSakanDescription : booking $this_id without travel object (id=$travelObjId) !!!");
-                $templateObj = $travelObj->hetTemplate();
+                $templateObj = $travelObj->het("travel_template_id");
                 if (!$templateObj) throw new RuntimeException("getSakanDescription : travel without template object !!!");
 
                 for ($trip = 1; $trip < $templateObj->trips_nb; $trip++) {
@@ -2048,10 +2048,10 @@ class Booking extends BtbObject
         public function sakanOk()
         {
                 $this_id = $this->id;
-                $travelObj = $this->hetTravel();
+                $travelObj = $this->het("travel_id");
                 $travelObjId = $this->getVal("travel_id");
                 if (!$travelObj) throw new RuntimeException("sakanDefined : booking $this_id without travel object (id=$travelObjId) !!!");
-                $templateObj = $travelObj->hetTemplate();
+                $templateObj = $travelObj->het("travel_template_id");
                 if (!$templateObj) throw new RuntimeException("sakanDefined : travel without template object !!!");
                 if ($templateObj->containResidence()) {
                         for ($trip = 1; $trip < $templateObj->trips_nb; $trip++) {
@@ -2074,10 +2074,10 @@ class Booking extends BtbObject
         {
                 $data = array();
                 $this_id = $this->id;
-                $travelObj = $this->hetTravel();
+                $travelObj = $this->het("travel_id");
                 $travelObjId = $this->getVal("travel_id");
                 if (!$travelObj) throw new RuntimeException("booking $this_id without travel object (id=$travelObjId) !!!");
-                $templateObj = $travelObj->hetTemplate();
+                $templateObj = $travelObj->het("travel_template_id");
                 if (!$templateObj) throw new RuntimeException("travel without template object !!!");
                 $data["trips_nb"] = $templateObj->trips_nb;
                 $cityList = array();
@@ -2111,7 +2111,7 @@ class Booking extends BtbObject
         {
                 $lang = AfwLanguageHelper::getGlobalLanguage();
                 $hotel_id = $hotelObj->id;
-                $travelObj = $this->hetTravel();
+                $travelObj = $this->het("travel_id");
                 $traveler_type_id = $this->getVal("traveler_type_id");
                 if (!$travelObj) return "Error no travel object for this booking. contact your administrator";
                 $trip_option = $this->getVal("trip${trip}_option");
@@ -2163,5 +2163,36 @@ class Booking extends BtbObject
                 elseif ($status == "new") return "conditions";
                 if ($status == "not_paid") return "paymode";
                 else return "seats";
+        }
+
+        public function shouldBeCalculatedField($attribute)
+        {
+                if ($attribute == "trips_html") return true;
+                if ($attribute == "photoGalery") return true;
+                if ($attribute == "full_residence") return true;
+                if ($attribute == "conditions") return true;
+                if ($attribute == "work_branch_id") return true;
+                if ($attribute == "company_id") return true;
+                if ($attribute == "city1_id") return true;
+                if ($attribute == "city2_id") return true;
+                if ($attribute == "city3_id") return true;
+                if ($attribute == "city1_hotel_mfk") return true;
+                if ($attribute == "city2_hotel_mfk") return true;
+                if ($attribute == "city3_hotel_mfk") return true;
+                if ($attribute == "traveler_group_id") return true;
+                if ($attribute == "bus_select_comment") return true;
+                if ($attribute == "div_sakan_options") return true;
+                if ($attribute == "div_seats_bus1") return true;
+                if ($attribute == "my_seats_bus1") return true;
+                if ($attribute == "div_seats_bus2") return true;
+                if ($attribute == "my_seats_bus2") return true;
+                if ($attribute == "div_seats_bus3") return true;
+                if ($attribute == "my_seats_bus3") return true;
+                if ($attribute == "bookHotel1") return true;
+                if ($attribute == "bookHotel2") return true;
+                if ($attribute == "bookHotel3") return true;
+                if ($attribute == "div_billing") return true;
+                if ($attribute == "status") return true;
+                return false;
         }
 }

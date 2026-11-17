@@ -26,332 +26,9 @@ class TravelHotel extends BtbObject
     public static $DATABASE        = "";
     public static $MODULE            = "btb";
     public static $TABLE            = "";
-    public static $DB_STRUCTURE = null; /* = array(
-                id => array(SHOW => true, RETRIEVE => true, EDIT => false, TYPE => PK),
- 
-                city_id => array(SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => city,  ANSMODULE => pag, ALL_FGROUP=>true,  
-				CATEGORY => SHORTCUT, SHORTCUT=>"hotel_id.city_id", READONLY => true, ),
-                                
-		hotel_id => array('STEP' => 1,  SHORTNAME => hotel,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => hotel,  ANSMODULE => btb,  AUTOCOMPLETE => false, ALL_FGROUP=>true,  
-				RELATION => OneToMany,  READONLY => true,  DNA => true, CSS => width_pct_50, ),
+    public static $DB_STRUCTURE = null;
 
-                avail_'beds' => array(CATEGORY=>FORMULA, TYPE => "TEXT",  READONLY => true, ),
-		
-		booking_start_date => array('STEP' => 1,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 10,  MAXLENGTH => 10,  FORMAT => HIJRI_UNIT,  UTF8 => false,  
-				TYPE => "DATE",  READONLY => false, CSS => width_pct_50, ),
- 
-		booking_start_time => array('STEP' => 1,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 8,  MAXLENGTH => 8,  UTF8 => false,  
-				TYPE => "TIME",  READONLY => false, CSS => width_pct_50, ),
- 
-		booking_end_date => array('STEP' => 1,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 10,  MAXLENGTH => 10,  FORMAT => HIJRI_UNIT,  UTF8 => false,  
-				TYPE => "DATE",  READONLY => false, CSS => width_pct_50, ),
- 
-		booking_end_time => array('STEP' => 1,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 8,  MAXLENGTH => 8,  UTF8 => false,  
-				TYPE => "TIME",  READONLY => false, CSS => width_pct_25, ),
- 
-                view_days_nb => array('STEP' => 1, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  MINIBOX =>true, CSS => width_pct_25,  
-				EDIT => true,  QEDIT => true, CSS => width_pct_25, RETRIEVE_FGROUP => true,
-				SIZE => 32,  MANDATORY => true,  UTF8 => false, "DEFAULT"=>1, 
-				TYPE => ENUM,  ANSWER => "FUNCTION", READONLY => false, ),
 
-                travelers_nb => array('STEP' => 1, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  MINIBOX =>true, CSS => width_pct_25,  
-				EDIT => true,  QEDIT => true, CSS => width_pct_50, RETRIEVE_FGROUP => true,
-				SIZE => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => "INT", UNIT=>"مسافر", READONLY => true, ),
-
-                active => array('STEP' => 1, SHOW => true, RETRIEVE => false, EDIT => true, QEDIT => false, "DEFAULT" => Y, TYPE => YN, CSS => width_pct_50),
-
-		nb_room2 => array('STEP' => 2,  FGROUP => rooms2,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS=>width_pct_100,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => "INT",  READONLY => false, FORMAT=>""),
-                
-                rooms2_math => array('STEP' =>2,  FGROUP => rooms2, SEARCH => false,  QSEARCH => false,  SHOW => true, CSS => width_pct_100,    
-				EDIT => true,  QEDIT => false, TYPE => "TEXT", CATEGORY => FORMULA, READONLY => true, "NO-LABEL"=>true, INPUT_WIDE=>true,),
-
-		nb_room3 => array('STEP' => 2,  FGROUP => rooms3,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS=>width_pct_100,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => "INT",  READONLY => false, FORMAT=>""),
-
-                rooms3_math => array('STEP' =>2,  FGROUP => rooms3, SEARCH => false,  QSEARCH => false,  SHOW => true, CSS => width_pct_100,    
-				EDIT => true,  QEDIT => false, TYPE => "TEXT", CATEGORY => FORMULA, READONLY => true, "NO-LABEL"=>true, INPUT_WIDE=>true,),
-
-		nb_room4 => array('STEP' => 2,  FGROUP => rooms4,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS=>width_pct_100,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => "INT",  READONLY => false, FORMAT=>""),
-                                
-                rooms4_math => array('STEP' =>2,  FGROUP => rooms4, SEARCH => false,  QSEARCH => false,  SHOW => true, CSS => width_pct_100,    
-				EDIT => true,  QEDIT => false, TYPE => "TEXT", CATEGORY => FORMULA, READONLY => true, "NO-LABEL"=>true, INPUT_WIDE=>true,),
-
-                nb_room5 => array('STEP' => 2,  FGROUP => rooms5,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS=>width_pct_100,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => "INT",  READONLY => false, FORMAT=>""),                                
-
-                rooms5_math => array('STEP' =>2,  FGROUP => rooms5, SEARCH => false,  QSEARCH => false,  SHOW => true, CSS => width_pct_100,    
-				EDIT => true,  QEDIT => false, TYPE => "TEXT", CATEGORY => FORMULA, READONLY => true, "NO-LABEL"=>true, INPUT_WIDE=>true,),
-
-                nb_room6 => array('STEP' => 2,  FGROUP => rooms6,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS=>width_pct_100,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => "INT",  READONLY => false, FORMAT=>""),
-                                
-                rooms6_math => array('STEP' =>2,  FGROUP => rooms6, SEARCH => false,  QSEARCH => false,  SHOW => true, CSS => width_pct_100,    
-				EDIT => true,  QEDIT => false, TYPE => "TEXT", CATEGORY => FORMULA, READONLY => true, "NO-LABEL"=>true, INPUT_WIDE=>true,),
-
-                user_math => array('STEP' =>2,  FGROUP => uhelp, SEARCH => false,  QSEARCH => false,  SHOW => true, CSS => width_pct_100,    
-				EDIT => true,  QEDIT => false, TYPE => "TEXT", CATEGORY => FORMULA, READONLY => true, "NO-LABEL"=>true, INPUT_WIDE=>true,),
-
-		booking_needed => array(FGROUP => bbooking, SHORTNAME => tobook, 'STEP' => 4,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => false,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_33,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => "YN", "DEFAULT" => "Y",  CHECKBOX => true,  READONLY => true, ),
- 
-		'booked' => array(FGROUP => bbooking, 'STEP' => 4,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_33,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "YN", "DEFAULT" => "N",  READONLY => true, ),
-                
-                complete => array(FGROUP => bbooking, 'STEP' => 4,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_33,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "YN", CATEGORY => FORMULA,  READONLY => true, ),
-                
-		booked_date => array(FGROUP => bbooking, 'STEP' => 4,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_33,  
-				SIZE => 10,  MAXLENGTH => 10,  UTF8 => false,  
-				TYPE => "DATE",  FORMAT => "HIJRI_UNIT",  READONLY => true, ),
- 
-		booking_comment => array(FGROUP => bbooking, 'STEP' => 4,  SEARCH => true,  QSEARCH => false,  SHOW => true,    
-				EDIT => true,  AUDIT => true,  
-				SIZE => 255,  MAXLENGTH => 255,  "MIN-SIZE" => 10,  CHAR_TEMPLATE => "ALL",  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
-
-		user_help => array('STEP' => 4,  FGROUP => usinghelp, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				SIZE => "AREA", EDIT => true,  QEDIT => true,  
-				"NO-LABEL" => true, TYPE => "TEXT", CATEGORY => FORMULA,  READONLY => true, ),
-                
-                rooms2_spec => array('STEP' => 4,  FGROUP => rooms2num, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => true, "NO-LABEL"=>true, ROWS=>3,  
-				SIZE => AREA,  MAXLENGTH => 255,  CHAR_TEMPLATE => "",  UTF8 => true,  
-				TYPE => "TEXT", "PLACEHOLDER-NO-CHANGE" => true, CSS=>no_resize, READONLY => false, ),
-                                
-		complete2_report => array(FGROUP => rooms2num, 'STEP' => 4,  SEARCH => true,  QSEARCH => false,  SHOW => true,    
-				EDIT => true,  QEDIT => false, "NO-LABEL"=>true, ROWS=>3,  
-				SIZE => 255,  MAXLENGTH => 255,  "MIN-SIZE" => 10,  CHAR_TEMPLATE => "ALL",  UTF8 => true,  
-				TYPE => "TEXT", CATEGORY => FORMULA,  READONLY => true, ),
-
-                rooms3_spec => array('STEP' => 4,  FGROUP => rooms3num, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => true, "NO-LABEL"=>true, ROWS=>3,  
-				SIZE => AREA,  MAXLENGTH => 255,  CHAR_TEMPLATE => "",  UTF8 => true,  
-				TYPE => "TEXT", "PLACEHOLDER-NO-CHANGE" => true, CSS=>no_resize,  READONLY => false, ),
-                                
-		complete3_report => array(FGROUP => rooms3num, 'STEP' => 4,  SEARCH => true,  QSEARCH => false,  SHOW => true,    
-				EDIT => true,  QEDIT => false, "NO-LABEL"=>true, ROWS=>3,  
-				SIZE => 255,  MAXLENGTH => 255,  "MIN-SIZE" => 10,  CHAR_TEMPLATE => "ALL",  UTF8 => true,  
-				TYPE => "TEXT", CATEGORY => FORMULA,  READONLY => true, ),
-
-                rooms4_spec => array('STEP' => 4,  FGROUP => rooms4num, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => true, "NO-LABEL"=>true, ROWS=>3,  
-				SIZE => AREA,  MAXLENGTH => 255,  CHAR_TEMPLATE => "",  UTF8 => true,  
-				TYPE => "TEXT", "PLACEHOLDER-NO-CHANGE" => true, CSS=>no_resize,  READONLY => false, ),
-                                
-		complete4_report => array(FGROUP => rooms4num, 'STEP' => 4,  SEARCH => true,  QSEARCH => false,  SHOW => true,    
-				EDIT => true,  QEDIT => false, "NO-LABEL"=>true, ROWS=>3,  
-				SIZE => 255,  MAXLENGTH => 255,  "MIN-SIZE" => 10,  CHAR_TEMPLATE => "ALL",  UTF8 => true,  
-				TYPE => "TEXT", CATEGORY => FORMULA,  READONLY => true, ),
-
-                rooms5_spec => array('STEP' => 4,  FGROUP => rooms5num, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => true, "NO-LABEL"=>true, ROWS=>3,  
-				SIZE => AREA,  MAXLENGTH => 255,  CHAR_TEMPLATE => "",  UTF8 => true,  
-				TYPE => "TEXT", "PLACEHOLDER-NO-CHANGE" => true, CSS=>no_resize,  READONLY => false, ),
-                                
-		complete5_report => array(FGROUP => rooms5num, 'STEP' => 4,  SEARCH => true,  QSEARCH => false,  SHOW => true,    
-				EDIT => true,  QEDIT => false, "NO-LABEL"=>true, ROWS=>3,  
-				SIZE => 255,  MAXLENGTH => 255,  "MIN-SIZE" => 10,  CHAR_TEMPLATE => "ALL",  UTF8 => true,  
-				TYPE => "TEXT", CATEGORY => FORMULA,  READONLY => true, ),
-
-                rooms6_spec => array('STEP' => 4,  FGROUP => rooms6num, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => true, "NO-LABEL"=>true, ROWS=>3,  
-				SIZE => AREA,  MAXLENGTH => 255,  CHAR_TEMPLATE => "",  UTF8 => true,  
-				TYPE => "TEXT", "PLACEHOLDER-NO-CHANGE" => true, CSS=>no_resize,  READONLY => false, ),
-                                
-		complete6_report => array(FGROUP => rooms6num, 'STEP' => 4,  SEARCH => true,  QSEARCH => false,  SHOW => true,    
-				EDIT => true,  QEDIT => false, "NO-LABEL"=>true, ROWS=>3,  
-				SIZE => 255,  MAXLENGTH => 255,  "MIN-SIZE" => 10,  CHAR_TEMPLATE => "ALL",  UTF8 => true,  
-				TYPE => "TEXT", CATEGORY => FORMULA,  READONLY => true, ),
-
-                travel_id => array('STEP' => 99, FGROUP => opening, SHORTNAME => travel,  SEARCH => true,  QSEARCH => true,  SHOW => true,  RETRIEVE => true,  
-				EDIT => false,  QEDIT => false, CSS => width_pct_33,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => travel,  ANSMODULE => btb,  AUTOCOMPLETE => false,  
-				RELATION => OneToMany,  READONLY => true,  DNA => true, ),
-                
-                // الله المستعان
-                price1 => array('STEP' => 3,  FGROUP => prices, UNIT => "ريال",  UNIT_EN => "SAR",  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_25,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "FLOAT", FORMAT=>"*.2" , CATEGORY => FORMULA, READONLY => true, ),
-                
-                price2 => array('STEP' => 3,  FGROUP => prices, UNIT => "ريال",  UNIT_EN => "SAR",  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_25,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "FLOAT", FORMAT=>"*.2" , CATEGORY => FORMULA, READONLY => true, ),
-
-                price3 => array('STEP' => 3,  FGROUP => prices, UNIT => "ريال",  UNIT_EN => "SAR",  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_25,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "FLOAT", FORMAT=>"*.2" , CATEGORY => FORMULA, READONLY => true, ),
-
-                price4 => array('STEP' => 3,  FGROUP => prices, UNIT => "ريال",  UNIT_EN => "SAR",  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_25,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "FLOAT", FORMAT=>"*.2" , CATEGORY => FORMULA, READONLY => true, ),
-
-                price5 => array('STEP' => 3,  FGROUP => prices, UNIT => "ريال",  UNIT_EN => "SAR",  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_25,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "FLOAT", FORMAT=>"*.2" , CATEGORY => FORMULA, READONLY => true, ),
-
-                price6 => array('STEP' => 3,  FGROUP => prices, UNIT => "ريال",  UNIT_EN => "SAR",  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_25,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "FLOAT", FORMAT=>"*.2" , CATEGORY => FORMULA, READONLY => true, ),
-                // tech-doc : FGROUP_BEHAVIOR=>collapsed should be on all attributes
-                // tech-doc : because some attributes can be not applicable so not seen by default template editor                
-                price1_report => array('STEP' => 3,  FGROUP => prices_report, FGROUP_BEHAVIOR=>collapsed,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "TEXT", INPUT_WIDE=>true , CATEGORY => FORMULA, READONLY => true, ),
-                
-                price2_report => array('STEP' => 3,  FGROUP => prices_report, FGROUP_BEHAVIOR=>collapsed,   SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "TEXT", INPUT_WIDE=>true , CATEGORY => FORMULA, READONLY => true, ),
-
-                price3_report => array('STEP' => 3,  FGROUP => prices_report, FGROUP_BEHAVIOR=>collapsed,   SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "TEXT", INPUT_WIDE=>true , CATEGORY => FORMULA, READONLY => true, ),
-
-                price4_report => array('STEP' => 3,  FGROUP => prices_report, FGROUP_BEHAVIOR=>collapsed,   SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "TEXT", INPUT_WIDE=>true , CATEGORY => FORMULA, READONLY => true, ),
-
-                price5_report => array('STEP' => 3,  FGROUP => prices_report, FGROUP_BEHAVIOR=>collapsed,   SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "TEXT", INPUT_WIDE=>true , CATEGORY => FORMULA, READONLY => true, ),
-
-                price6_report => array('STEP' => 3,  FGROUP => prices_report, FGROUP_BEHAVIOR=>collapsed,   SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "TEXT", INPUT_WIDE=>true , CATEGORY => FORMULA, READONLY => true, ),
-                
-		opened => array('STEP' => 5,  FGROUP => opening, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => "YN", "DEFAULT" => "N",  READONLY => true, CSS => width_pct_33, ),
- 
-		opened_date => array('STEP' => 5,  FGROUP => opening, SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE_FGROUP => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 10,  MAXLENGTH => 10,  UTF8 => false,  
-				TYPE => "DATE",  FORMAT => "HIJRI_UNIT", CSS => width_pct_33,  READONLY => true, ),
-
-                closed => array('STEP' => 5,  FGROUP => opening, SHOW => true, RETRIEVE => false, EDIT => true, QEDIT => false,  RETRIEVE_FGROUP => true,
-                                 "DEFAULT" => N, TYPE => YN, CSS => width_pct_33,  READONLY => true),
-
-                day_gdate1 => array('STEP' => 55, "TYPE" => "GDAT", "CATEGORY" => "FORMULA", EDIT => true, SHOW => true,  ),
-                day_gdate2 => array('STEP' => 55, "TYPE" => "GDAT", "CATEGORY" => "FORMULA", EDIT => true, SHOW => true,),
-                day_gdate3 => array('STEP' => 55, "TYPE" => "GDAT", "CATEGORY" => "FORMULA", EDIT => true, SHOW => true,),
-                day_gdate4 => array('STEP' => 55, "TYPE" => "GDAT", "CATEGORY" => "FORMULA", EDIT => true, SHOW => true,),
-
-                roomDay1List => array('STEP' => 5, SHORTNAME => bookDay1,  SHOW => true,  FORMAT => custom, CUSTOM_FORMAT => showRoomDayStatus,  
-                                ICONS => true,  "DELETE-ICON" => true,  BUTTONS => true,  SEARCH => false,  QSEARCH => false,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => FK,  
-				CATEGORY => ITEMS,  ANSWER => room_day,  ANSMODULE => btb,  ITEM => "travel_hotel_id", OPTIMIZE =>true,  
-                                FGROUP=>roomDay1List, FGROUP_BEHAVIOR=>collapsed, WHERE=>"day_date = §day_gdate1§",
-                                READONLY => true, ),
-
-                roomDay2List => array('STEP' => 5, SHORTNAME => bookDay2,  SHOW => true,  FORMAT => custom, CUSTOM_FORMAT => showRoomDayStatus,  
-                                ICONS => true,  "DELETE-ICON" => true,  BUTTONS => true,  SEARCH => false,  QSEARCH => false,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => FK,  
-				CATEGORY => ITEMS,  ANSWER => room_day,  ANSMODULE => btb,  ITEM => "travel_hotel_id", OPTIMIZE =>true,  
-                                FGROUP=>roomDay2List, FGROUP_BEHAVIOR=>collapsed, WHERE=>"day_date = §day_gdate2§",
-                                READONLY => true, ),
-                                
-                roomDay3List => array('STEP' => 5, SHORTNAME => bookDay3,  SHOW => true,  FORMAT => custom, CUSTOM_FORMAT => showRoomDayStatus,  
-                                ICONS => true,  "DELETE-ICON" => true,  BUTTONS => true,  SEARCH => false,  QSEARCH => false,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => FK,  
-				CATEGORY => ITEMS,  ANSWER => room_day,  ANSMODULE => btb,  ITEM => "travel_hotel_id", OPTIMIZE =>true,  
-                                FGROUP=>roomDay3List, FGROUP_BEHAVIOR=>collapsed, WHERE=>"day_date = §day_gdate3§",
-                                READONLY => true, ),                
-                                
-                roomDay4List => array('STEP' => 5, SHORTNAME => bookDay4,  SHOW => true,  FORMAT => custom, CUSTOM_FORMAT => showRoomDayStatus,  
-                                ICONS => true,  "DELETE-ICON" => true,  BUTTONS => true,  SEARCH => false,  QSEARCH => false,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => FK,  
-				CATEGORY => ITEMS,  ANSWER => room_day,  ANSMODULE => btb,  ITEM => "travel_hotel_id", OPTIMIZE =>true,  
-                                FGROUP=>roomDay4List, FGROUP_BEHAVIOR=>collapsed, WHERE=>"day_date = §day_gdate4§",
-                                READONLY => true, ),                
-                /*
-                hotelDiv => array('STEP' => 5, "TYPE" => "TEXT", "CATEGORY" => "FORMULA", EDIT => true,  SHOW=>true, RETRIEVE=>false, SIZE=>255, "NO-LABEL"=>true,  READONLY => true,),
-                * /
-		approval => array(FGROUP => bbapproval, 'STEP' => 6,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_33,  
-				SIZE => 32,  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "YN", "DEFAULT" => "W",  READONLY => false, ),
- 
-		approval_date => array(FGROUP => bbapproval, 'STEP' => 6,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_33,  
-				SIZE => 10,  MAXLENGTH => 10,  UTF8 => false,  
-				TYPE => "DATE",  FORMAT => "HIJRI_UNIT",  READONLY => false, ),
- 
-		approval_comment => array(FGROUP => bbapproval, 'STEP' => 6,  SEARCH => true,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_66,  
-				SIZE => 255,  MAXLENGTH => 255,  "MIN-SIZE" => 10,  CHAR_TEMPLATE => "ALL",  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
-
-                created_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                created_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                updated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                updated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                validated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                validated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                draft => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                version => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => INT),
-                update_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                delete_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                display_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                sci_id => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => scenario_item, ANSMODULE => pag),
-                tech_notes 	    => array(TYPE => TEXT, CATEGORY => FORMULA, "SHOW-ADMIN" => true, 'STEP' =>"all", TOKEN_SEP=>"§", READONLY=>true, "NO-ERROR-CHECK"=>true),
-	);
- 
-	*/
     public function __construct()
     {
         parent::__construct("travel_hotel", "id", "btb");
@@ -476,7 +153,7 @@ class TravelHotel extends BtbObject
 
     public function isToBeBooked()
     {
-        return (($this->estToBook()) and (!$this->estBooked()));
+        return (($this->sureIs("booking_needed")) and (!$this->sureIs("booked")));
     }
 
     protected function getPublicMethods()
@@ -613,15 +290,16 @@ class TravelHotel extends BtbObject
 
     public function bookRooms($room_size, $nb_rooms, $booking_id, $room_size_exact = true)
     {
+        $updated_prices = 0;
         $error_arr = array();
         $log_arr = array();
         $roomBooked_arr = array();
         $room_nums = array();
 
-        $hotel = $this->hetHotel();
+        $hotel = $this->het("hotel_id");
         if (!$hotel)  return array("hotel not defined can't book rooms and room days. Contact admin of plateform", $room_nums, $roomBooked_arr, $log_arr);
 
-        $travel = $this->hetTravel();
+        $travel = $this->het("travel_id");
         if (!$travel)  return array("travel not defined can't book rooms and room days. Contact admin of plateform", $room_nums, $roomBooked_arr, $log_arr);
 
         $work_branch_id = $travel->getVal("work_branch_id");
@@ -640,8 +318,8 @@ class TravelHotel extends BtbObject
 
 
         // get roomList with size $room_size and booked for this travel hotel 
-        $file_dir_name = dirname(__FILE__);
-        require_once "$file_dir_name/../btb/hroom.php";
+        // $file_dir_name = dirname(__FILE__);
+        // require_once "$file_dir_name/../btb/hroom.php";
         $hr = new Hroom();
         if (!$room_size) $room_size = 0;
         $server_db_prefix = AfwSession::currentDBPrefix();
@@ -717,8 +395,8 @@ class TravelHotel extends BtbObject
     {
         $travel_hotel_id = $this->getId();
 
-        $file_dir_name = dirname(__FILE__);
-        require_once "$file_dir_name/../btb/room_day.php";
+        // $file_dir_name = dirname(__FILE__);
+        // require_once "$file_dir_name/../btb/room_day.php";
 
         $rdObj = new RoomDay();
         // double solution for PB001 below
@@ -737,9 +415,9 @@ class TravelHotel extends BtbObject
 
     public function updateRooms($lang = "ar", $always_update_price = false, $publicM = true)
     {
-        $file_dir_name = dirname(__FILE__);
-        require_once "$file_dir_name/../btb/hroom.php";
-        require_once "$file_dir_name/../btb/room_day.php";
+        // $file_dir_name = dirname(__FILE__);
+        // require_once "$file_dir_name/../btb/hroom.php";
+        // require_once "$file_dir_name/../btb/room_day.php";
 
         $travel_hotel_id = $this->getId();
 
@@ -748,10 +426,10 @@ class TravelHotel extends BtbObject
         $rdObj->select("booking_id", 0);
         $rdObj->logicDelete($ur_commit = true, $ur_only_me = false);
 
-        $hotel = $this->hetHotel();
+        $hotel = $this->het("hotel_id");
         if (!$hotel)  return array("hotel not defined can't generate rooms and room days. Contact admin of plateform", "");
 
-        $travel = $this->hetTravel();
+        $travel = $this->het("travel_id");
         if (!$travel)  return array("travel not defined can't generate rooms and room days. Contact admin of plateform", "");
 
         $work_branch_id = $travel->getVal("work_branch_id");
@@ -988,7 +666,7 @@ class TravelHotel extends BtbObject
             if (($attribute == "price${rs}_report") or ($attribute == "price$rs") or ($attribute == "nb_room$rs")
                 or ($attribute == "rooms${rs}_spec") or ($attribute == "rooms${rs}_math")
             ) {
-                return ($this->getVal("price$rs") > 0);
+                return true; //($this->getVal("price$rs") > 0); we want to see the value and report in all cases
             }
         }
 
@@ -1006,10 +684,10 @@ class TravelHotel extends BtbObject
 
     public function genereMyNeededNumberOfRooms($lang = "ar")
     {
-        $hotel = $this->hetHotel();
+        $hotel = $this->het("hotel_id");
         if (!$hotel)  return array("hotel not defined can't genere needed number of rooms. Contact admin of plateform", "");
 
-        $travel = $this->hetTravel();
+        $travel = $this->het("travel_id");
         if (!$travel)  return array("travel not defined can't genere needed number of rooms. Contact admin of plateform", "");
 
 
@@ -1021,7 +699,7 @@ class TravelHotel extends BtbObject
 
     public function pricesReady()
     {
-        $hotel = $this->hetHotel();
+        $hotel = $this->het("hotel_id");
         if (!$hotel) return array(false, "الفندق غير محدد لا يمكن مراقبة التسعير");
 
         $roombed_men = $hotel->getVal("roombed_men");
@@ -1077,10 +755,10 @@ class TravelHotel extends BtbObject
     {
         $travel_hotel_id = $this->getId();
 
-        $hotel = $this->hetHotel();
+        $hotel = $this->het("hotel_id");
         if (!$hotel)  return array("hotel not defined can't book rooms and room days. Contact admin of plateform", 0, [], []);
 
-        $travel = $this->hetTravel();
+        $travel = $this->het("travel_id");
         if (!$travel)  return array("travel not defined can't book rooms and room days. Contact admin of plateform", 0, [], []);
 
         $hotel_id = $hotel->getId();
@@ -1098,15 +776,15 @@ class TravelHotel extends BtbObject
              $sakan_duration = $rowHotelSakanDetails["sakan_duration"];
              */
 
-        $file_dir_name = dirname(__FILE__);
-        require_once "$file_dir_name/../btb/room_day.php";
+        // $file_dir_name = dirname(__FILE__);
+        // require_once "$file_dir_name/../btb/room_day.php";
 
         return RoomDay::nbBookedRooms($travel_hotel_id, $arrival_gdate, $nb_beds);
     }
 
     public function roomsBedsDetailsForBooking($the_room_size = "", $only_missed = true)
     {
-        $hotel = $this->hetHotel();
+        $hotel = $this->het("hotel_id");
         if (!$hotel) return "الفندق غير محدد لا يمكن حجز غرف";
         $return = "";
         $nbrooms_array = array();
@@ -1140,12 +818,12 @@ class TravelHotel extends BtbObject
     ) {
         $sp_errors = array();
 
-        $travel = $this->hetTravel();
+        $travel = $this->het("travel_id");
         if (!$travel) $sp_errors["travel_id"] = "خطأ حرج : رحلة غير محددة: رجاء التواصل مع مدير التطبيق";
         $tcompany = $travel->hetCompany();
         if (!$tcompany) $sp_errors["travel_id"] = "خطأ حرج : شركة الرحلة غير محددة: رجاء التواصل مع مدير التطبيق";
 
-        $hotel = $this->hetHotel();
+        $hotel = $this->het("hotel_id");
         if (!$hotel) $sp_errors["hotel_id"] = "خطأ حرج : فندق غير محدد: رجاء التواصل مع مدير التطبيق";
 
         $booking_needed = $this->sureIs("booking_needed");
@@ -1296,7 +974,7 @@ class TravelHotel extends BtbObject
         // @todo from settings
         // 3azzabi room size
         $azzabi_room_size = 5;
-        $room_price = $this->calcPrice($azzabi_room_size);
+        list($room_price,) = $this->calcPrice($azzabi_room_size);
         $return = round(($room_price / $azzabi_room_size) + 0.4);
 
         return "$return = $room_price / $azzabi_room_size";
@@ -1304,10 +982,13 @@ class TravelHotel extends BtbObject
 
     public function calcPrice($room_size)
     {
-        $hotel = $this->hetHotel();
+        $hotel = $this->het("hotel_id");
         if (!$hotel)  return -99;
 
-        $travel = $this->hetTravel();
+        /**
+         * @var Travel $travel
+         */
+        $travel = $this->het("travel_id");
         if (!$travel)  return -99;
 
         return $travel->getRoomPrice($hotel, $room_size);
@@ -1402,6 +1083,7 @@ class TravelHotel extends BtbObject
     public function calcRoomsMath($room_size)
     {
         $room_nb = $this->getVal("nb_room$room_size");
+        if (!$room_nb) $room_nb = 0;
         $nb_travelers = $room_size * $room_nb;
         return "<div class='btb_help'>$nb_travelers مسافر = $room_size ضارب $room_nb</div>";
     }
@@ -1411,12 +1093,13 @@ class TravelHotel extends BtbObject
         $nb_travelers_gen = 0;
         $text_msg = "";
         for ($rs = 2; $rs <= 6; $rs++) {
-            if ($this->attributeIsApplicable("nb_room$rs")) {
+            if (true) { // $this->attributeIsApplicable("nb_room$rs")
 
                 $room_nb = $this->getVal("nb_room$rs");
+                if (!$room_nb) $room_nb = 0;
                 $rs_nb_trav = ($rs * $room_nb);
                 $nb_travelers_gen += $rs_nb_trav;
-                $text_msg .= "+$rs_nb_trav";
+                $text_msg .= " + $rs_nb_trav(rs=$rs * rooms=$room_nb)";
             }
         }
 
@@ -1501,10 +1184,10 @@ class TravelHotel extends BtbObject
     {
         $travel_hotel_id = $this->getId();
 
-        $hotel = $this->hetHotel();
+        $hotel = $this->het("hotel_id");
         if (!$hotel)  return array("hotel not defined can't book rooms and room days. Contact admin of plateform", 0, [], []);
 
-        $travel = $this->hetTravel();
+        $travel = $this->het("travel_id");
         if (!$travel)  return array("travel not defined can't book rooms and room days. Contact admin of plateform", 0, [], []);
 
         $hotel_id = $hotel->getId();
@@ -1531,11 +1214,11 @@ class TravelHotel extends BtbObject
 
         $hroomObject = $first_item->het("hroom_id");
         /*
-             $hotel = $this->hetHotel();
+             $hotel = $this->het("hotel_id");
              if(!$hotel)  return array("hotel not defined can't book rooms and room days. Contact admin of plateform", $ids);
               
              
-             $travel = $this->hetTravel();
+             $travel = $this->het("travel_id");
              if(!$travel)  return array("travel not defined can't book rooms and room days. Contact admin of plateform", $ids);
              */
 

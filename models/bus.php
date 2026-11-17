@@ -180,25 +180,34 @@ class Bus extends BtbObject
          * @param string $arrival_time, 
          * @param int $days_nb, 
          * @param string $company_name 
+         * @param int $week_period_enum, 
+         * @param int $period_type_enum, 
+         * @param int $yperiod_id,
          * 
          * @return float
          */
 
-        public function getBusTotalPrice($travel_program_id, $days_nb, $company_name = "", $departure_date = "", $departure_time = "", $arrival_date = "", $arrival_time = "")
+        public function getBusTotalPrice($travel_program_id, $days_nb, $week_period_enum, $period_type_enum, $yperiod_id, $company_name = "", $departure_date = "", $departure_time = "", $arrival_date = "", $arrival_time = "", $lang = "ar")
         {
                 $errors_arr = array();
                 $report_arr = array();
 
                 $this_id = $this->getId();
+                $parent_bus_id = $this->getVal("parent_bus_id");
 
                 if (!$this_id) {
-                        $errors_arr[] = "هذه المركبة غير مكتمل البيانات";
+                        $errors_arr[] = "هذه المركبة غير مكتملة البيانات";
                         return array(-1111, $errors_arr, $report_arr, null, null);
                 }
 
+                $the_buses = [];
+                $the_buses[$this_id] = "المركبة";
+                if ($parent_bus_id) $the_buses[$parent_bus_id] = "النموذج";
+
+
                 $busOwner = $this->het("work_branch_id");
                 if (!$busOwner) {
-                        $errors_arr[] = "هذه المركبة لم يتم تحديد ملكيته لأي مؤسسة";
+                        $errors_arr[] = "لم يتم تحديد ملكية هذه المركبة لأي مؤسسة";
                         return array(-2222, $errors_arr, $report_arr, null, null);
                 }
 
@@ -213,15 +222,34 @@ class Bus extends BtbObject
                 }
 
                 $file_dir_name = dirname(__FILE__);
-
-                $bp = BusPricing::loadByMainIndex($this_id, $travel_program_id, $days_nb, $week_period_enum, $period_type_enum, $yperiod_id, $create_obj_if_not_found = false);
-                if (!$bp) {
-                        $report_arr[] = "لم يتم العثور على تسعيرة  للفترة المحددة";
-                        $report_arr[] = "سيتم البحث عن تسعيرة عامة لجميع الفترات";
-                        $bp = BusPricing::loadByMainIndex($this_id, $travel_program_id, $days_nb, $week_period_enum, $period_type_enum, 0, $create_obj_if_not_found = false);
-                        if (!$bp) $bp = BusPricing::loadByMainIndex($this_id, $travel_program_id, $days_nb, $week_period_enum, 0, 0, $create_obj_if_not_found = false);
-                        if (!$bp) $bp = BusPricing::loadByMainIndex($this_id, $travel_program_id, $days_nb, 0, $period_type_enum, 0, $create_obj_if_not_found = false);
-                        if (!$bp) $bp = BusPricing::loadByMainIndex($this_id, $travel_program_id, $days_nb, 0, 0, 0, $create_obj_if_not_found = false);
+                $bp = null;
+                foreach ($the_buses as $the_bus_id => $the_bus_name) {
+                        if (!$bp) {
+                                $report_arr[] = "البحث عن سعر تكلفة المركبة : $the_bus_id ($the_bus_name)";
+                                $bp = BusPricing::loadByMainIndex($the_bus_id, $travel_program_id, $days_nb, $week_period_enum, $period_type_enum, $yperiod_id, $create_obj_if_not_found = false);
+                                $report_arr[] = "لم يتم العثور على تسعيرة  للفترة المحددة [dn=$days_nb, wp=$week_period_enum,pt=$period_type_enum, yp=$yperiod_id]";
+                                $report_arr[] = "سيتم البحث عن تسعيرة عامة لجميع الفترات";
+                                $bp = BusPricing::loadByMainIndex($the_bus_id, $travel_program_id, $days_nb, $week_period_enum, $period_type_enum, 0, $create_obj_if_not_found = false);
+                                if ($bp and ($bp->getVal("price") <= 0)) {
+                                        unset($bp);
+                                        $bp = null;
+                                }
+                                if (!$bp) $bp = BusPricing::loadByMainIndex($the_bus_id, $travel_program_id, $days_nb, $week_period_enum, 0, 0, $create_obj_if_not_found = false);
+                                if ($bp and ($bp->getVal("price") <= 0)) {
+                                        unset($bp);
+                                        $bp = null;
+                                }
+                                if (!$bp) $bp = BusPricing::loadByMainIndex($the_bus_id, $travel_program_id, $days_nb, 0, $period_type_enum, 0, $create_obj_if_not_found = false);
+                                if ($bp and ($bp->getVal("price") <= 0)) {
+                                        unset($bp);
+                                        $bp = null;
+                                }
+                                if (!$bp) $bp = BusPricing::loadByMainIndex($the_bus_id, $travel_program_id, $days_nb, 0, 0, 0, $create_obj_if_not_found = false);
+                                if ($bp and ($bp->getVal("price") <= 0)) {
+                                        unset($bp);
+                                        $bp = null;
+                                }
+                        }
                 }
 
                 if (!$bp) {
@@ -233,9 +261,14 @@ class Bus extends BtbObject
                 }
                 $bpId = $bp->getId();
                 $total_price = floatval($bp->getVal("price"));
-                $report_arr[] = "مرجع التسعيرة المعتمدة : $bpId";
-                $report_arr[] = "سعر تكلفة المركبة : $total_price";
-                // $report_arr[] = "وفقا للخيارات التالية : @todo";
+                if ($total_price > 0) {
+                        $report_arr[] = "مرجع التسعيرة المعتمدة : $bpId";
+                        $report_arr[] = "سعر تكلفة المركبة : $total_price";
+                        // $report_arr[] = "وفقا للخيارات التالية : @todo";
+                } else {
+                        $errors_arr[] = "سعر تكلفة المركبة غير متوفر رقم المرجع : BusPricingID-$bpId : " . $bp->getDisplay($lang);
+                }
+
 
                 return array($total_price, $errors_arr, $report_arr, $this->prices_expiry_date, $bp);
         }
@@ -330,7 +363,8 @@ class Bus extends BtbObject
                         // ?? $data[4] = "رقم ".$this->getVal("bus_num")." في الأسطول";
                 }
 
-                return "<div class='bus_display'>" . implode("-", $data) . "</div>";
+                // return "<div class='bus_display'>" . implode("-", $data) . "</div>";
+                return implode("-", $data);
         }
 
 
@@ -1035,7 +1069,7 @@ class Bus extends BtbObject
                 if ($attribute == "owner_type_id")  return $this->propertiesCanBeCustomized();
 
                 if ($attribute == "custom_prices") return ($this->pricesInherited() and $this->priceCustomizatiomHaveSens());
-                if ($attribute == "seatsCategDiv") return (count($this->get("busSeatCategoryList")) > 0);
+                if ($attribute == "seatsCategDiv") return (count($this->getMyBusSeatCategoryList()) > 0);
                 /*
               if($attribute=="account_company_id") return ((!$this->pricesInherited()) or ($this->pricesCanBeCustomized() and $this->sureIs("customized"))); 
               if($attribute=="busPricingList")     return ((!$this->pricesInherited()) or ($this->pricesCanBeCustomized() and $this->sureIs("customized"))); 
@@ -1117,12 +1151,14 @@ class Bus extends BtbObject
         }
 
 
+        /* complex need to be reviewed 
+        ما هذا التعقيد الذي أطوره ولم يطلبه العميل أصلا .. عجيب نقص في الخبرة آنذاك
         public function approvalNeededFor($travelTemplateObject)
         {
                 // في حال رحلة غير معروفة أو ملك المركبة غير معروف 
                 // وهي حالة غريبة
                 // نحدث خطأ
-                $travelCompany = $travelTemplateObject->hetTcompany();
+                $travelCompany = $travelTemplateObject->het("work_branch_id");
                 $busOwner = $this->het("work_branch_id");
                 if (!$busOwner) throw new RunTimeException("bus owner not defined");
                 if (!$travelCompany) throw new RunTimeException("travel not defined");
@@ -1177,7 +1213,7 @@ class Bus extends BtbObject
                 // فحجزه يحتاج اعتماد مبدئي ثم نهائي مع الشركة المتصرفة
 
                 return true;
-        }
+        }*/
 
         public function isAlreadyBooked()
         {
@@ -1446,7 +1482,18 @@ class Bus extends BtbObject
                 return $busTemplate;
         }
 
-        public function genereSeatsCateg($reset_generation = false)
+        public function getMyBusSeatCategoryList()
+        {
+                $bscList = $this->get("busSeatCategoryList");
+                if (!$bscList) {
+                        $parentBus = $this->het("parent_bus_id");
+                        if ($parentBus) $bscList = $parentBus->get("busSeatCategoryList");
+                }
+
+                return $bscList;
+        }
+
+        public function genereBusSeatsAndAssignCategories($reset_generation = false)
         {
                 // 
                 $activated_categs = [1, 2];
@@ -1471,13 +1518,13 @@ class Bus extends BtbObject
                 $rows_nb = intval($template->getVal("rows_nb"));
 
                 // parse busSeatCategoryList of me and deduce category_arr
-                if ($this->busSeatCategoryListCache === null) $this->busSeatCategoryListCache = $this->get("busSeatCategoryList");
+                if ($this->busSeatCategoryListCache === null) $this->busSeatCategoryListCache = $this->getMyBusSeatCategoryList();
 
                 $template->category_arr = array();
                 $log_arr = array();
                 foreach ($this->busSeatCategoryListCache as $busSeatCategoryItem) {
                         if (!$template->all_categories) {
-                                $template->all_categories = $busSeatCategoryItem->getAllCategories($activated_categs);
+                                $template->all_categories = $busSeatCategoryItem->getAllCategoriesCodeAndTitle($activated_categs);
                         }
                         $seat_list_val = $busSeatCategoryItem->getVal("seat_list");
                         $seat_list_arr = explode(",", $seat_list_val);
@@ -1547,7 +1594,7 @@ class Bus extends BtbObject
 
         public function getTheSeatCategoryCode($seat_code, $return_name = false, $reset_generation = false)
         {
-                $template = $this->genereSeatsCateg($reset_generation);
+                $template = $this->genereBusSeatsAndAssignCategories($reset_generation);
                 // throw new AfwRuntimeException("template->category_arr = ".var_export($template->category_arr,true));
                 if ($template->category_arr[$seat_code]) $return = $template->category_arr[$seat_code];
                 else $return = 'normal';
@@ -1558,27 +1605,56 @@ class Bus extends BtbObject
 
         public function regenereSeatsCategDiv($lang = "ar")
         {
-                $template = $this->genereSeatsCateg(true);
-                return array("", $template->calcBusDiv(false, "", "هذه صورة تصنيف المقاعد بعد التحديث"));
+                /**
+                 * @var BusTemplate $busTemplateObj
+                 */
+                $busTemplateObj = $this->genereBusSeatsAndAssignCategories(true);
+                return array("", $busTemplateObj->calcBusDiv("value", false, "", "هذه صورة تصنيف المقاعد بعد التحديث", null, true));
+        }
+
+        public function busReelSeats()
+        {
+                $busReelSeats = [];
+                $busReelSeats['categories'] = [];
+
+
+                $busSeatList = $this->get("busSeatList");
+                foreach ($busSeatList as $busSeatItem) {
+                        $id = $busSeatItem->id;
+                        $category = BusSeatCategory::code_of_seat_category($busSeatItem->getVal("seat_category"));
+                        $seat_num = $busSeatItem->getVal("seat_code");
+                        $seat_ready = 'ready';
+                        $seat_edit_link = "m.php?mp=ed&cl=BusSeat&cm=btb&id=$id&cs=1&clp=";
+                        $busReelSeats[$seat_num]['ready'] = $seat_ready;
+                        $busReelSeats[$seat_num]['edit_link'] = $seat_edit_link;
+                        $busReelSeats['categories'][$seat_num] = $category;
+                }
+
+                return $busReelSeats;
         }
 
         public function calcSeatsCategReelDiv()
         {
-                $template = $this->busReelSeatsCateg();
+                /**
+                 * @var BusTemplate $busTemplateObj
+                 */
+                $busTemplateObj = $this->genereBusSeatsAndAssignCategories(true);
+                $busReelSeats = $this->busReelSeats();
                 //return var_export($template->category_arr,true);
-                return $template->calcBusDiv(false, "", "هذه صورة تصنيف المقاعد على المركبة");
+                return $busTemplateObj->calcBusDiv("value", false, "", "هذه صورة جاهزية حجز المقاعد على المركبة", null, false, false, false, $busReelSeats);
         }
 
         public function calcSeatsCategDiv()     // $sw = 66, $sh = 66, $iw = 5, $ih = 5, $driver_seat_width = 45, $bus_num=1, $seats_bus="-", $booking_id=0, $can_edit=true
         {
-
                 // @todo show bus div from next travel for this bus to see booking status of seats and name of next travel
 
-
-                $template = $this->genereSeatsCateg();
+                /**
+                 * @var BusTemplate $busTemplateObj
+                 */
+                $busTemplateObj = $this->genereBusSeatsAndAssignCategories();
                 //return var_export($template->category_arr,true);
 
-                return $template->calcBusDiv(false, "", "هذه صورة تصنيف المقاعد حسب الإعدادات");
+                return $busTemplateObj->calcBusDiv("value", false, "", "هذه صورة تصنيف المقاعد حسب الإعدادات");
         }
 
 
@@ -1605,7 +1681,7 @@ class Bus extends BtbObject
         public function getSeatsCategories()
         {
                 $lang = AfwLanguageHelper::getGlobalLanguage();
-                if ($this->busSeatCategoryListCache === null) $this->busSeatCategoryListCache = $this->get("busSeatCategoryList");
+                if ($this->busSeatCategoryListCache === null) $this->busSeatCategoryListCache = $this->getMyBusSeatCategoryList();
                 $categories = array();
                 $categories[1] = "مقعد عادي";
                 foreach ($this->busSeatCategoryListCache as $busSeatCategoryItem) {

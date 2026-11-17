@@ -24,7 +24,7 @@ class BusSeat extends BtbObject
 
         $this->showQeditErrors = true;
         $this->showRetrieveErrors = true;
-        // $this->after_save_edit = array("class"=>Road,"attribute"=>road_id, "currmod"=> 'btb',"currstep"=>9);
+        $this->after_save_edit = array("class" => 'Bus', "attribute" => 'bus_id', "currmod" => 'btb', "currstep" => 5);
     }
 
     public static function loadById($id)
@@ -76,16 +76,8 @@ class BusSeat extends BtbObject
         $data = [];
         $link = [];
 
-        list($data[0], $link[0]) = $this->displayAttribute(
-            'travel_bus_id',
-            false,
-            $lang
-        );
-        list($data[1], $link[1]) = $this->displayAttribute(
-            'seat_code',
-            false,
-            $lang
-        );
+        $data[0] = $this->decode('bus_id', '', false, $lang);
+        $data[1] = $this->decode('seat_code', '', false, $lang);
 
         return implode(' - ', $data);
     }

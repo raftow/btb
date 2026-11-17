@@ -119,6 +119,39 @@ class BusSeatCategory extends BtbObject
         return  $code;
     }
 
+    /**
+     * @param string $code
+     * @return int
+     */
+    public static function num_of_seat_category_code($code)
+    {
+
+        $seat_category = 0;
+        if ($code == "normal") $seat_category = 1;
+        if ($code == "front") $seat_category = 2;
+        if ($code == "silver") $seat_category = 3;
+        if ($code == "golden") $seat_category = 4;
+        if ($code == "bed") $seat_category = 5;
+        if ($code == "window") $seat_category = 6;
+        if ($code == "door") $seat_category = 7;
+        if ($code == "togenerate") $seat_category = 8;
+
+        return  $seat_category;
+    }
+
+
+    /**
+     * @param array $arrCodes
+     */
+    public static function categoryCodesToNums($arrCodes)
+    {
+        $result = [];
+        foreach ($arrCodes as $x => $categCode) {
+            $result[$x] = self::num_of_seat_category_code($categCode);
+        }
+
+        return $result;
+    }
 
     public function getSeatCategoryCode()
     {
@@ -129,14 +162,16 @@ class BusSeatCategory extends BtbObject
     public static function getAllActivatedCategories($activated_categs = array())
     {
         $obj = new BusSeatCategory();
-        return $obj->getAllCategories($activated_categs);
+        return $obj->getAllCategoriesCodeAndTitle($activated_categs);
     }
 
-    public function getAllCategories($activated_categs = array())
+
+
+    public static function getAllCategoriesCodeAndTitle($activated_categs = array())
     {
-        $list_of_seat_category = $this->list_of_seat_category_enum();
+        $list_of_seat_category = self::list_of_seat_category_enum();
         $all_arr = array();
-        for ($c = 1; $c <= 8; $c++) {
+        for ($c = 1; $c <= count($list_of_seat_category); $c++) {
             if ((!$activated_categs) or (in_array($c, $activated_categs))) {
                 $row_c = array();
                 $row_c["code"] = self::code_of_seat_category($c);

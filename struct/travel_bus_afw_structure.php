@@ -20,7 +20,6 @@ class BtbTravelBusAfwStructure
 
 		'bus_company_id' => array(
 			'STEP' => 1,
-			'SHORTNAME' => 'bcompany',
 			'SEARCH' => true,
 			'QSEARCH' => false,
 			'SHOW' => true,
@@ -35,7 +34,7 @@ class BtbTravelBusAfwStructure
 			'ANSWER' => 'work_branch',
 			'ANSMODULE' => 'btb',
 			'AUTOCOMPLETE' => true,
-			'RELATION' => 'ManyToOne',
+			'RELATION' => 'OneToMany',
 			'READONLY' => true,
 			'CSS' => 'width_pct_50',
 			'SEARCH-BY-ONE' => false,
@@ -78,9 +77,7 @@ class BtbTravelBusAfwStructure
 		),
 
 		'travel_company_id' => array(
-			'FGROUP' => 'bbooking',
 			'STEP' => 1,
-			'SHORTNAME' => 'tcompany',
 			'SEARCH' => true,
 			'QSEARCH' => false,
 			'SHOW' => true,
@@ -96,7 +93,7 @@ class BtbTravelBusAfwStructure
 			'ANSWER' => 'work_branch',
 			'ANSMODULE' => 'btb',
 			'AUTOCOMPLETE' => true,
-			'RELATION' => 'ManyToOne',
+			'RELATION' => 'OneToMany',
 			'READONLY' => true,
 			'SEARCH-BY-ONE' => false,
 			'DISPLAY' => true,
@@ -107,7 +104,6 @@ class BtbTravelBusAfwStructure
 		),
 
 		'travel_id' => array(
-			'FGROUP' => 'bbooking',
 			'STEP' => 1,
 			'SHORTNAME' => 'travel',
 			'SEARCH' => true,
@@ -397,7 +393,6 @@ class BtbTravelBusAfwStructure
 
 		'price_approval' => array(
 			'STEP' => 2,
-			'SHORTNAME' => 'priced',
 			'SEARCH' => true,
 			'QSEARCH' => false,
 			'SHOW' => true,
@@ -446,7 +441,6 @@ class BtbTravelBusAfwStructure
 
 		'booking_needed' => array(
 			'FGROUP' => 'bbooking',
-			'SHORTNAME' => 'tobook',
 			'STEP' => 3,
 			'SEARCH' => true,
 			'QSEARCH' => false,
@@ -475,7 +469,6 @@ class BtbTravelBusAfwStructure
 
 		'booking_needed_now' => array(
 			'FGROUP' => 'bbooking',
-			'SHORTNAME' => 'tobooknow',
 			'STEP' => 3,
 			'SHOW' => true,
 			'RETRIEVE' => false,
@@ -578,7 +571,9 @@ class BtbTravelBusAfwStructure
 			'STEP' => 4,
 			'TYPE' => 'TEXT',
 			'CATEGORY' => 'FORMULA',
+			'READONLY' => true,
 			'SHOW' => true,
+			'EDIT' => true,
 			'RETRIEVE' => false,
 			'SIZE' => 255,
 			'NO-LABEL' => true,
@@ -773,7 +768,7 @@ class BtbTravelBusAfwStructure
 			'ANSWER' => 'hotel',
 			'ANSMODULE' => 'btb',
 			'CATEGORY' => 'SHORTCUT',
-			'SHORTCUT' => 'travel.template.city1_hotel_mfk',
+			'SHORTCUT' => 'travel_id.travel_template_id.city1_hotel_mfk',
 			'NO-COTE' => true,
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => '',
@@ -788,7 +783,7 @@ class BtbTravelBusAfwStructure
 			'ANSWER' => 'hotel',
 			'ANSMODULE' => 'btb',
 			'CATEGORY' => 'SHORTCUT',
-			'SHORTCUT' => 'travel.template.city2_hotel_mfk',
+			'SHORTCUT' => 'travel_id.travel_template_id.city2_hotel_mfk',
 			'NO-COTE' => true,
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => '',
@@ -803,7 +798,7 @@ class BtbTravelBusAfwStructure
 			'ANSWER' => 'hotel',
 			'ANSMODULE' => 'btb',
 			'CATEGORY' => 'SHORTCUT',
-			'SHORTCUT' => 'travel.template.city3_hotel_mfk',
+			'SHORTCUT' => 'travel_id.travel_template_id.city3_hotel_mfk',
 			'NO-COTE' => true,
 			'SEARCH-BY-ONE' => '',
 			'DISPLAY' => '',

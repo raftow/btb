@@ -177,7 +177,7 @@ class Hroom extends BtbObject
     {
         /*
         if ($fields_updated["room_re el_num"]) {
-            $hotel = $this->hetHotel();
+            $hotel = $this->het("hotel_id");
             if ($hotel) {
                 $room_num = $this->getVal("room_re el_num");
                 $floor_num = $hotel->getFloorNumFromRoomNum($room_num);

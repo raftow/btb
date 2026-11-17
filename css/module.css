@@ -166,11 +166,16 @@ span.hzm_a.driver_volan.inv-watch {
 
 .bus_seats_bloc {
     position: relative;
-    top: 168px;
-    left: -30px;
+    top: 0px;
+    left: 0px;
     overflow-y: visible;
     display: block;
     float: left;
+}
+
+.plane.bus_seats_bloc {
+    top: 168px !important;
+    left: -30px;
 }
 
 .bus_body_header {
@@ -609,6 +614,18 @@ span.plane.bus_seat {
     float: right;
 }
 
+
+.bus_picture_draw {
+    background: url(../pic/bus-model-draw.png) 1px 1px no-repeat;
+    background-size: 100%;
+    width: 588px;
+    height: 245px;
+    margin-top: 25px;
+    overflow: visible;
+    float: right;
+}
+
+
 .plane_picture {
     background: url(../pic/plane-complete-model-before-zoom.png) 1px 1px no-repeat;
     background-size: 100%;
@@ -730,6 +747,7 @@ span.plane.bus_seat {
 
 li.makeFlex.hrtlCenter {
     min-width: 208px;
+    margin-bottom: 3px;
 }
 
 .body_form_hzm.body_form_bustemplat {
@@ -751,7 +769,7 @@ li.makeFlex.hrtlCenter {
 
 
 .hzm_data.hzm_data_seatsCategDiv.form-control.inputreadonly {
-    min-height: 500px;
+    min-height: 1000px;
 }
 
 .hzm_data.hzm_data_seatsCategReelDiv {
@@ -763,7 +781,7 @@ li.makeFlex.hrtlCenter {
 
 
 .hzm_data.hzm_data_seatsCategReelDiv.form-control.inputreadonly {
-    min-height: 500px;
+    min-height: 1000px;
 }
 
 div.form_content_travelbus td.hzm_col.hzm_col_afw.hzm_col_afw_price.hzm_col_afw_price {
@@ -6972,4 +6990,26 @@ select.hzm_time {
     background-color: #fff;
     padding: 2px 6px;
     border: 1px #8885856b solid;
+}
+
+a.edit-seat {
+    color: brown;
+    text-decoration: underline !important;
+}
+
+span.bus_seat.not-ready>a.edit-seat {
+    color: white;
+}
+
+span.bus_seat.not-ready {
+    color: white;
+    border: none;
+}
+
+.body_form_hzm.body_form_travelbus {
+    min-height: 1700px !important;
+}
+
+div#div_data_busDiv {
+    min-height: 1200px;
 }

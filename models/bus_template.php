@@ -294,14 +294,38 @@ class BusTemplate extends BtbObject
 
 
 
-        public static function getSeatCategHtml($seat_num, $type, $who, $price, $curr, $left, $top, $wd, $hg, $lhg, $is_booking, $booked_by_others, $confirmed = false, $can_edit = true, $display_seat_num = true, $bus_num = 0, $rotate_transform = "x", $wanted_type = "family", $bus_type = "bus")
-        {
+        public static function getSeatCategHtml(
+                $seat_num,
+                $type,
+                $who,
+                $price,
+                $curr,
+                $left,
+                $top,
+                $wd,
+                $hg,
+                $lhg,
+                $is_booking,
+                $booked_by_others,
+                $confirmed = false,
+                $can_edit = true,
+                $display_seat_num = true,
+                $bus_num = 0,
+                $rotate_transform = "x",
+                $wanted_type = "family",
+                $bus_type = "bus",
+                $seat_ready = "not-ready",
+                $seat_edit_link = ""
+        ) {
 
                 $seat_num_l = "b" . $bus_num . "_" . strtolower($seat_num);
                 $seat_val = 0;
                 if ((!$booked_by_others) and $is_booking) $seat_val = 1;
-                if ($display_seat_num or $is_booking) $seat_num_display = $seat_num;
-                else $seat_num_display = "&nbsp;";
+                if ($display_seat_num or $is_booking) {
+                        if ($seat_edit_link) {
+                                $seat_num_display = "<a class='edit-seat' target='edit-seat' href='$seat_edit_link'>$seat_num</a>";
+                        } else $seat_num_display = $seat_num;
+                } else $seat_num_display = "&nbsp;";
 
                 //$seat_num_display .= $seat_val;
 
@@ -313,7 +337,7 @@ class BusTemplate extends BtbObject
                 $legend_seat_class_show = str_replace(' ', '_', $legend_seat_class_show);
                 $legend_seat_class_show = str_replace('hzm_', '', $legend_seat_class_show);
 
-                return array($legend_seat_class_show, "<span id='$seat_num_l' alt='$bus_num' class='$hzm_available_seat $bus_type bus_seat seat_$type seat_rotate_$rotate_transform' title='$seat_title_help' style='left: ${left}px; top: ${top}px; width: ${wd}px; height: ${hg}px; line-height: ${lhg}px;'>$seat_num_display
+                return array($legend_seat_class_show, "<span id='$seat_num_l' alt='$bus_num' class='$hzm_available_seat $bus_type bus_seat seat_$type $seat_ready seat_rotate_$rotate_transform' title='$seat_title_help' style='left: ${left}px; top: ${top}px; width: ${wd}px; height: ${hg}px; line-height: ${lhg}px;'>$seat_num_display
                                                         </span><input type='hidden' name='seat_val_$seat_num_l'  id='seat_val_$seat_num_l' value='$seat_val' />");
         }
 
@@ -338,13 +362,37 @@ class BusTemplate extends BtbObject
          * @param string $wanted_type
          * @return array
          */
-        public static function getSeatHtml($seat_num, $type, $who, $price, $curr, $left, $top, $wd, $hg, $lhg, $is_booking, $booked_by_others, $confirmed = false, $can_edit = true, $display_seat_num = true, $bus_num = 0, $rotate_transform = "x", $wanted_type = "family", $bus_type = "bus")
-        {
+        public static function getSeatHtml(
+                $seat_num,
+                $type,
+                $who,
+                $price,
+                $curr,
+                $left,
+                $top,
+                $wd,
+                $hg,
+                $lhg,
+                $is_booking,
+                $booked_by_others,
+                $confirmed = false,
+                $can_edit = true,
+                $display_seat_num = true,
+                $bus_num = 0,
+                $rotate_transform = "x",
+                $wanted_type = "family",
+                $bus_type = "bus",
+                $seat_ready = "not-ready",
+                $seat_edit_link = ""
+        ) {
                 $seat_num_l = "b" . $bus_num . "_" . strtolower($seat_num);
                 $seat_val = 0;
                 if ((!$booked_by_others) and $is_booking) $seat_val = 1;
-                if ($display_seat_num or $is_booking) $seat_num_display = $seat_num;
-                else $seat_num_display = "&nbsp;";
+                if ($display_seat_num or $is_booking) {
+                        if ($seat_edit_link) {
+                                $seat_num_display = "<a class='edit-seat' target='edit-seat' href='$seat_edit_link'>$seat_num</a>";
+                        } else $seat_num_display = $seat_num;
+                } else $seat_num_display = "&nbsp;";
 
                 //$seat_num_display .= $seat_val;
                 if (true) {
@@ -388,7 +436,7 @@ class BusTemplate extends BtbObject
                 $legend_seat_class_show = str_replace(' ', '_', $legend_seat_class_show);
                 $legend_seat_class_show = str_replace('hzm_', '', $legend_seat_class_show);
 
-                return array($legend_seat_class_show, "<span id='$seat_num_l' alt='$bus_num' class='$hzm_available_seat bus_seat $bus_type seat_$type seat_rotate_$rotate_transform' title='$seat_title_help' style='left: ${left}px; top: ${top}px; width: ${wd}px; height: ${hg}px; line-height: ${lhg}px;'>$seat_num_display
+                return array($legend_seat_class_show, "<span id='$seat_num_l' alt='$bus_num' class='$hzm_available_seat bus_seat $bus_type seat_$type $seat_ready seat_rotate_$rotate_transform' title='$seat_title_help' style='left: ${left}px; top: ${top}px; width: ${wd}px; height: ${hg}px; line-height: ${lhg}px;'>$seat_num_display
                                                         </span><input type='hidden' name='seat_val_$seat_num_l'  id='seat_val_$seat_num_l' value='$seat_val' />");
         }
 
@@ -399,8 +447,14 @@ class BusTemplate extends BtbObject
                 else return "car";
         }
 
-        public function getBusSeatsHtml($status_random = true, $vertical_turn = null, $categ_only = false, $showExample = false, $showLettersSeparately = true)
-        {
+        public function getBusSeatsHtml(
+                $status_random = true,
+                $vertical_turn = null,
+                $categ_only = false,
+                $showExample = false,
+                $showLettersSeparately = true,
+                $busReelSeats = []
+        ) {
                 $rows_nb = intval($this->getVal("rows_nb"));
                 list($all_cols,  $empty_columns_arr) = $this->getCols();
                 $nbCols = count($all_cols);
@@ -506,6 +560,11 @@ class BusTemplate extends BtbObject
                                                                         // throw new AfwRuntimeException("categ_only=$categ_only L9 : left=$left, top=$top:(margin_top:$margin_top + (nbCols:$nbCols - 1 - icol:$icol) * (sh:$sh + ih:$ih)), wd=$wd, hg=$hg, lhg=$lhg");
                                                                 }
 
+                                                                $seat_ready = $busReelSeats[$seat_num]['ready'];
+                                                                if (!$seat_ready and $busReelSeats) $seat_ready = 'not-ready';
+                                                                $seat_edit_link = $busReelSeats[$seat_num]['edit_link'];
+
+
                                                                 if ($this->category_arr) {
                                                                         $type = $this->category_arr[$seat_num];
                                                                         if (!$type) $type = "normal";
@@ -535,16 +594,16 @@ class BusTemplate extends BtbObject
                                                                                 $lhg2 = $lhg; // ??
                                                                         } else throw new RuntimeException("turn sens not implemented");
 
-                                                                        if ($categ_only) list($legend_seat_class_show, $seats_html_arr[$row][$col]) = self::getSeatCategHtml($seat_num, $type, "", $price, $curr, $left2, $top2, $wd2, $hg2, $lhg2, false, $bkd, $conf, true, (!$bkd), 0, "x", "", $bus_type);
-                                                                        else list($legend_seat_class_show, $seats_html_arr[$row][$col]) = self::getSeatHtml($seat_num, $type, "", $price, $curr, $left2, $top2, $wd2, $hg2, $lhg2, false, $bkd, $conf, true, (!$bkd), 0, "x", "", $bus_type);
+                                                                        if ($categ_only) list($legend_seat_class_show, $seats_html_arr[$row][$col]) = self::getSeatCategHtml($seat_num, $type, "", $price, $curr, $left2, $top2, $wd2, $hg2, $lhg2, false, $bkd, $conf, true, (!$bkd), 0, "x", "", $bus_type, $seat_ready, $seat_edit_link);
+                                                                        else list($legend_seat_class_show, $seats_html_arr[$row][$col]) = self::getSeatHtml($seat_num, $type, "", $price, $curr, $left2, $top2, $wd2, $hg2, $lhg2, false, $bkd, $conf, true, (!$bkd), 0, "x", "", $bus_type, $seat_ready, $seat_edit_link);
                                                                 } else {
                                                                         if ($categ_only) {
                                                                                 if ($seat_num == "L9") {
                                                                                         // throw new AfwRuntimeException("self::getSeatCategHtml(seat_num=$seat_num, type=$type, '', price=$price, curr=$curr, left=$left, top=$top, wd=$wd, hg=$hg, lhg=$lhg, false, $bkd, $conf, true, (!$bkd))");
                                                                                 }
 
-                                                                                list($legend_seat_class_show, $seats_html_arr[$row][$col]) = self::getSeatCategHtml($seat_num, $type, "", $price, $curr, $left, $top, $wd, $hg, $lhg, false, $bkd, $conf, true, (!$bkd), 0, "x", "", $bus_type);
-                                                                        } else list($legend_seat_class_show, $seats_html_arr[$row][$col]) = self::getSeatHtml($seat_num, $type, "", $price, $curr, $left, $top, $wd, $hg, $lhg, false, $bkd, $conf, true, (!$bkd), 0, "x", "", $bus_type);
+                                                                                list($legend_seat_class_show, $seats_html_arr[$row][$col]) = self::getSeatCategHtml($seat_num, $type, "", $price, $curr, $left, $top, $wd, $hg, $lhg, false, $bkd, $conf, true, (!$bkd), 0, "x", "", $bus_type, $seat_ready, $seat_edit_link);
+                                                                        } else list($legend_seat_class_show, $seats_html_arr[$row][$col]) = self::getSeatHtml($seat_num, $type, "", $price, $curr, $left, $top, $wd, $hg, $lhg, false, $bkd, $conf, true, (!$bkd), 0, "x", "", $bus_type, $seat_ready, $seat_edit_link);
                                                                 }
                                                         } else {
                                                                 $seats_html_arr[$row][$col] = "";
@@ -583,21 +642,40 @@ class BusTemplate extends BtbObject
                 return ($bus_type_id == 3);
         }
 
-        public function calcBusDiv($what = "value", $status_random = false, $bus_pic = "", $message_user = "الرجاء التظليل على كل المقاعد التي توافق على الجلوس عليها أنت ومن معك", $vertical_turn = null, $showLegend = false)
+        // الرجاء التظليل على كل المقاعد التي توافق على الجلوس عليها أنت ومن معك
+        public function calcBusDiv($what = "value", $status_random = false, $bus_pic = "", $message_user = "--", $vertical_turn = null, $showLegend = false, $showAccessories = false, $showDriver = false, $busReelSeats = [])
         {
+                if ($busReelSeats['categories']) $the_categories_arr = $busReelSeats['categories'];
+                else $the_categories_arr = $this->category_arr;
                 if (!$bus_pic) {
-                        if ($this->isBus()) $bus_pic_class = "bus_picture";
-                        elseif ($this->isPlane()) $bus_pic_class = "plane_picture";
+                        if ($this->isBus()) {
+                                if ($busReelSeats['categories']) $bus_pic_class = "bus_picture";
+                                else $bus_pic_class = "bus_picture_draw";
+                        } elseif ($this->isPlane()) $bus_pic_class = "plane_picture";
                         else $bus_pic_class = "car_picture";
                         $bus_pic = "<div class='$bus_pic_class'></div>";
                 }
 
+                $activated_categs_index = array();
+                $activated_categs_index['normal'] = true;
+                foreach ($the_categories_arr as $seat_code => $category_code) {
+                        $activated_categs_index[$category_code] = true;
+                }
 
-                //throw new AfwRuntimeException("all_categories = ".var_export($this->all_categories,true)." category_arr = ".var_export($this->category_arr,true));
-                if (isset($this->category_arr)) {
+                $activated_categs = array_keys($activated_categs_index);
+
+                $activated_categs_nums = BusSeatCategory::categoryCodesToNums($activated_categs);
+
+                $all_the_categories_arr = BusSeatCategory::getAllCategoriesCodeAndTitle($activated_categs_nums);
+
+                // die("rafik dbg 26111613 : all_the_categories_arr = " . var_export($all_the_categories_arr, true) . " activated_categs = " . var_export($activated_categs, true));
+
+                // die("rafik dbg 26111611 : this categories = " . var_export($this->category_arr, true) . " bus categories = " . var_export($busReelSeats, true));
+                // die("rafik dbg 26111612 : the_categories_arr = " . var_export($the_categories_arr, true));
+                if (count($all_the_categories_arr) > 0) {
                         $legend = "<div class='the_legend_vertical'>
                                               <ul class='seatType makeGrid hrtlCenter appendTop20 latoRegular darkGreyText' data-radium='true'>";
-                        foreach ($this->all_categories as $categ_row) {
+                        foreach ($all_the_categories_arr as $categ_row) {
                                 $code = $categ_row["code"];
                                 $title = $categ_row["title"];
 
@@ -646,10 +724,18 @@ class BusTemplate extends BtbObject
                                                 </ul>
                                         </div>";
                 }
-                // $show_categories_only = isset($this->category_arr); not workinf for pure bus template
+                // $show_categories_only = isset($the_categories_arr); not workinf for pure bus template
                 $show_categories_only = true;
 
-                list($bus_length, $seats_html_arr, $bus_width) = $this->getBusSeatsHtml($status_random, $vertical_turn = null, $show_categories_only);
+                list($bus_length, $seats_html_arr, $bus_width)
+                        = $this->getBusSeatsHtml(
+                                $status_random,
+                                $vertical_turn = null,
+                                $show_categories_only,
+                                false,
+                                false,
+                                $busReelSeats
+                        );
 
                 if (!$seats_html_arr) return "<div>Empty Bus Template Object</div>";
 
@@ -692,6 +778,9 @@ class BusTemplate extends BtbObject
                         $bus_driver_html = "";
                 }
 
+                if (!$showAccessories) $bus_accessoiries_html = "";
+                if (!$showDriver) $bus_driver_html = "";
+
                 $bus_type = $this->busTypeCode();
 
                 return "<div class='hzm_abc bus_div' style='width:${bus_div_length}px'>
@@ -704,7 +793,7 @@ class BusTemplate extends BtbObject
                                 <div class='bus_complete'>
                                         <div class='hzm_x bus_body bus_$buscolor'>
                                                 $bus_driver_html
-                                                <div class='hzm_b bus_seats_bloc' style='width: ${bus_length}px; height: ${bus_width}px;'>
+                                                <div class='hzm_b $bus_type bus_seats_bloc' style='width: ${bus_length}px; height: ${bus_width}px;'>
                                                         <div id='show_seats' class='hzm_c $bus_type bus_body_header'>-</div>
                                                         
                                                         $bus_accessoiries_html

@@ -597,23 +597,25 @@ class WorkBranch extends BtbObject
         $errors_arr = array();
         $infos_arr = array();
         foreach ($travelTemplateList as $travelTemplateItem) {
+            /**
+             * @var TravelTemplate $travelTemplateItem
+             */
             list($is_ok, $dataErr) = $travelTemplateItem->isOk(true, true);
             if ($is_ok) {
-                list($err_arr, $info_arr) = $travelTemplateItem->genereNextTravels($lang = "ar");
-                if (count($err_arr) > 0) {
+                list($err, $info) = $travelTemplateItem->genereNextTravels($lang = "ar");
+                if ($err) {
                     $errors_arr[] = "أخطاء  في توليد الرحلات القادمة للبرنامج  : " . $travelTemplateItem->getDisplay($lang);
-                    $errors_arr = array_merge($errors_arr, $err_arr);
+                    $errors_arr[] = $err;
                 }
 
-                $infos_arr = array_merge($infos_arr, $info_arr);
+                $infos_arr[] = $info;
             } else {
                 $errors_arr[] = "أخطاء في البرنامج  : " . $travelTemplateItem->getDisplay($lang);
                 $errors_arr[] = implode("<br>\n", $dataErr);
             }
         }
 
-
-        return array(implode("<br>\n", $errors_arr), implode("<br>\n", $infos_arr));
+        return AfwFormatHelper::pbm_result($errors_arr, $infos_arr);
     }
 
     /**

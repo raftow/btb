@@ -127,7 +127,7 @@ class HotelFile extends BtbObject
     {
         if (!$this->getVal("doc_type_id")) {
             /*
-                           $prObj = $this->hetHotel();
+                           $prObj = $this->het("hotel_id");
                            if($prObj)
                            {
                           

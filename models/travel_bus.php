@@ -40,6 +40,7 @@ class TravelBus extends BtbObject
         public function __construct()
         {
                 parent::__construct("travel_bus", "id", "btb");
+                // BtbTravelBusAfwStructure::initIn();
                 $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
                 $this->DISPLAY_FIELD = "";
                 $this->ORDER_BY_FIELDS = "travel_id, bus_num";
@@ -286,7 +287,7 @@ class TravelBus extends BtbObject
                                 'STEP' => 2
                         );
                 }
-                if (!$this->estBooked()) {
+                if (!$this->sureIs("booked")) {
                         $color = "blue";
                         $title_ar = "تحديث إعدادات تأجير المركبة";
                         $pbms["Hdf98u"] = array("METHOD" => "updateBookingParams", "COLOR" => $color, "LABEL_AR" => $title_ar, "ADMIN-ONLY" => true, "BF-ID" => "", 'STEP' => 3);
@@ -303,13 +304,13 @@ class TravelBus extends BtbObject
 
 
 
-                if (($this->estToBook()) and (!$this->estBooked())) {
+                if (($this->sureIs("booking_needed")) and (!$this->sureIs("booked"))) {
                         $color = "green";
-                        $title_ar = "تم التأجير المبدئي للباص";
+                        $title_ar = "اكتمل التأجير المبدئي للباص";
                         $pbms["xrTy3A"] = array("METHOD" => "setBusBooked", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 3);
                 }
 
-                if ($this->estBooked() and (!$this->estApproval())) {
+                if ($this->sureIs("booked") and (!$this->estApproval())) {
                         $color = "green";
                         $title_ar = "التأكيد النهائي والموافقة";
                         $pbms["xrTy3A"] = array("METHOD" => "busApproved", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 8);
@@ -482,6 +483,92 @@ class TravelBus extends BtbObject
                 return $this->updateSeats($lang = "ar", $update_price_also_for_manuel_prices = false, $publicM = true, $update_price_also_for_confirmed_seats = false);
         }
 
+        public function updateBusPrices($lang = "ar")
+        {
+                $report_arr = array();
+                $errors_arr = array();
+                $old_total_price = $this->getVal("total_price");
+                $travelObj = $this->het("travel_id");
+
+
+                if (!$travelObj) {
+                        return array("لا يوجد رحلة نسعر  عليها : خطأ حرج", "");
+                }
+                list($week_period_enum, $period_type_enum, $yperiod_id, $days_nb, $nights_nb, $report) = $travelObj->getTravelProps();
+
+                $travelObjId = $travelObj->getId();
+                $travel_date = $travelObj->getVal("travel_date");
+
+                $departure_date = $travelObj->getVal("travel_date");
+                $departure_time = $travelObj->getVal("planned_start_time");
+                $arrival_date = $travelObj->getVal("return_date");
+                $arrival_time = $travelObj->getVal("planned_end_time");
+                $report_arr[] = "تواريخ الرحلة :$departure_date $departure_time إلى  $arrival_date $arrival_time";
+
+                /**
+                 * @var Bus $busObj
+                 */
+                $busObj = $this->het("bus_id");
+                if (!$busObj) {
+                        return array("لا يوجد مركبة نسعر لها :  خطأ حرج", "");
+                }
+
+
+
+                $travelCompanyObj = $this->get("travel_company_id");
+                if (!$travelCompanyObj) {
+                        return array("لا يوجد شركة أسفار لنأخذ اعدادات الأسعار منها :  خطأ حرج في علاقة المركبة بالرحلة رقم تسلسل " . $this->id, "");
+                }
+
+                /**
+                 * @var TravelTemplate $templateObj
+                 */
+                $templateObj = $travelObj->het("travel_template_id");
+                if (!$templateObj) {
+                        return array("لا يوجد نموذج للرحلة برقم التسلسل $travelObjId حتى نسعر عليه :  خطأ حرج", "");
+                }
+                list($err, $info, $travelProgramObj, $travel_duration) = $templateObj->genereMyTravelProgram();
+                list(
+                        $total_price,
+                        $price_errors_arr,
+                        $price_report_arr,
+                        $prices_expiry_date,
+                        $bpPricesObj
+                ) = $busObj->getBusTotalPrice(
+                        $travelProgramObj->getId(),
+                        $travel_duration,
+                        $week_period_enum,
+                        $period_type_enum,
+                        $yperiod_id,
+                        $travelCompanyObj->getDisplay($lang)
+                );
+                $report_arr[] = "مدة الرحلة حسب البرنامج :  $travel_duration يوم";
+                $report_arr[] = "تقرير حساب السعر : ";
+                $report_arr[] = implode(" &larr; ", $price_report_arr);
+                if ((count($price_errors_arr) > 0) or ($total_price <= 0)) {
+                        $errors_arr[] = "تقرير الأخطاء : ";
+                        //$errors_arr[] = var_export($price_errors_arr, true);
+                        $errors_arr[] = implode(" &larr; ", $price_errors_arr);
+                }
+
+                if (($total_price > 0) and  ($old_total_price != $total_price)) {
+                        $this->set("total_price", $total_price);
+                        // if 'auto-approve seat prices if not expired' (Aasp) is enabled in 
+                        // **settings of travel company** approve seat price if not expired the day of travel
+                        if (true or (($travelCompanyObj->optionAutoApproveSeatPricesEnabled()) and ($prices_expiry_date >= $travel_date))) {
+                                $this->set("price_approval", "Y");
+                                $this->set("price_approval_date", AfwDateHelper::currentHijriDate());
+                        }
+                        $this->commit();
+                        $info = "ntotal price found : $total_price ريال";
+                } else {
+                        if ($total_price > 0) $info = "nothing to update";
+                        else $info = "bad total price found";
+                }
+
+                return [implode("\n<br>", $errors_arr), $info, implode("\n<br>", $report_arr)];
+        }
+
 
         // updateSeats
         // 1. تحديث المقاعد بحسب النموذج لو تغير نغير المقاعد
@@ -505,6 +592,8 @@ class TravelBus extends BtbObject
                 );
 
 
+
+
                 /*
                 throw new AfwRuntimeException("This method updateSeats is obsolete for the moment because not optimized as performance");
                 // $file_dir_name = dirname(__FILE__);
@@ -513,7 +602,7 @@ class TravelBus extends BtbObject
                 $bus = $this->het("bus_id");
                 if(!$bus)  return array("bus not defined can't generate seats", "");
                 
-                $template = $bus->hetTemplate();
+                $template = $bus->het("travel_template_id");
                 if(!$template)  return array("bus template not defined can't generate seats", "");
                 
                 $travel_bus_id = $this->getId();
@@ -556,9 +645,9 @@ class TravelBus extends BtbObject
                 $updated_prices_report_arr = [];
                 $seats_count = "v3.N/A";
                 if ($publicM) {
-                        $final_info = "$new_seats seats created seats, $updated_prices updated prices";
-                        $objme = AfwSession::getUserConnected();
-                        if ($this->inModeDev() or ($objme and $objme->isAdmin())) $final_info .= AfwHtmlHelper::genereAccordionForLogArray($updated_prices_report_arr, "Pricing report");
+                        $final_info = "$new_seats seats created, $updated_prices prices updated";
+                        // $objme = AfwSession::getUserConnected();
+                        // if ($this->inModeDev() or ($objme and $objme->isAdmin())) $final_info .= AfwHtmlHelper::genereAccordionForLogArray($updated_prices_report_arr, "Pricing report");
                         return array("", $final_info);
                 } else return array($new_seats, $seats_count, $updated_prices, $updated_prices_report_arr);
         }
@@ -691,8 +780,8 @@ class TravelBus extends BtbObject
                 $account_bus_company_id = $accountBusCompanyObj->getId();
                 $payment_deadline = $accountBusCompanyObj->getVal("payment_deadline");
 
-                $file_dir_name = dirname(__FILE__);
-                require_once "$file_dir_name/../btb/account.php";
+                // $file_dir_name = dirname(__FILE__);
+                // require_once "$file_dir_name/../btb/account.php";
                 $otherPartAccountObjTypeId = Account::$ACCOUNT_TYPE_BUS_COMPANY;
                 $otherPartAccountObj = Account::loadByMainIndex($account_company_id, $otherPartAccountObjTypeId, "bus-co-$account_bus_company_id", $create_obj_if_not_found = true);
                 if (!$otherPartAccountObj) {
@@ -752,8 +841,8 @@ class TravelBus extends BtbObject
                 $deadline_date = AfwDateHelper::shiftHijriDate($service_date, $payment_deadline);
 
                 // push payment order
-                $file_dir_name = dirname(__FILE__);
-                require_once "$file_dir_name/../btb/account_row.php";
+                // $file_dir_name = dirname(__FILE__);
+                // require_once "$file_dir_name/../btb/account_row.php";
                 $rowObj = AccountRow::pushRow($account_company_id, $product_code, $product_ref, $otherPartAccountObjTypeId, $otherPartAccountObjId, $description, $credit, $debit, $deadline_date);
                 $row_id = $rowObj->getId();
                 list($deadline_date_display,) = $rowObj->displayAttribute("deadline_date");
@@ -779,8 +868,8 @@ class TravelBus extends BtbObject
                         return array($err, "");
                 }
                 // push payment order
-                $file_dir_name = dirname(__FILE__);
-                require_once "$file_dir_name/../btb/account_row.php";
+                // $file_dir_name = dirname(__FILE__);
+                // require_once "$file_dir_name/../btb/account_row.php";
                 $rowObj = AccountRow::cancelRow($account_company_id, $product_code, $product_ref, $otherPartAccountObjTypeId, $otherPartAccountObjId);
 
                 $this->set("approval", "W");
@@ -831,28 +920,32 @@ class TravelBus extends BtbObject
 
         public function openSeatsBooking($lang = "ar", $publicM = true, $update_seats = true)
         {
+                // I dont understand this param so i force to true
+                // because otherwise he will not prepare seats and we will not understand the reason
+                $update_seats = true;
                 $hijri_current_date = AfwDateHelper::currentHijriDate();
+                /* complex and not clear disabled by rafik
                 if (!$this->bookedTemporary()) {
                         // only at least booked temporary buses can be opened for seat booking
                         $err = "لا يمكن فتح حجز المقاعد على مركبة غير محجوز مبدئيا من عند مالكه";
                         if ($publicM) return array($err, "");
-                        else array(0, $err);
+                        else return array(0, $err);
                 }
                 list($approved, $reason) = $this->priceApprovedAtTime();
                 if (!$approved) {
                         // approve bus total price with owner before open seat for booking
                         $err = "قم بإعتماد سعر التكلفة حتى نتمكن من فتح المركبة لحجز المقاعد. " . $reason;
                         if ($publicM) return array($err, "");
-                        else array(0, $err);
-                }
-                if ($update_seats) {
-                        list($new_seats, $seats_count, $updated_prices, $updated_prices_report_arr) = $this->updateSeats($lang, $update_price_also_for_manuel_prices = false, $publicM = false);
-                } else {
-                        $new_seats = 0;
-                        $seats_count = 0;
-                        $updated_prices = 0;
-                        $updated_prices_report_arr = array();
-                }
+                        else return array(0, $err);
+                }*/
+                /* if ($update_seats) {*/
+                list($new_seats, $seats_count, $updated_prices, $updated_prices_report_arr) = $this->updateSeats($lang, $update_price_also_for_manuel_prices = false, $publicM = false);
+                /* } else {
+                $new_seats = 0;
+                $seats_count = 0;
+                $updated_prices = 0;
+                $updated_prices_report_arr = array();
+                } */
 
                 $this->set("opened", "Y");
                 $this->set("opened_date", $hijri_current_date);
@@ -862,19 +955,27 @@ class TravelBus extends BtbObject
                 else return array($new_seats, "");
         }
 
-        public function getBusSeatsHtml($sw = 66, $sh = 66, $iw = 6, $ih = 6, $driver_seat_width = 60, $bus_num = 1, $booking_seats_bus_arr = array(), $booking_id, $can_edit = true, $vertical_turn = null, $rotate_transform = "x", $nb_seats = 1, $booking_ongoing = false)
+        public function getBusSeatsHtml($what = 'value', $sw = 66, $sh = 66, $iw = 6, $ih = 6, $driver_seat_width = 60, $bus_num = 1, $booking_seats_bus_arr = array(), $booking_id, $can_edit = true, $vertical_turn = null, $rotate_transform = "x", $nb_seats = 1, $booking_ongoing = false)
         {
+                /* die("rafik 26111708 : getBusSeatsHtml($sw = sw, $sh = sh, $iw = iw, 
+                                            $ih = ih, $driver_seat_width = driver_seat_width, $bus_num = bus_num, 
+                                            $booking_seats_bus_arr =  booking_seats_bus_arr, booking_id = $booking_id,
+                                            $can_edit = can_edit, $vertical_turn = vertical_turn, $rotate_transform = rotate_transform, 
+                                            $nb_seats = nb_seats, $booking_ongoing = booking_ongoing)");*/
                 $lang = AfwLanguageHelper::getGlobalLanguage();
 
-                $file_dir_name = dirname(__FILE__);
+                // $file_dir_name = dirname(__FILE__);
 
-                require_once "$file_dir_name/../btb/bus_template.php";
-                require_once "$file_dir_name/../btb/bus_template_row.php";
+                // require_once "$file_dir_name/../btb/bus_template.php";
+                // require_once "$file_dir_name/../btb/bus_template_row.php";
 
                 $bus = $this->het("bus_id");
                 if (!$bus)  return "bus not defined can't display seats";
 
-                $template = $bus->hetTemplate();
+                $travelObj = $this->het("travel_id");
+                if (!$travelObj)  return "travel not defined can't display seats";
+
+                $template = $bus->het("bus_template_id");
                 if (!$template)  return "bus template not defined can't display seats";
 
                 $bus_template_id = $template->getId();
@@ -884,8 +985,7 @@ class TravelBus extends BtbObject
                 if (!$travel_bus_id)  return "travel bus booking not defined can't display seats";
 
 
-                $travelObj = $this->het("travel_id");
-                if (!$travelObj)  return "travel not defined can't display seats";
+
 
                 $rows_nb = intval($template->getVal("rows_nb"));
 
@@ -947,9 +1047,9 @@ class TravelBus extends BtbObject
                                                                 $lhg = $sh;
                                                                 $seat_is_booking = (in_array($seat_code, $booking_seats_bus_arr) or $tsObj->estBookedForMe($booking_id));
 
-                                                                $show_seat = (($sw >= 32) and ($sh >= 32) and (!$tsObj->estBooked()) and (!$seat_is_booking));
+                                                                $show_seat = (($sw >= 32) and ($sh >= 32) and (!$tsObj->sureIs("booked")) and (!$seat_is_booking));
                                                                 /*
-                                                if($tsObj->estBooked() and $tsObj->estBookedForOthers($booking_id))
+                                                if($tsObj->sureIs("booked") and $tsObj->estBookedForOthers($booking_id))
                                                 {
                                                         throw new AfwRuntimeException($tsObj->getDisplay("ar")." seat  is estBookedForOthers($booking_id) ".var_export($tsObj,true));
                                                 }*/
@@ -1023,112 +1123,46 @@ class TravelBus extends BtbObject
                 return $price;
         }
 
-        public function calcSeat_price($return_report = false, $update_total_price = false, $lang = "ar", $separator = " &larr; ")
+        public function calcSeat_price($what = 'value', $return_report = false, $update_total_price = false, $lang = "ar", $separator = " &larr; ")
         {
+                $total_price = $this->getVal("total_price");
                 $seat_price = -1;
                 $report_arr = array();
                 $errors_arr = array();
 
-                $travelObj = $this->het("travel_id");
-
-                if (!$travelObj) {
-                        if ($return_report) return array("لا يوجد رحلة نسعر  عليها : خطأ حرج", "");
-                        else $seat_price;
-                }
-                $travelObjId = $travelObj->getId();
-                $travel_date = $travelObj->travel_date;
-
-                $busObj = $this->het("bus_id");
-                if (!$busObj) {
-                        if ($return_report) return array("لا يوجد مركبة نسعر عليه :  خطأ حرج", "");
-                        else return  $seat_price;
-                }
-
-                $templateObj = $travelObj->hetTemplate();
-                if (!$templateObj) {
-                        if ($return_report) return array("لا يوجد نموذج للرحلة برقم التسلسل $travelObjId حتى نسعر عليه :  خطأ حرج", "");
-                        else return  $seat_price;
-                }
-
-                $travelCompanyObj = $this->get("travel_company_id");
-                if (!$travelCompanyObj) {
-                        if ($return_report) return array("لا يوجد شركة أسفار لنأخذ اعدادات الأسعار منها :  خطأ حرج في علاقة المركبة بالرحلة رقم تسلسل " . $this->id, "");
-                        else return  $seat_price;
-                }
-
-
-                list($err, $info, $travelProgramObj, $travel_duration) = $templateObj->genereMyBusProgram();
-
-
-
-                $departure_date = $travelObj->getVal("travel_date");
-                $departure_time = $travelObj->getVal("planned_start_time");
-                $arrival_date = $travelObj->getVal("return_date");
-                $arrival_time = $travelObj->getVal("planned_end_time");
-                $report_arr[] = "تواريخ الرحلة :$departure_date $departure_time إلى  $arrival_date $arrival_time";
-                $report_arr[] = "مدة الرحلة حسب البرنامج :  $travel_duration يوم";
-
-                $total_price = $this->getVal("total_price");
                 if ((!$total_price) or ($update_total_price)) {
-                        $old_total_price = $total_price;
-
-                        list(
-                                $total_price,
-                                $price_errors_arr,
-                                $price_report_arr,
-                                $prices_expiry_date,
-                                $bpPricesObj
-                        ) = $busObj->getBusTotalPrice(
-                                $travelProgramObj->getId(),
-                                $departure_date,
-                                $departure_time,
-                                $arrival_date,
-                                $arrival_time,
-                                $travel_duration,
-                                $travelCompanyObj->getDisplay($lang)
-                        );
-                        $report_arr[] = "تقرير حساب السعر : ";
-                        $report_arr[] = implode(" &larr; ", $price_report_arr);
-                        if ($total_price < 0) {
-                                $errors_arr[] = "تقرير الأخطاء : ";
-                                $errors_arr[] = implode(" &larr; ", $price_errors_arr);
-                        }
-
-                        $total_price_to_be_updated = ($old_total_price != $total_price);
-
-                        if (($total_price > 0) and ($total_price_to_be_updated)) {
-                                $this->set("total_price", $total_price);
-                                // if 'auto-approve seat prices if not expired' (Aasp) is enabled in 
-                                // **settings of travel company** approve seat price if not expired the day of travel
-                                if (($travelCompanyObj->optionAutoApproveSeatPricesEnabled()) and ($prices_expiry_date >= $travel_date)) {
-                                        $this->set("price_approval", "Y");
-                                        $this->set("price_approval_date", AfwDateHelper::currentHijriDate());
-                                }
-                                $this->commit();
-                        }
+                        list($err, $inf, $war) = $this->updateBusPrices($lang);
+                        if ($err) $errors_arr[] = $err;
+                        if ($inf) $report_arr[] = $inf;
+                        if ($war) $report_arr[] = $war;
                 }
 
                 if ($total_price > 0) {
-                        $nb_seats = $busObj->calcNb_seats();
-
-                        if (!$nb_seats) {
-                                // لاحظ هنا  $all=true   
-                                $nb_gen_seats = $this->countSeatsAvailable($all = true);
-                                if ($nb_gen_seats) {
-                                        $report_arr[] = "عدد المقاعد الإجمالي في المركبة :$nb_gen_seats ";
-                                        $nb_seats = $nb_gen_seats;
-                                }
-                        }
-
-                        if (!$nb_seats) {
-                                $errors_arr[] = "عدد المقاعد غير معروف لا يمكن حساب سعر المقعد";
+                        $busObj = $this->het("bus_id");
+                        if (!$busObj) {
+                                $errors_arr[] = "لا يوجد مركبة نسعر لها :  خطأ حرج";
                         } else {
-                                $seat_price = round(100 * ($total_price / $nb_seats)) / 100;
-                                $report_arr[] = "حساب سعر المقعد : $seat_price = $total_price قسمة $nb_seats ";
+                                $nb_seats = $busObj->calcNb_seats();
+
+                                if (!$nb_seats) {
+                                        // لاحظ هنا  $all=true   
+                                        $nb_gen_seats = $this->countSeatsAvailable($all = true);
+                                        if ($nb_gen_seats) {
+                                                $report_arr[] = "عدد المقاعد الإجمالي في المركبة :$nb_gen_seats ";
+                                                $nb_seats = $nb_gen_seats;
+                                        }
+                                }
+
+                                if (!$nb_seats) {
+                                        $errors_arr[] = "عدد المقاعد غير معروف لا يمكن حساب سعر المقعد";
+                                } else {
+                                        $seat_price = round(100 * ($total_price / $nb_seats)) / 100;
+                                        $report_arr[] = "حساب سعر المقعد : $seat_price = $total_price قسمة $nb_seats ";
 
 
 
-                                $this->commit();
+                                        $this->commit();
+                                }
                         }
                 }
 
@@ -1185,6 +1219,7 @@ class TravelBus extends BtbObject
 
 
         public function calcBusDiv(
+                $what = 'value',
                 $sw = 66,
                 $sh = 66,
                 $iw = 5,
@@ -1214,6 +1249,7 @@ class TravelBus extends BtbObject
                         $seats_html_arr,
                         $legend_seat_class_show_arr
                 ) = $this->getBusSeatsHtml(
+                        $what,
                         $sw,
                         $sh,
                         $iw,
@@ -1266,11 +1302,13 @@ class TravelBus extends BtbObject
                 $bus_internal_space = 2 * ($bus_body_padding + $bus_body_border) + $bus_body_seats_selector_height;
 
 
-
+                $busTemplateObj = null;
                 $driver_volan_zoom = $sw * 2 + 20;
 
                 $busObj = $this->het("bus_id");
                 if ($busObj) {
+                        $busTemplateObj = $busObj->het("bus_template_id");
+                        if ($busTemplateObj) $bus_type = $busTemplateObj->busTypeCode();
                         $busObjId = $busObj->getId();
                         $photo_galery = $busObj->calcPhotoGalery();
                 } else {
@@ -1349,7 +1387,7 @@ class TravelBus extends BtbObject
                                         <span class='hzm_a driver_volan $direction_class ' style='zoom:${driver_volan_zoom}%'>
                                         </span>
                                 </div>
-                                <div class='hzm_b bus_seats_bloc $direction_class ' style='width: ${bus_length}px; height: ${bus_height}px;'>
+                                <div class='hzm_b $bus_type bus_seats_bloc $direction_class ' style='width: ${bus_length}px; height: ${bus_height}px;'>
                                         $seats_shower 
                                         <input type='hidden' name='seats_bus$bus_num'  id='seats_bus$bus_num' value='$seats_bus' />
                                         $bus_accessories
@@ -1360,12 +1398,16 @@ class TravelBus extends BtbObject
                         
                 </div>";
 
+
+
                 if (!$add_enveloppe) {
                         $return = $bus_picture_seats;
                 } else {
+                        $busTemplateObj = $busObj->het("bus_template_id");
+                        $bus_type = $busTemplateObj->busTypeCode();
                         $return = "
                         <div class='hzm_$rotate_transform bus_div $direction_class' style='width:${bus_div_length}px;height:${bus_div_height}px'>
-                                <div id='$direction_class bus_$busObjId' class='the_bus'>
+                                <div id='$direction_class bus_$busObjId' class='$bus_type the_bus'>
                                         $message_help_html
                                         $bus_picture_seats
                                         
@@ -1712,7 +1754,7 @@ class TravelBus extends BtbObject
 
                 $tsObj = TravelSeat::loadByMainIndex($travel_bus_id, $seat_code, $create_obj_if_not_found = false);
                 $nb_rows = 0;
-                if ($tsObj->estBooked()) {
+                if ($tsObj->sureIs("booked")) {
                         $tsObj->set("traveler_id", $traveler_id);
                         $tsObj->set("booking_id", $booking_id);
                         $tsObj->where("booked='Y' and (booking_id = 0 or booking_id is null or booking_id=$booking_id)");
@@ -1736,8 +1778,8 @@ class TravelBus extends BtbObject
                 $tsObj = TravelSeat::loadByMainIndex($travel_bus_id, $seat_code, $create_obj_if_not_found = false);
                 if ((!$tsObj) or (!$tsObj->getId())) return array('STATUS' => 'SEAT_NOT_FOUND', 'MESSAGE' => "booking error : seat $seat_code not defined in travel bus $travel_bus_id !");
 
-                if ((!$tsObj->estBooked()) or ($tsObj->getVal("booking_id") != $booking_id) or ($tsObj->getVal("traveler_id") != $traveler_id)) {
-                        if ($tsObj->estBooked() and ($tsObj->getVal("booking_id") > 0) and ($tsObj->getVal("booking_id") != $booking_id)) return array('STATUS' => 'SEAT_BOOKED_ALREADY', 'MESSAGE' => "booking error : sorry the seat $seat_code in travel bus $travel_bus_id is already booked by someone else!");
+                if ((!$tsObj->sureIs("booked")) or ($tsObj->getVal("booking_id") != $booking_id) or ($tsObj->getVal("traveler_id") != $traveler_id)) {
+                        if ($tsObj->sureIs("booked") and ($tsObj->getVal("booking_id") > 0) and ($tsObj->getVal("booking_id") != $booking_id)) return array('STATUS' => 'SEAT_BOOKED_ALREADY', 'MESSAGE' => "booking error : sorry the seat $seat_code in travel bus $travel_bus_id is already booked by someone else!");
                         $tsObj->set("booked", "Y");
                         $tsObj->set("booking_id", $booking_id);
                         $tsObj->set("traveler_id", $traveler_id);
@@ -1750,7 +1792,7 @@ class TravelBus extends BtbObject
                                 unset($tsObj);
                                 $tsObj = TravelSeat::loadByMainIndex($travel_bus_id, $seat_code, $create_obj_if_not_found = false);
                                 if ((!$tsObj) or (!$tsObj->getId())) return array('STATUS' => 'SEAT_DELETED', 'MESSAGE' => "booking error : seat $seat_code not defined in travel bus $travel_bus_id !");
-                                if ($tsObj->estBooked() and $tsObj->getVal("booking_id") != $booking_id) return array('STATUS' => 'SEAT_BOOKED_NOW', 'MESSAGE' => "booking error : sorry the seat $seat_code in travel bus $travel_bus_id is already booked by someone else!");
+                                if ($tsObj->sureIs("booked") and $tsObj->getVal("booking_id") != $booking_id) return array('STATUS' => 'SEAT_BOOKED_NOW', 'MESSAGE' => "booking error : sorry the seat $seat_code in travel bus $travel_bus_id is already booked by someone else!");
                                 return array('STATUS' => 'SEAT_BOOKING_ERROR', 'MESSAGE' => "booking error : sorry the seat $seat_code in travel bus $travel_bus_id can't be booked. please try later !");
                         }
 
@@ -1802,13 +1844,13 @@ class TravelBus extends BtbObject
 
                 if (($attribute == "approval") or ($attribute == "approval_date") or ($attribute == "approval_comment") or ($attribute == "approval_bus_code") or ($attribute == "approval_bus_price"))  //  or ($attribute=="bus_num")
                 {
-                        return $this->estBooked();
+                        return $this->sureIs("booked");
                 }
 
                 for ($i = 1; $i <= 3; $i++) {
                         if ($attribute == "city${i}_hotel_mfk") {
                                 $travel = $this->het("travel_id");
-                                if ($travel) $template = $travel->hetTemplate();
+                                if ($travel) $template = $travel->het("travel_template_id");
                                 else $template = null;
                                 if ($template) return ($template->containResidence() and (intval($template->getVal("trips_nb")) > $i));
                         }
@@ -1848,7 +1890,7 @@ class TravelBus extends BtbObject
                 $arrival_date = $travelObj->getVal("return_date");
                 $arrival_time = $travelObj->getVal("planned_end_time");
 
-                $travelTemplateObj = $travelObj->hetTemplate();
+                $travelTemplateObj = $travelObj->het("travel_template_id");
                 if (!$travelTemplateObj) {
                         $prices_arr[] = array("ptype" => "خطأ", "price" => 0, "comment" => "برنامج الرحلة غير محدد",);
                         return $prices_arr;
@@ -1961,13 +2003,13 @@ class TravelBus extends BtbObject
 
         public function bookingNeededNow()
         {
-                $booking_needed = $this->sureIs("booking_needed");
+                $booking_needed = false; // $this->sureIs("booking_needed");
                 if ($booking_needed) {
                         $bus = $this->het("bus_id");
                         $days_anticipate = $bus->getMyDaysAnticipate();
                         $travel = $this->het("travel_id");
                         $days_remain = 0;
-                        if ($travel) $days_remain = $travel->days_remain;
+                        if ($travel) $days_remain = $travel->getVal("days_remain");
                 } else {
                         $days_anticipate = 0;
                         $days_remain = 999999;
@@ -1990,9 +2032,9 @@ class TravelBus extends BtbObject
 
                 $travel = $this->het("travel_id");
                 if (!$travel) $sp_errors["travel_id"] = "خطأ حرج : رحلة المركبة غير محددة: رجاء التواصل مع مدير التطبيق";
-                $tcompany = $this->hetTcompany();
+                $tcompany = $this->het("travel_company_id");
                 if (!$tcompany) $sp_errors["travel_company_id"] = "خطأ حرج : شركة الرحلة غير محددة: رجاء التواصل مع مدير التطبيق";
-                $bcompany = $this->hetBcompany();
+                $bcompany = $this->het("bus_company_id");
                 if (!$bcompany) $sp_errors["bus_company_id"] = "خطأ حرج : شركة المركبة غير محددة: رجاء التواصل مع مدير التطبيق";
 
                 //$booking_needed = $this->sureIs("booking_needed");
@@ -2003,10 +2045,10 @@ class TravelBus extends BtbObject
                 $confirmedSeatsCount  = $this->relConfirmedSeatList()->count();
                 $allSeatsCount  = $this->relConfirmedSeatList()->resetWhere()->count();
 
-                $pctge_fill = $confirmedSeatsCount / $allSeatsCount;
+                $pctge_fill = $allSeatsCount ? $confirmedSeatsCount / $allSeatsCount : "n/a";
 
                 if ($booking_needed_now and (!$booked)) {
-                        $sp_errors["booked"] = "هذه المركبة يحتاج حجزا مبدئيا لدى الشركة المالكة قبل $anticipate_days يوم من موعد الرحلة";
+                        $sp_errors["booked"] = "هذه المركبة تحتاج حجزا مبدئيا لدى الشركة المالكة قبل $anticipate_days يوم من موعد الرحلة";
                 }
 
                 if ($travel and $booked and (!$approval)) {
@@ -2068,18 +2110,18 @@ class TravelBus extends BtbObject
         public function getAttributeLabel($attribute, $lang = 'ar', $short = false, $AIT = true)
         {
                 if ($attribute == "city1_hotel_mfk") {
-                        $city1 = $this->het("travel_id.template.city1_id");
+                        $city1 = $this->het("travel_id.travel_template_id.city1_id");
 
                         return "الفنادق في " . $city1;
                 }
 
                 if ($attribute == "city2_hotel_mfk") {
-                        $city2 = $this->het("travel_id.template.city2_id");
+                        $city2 = $this->het("travel_id.travel_template_id.city2_id");
 
                         return "الفنادق في " . $city2;
                 }
                 if ($attribute == "city3_hotel_mfk") {
-                        $city3 = $this->het("travel_id.template.city3_id");
+                        $city3 = $this->het("travel_id.travel_template_id.city3_id");
 
                         return "الفنادق في " . $city3;
                 }
@@ -2113,9 +2155,9 @@ class TravelBus extends BtbObject
         {
                 $seat_price = floatval($this->getVal("seat_price"));
                 $approval_date = $this->getVal("price_approval_date");
-                $approval_date_greg = AfwDateHelper::hijriToGreg($approval_date);
+                $approval_date_greg = $approval_date ? AfwDateHelper::hijriToGreg($approval_date) : "";
                 $today = date("Y-m-d");
-                $nb_days_period = AfwDateHelper::diff_date($today, $approval_date_greg);
+                $nb_days_period = $approval_date_greg ? AfwDateHelper::diff_date($today, $approval_date_greg) : 0;
                 $approval = $this->sureIs("price_approval");
 
                 $return = true;
@@ -2156,7 +2198,7 @@ class TravelBus extends BtbObject
                         return array("no bus associated to this travel-bus", "");
                 }
 
-                $approval_needed = $busObj->approvalNeededFor($travelObj->hetTemplate()) ? "Y" : "N";
+                $approval_needed = "N"; // $busObj->approvalNeededFor($travelObj->het("travel_template_id")) ? "Y" : "N";
                 $this->set("booking_needed", $approval_needed);
                 $this->commit();
 
@@ -2165,9 +2207,9 @@ class TravelBus extends BtbObject
 
         protected function attributeCanBeEditedBy($attribute, $user, $desc)
         {
-                // throw new AfwRuntimeException("return ".(!$this->estBooked()));
-                if ($attribute == "booking_comment") return array((!$this->estBooked()), "after bus is booked can't be edited");
-                if ($attribute == "total_price") return array((!$this->estPriced()), "after bus is price approved price can't be edited");
+                // throw new AfwRuntimeException("return ".(!$this->sureIs("booked")));
+                if ($attribute == "booking_comment") return array((!$this->sureIs("booked")), "after bus is booked can't be edited");
+                if ($attribute == "total_price") return array((!$this->sureIs("price_approval")), "after bus is price approved price can't be edited");
 
                 return [true, ''];
         }
@@ -2265,7 +2307,7 @@ class TravelBus extends BtbObject
                 if (!$this->all_cols) {
                         $bus = $this->het("bus_id");
                         if (!$bus)  throw new RuntimeException("bus not defined for this travel bus : $this->id !!!");
-                        $templateObj = $bus->hetTemplate();
+                        $templateObj = $bus->het("travel_template_id");
                         if (!$templateObj)  throw new RuntimeException("bus template not defined for this bus : $bus->id !!!");
 
                         list($this->all_cols,  $this->empty_columns_arr) = $templateObj->getCols();
@@ -2277,7 +2319,7 @@ class TravelBus extends BtbObject
 
                 $tseatsList = $this->relAllSeatList()->resetWhere($where)->getList();
                 foreach ($tseatsList as $tseatsItem) {
-                        if ($tseatsItem->estBooked()) {
+                        if ($tseatsItem->sureIs("booked")) {
                                 $seat_type = $tseatsItem->getBookedTypeSeat();
                         } else {
                                 $seats_free++;
