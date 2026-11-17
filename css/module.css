@@ -7013,3 +7013,9 @@ span.bus_seat.not-ready {
 div#div_data_busDiv {
     min-height: 1200px;
 }
+
+.single_element .single_quick_activity .big.icon {
+    width: 100px;
+    height: 100px;
+    flex-basis: 100px;
+}
