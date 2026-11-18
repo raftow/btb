@@ -6993,8 +6993,13 @@ select.hzm_time {
 }
 
 a.edit-seat {
-    color: brown;
+    color: #19893d;
     text-decoration: underline !important;
+}
+
+span.bus_seat.ready {
+    background-color: #f8ffe4;
+    border-color: #17cb17;
 }
 
 span.bus_seat.not-ready>a.edit-seat {
@@ -7018,4 +7023,14 @@ div#div_data_busDiv {
     width: 100px;
     height: 100px;
     flex-basis: 100px;
+}
+
+.bus_seat.seat-erroned {
+    color: red;
+    cursor: pointer;
+    border-color: red;
+}
+
+.seat-erroned>a.edit-seat {
+    color: red;
 }

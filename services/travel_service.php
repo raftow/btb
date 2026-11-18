@@ -343,9 +343,35 @@ class TravelService
             list($resultdd, $ddrow_count, $ddaffected_row_count) = TravelSeat::executeQuery($sql_delete_old_tt_seats);
         }
 
+        $sql_stats_before_insert = "select bs.bus_id, count(*) as nb_seats
+        from " . $server_db_prefix . "btb.travel t 
+          inner join " . $server_db_prefix . "btb.travel_bus tb on tb.travel_id = t.id
+          inner join " . $server_db_prefix . "btb.bus_seat bs on bs.bus_id = tb.bus_id  
+        where t.work_branch_id=$work_branch_id
+          and (t.travel_template_id = $travel_template_id or '$travel_template_id'='0')
+          and (t.id = $travel_id or '$travel_id'='0')
+          and (tb.id = $travel_bus_id or '$travel_bus_id'='0')
+        group by bs.bus_id";
+
+        $stats_rows = AfwDatabase::db_recup_rows($sql_stats_before_insert);
+
+        $sql_stats_existing = "select count(*) as nb_seats
+        from " . $server_db_prefix . "btb.travel_seat ts 
+          inner join " . $server_db_prefix . "btb.travel_bus tb on ts.travel_bus_id = tb.id
+          inner join " . $server_db_prefix . "btb.travel t on t.id = tb.travel_id
+          inner join " . $server_db_prefix . "btb.bus_seat bs on bs.bus_id = tb.bus_id and bs.seat_code = ts.seat_code  
+        where t.work_branch_id=$work_branch_id
+          and (t.travel_template_id = $travel_template_id or '$travel_template_id'='0')
+          and (t.id = $travel_id or '$travel_id'='0')
+          and (tb.id = $travel_bus_id or '$travel_bus_id'='0')";
+
+        $existing_seats = AfwDatabase::db_recup_value($sql_stats_existing);
+
+        list($stats_html,) = AfwShowHelper::tableToHtml($stats_rows, ['bus_id' => 'رقم الباص التسلسلي', 'nb_seats' => 'عدد المقاعد']);
+
 
         // ALTER TABLE `travel_seat` ADD week_period_enum,period_type_enum,yperiod_id;
-        $sql_bloc_insert = "insert into " . $server_db_prefix . "btb.travel_seat( created_by,created_at,updated_by,updated_at,
+        $sql_bloc_insert = "insert into " . $server_db_prefix . "btb.travel_seat(created_by,created_at,updated_by,updated_at,
                     travel_bus_id, seat_code, seat_category, 
                     travel_template_id, week_period_enum, period_type_enum, yperiod_id, 
                     manuel, apply_for_all, active, version, booked, booking_id )
@@ -361,7 +387,7 @@ class TravelService
           and (t.travel_template_id = $travel_template_id or '$travel_template_id'='0')
           and (t.id = $travel_id or '$travel_id'='0')
           and (tb.id = $travel_bus_id or '$travel_bus_id'='0')
-          and t.travel_status_id = 10
+          -- and t.travel_status_id = 10 -- in any status we can add seats so no need this cond the left join above insure to not import twice same seat
           and ts.id is null";
 
         list($result00, $row_count, $affected_row_count) = TravelSeat::executeQuery($sql_bloc_insert);
@@ -371,16 +397,16 @@ class TravelService
 
 
         // update prices depending on categories of seats
-        $ttList = array();
         if ($travel_template_id) {
-            $ttList[$travel_template_id] = TravelTemplate::loadById($travel_template_id);
+            $travelTemplateList[$travel_template_id] = TravelTemplate::loadById($travel_template_id);
         } else {
-            $ttList = TravelTemplate::loadAllTTOfCompany($work_branch_id);
+            $travelTemplateList = TravelTemplate::loadAllTTOfCompany($work_branch_id);
         }
 
         $updated_prices = 0;
-        foreach ($ttList as $ttObj) {
-            $seatPricingList = $ttObj->get("seatPricingList");
+        $seatPricingArr = [];
+        foreach ($travelTemplateList as $travelTemplateObj) {
+            $seatPricingList = $travelTemplateObj->get("seatPricingList");
 
             foreach ($seatPricingList as $seatPricingItem) {
                 $tsObj = new TravelSeat();
@@ -394,7 +420,7 @@ class TravelService
 
                 $tsObj->select("travel_template_id", $sp_travel_template_id);
                 if (!$update_price_also_for_confirmed_seats) {
-                    $tsObj->where("confirmed = 'N' or confirmed is null");
+                    $tsObj->where("confirmed = 'N' or confirmed = 'W' or confirmed is null");
                 }
                 if ($travel_id and $cond_seats_for_travel_id) {
                     $tsObj->where($cond_seats_for_travel_id);
@@ -424,7 +450,7 @@ class TravelService
             }
         }
 
-        return array($new_seats, $updated_prices);
+        return array($new_seats, $updated_prices, $existing_seats, $stats_html);
     }
 
     public static function moveTravelsToNewStatus(
@@ -537,21 +563,26 @@ class TravelService
                 }
 
                 // @todo genere seats by @bloc-insert technique if not insert already by above level
-                list(
-                    $error_app,
-                    $info_app,
-                ) = TravelService::genereTravelSeatsAndPricesBlocInsert($companyItem->id, $objTravelTemplateId);
-                if ($error_app) {
+                list($new_seats, $updated_prices, $existing_seats, $stats_html)
+                    = TravelService::genereTravelSeatsAndPricesBlocInsert($companyItem->id, $objTravelTemplateId);
+                /* if ($error_app) {
                     $errors_arr[] =
                         $companyItem->getShortDisplay($lang) .
                         ' : ' .
                         $error_app;
-                }
+                }*/
+                $info_app = "$new_seats new seats, $updated_prices updated prices, $existing_seats existing seats";
                 if ($info_app) {
                     $infos_arr[] =
                         $companyItem->getShortDisplay($lang) .
                         ' : ' .
                         $info_app;
+                }
+
+                if ($stats_html) {
+                    $infos_arr[] .=
+                        ' <br> ' .
+                        $stats_html;
                 }
 
                 foreach ($travelList as $travelItem) {

@@ -71,18 +71,7 @@ class Travel extends BtbObject
         public function __construct()
         {
                 parent::__construct("travel", "id", "btb");
-                $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-                $this->DISPLAY_FIELD_BY_LANG = ['ar' => "travel_name_ar", 'en' => "travel_name_en"];
-                $this->ORDER_BY_FIELDS = "work_branch_id, travel_template_id, travel_gdate";
-
-
-                $this->UNIQUE_KEY = array('work_branch_id', 'travel_template_id', 'travel_gdate');
-
-                $this->showQeditErrors = true;
-                $this->showRetrieveErrors = true;
-                $this->editByStep = true;
-                $this->editNbSteps = 9;
-                $this->horizontalTabs = true;
+                BtbTravelAfwStructure::initInstance($this);
         }
 
         public static function loadById($id)
@@ -236,7 +225,7 @@ class Travel extends BtbObject
                                 "COLOR" => $color,
                                 "LABEL_AR" => $title_ar,
                                 "PUBLIC" => true,
-                                "BF-ID" => "",
+                                "STEP" => "all",
                         );
 
 
@@ -2088,7 +2077,7 @@ class Travel extends BtbObject
               
               if(($travel_status_id > self::$TRAVEL_STATUS_ORGANIZE) and (!$sp_errors["travel_status_id"]) and ($this->containResidence()) and $this->stepContainAttribute($step, "travel_status_id")) 
               {
-                  list($error_app, ) = $this->approveHotels($lang, $commit=false);
+                  list($error_app, ) = $this->appro veHotels($lang, $commit=false);
                   if($error_app) $sp_errors["travel_status_id"] = $error_app;
               }
               */
@@ -2277,32 +2266,33 @@ class Travel extends BtbObject
 
         public function bootstrapMe($lang = "ar")
         {
+                list($error_app, $info_app) = $this->updateTravelSeatsAndPrices($lang);
+                if ($error_app) $errors_arr[] = $error_app;
+                if ($info_app) $infos_arr[] = $info_app;
                 $errors_arr = array();
                 $infos_arr = array();
                 $companyItem = $this->het("work_branch_id");
                 $nb_days_before_booking = intval($companyItem->getVal("nb_days_before_booking"));
-                if (($this->getVal("status") <= self::$TRAVEL_STATUS_PREPARE) and ($this->days_remain <= $nb_days_before_booking)) {
+                if (($this->getVal("travel_status_id") <= self::$TRAVEL_STATUS_PREPARE) and ($this->days_remain <= $nb_days_before_booking)) {
                         list($error_app, $info_app) = $this->approveBuses($lang, $commit = true);
                         if ($error_app) $errors_arr[] = $error_app;
                         if ($info_app) $infos_arr[] = $info_app;
                 } else {
-                        if ($this->getVal("status") == self::$TRAVEL_STATUS_PREPARE) {
+                        if ($this->getVal("travel_status_id") == self::$TRAVEL_STATUS_PREPARE) {
                                 $infos_arr[] = $this->tm("approve buses ignored : remain=") . $this->days_remain . $this->tm(" vs limit = ") . $nb_days_before_booking . " " . $this->tm("days") . "<br>";
                                 $infos_arr[] = $this->tm("too early for opening booking");
-                        }
-                        //@debugg else $infos_arr[] = "approve buses skipped : status=".$this->getVal("status");
+                        } else $infos_arr[] = "approve buses skipped : status=" . $this->getVal("travel_status_id");
                 }
 
-                if (($this->getVal("status") == self::$TRAVEL_STATUS_ORGANIZE) and $this->containResidence() and ($this->days_remain <= $nb_days_before_booking)) {
+                if (($this->getVal("travel_status_id") == self::$TRAVEL_STATUS_ORGANIZE) and $this->containResidence() and ($this->days_remain <= $nb_days_before_booking)) {
                         list($error_app, $info_app) = $this->approveHotels($lang, $commit = true);
                         if ($error_app) $errors_arr[] = $error_app;
                         if ($info_app) $infos_arr[] = $info_app;
-                } elseif ($this->getVal("status") != self::$TRAVEL_STATUS_ORGANIZE) {
-                        //@debugg $infos_arr[] = "approve buses skipped : status=".$this->getVal("status");
-
+                } elseif ($this->getVal("travel_status_id") != self::$TRAVEL_STATUS_ORGANIZE) {
+                        $infos_arr[] = "approve hotels skipped : status=" . $this->decode("status");
                 } else {
-                        if ($this->containResidence()) $infos_arr[] = $this->tm("approve hotels ignored : remain=") . $this->days_remain . $this->tm(" vs limit = ") . $nb_days_before_booking;
-                        //@debugg else $infos_arr[] = "approve hotels ignored : no sakan for this travel";
+                        if ($this->containResidence()) $infos_arr[] = $this->tm("not yet time to approve hotels", $lang) . " : " . $this->tm("remain", $lang) . " = " . $this->days_remain . $this->tm(" vs limit = ", $lang) . $nb_days_before_booking;
+                        else $infos_arr[] = "approve hotels ignored : no sakan for this travel";
                 }
 
                 return AfwFormatHelper::pbm_result($errors_arr, $infos_arr, $sep = "<br>\n");
@@ -2493,14 +2483,14 @@ class Travel extends BtbObject
                         $branch_name = $companyObj->name;
                         $work_branch_id = $companyObj->id;
                         if ($companyObj->isBranch()) $companyObj = $companyObj->hetParent();
-                        if ($companyObj) $orgunitObj = $companyObj->hetOrgunit();
+                        if ($companyObj) $orgunitObj = $companyObj->het("orgunit_id");
                 }
 
                 if (!$orgunitObj) {
                         $return = "<img src=\"../btb/pic/logo-company-none.png\" alt=\"\" style=\"margin-top:5px;height: ${height}px;border-radius: 40%;\">";
                 } else {
-                        $crm_code = $orgunitObj->crm_code;
-                        if (!$crm_code) $crm_code = $orgunitObj->hrm_code;
+                        $crm_code = $orgunitObj->getVal("crm_code");
+                        if (!$crm_code) $crm_code = $orgunitObj->getVal("hrm_code");
                         if (!$crm_code) "choose_crm_code_for_your_company";
                         $return = "<img src=\"../btb/pic/logo-company-$crm_code.png\" alt=\"\" style=\"margin-top:5px;height: ${height}px;border-radius: 40%;\">";
                 }

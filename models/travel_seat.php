@@ -18,107 +18,12 @@ class TravelSeat extends BtbObject
     public static $MODULE            = "btb";
     public static $TABLE            = "";
     public static $DB_STRUCTURE = null;
-    /* = array(
-                id => array(SHOW => true, RETRIEVE => true, EDIT => true, TYPE => PK),
 
-		
-		travel_bus_id => array(FGROUP=>seat, SHORTNAME => tbus,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_100,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => travel_bus,  ANSMODULE => btb,  AUTOCOMPLETE => true,  
-				RELATION => OneToMany,  READONLY => true, ),
-
-		seat_code => array(FGROUP=>seat, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => false, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  "MIN-SIZE" => 2,  CHAR_TEMPLATE => "ARABIC-CHARS,SPACE",  REQUIRED => true,  UTF8 => false,  
-				TYPE => "TEXT",  READONLY => true, ),
-
-                
-		seat_category => array(FGROUP=>seat, SHORTNAME => category,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => ENUM,  ANSWER => "FUNCTION", CATEGORY=>FORMULA, "FORMULA-RETURN-VALUE"=>true, READONLY => true, ),                
-                                
-                                
-
-		'price' => array(FGROUP=>seat, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => "FLOAT", UNIT=>"ريال", READONLY => false, ),
-
-                
-                active => array(FGROUP=>seat,  SHOW => true, EDIT => true, QEDIT => false, "DEFAULT" => Y, TYPE => YN, CSS => width_pct_50),
-
-		'booked' => array(FGROUP=>booking, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true, CSS => width_pct_50,  
-				SIZE => 32,  MAXLENGTH => 32,  REQUIRED => true,  UTF8 => false,  
-				TYPE => "YN",  CHECKBOX => true, "DEFAULT"=>"N",  READONLY => true, ),
-
-		'booking_id' => array(FGROUP=>booking, SHORTNAME => booking,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => false,  UTF8 => false,  
-				TYPE => FK,  ANSWER => booking,  ANSMODULE => btb,  AUTOCOMPLETE => true,  
-				RELATION => OneToMany,  READONLY => true, ),
-                                
-                'traveler_id' => array(FGROUP=>booking, SHORTNAME => traveler,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => traveler,  ANSMODULE => btb,  
-				RELATION => OneToMany,  READONLY => false, ),
-
-		expiry_date => array(FGROUP=>booking, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 10,  MAXLENGTH => 10,  MANDATORY => true,  UTF8 => false,  
-				TYPE => "GDAT", FORMAT => "FRM",  READONLY => false, ),
-
-        confirmed => array(FGROUP=>booking, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => "YN",  CHECKBOX => true,  READONLY => false, ),
-
-		confirmed_date => array(FGROUP=>booking, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 10,  MAXLENGTH => 10,  MANDATORY => true,  UTF8 => false,  
-				TYPE => "DATE",  FORMAT => "HIJRI_UNIT",  READONLY => false, ),
-
-		/*payment_date => array(SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 10,  MAXLENGTH => 10,  MANDATORY => true,  UTF8 => false,  
-				TYPE => "DATE",  FORMAT => "HIJRI_UNIT",  READONLY => false, ),* /
-
-		payment_type_id => array(FGROUP=>booking, SHORTNAME => type,  SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  MANDATORY => true,  UTF8 => false,  
-				TYPE => FK,  ANSWER => payment_type,  ANSMODULE => crm,  
-				RELATION => ManyToOne,  READONLY => false, ),
-
-		payment_ref => array(FGROUP=>booking, SEARCH => false,  QSEARCH => false,  SHOW => true,  RETRIEVE => true,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 32,  MAXLENGTH => 32,  "MIN-SIZE" => 3,  CHAR_TEMPLATE => "",  MANDATORY => true,  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
-
-                
-                created_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                created_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                updated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                updated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                validated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                validated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                draft => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, QEDIT => false, "DEFAULT" => Y, TYPE => YN),
-                version => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => INT),
-                update_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                delete_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                display_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                sci_id => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => scenario_item, ANSMODULE => pag),
-                tech_notes 	    => array(TYPE => TEXT, CATEGORY => FORMULA, "SHOW-ADMIN" => true, 'STEP' =>"all", TOKEN_SEP=>"§", READONLY=>true, "NO-ERROR-CHECK"=>true),
-	);
-	
-	*/
     public function __construct()
     {
         parent::__construct("travel_seat", "id", "btb");
         $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-        $this->DISPLAY_FIELD = "";
+        $this->DISPLAY_FIELD = array('travel_bus_id', 'seat_code');
         $this->ORDER_BY_FIELDS = "travel_bus_id, seat_code";
         $this->horizontalTabs = true;
 
@@ -132,7 +37,7 @@ class TravelSeat extends BtbObject
 
     public function getBookedTypeSeat()
     {
-        $bookingObj = $this->hetBooking();
+        $bookingObj = $this->het("booking_id");
         if ($bookingObj) return $bookingObj->getTravelerTypeSeat();
 
         return "";
@@ -142,7 +47,7 @@ class TravelSeat extends BtbObject
     public function getTypeSeat($wanted_seat_type, $nb_seats, $travelObj = null, $travelBusObj = null)
     {
         // if there's booking put the type of travelers of this booking
-        $bookingObj = $this->hetBooking();
+        $bookingObj = $this->het("booking_id");
         if ($bookingObj) return $bookingObj->getTravelerTypeSeat();
 
         // if no booking on this travel seat : find out from travel policy and following criterea :
@@ -180,7 +85,7 @@ class TravelSeat extends BtbObject
     {
         if (($fields_updated["price"]) and ($this->estBooked())) {
             if (!$this->estConfirmed()) {
-                $this->hetBooking()->genereBilling();
+                $this->het("booking_id")->genereBilling();
                 // depending on settings send SMS to customer ?
                 // sendSMS(.....) @todo
             } else {
@@ -225,11 +130,10 @@ class TravelSeat extends BtbObject
         $link = array();
 
 
-        list($data[0], $link[0]) = $this->displayAttribute("travel_bus_id", false, $lang);
-        list($data[1], $link[1]) = $this->displayAttribute("seat_code", false, $lang);
+        $travel_bus_id = $this->getVal("travel_bus_id");
+        $seat_code = $this->getVal("seat_code");
 
-
-        return implode(" - ", $data);
+        return "TB$travel_bus_id" . "-SC-$seat_code";
     }
 
 

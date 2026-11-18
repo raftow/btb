@@ -40,20 +40,7 @@ class TravelBus extends BtbObject
         public function __construct()
         {
                 parent::__construct("travel_bus", "id", "btb");
-                // BtbTravelBusAfwStructure::initIn();
-                $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-                $this->DISPLAY_FIELD = "";
-                $this->ORDER_BY_FIELDS = "travel_id, bus_num";
-                $this->horizontalTabs = true;
-
-
-                $this->UNIQUE_KEY = array('travel_id', 'bus_num');
-                $this->editByStep = true;
-                $this->editNbSteps = 8;
-                $this->showQeditErrors = true;
-                $this->showRetrieveErrors = true;
-                $this->general_check_errors = false;
-                // $this->after_save_edit = array("class"=>Road,"attribute"=>road_id, "currmod"=> 'btb',"currstep"=>9);
+                BtbTravelBusAfwStructure::initInstance($this);
         }
 
         public static function loadById($id)
@@ -318,27 +305,27 @@ class TravelBus extends BtbObject
 
                 $color = "blue";
                 $title_ar = "تحديث المقاعد";
-                $pbms["h12AWx"] = array("METHOD" => "updateSeats", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 4);
+                $pbms["h12AWx"] = array("METHOD" => "updateSeats", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => $this->stepOfAttribute('busDiv'));
 
                 $color = "yellow";
                 $title_ar = "تحديث المقاعد وأسعارها";
-                $pbms["UYTn55"] = array("METHOD" => "updateSeatsAndPrices", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, 'STEP' => 5);
+                $pbms["UYTn55"] = array("METHOD" => "updateSeatsAndPrices", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, 'STEP' => $this->stepOfAttribute('busDiv'));
 
 
                 $color = "red";
                 $title_ar = "تحديث المقاعد وأسعارها ولو محجوزة وتم السداد";
-                $pbms["XHOn67"] = array("METHOD" => "updateSeatsAndPricesEvenBookedAndConfirmed", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 6);
+                $pbms["XHOn67"] = array("METHOD" => "updateSeatsAndPricesEvenBookedAndConfirmed", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => $this->stepOfAttribute('busDiv'));
 
                 if (!$this->estOpened()) {
                         if ($this->bookedTemporary()) {
                                 $color = "green";
                                 $title_ar = "فتح حجز المقاعد";
-                                $pbms["xc123B"] = array("METHOD" => "openSeatsBooking", "COLOR" => $color, "LABEL_AR" => $title_ar, "BF-ID" => "", "PUBLIC" => true, 'STEP' => 4);
+                                $pbms["xc123B"] = array("METHOD" => "openSeatsBooking", "COLOR" => $color, "LABEL_AR" => $title_ar, "BF-ID" => "", "PUBLIC" => true, 'STEP' => $this->stepOfAttribute('busDiv'));
                         }
                 } else {
                         $color = "red";
                         $title_ar = "غلق حجز المقاعد";
-                        $pbms["hc143D"] = array("METHOD" => "closeSeatsBooking", "COLOR" => $color, "LABEL_AR" => $title_ar, "BF-ID" => "", "PUBLIC" => true, 'STEP' => 4);
+                        $pbms["hc143D"] = array("METHOD" => "closeSeatsBooking", "COLOR" => $color, "LABEL_AR" => $title_ar, "BF-ID" => "", "PUBLIC" => true, 'STEP' => $this->stepOfAttribute('busDiv'));
                 }
 
 
@@ -581,15 +568,16 @@ class TravelBus extends BtbObject
                 $travel_template_id = $travelObj->getVal("travel_template_id");
                 $travel_bus_id = $this->id;
 
-                list($new_seats, $updated_prices) = TravelService::genereTravelSeatsAndPricesBlocInsert(
-                        $travel_company_id,
-                        $travel_template_id,
-                        $travel_id,
-                        $travel_bus_id,
-                        $update_price_also_for_confirmed_seats,
-                        $update_price_also_for_manuel_prices,
-                        true
-                );
+                list($new_seats, $updated_prices, $existing_seats, $stats_html) =
+                        TravelService::genereTravelSeatsAndPricesBlocInsert(
+                                $travel_company_id,
+                                $travel_template_id,
+                                $travel_id,
+                                $travel_bus_id,
+                                $update_price_also_for_confirmed_seats,
+                                $update_price_also_for_manuel_prices,
+                                false
+                        );
 
 
 
@@ -602,7 +590,7 @@ class TravelBus extends BtbObject
                 $bus = $this->het("bus_id");
                 if(!$bus)  return array("bus not defined can't generate seats", "");
                 
-                $template = $bus->het("travel_template_id");
+                $template = $bus->het("bus_template_id");
                 if(!$template)  return array("bus template not defined can't generate seats", "");
                 
                 $travel_bus_id = $this->getId();
@@ -645,7 +633,7 @@ class TravelBus extends BtbObject
                 $updated_prices_report_arr = [];
                 $seats_count = "v3.N/A";
                 if ($publicM) {
-                        $final_info = "$new_seats seats created, $updated_prices prices updated";
+                        $final_info = "$new_seats seats created, $existing_seats existing seats, $updated_prices prices updated <br> $stats_html";
                         // $objme = AfwSession::getUserConnected();
                         // if ($this->inModeDev() or ($objme and $objme->isAdmin())) $final_info .= AfwHtmlHelper::genereAccordionForLogArray($updated_prices_report_arr, "Pricing report");
                         return array("", $final_info);
@@ -1053,6 +1041,8 @@ class TravelBus extends BtbObject
                                                 {
                                                         throw new AfwRuntimeException($tsObj->getDisplay("ar")." seat  is estBookedForOthers($booking_id) ".var_export($tsObj,true));
                                                 }*/
+                                                                $seat_edit_link = "m.php?mp=ed&cl=TravelSeat&cm=btb&id=" . $tsObj->id . "&cs=1&clp=";
+                                                                $seat_ready = ($tsObj->valPrice() > 0) ? "ready" : "seat-erroned";
                                                                 if ($vertical_turn) {
                                                                         $vertical_turn_sens = $vertical_turn["sens"];
                                                                         if ($vertical_turn_sens == "inv-watch") {
@@ -1063,9 +1053,58 @@ class TravelBus extends BtbObject
                                                                                 $lhg2 = $lhg; // ??
                                                                         } else throw new RuntimeException("turn sens not implemented");
 
-                                                                        list($legend_seat_class_show, $seats_html_arr[$row][$col]) = BusTemplate::getSeatHtml($seat_code, $type, $tsObj->whoTraveler($lang), $tsObj->valPrice(), $curr, $left2, $top2, $wd2, $hg2, $lhg2, $seat_is_booking, $tsObj->estBookedForOthers($booking_id), $tsObj->estConfirmed(), $can_edit, $show_seat, $bus_num, $rotate_transform, $wanted_seat_type);
-                                                                } else list($legend_seat_class_show, $seats_html_arr[$row][$col]) = BusTemplate::getSeatHtml($seat_code, $type, $tsObj->whoTraveler($lang), $tsObj->valPrice(), $curr, $left, $top, $wd, $hg, $lhg, $seat_is_booking, $tsObj->estBookedForOthers($booking_id), $tsObj->estConfirmed(), $can_edit, $show_seat, $bus_num, $rotate_transform, $wanted_seat_type);
 
+
+                                                                        list($legend_seat_class_show, $seats_html_arr[$row][$col]) =
+                                                                                BusTemplate::getSeatHtml(
+                                                                                        $seat_code,
+                                                                                        $type,
+                                                                                        $tsObj->whoTraveler($lang),
+                                                                                        $tsObj->valPrice(),
+                                                                                        $curr,
+                                                                                        $left2,
+                                                                                        $top2,
+                                                                                        $wd2,
+                                                                                        $hg2,
+                                                                                        $lhg2,
+                                                                                        $seat_is_booking,
+                                                                                        $tsObj->estBookedForOthers($booking_id),
+                                                                                        $tsObj->estConfirmed(),
+                                                                                        $can_edit,
+                                                                                        $show_seat,
+                                                                                        $bus_num,
+                                                                                        $rotate_transform,
+                                                                                        $wanted_seat_type,
+                                                                                        $bus_type = "bus",
+                                                                                        $seat_ready,
+                                                                                        $seat_edit_link
+                                                                                );
+                                                                } else {
+                                                                        list($legend_seat_class_show, $seats_html_arr[$row][$col]) =
+                                                                                BusTemplate::getSeatHtml(
+                                                                                        $seat_code,
+                                                                                        $type,
+                                                                                        $tsObj->whoTraveler($lang),
+                                                                                        $tsObj->valPrice(),
+                                                                                        $curr,
+                                                                                        $left,
+                                                                                        $top,
+                                                                                        $wd,
+                                                                                        $hg,
+                                                                                        $lhg,
+                                                                                        $seat_is_booking,
+                                                                                        $tsObj->estBookedForOthers($booking_id),
+                                                                                        $tsObj->estConfirmed(),
+                                                                                        $can_edit,
+                                                                                        $show_seat,
+                                                                                        $bus_num,
+                                                                                        $rotate_transform,
+                                                                                        $wanted_seat_type,
+                                                                                        $bus_type = "bus",
+                                                                                        $seat_ready,
+                                                                                        $seat_edit_link
+                                                                                );
+                                                                }
                                                                 $legend_seat_class_show_arr[$legend_seat_class_show] = true;
                                                         } else {
                                                                 $seats_html_arr[$row][$col] = "";
@@ -1189,12 +1228,13 @@ class TravelBus extends BtbObject
                 else return "no bus";
         }
 
-        public function calcFrontBusDiv($seats_bus = "-", $booking_id = 0, $can_edit = true, $nb_seats = 1, $booking_ongoing = true)
+        public function calcFrontBusDiv($what = 'value', $seats_bus = "-", $booking_id = 0, $can_edit = true, $nb_seats = 1, $booking_ongoing = true)
         {
                 // rafik-dbg position of seats for vertical align
                 $vertical_turn = array('sens' => "inv-watch", 'translate_x' => -10, 'translate_y' => 345); // null;//
                 $bus_num = $this->getVal("bus_num");
                 return $this->calcBusDiv(
+                        $what,
                         $sw = 37,
                         $sh = 37,
                         $iw = 3,
@@ -2307,7 +2347,7 @@ class TravelBus extends BtbObject
                 if (!$this->all_cols) {
                         $bus = $this->het("bus_id");
                         if (!$bus)  throw new RuntimeException("bus not defined for this travel bus : $this->id !!!");
-                        $templateObj = $bus->het("travel_template_id");
+                        $templateObj = $bus->het("bus_template_id");
                         if (!$templateObj)  throw new RuntimeException("bus template not defined for this bus : $bus->id !!!");
 
                         list($this->all_cols,  $this->empty_columns_arr) = $templateObj->getCols();

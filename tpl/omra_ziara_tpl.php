@@ -433,7 +433,9 @@ $calendar_tr =
                                                         <?php
                                                         if (count($travelFoundList) > 0) {
                                                                 foreach ($travelFoundList as $travelFoundItem) {
-
+                                                                        /**
+                                                                         * @var Travel $travelFoundItem 
+                                                                         */
                                                                         $price_std = $travelFoundItem->getSeatPriceByCateg($categ = 1);  // مقعد عادي
                                                                         list($week_period_enum, $period_type_enum, $yperiod_id, $period_nb_days, $period_nb_nights, $report) = $travelFoundItem->getTravelProps();
                                                         ?>

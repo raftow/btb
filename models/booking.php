@@ -2123,7 +2123,7 @@ class Booking extends BtbObject
                         $option_sakan_selected = ($trip_option == $option_code) ? "trip${trip}option_selected" : "";
 
                         foreach ($option as $key => $keyval) ${"option_" . $key} = $keyval;
-                        //$duration = var_export($option,true);
+                        // $option_duration = var_export($option, true);
 
                         $html .= "<div id='trip${trip}option_${hotel_id}_$option_code' class='option_sakan $option_sakan_selected' alt='$option_price_report'>
                                         <p>$option_name</p>

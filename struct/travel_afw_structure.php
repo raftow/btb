@@ -2,6 +2,39 @@
 <?php
 class BtbTravelAfwStructure
 {
+	// token separator = §
+	public static function initInstance(&$obj)
+	{
+		if ($obj instanceof Travel) {
+			$obj->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
+			$obj->DISPLAY_FIELD_BY_LANG = ['ar' => "travel_name_ar", 'en' => "travel_name_en"];
+
+			// $obj->ENABLE_DISPLAY_MODE_IN_QEDIT=true;
+			$obj->ORDER_BY_FIELDS = "work_branch_id, travel_template_id, travel_gdate";
+
+
+
+			$obj->UNIQUE_KEY = array('work_branch_id', 'travel_template_id', 'travel_gdate');
+			$obj->editByStep = true;
+			$obj->editNbSteps = 9;
+			$obj->showQeditErrors = true;
+			$obj->showRetrieveErrors = true;
+			$obj->general_check_errors = true;
+			$obj->horizontalTabs = true;
+			// $obj->after_save_edit = array("class"=>'Travel',"attribute"=>'xxxx_id', "currmod"=>'btb',"currstep"=>2);
+			$obj->after_save_edit = array("mode" => "qsearch", "currmod" => 'btb', "class" => 'Travel', "submit" => true);
+		} else {
+			TravelArTranslator::initData();
+			TravelEnTranslator::initData();
+		}
+	}
+
+	/**
+	 * DB_STRUCTURE is the main source of configuration for the class 
+	 *    it is used in all the modules and methods to know how 
+	 *    to handle the class attributes
+	 * @var array
+	 */
 	public static $DB_STRUCTURE = array(
 
 

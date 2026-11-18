@@ -411,8 +411,8 @@ class BusTemplate extends BtbObject
                                 } elseif ($is_booking) {
                                         $hzm_available_seat = "$basic_class seat_booking";
                                         $seat_title_help = "$who ($price $curr)";
-                                } elseif (($wanted_type != $type) and ($type != "all")) {
-                                        $hzm_available_seat = "seat_policy_block";
+                                } elseif (($wanted_type != $type) and ($type != "all") and ($wanted_type != "all")) {
+                                        $hzm_available_seat = "seat_policy_block $wanted_type" . "_vs_$type";
                                         $seat_title_help = "$who ($price $curr)";
                                 } else {
                                         $hzm_available_seat = "$basic_class";
@@ -594,8 +594,54 @@ class BusTemplate extends BtbObject
                                                                                 $lhg2 = $lhg; // ??
                                                                         } else throw new RuntimeException("turn sens not implemented");
 
-                                                                        if ($categ_only) list($legend_seat_class_show, $seats_html_arr[$row][$col]) = self::getSeatCategHtml($seat_num, $type, "", $price, $curr, $left2, $top2, $wd2, $hg2, $lhg2, false, $bkd, $conf, true, (!$bkd), 0, "x", "", $bus_type, $seat_ready, $seat_edit_link);
-                                                                        else list($legend_seat_class_show, $seats_html_arr[$row][$col]) = self::getSeatHtml($seat_num, $type, "", $price, $curr, $left2, $top2, $wd2, $hg2, $lhg2, false, $bkd, $conf, true, (!$bkd), 0, "x", "", $bus_type, $seat_ready, $seat_edit_link);
+                                                                        if ($categ_only) list($legend_seat_class_show, $seats_html_arr[$row][$col]) =
+                                                                                self::getSeatCategHtml(
+                                                                                        $seat_num,
+                                                                                        $type,
+                                                                                        "",
+                                                                                        $price,
+                                                                                        $curr,
+                                                                                        $left2,
+                                                                                        $top2,
+                                                                                        $wd2,
+                                                                                        $hg2,
+                                                                                        $lhg2,
+                                                                                        false,
+                                                                                        $bkd,
+                                                                                        $conf,
+                                                                                        true,
+                                                                                        (!$bkd),
+                                                                                        0,
+                                                                                        "x",
+                                                                                        "",
+                                                                                        $bus_type,
+                                                                                        $seat_ready,
+                                                                                        $seat_edit_link
+                                                                                );
+                                                                        else list($legend_seat_class_show, $seats_html_arr[$row][$col]) =
+                                                                                self::getSeatHtml(
+                                                                                        $seat_num,
+                                                                                        $type,
+                                                                                        "",
+                                                                                        $price,
+                                                                                        $curr,
+                                                                                        $left2,
+                                                                                        $top2,
+                                                                                        $wd2,
+                                                                                        $hg2,
+                                                                                        $lhg2,
+                                                                                        false,
+                                                                                        $bkd,
+                                                                                        $conf,
+                                                                                        true,
+                                                                                        (!$bkd),
+                                                                                        0,
+                                                                                        "x",
+                                                                                        "",
+                                                                                        $bus_type,
+                                                                                        $seat_ready,
+                                                                                        $seat_edit_link
+                                                                                );
                                                                 } else {
                                                                         if ($categ_only) {
                                                                                 if ($seat_num == "L9") {

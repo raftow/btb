@@ -188,11 +188,11 @@ class BtbBusSeatAfwStructure
                 ),
 
                 'active'                   => array(
-                        'STEP' => 99,
+                        'STEP' => 1,
                         'HIDE_IF_NEW' => true,
                         'SHOW' => true,
-                        'RETRIEVE' => false,
-                        'EDIT' => false,
+                        'RETRIEVE' => true,
+                        'EDIT' => true,
                         'QEDIT' => false,
                         "DEFAULT" => 'Y',
                         'TYPE' => 'YN',

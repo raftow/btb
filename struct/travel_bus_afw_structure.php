@@ -2,6 +2,38 @@
 <?php
 class BtbTravelBusAfwStructure
 {
+	// token separator = §
+	public static function initInstance(&$obj)
+	{
+		if ($obj instanceof TravelBus) {
+			$obj->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 3;
+			$obj->DISPLAY_FIELD = ['travel_id', 'bus_num'];
+
+			// $obj->ENABLE_DISPLAY_MODE_IN_QEDIT=true;
+			$obj->ORDER_BY_FIELDS = "travel_id, bus_num";
+
+
+
+			$obj->UNIQUE_KEY = array('travel_id', 'bus_num');
+			$obj->editByStep = true;
+			$obj->editNbSteps = 9;
+			$obj->showQeditErrors = true;
+			$obj->showRetrieveErrors = true;
+			$obj->general_check_errors = true;
+			$obj->after_save_edit = array("class" => 'Travel', "attribute" => 'travel_id', "currmod" => 'btb', "currstep" => 3);
+			// $obj->after_save_edit = array("mode" => "qsearch", "currmod" => 'btb', "class" => 'TravelBus', "submit" => true);
+		} else {
+			TravelBusArTranslator::initData();
+			TravelBusEnTranslator::initData();
+		}
+	}
+
+	/**
+	 * DB_STRUCTURE is the main source of configuration for the class 
+	 *    it is used in all the modules and methods to know how 
+	 *    to handle the class attributes
+	 * @var array
+	 */
 	public static $DB_STRUCTURE = array(
 
 
@@ -663,7 +695,7 @@ class BtbTravelBusAfwStructure
 		),
 
 		'freeSeatList' => array(
-			'STEP' => 4,
+			'STEP' => 9,
 			'TYPE' => 'FK',
 			'ANSWER' => 'travel_seat',
 			'ANSMODULE' => 'btb',
