@@ -271,25 +271,25 @@ span.plane.bus_seat {
     padding-left: 4px;
 }
 
-.seat_booking.seat_all {
+span.bus_seat.seat_booking.seat_all {
     background-color: rgb(129, 150, 171);
     color: rgb(129, 150, 171);
     font-size: 2px;
 }
 
-.seat_booking.seat_women {
+span.bus_seat.seat_booking.seat_women {
     background-color: rgb(255, 140, 0);
     color: rgb(255, 140, 0);
     font-size: 2px;
 }
 
-.seat_booking.seat_men {
+span.bus_seat.seat_booking.seat_men {
     background-color: rgb(0, 140, 255);
     color: rgb(0, 140, 255);
     font-size: 2px;
 }
 
-.seat_booking.seat_family {
+span.bus_seat.seat_booking.seat_family {
     background-color: rgb(44, 189, 22);
     color: rgb(44, 189, 22);
     font-size: 2px;

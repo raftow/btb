@@ -73,7 +73,7 @@ class BtbBusSeatAfwStructure
                         'ERROR-CHECK' => true,
                 ),
 
-                'seat_category' => array(
+                'seat_category_enum' => array(
 
                         'SHORTNAME' => 'category',
                         'SEARCH' => false,

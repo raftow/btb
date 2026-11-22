@@ -20,17 +20,7 @@ class HotelFile extends BtbObject
     public function __construct()
     {
         parent::__construct("hotel_file", "id", "btb");
-        $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-        $this->DISPLAY_FIELD = "id";
-        $this->ORDER_BY_FIELDS = "hotel_id, workflow_file_id";
-
-
-        $this->UNIQUE_KEY = array('hotel_id', 'workflow_file_id');
-
-        $this->showQeditErrors = true;
-        $this->showRetrieveErrors = true;
-
-        $this->after_save_edit = array("class" => 'Hotel', "attribute" => 'hotel_id', "currmod" => 'btb', "currstep" => 3);
+        BtbHotelFileAfwStructure::initInstance($this);
     }
 
     public static function loadById($id)
@@ -72,7 +62,7 @@ class HotelFile extends BtbObject
     {
         $data = array();
         $link = array();
-
+        AfwAutoLoader::addModule("workflow");
         $fle = $this->het("workflow_file_id");
         if ($fle) return $fle->getShortDisplay($lang);
 
@@ -90,6 +80,7 @@ class HotelFile extends BtbObject
         $structure = null,
         $lang = 'ar'
     ) {
+        AfwAutoLoader::addModule("workflow");
         if ($attribute != "workflow_file_id") return $this->showAttribute($attribute, $structure, true, $lang);
         $wfObj = $this->het("workflow_file_id");
         if (!$wfObj) return "<div style='width: 100%;height: 100%;text-align: center;'><i class='fas fa-file-alt' style='font-size: 48px;color: gray;'></i><br>Preview not available if no file uploaded</div>";
@@ -177,7 +168,7 @@ class HotelFile extends BtbObject
 
     public function preview()
     {
-        $fle = $this->hetFile();
+        $fle = $this->het("workflow_file_id");
         if ($fle) return $fle->pictureView();
         else return "[no-photo]";
     }

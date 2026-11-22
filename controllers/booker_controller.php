@@ -605,8 +605,8 @@ class BookerController extends AfwController
                 $data["nb_travelers"] = $nb_travelers;
                 $data["nb_beds"] = $nb_beds;
 
-                // $options = TravelHelper::decomposeBedOptions($nb_beds);
-                // AfwRunHelper::safeDie("TravelHelper::decomposeBedOptions($nb_beds) = ". var_export($options,true));
+                // $options = TravelUtils::decomposeBedOptions($nb_beds);
+                // AfwRunHelper::safeDie("TravelUtils::decomposeBedOptions($nb_beds) = ". var_export($options,true));
 
                 $data["cityList"] = $cityList;
 

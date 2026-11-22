@@ -21,8 +21,8 @@ class BtbTravelAfwStructure
 			$obj->showRetrieveErrors = true;
 			$obj->general_check_errors = true;
 			$obj->horizontalTabs = true;
-			// $obj->after_save_edit = array("class"=>'Travel',"attribute"=>'xxxx_id', "currmod"=>'btb',"currstep"=>2);
-			$obj->after_save_edit = array("mode" => "qsearch", "currmod" => 'btb', "class" => 'Travel', "submit" => true);
+			$obj->after_save_edit = array("class" => 'TravelTemplate', "attribute" => 'travel_template_id', "currmod" => 'btb', "currstep" => 10);
+			// $obj->after_save_edit = array("mode" => "qsearch", "currmod" => 'btb', "class" => 'Travel', "submit" => true);
 		} else {
 			TravelArTranslator::initData();
 			TravelEnTranslator::initData();

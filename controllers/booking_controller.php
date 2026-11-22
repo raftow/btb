@@ -245,12 +245,12 @@ class BookingController extends AfwStepsController
                 $booking_id = $request["booking_id"];
                 if ($booking_id) {
                         $bookingObj = Booking::loadById($booking_id);
-                        if (!$bookingObj) throw new RuntimeException("booking_id defined, but object seems to be deleted");
+                        if (!$bookingObj) throw new AfwRuntimeException("booking_id defined, but object seems to be deleted");
                         $customerObj = AfwSession::getCustomerConnected();
-                        if (!$customerObj) throw new RuntimeException("your session seems to be expired, try again");
+                        if (!$customerObj) throw new AfwAuthenticationException("your session seems to be expired, try again");
                         if ($bookingObj->getVal("crm_customer_id") != $customerObj->id) throw new RuntimeException("critical error : booking hacking detected, operation not permitted, admin-security investigation and report sending ...");
                         $this->setObject($bookingObj);
-                } elseif ($mandatory) throw new RuntimeException("booking_id not defined in request array, can not initObjectFromRequest, request = " . var_export($request, true));
+                } elseif ($mandatory) throw new AfwRuntimeException("booking_id not defined in request array, can not initObjectFromRequest, request = " . var_export($request, true));
                 else $this->setObject(null);
 
                 return $request;
@@ -277,7 +277,15 @@ class BookingController extends AfwStepsController
                 $this->addStep("customer");
                 $this->addStep("seats");
                 if ($this->getTravelObject($request)->containResidence()) {
-                        $bookingObj = $this->getObject($request, false);
+                        $bookingObj = null;
+                        // because we are inside sensible front end component/method : AfwController/constructor 
+                        // we should never throw exception
+                        // all exceptions should be catched and managed
+                        try {
+                                $bookingObj = $this->getObject($request, false);
+                        } catch (Exception $e) {
+                        }
+
                         if (((!$bookingObj) and intval($request["beds"]) > 0) or
                                 (intval($bookingObj->nb_beds) > 0)
                         ) {
@@ -516,7 +524,7 @@ class BookingController extends AfwStepsController
                         $old_seats_bus = trim($bookingObj->getVal("seats_bus$busNum"), "-");
                         $new_seats_bus = trim($request["seats_bus$busNum"], "-");
                         if ($old_seats_bus != $new_seats_bus) {
-                                $busObj = $bookingObj->het("bus$busNum");
+                                $busObj = $bookingObj->het("travel_bus$busNum" . "_id");
                                 if ($busObj) {
                                         list($seats_bkng_information, $seats_bkng_warning, $new_seats_bus) = $busObj->applySeatsBooking($bookingObj->id, $new_seats_bus, $busNum, $travelersList = array());
                                         // if($seats_bkng_information) AfwSession::pushInformation($seats_bkng_information);
@@ -572,10 +580,10 @@ class BookingController extends AfwStepsController
 
                 $data["step_infos"] = array();
                 $bookingObj = $this->getObject($request);
-                $custObj = $bookingObj->hetCustomer();
+                $custObj = $bookingObj->het("crm_customer_id");
                 if ($bookingObj) {
                         $data["step_infos"]["رقم الحجز التسلسلي"] = $bookingObj->id;
-                        $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("seattype");
+                        $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("traveler_type_id");
                 }
                 if ($custObj) $data["step_infos"]["العميل"] = $custObj->getDisplay($lang);
 
@@ -670,10 +678,10 @@ class BookingController extends AfwStepsController
                 $data["step_help"] = "<div><strong>قواعد مهمة نرجوا الإطلاع عليها :</strong></div>" . AfwHtmlHelper::genereBulles($arr_notes);
 
                 $data["step_infos"] = array();
-                $custObj = $bookingObj->hetCustomer();
+                $custObj = $bookingObj->het("crm_customer_id");
                 if ($bookingObj) {
                         $data["step_infos"]["رقم الحجز التسلسلي"] = $bookingObj->id;
-                        $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("seattype");
+                        $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("traveler_type_id");
                 }
                 if ($custObj) $data["step_infos"]["العميل"] = $custObj->getDisplay($lang);
 
@@ -773,10 +781,10 @@ class BookingController extends AfwStepsController
 
 
                 $data["step_infos"] = array();
-                $custObj = $bookingObj->hetCustomer();
+                $custObj = $bookingObj->het("crm_customer_id");
                 if ($bookingObj) {
                         $data["step_infos"]["رقم الحجز التسلسلي"] = $bookingObj->id;
-                        $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("seattype");
+                        $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("traveler_type_id");
                         $data["step_infos"]["قيمة التذكرة"] = $total_amount . " ريال";
                 }
 
@@ -862,7 +870,7 @@ class BookingController extends AfwStepsController
                 $travelObj = self::getTravelObject($request);
                 if (!$travelObj) $this->renderError("action paymode fail no travel object : how to work without travel object");
 
-                $companyObj = $travelObj->hetCompany();
+                $companyObj = $travelObj->het("work_branch_id");
                 if (!$companyObj) $this->renderError("action paymode fail no company object : how to work without company object");
 
                 $data["travelObj"] = $travelObj;
@@ -882,10 +890,10 @@ class BookingController extends AfwStepsController
                 $data["step_help"] = "<div><strong>طريقة السداد :</strong></div>" . AfwHtmlHelper::genereBulles($arr_notes);
 
                 $data["step_infos"] = array();
-                $custObj = $bookingObj->hetCustomer();
+                $custObj = $bookingObj->het("crm_customer_id");
                 if ($bookingObj) {
                         $data["step_infos"]["رقم الحجز التسلسلي"] = $bookingObj->id;
-                        $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("seattype");
+                        $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("traveler_type_id");
                         $data["step_infos"]["قيمة التذكرة"] = $total_amount . " ريال";
                 }
 
@@ -967,7 +975,7 @@ class BookingController extends AfwStepsController
                 $travelObj = self::getTravelObject($request);
                 if (!$travelObj) $this->renderError("action payment fail no travel object : how to work without travel object");
 
-                $companyObj = $travelObj->hetCompany();
+                $companyObj = $travelObj->het("work_branch_id");
                 if (!$companyObj) $this->renderError("action payment fail no company object : how to work without company object");
 
                 $paymentModeObj = $bookingObj->het("payment_mode_id");
@@ -991,10 +999,10 @@ class BookingController extends AfwStepsController
                 $data["step_help"] = "<div><strong>طريقة السداد :</strong></div>" . AfwHtmlHelper::genereBulles($arr_notes);
 
                 $data["step_infos"] = array();
-                $custObj = $bookingObj->hetCustomer();
+                $custObj = $bookingObj->het("crm_customer_id");
                 if ($bookingObj) {
                         $data["step_infos"]["رقم الحجز التسلسلي"] = $bookingObj->id;
-                        $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("seattype");
+                        $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("traveler_type_id");
                         $data["step_infos"]["قيمة التذكرة"] = $total_amount . " ريال";
                 }
 

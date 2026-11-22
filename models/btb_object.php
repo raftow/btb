@@ -2,6 +2,11 @@
 
 class BtbObject extends AfwMomkenObject
 {
+        public function getPriceUnit($lang = 'ar')
+        {
+                if ($lang == 'ar') return "ريال";
+                else return "SAR";
+        }
 
         public static function userIsSuperAdmin($objme = null)
         {

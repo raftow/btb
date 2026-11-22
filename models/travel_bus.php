@@ -619,7 +619,7 @@ class TravelBus extends BtbObject
                                 {
                                         $booked = "N";
                                         $tsObj->set("booked",$booked);
-                                        $tsObj->set("seat_category",$categId);
+                                        $tsObj->set("seat_category_enum",$categId);
                                          
                                         $new_seats++;
                                 }
@@ -708,7 +708,7 @@ class TravelBus extends BtbObject
                                 $this->commit();
                         }
 
-                        $busParent = $busObj->het("myparent");
+                        $busParent = $busObj->het("parent_bus_id");
                         // if this bus is from bus template group
                         // approve also all the buses brothers if the seat price is same
                         if ($busParent and $update_brothers) {
@@ -943,7 +943,7 @@ class TravelBus extends BtbObject
                 else return array($new_seats, "");
         }
 
-        public function getBusSeatsHtml($what = 'value', $sw = 66, $sh = 66, $iw = 6, $ih = 6, $driver_seat_width = 60, $bus_num = 1, $booking_seats_bus_arr = array(), $booking_id, $can_edit = true, $vertical_turn = null, $rotate_transform = "x", $nb_seats = 1, $booking_ongoing = false)
+        public function getBusSeatsHtml($what = 'value', $sw = 66, $sh = 66, $iw = 6, $ih = 6, $driver_seat_width = 60, $bus_num = 1, $booking_seats_bus_arr = array(), $booking_id, $can_edit = true, $vertical_turn = null, $rotate_transform = "x", $nb_seats = 1, $booking_ongoing = false, $mod_edit_link = true)
         {
                 /* die("rafik 26111708 : getBusSeatsHtml($sw = sw, $sh = sh, $iw = iw, 
                                             $ih = ih, $driver_seat_width = driver_seat_width, $bus_num = bus_num, 
@@ -1029,7 +1029,9 @@ class TravelBus extends BtbObject
                                                         $attribute_length_val = $btr->getVal($attribute_length);
                                                         if ($attribute_width_val) {
                                                                 $top = $stop + (4 - $icol) * ($sh + $ih);
+                                                                $top_help = "top = $top = stop:$stop + (4 - $icol:icol) * (sh:$sh + ih:$ih);";
                                                                 $left = $sleft - ($row - 1 + $attribute_length_val) * ($sw + $iw);
+                                                                $left_help = "left = $left = sleft:$sleft - (row:$row - 1 + cell_length:$attribute_length_val) * (sw:$sw + iw:$iw);";
                                                                 $wd = intval($attribute_length_val) * ($sw + $iw) - $iw;
                                                                 $hg = intval($attribute_width_val) * ($sh + $ih) - $ih;
                                                                 $lhg = $sh;
@@ -1041,13 +1043,19 @@ class TravelBus extends BtbObject
                                                 {
                                                         throw new AfwRuntimeException($tsObj->getDisplay("ar")." seat  is estBookedForOthers($booking_id) ".var_export($tsObj,true));
                                                 }*/
-                                                                $seat_edit_link = "m.php?mp=ed&cl=TravelSeat&cm=btb&id=" . $tsObj->id . "&cs=1&clp=";
+                                                                if ($mod_edit_link) $seat_edit_link = "m.php?mp=ed&cl=TravelSeat&cm=btb&id=" . $tsObj->id . "&cs=1&clp=";
+                                                                else $seat_edit_link = "";
                                                                 $seat_ready = ($tsObj->valPrice() > 0) ? "ready" : "seat-erroned";
+                                                                $vertical_turn_help = "";
                                                                 if ($vertical_turn) {
                                                                         $vertical_turn_sens = $vertical_turn["sens"];
                                                                         if ($vertical_turn_sens == "inv-watch") {
-                                                                                $left2 = $top + $vertical_turn["translate_x"];
-                                                                                $top2 =  $vertical_turn["translate_y"] - $left;
+                                                                                $translate_x = $vertical_turn["translate_x"];
+                                                                                $translate_y = $vertical_turn["translate_y"];
+                                                                                $left2 = $top + $translate_x;
+                                                                                $vertical_turn_help = "left2= $left2 = top:$top + $translate_x:translate_x";
+                                                                                $top2 =  $translate_y - $left;
+                                                                                $vertical_turn_help .= " top2 = $top2 =  translate_y:$translate_y - $left:left";
                                                                                 $wd2 = $hg;
                                                                                 $hg2 = $wd;
                                                                                 $lhg2 = $lhg; // ??
@@ -1077,7 +1085,8 @@ class TravelBus extends BtbObject
                                                                                         $wanted_seat_type,
                                                                                         $bus_type = "bus",
                                                                                         $seat_ready,
-                                                                                        $seat_edit_link
+                                                                                        $seat_edit_link,
+                                                                                        $top_help . " > " . $left_help . " > " . $vertical_turn_help
                                                                                 );
                                                                 } else {
                                                                         list($legend_seat_class_show, $seats_html_arr[$row][$col]) =
@@ -1102,7 +1111,8 @@ class TravelBus extends BtbObject
                                                                                         $wanted_seat_type,
                                                                                         $bus_type = "bus",
                                                                                         $seat_ready,
-                                                                                        $seat_edit_link
+                                                                                        $seat_edit_link,
+                                                                                        $top_help . " > " . $left_help . " > " . $vertical_turn_help
                                                                                 );
                                                                 }
                                                                 $legend_seat_class_show_arr[$legend_seat_class_show] = true;
@@ -1231,7 +1241,7 @@ class TravelBus extends BtbObject
         public function calcFrontBusDiv($what = 'value', $seats_bus = "-", $booking_id = 0, $can_edit = true, $nb_seats = 1, $booking_ongoing = true)
         {
                 // rafik-dbg position of seats for vertical align
-                $vertical_turn = array('sens' => "inv-watch", 'translate_x' => -10, 'translate_y' => 345); // null;//
+                $vertical_turn = array('sens' => "inv-watch", 'translate_x' => -10, 'translate_y' => 455); // null;//
                 $bus_num = $this->getVal("bus_num");
                 return $this->calcBusDiv(
                         $what,
@@ -1253,7 +1263,8 @@ class TravelBus extends BtbObject
                         $message_help = false,
                         $add_enveloppe = false,
                         $nb_seats,
-                        $booking_ongoing
+                        $booking_ongoing,
+                        false
                 );
         }
 
@@ -1278,7 +1289,8 @@ class TravelBus extends BtbObject
                 $message_help = false,
                 $add_enveloppe = true,
                 $nb_seats = 1,
-                $booking_ongoing = false
+                $booking_ongoing = false,
+                $mod_edit_link = true
         ) {
                 $booking_seats_bus_arr = explode("-", trim($seats_bus, "-"));
 
@@ -1302,7 +1314,8 @@ class TravelBus extends BtbObject
                         $vertical_turn,
                         $rotate_transform,
                         $nb_seats,
-                        $booking_ongoing
+                        $booking_ongoing,
+                        $mod_edit_link
                 );
                 // throw new AfwRuntimeException("legend_seat_class_show_arr = ".var_export($legend_seat_class_show_arr,true));
                 if (!$seats_html_arr) return "<div>صورة المقاعد غير متاحة مع وجود $rows_nb من الصفوف</div>";
@@ -1918,7 +1931,7 @@ class TravelBus extends BtbObject
                         return $prices_arr;
                 }
                 /*
-                $companyObj = $travelObj->hetCompany();
+                $companyObj = $travelObj->het("work_branch_id");
                 if(!$companyObj)
                 {
                         $prices_arr[] = array("ptype"=>"خطأ","price"=>0,"comment"=>"مؤسسة الرحلة غير محددة",);
@@ -2019,8 +2032,8 @@ class TravelBus extends BtbObject
                                         $prices_row["unit_type"] = "seat";
                                         $prices_row["ptype"] = $categoryName;
                                         $prices_row["categ_id"] = $categoryId;
-                                        $prices_row["price"] = $spr->price;
-                                        $prices_row["unit_price"] = $spr->price;
+                                        $prices_row["price"] = $spr->getVal("price");
+                                        $prices_row["unit_price"] = $spr->getPriceUnit($lang);
                                         $prices_row["price_report"] = "من إعدادات تسعير المقاعد لبرنامج الرحلة : " . $spr->getWideDisplay($langue);
                                         $prices_row["comment"] = "";
                                         if ($seat_code) $index_price = $seat_code;
@@ -2292,9 +2305,12 @@ class TravelBus extends BtbObject
 
                                 if (!$currentSeatsTravelerArr[$busNum][$seat_code]["booked"]) {
                                         $seats_booking_results_arr[$seat_code] = $this->bookSeatForMe($seat_code, $booking_id, $traveler_id, $lang);
-                                        if ($seats_booking_results_arr[$seat_code]["STATUS"] != "SEAT_ALREADY_BOOKED_FOR_ME") {
-                                                if ($seats_booking_results_arr[$seat_code]["STATUS"] != "SEAT_BOOKING_OK") {
-                                                        $warning .= "لا يمكن حجز المقعد " . $seat_code . " السبب : " . $seats_booking_results_arr[$seat_code]["STATUS"] . " " . $this->translate($seats_booking_results_arr[$seat_code]["STATUS"], $lang) . "<br>\n";
+                                        $seats_booking_result_status = $seats_booking_results_arr[$seat_code]["STATUS"];
+                                        if ($seats_booking_result_status != "SEAT_ALREADY_BOOKED_FOR_ME") {
+                                                if ($seats_booking_result_status != "SEAT_BOOKING_OK") {
+                                                        $warning .= "لا يمكن حجز المقعد [" . $seat_code .
+                                                                "]<br>\nالسبب : " . $seats_booking_result_status . " " .
+                                                                $this->translate($seats_booking_result_status, $lang) . "<br>\n";
                                                 } else {
                                                         $new_seats_bus .= $seat_code . "-";
                                                         $information .= "تم حجز المقعد " . $seat_code . " $traveler_name<br>\n";

@@ -15,7 +15,7 @@ class BtbHotelAfwStructure
 			$obj->public_display = true;
 			$obj->horizontalTabs = true;
 
-
+			$obj->OwnedBy = array('module' => "btb", 'afw' => "WorkBranch");
 			$obj->ignore_insert_doublon = true;
 			$obj->UNIQUE_KEY = array('work_branch_id', 'country_id', 'city_id', 'name_ar');
 			$obj->editByStep = true;
@@ -463,6 +463,7 @@ class BtbHotelAfwStructure
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',
 			'CSS' => 'width_pct_100',
+			'DEFAULT' => '50rs4:1fl=106-130/4fl=411-435'
 		),
 
 		'roombed_men' => array(

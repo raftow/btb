@@ -158,6 +158,8 @@ class BusTemplate extends BtbObject
 
         public function genereBusTemplateRows($lang = "ar", $update_seats = false)
         {
+                $empty_seats_arr = explode(",", $this->getVal("remove_seats"));
+                $force_seats_arr = explode(",", $this->getVal("force_seats"));
                 $bus_template_id = $this->getId();
                 if (!$bus_template_id) return array("Bus template object is empty", "");
                 $file_dir_name = dirname(__FILE__);
@@ -177,7 +179,11 @@ class BusTemplate extends BtbObject
                         if ($btr->is_new or $update_seats) {
                                 foreach ($all_cols as $col) {
                                         $lowerCol = strtolower($col);
-                                        if (in_array($col, $empty_columns_arr)) {
+                                        $seatCode = strtoupper($col) . $row;
+                                        if ((!in_array($seatCode, $force_seats_arr)) and (
+                                                in_array($col, $empty_columns_arr) or
+                                                in_array($seatCode, $empty_seats_arr)
+                                        )) {
                                                 $wd = 0;
                                                 $ln = 0;
                                         } else {
@@ -383,7 +389,8 @@ class BusTemplate extends BtbObject
                 $wanted_type = "family",
                 $bus_type = "bus",
                 $seat_ready = "not-ready",
-                $seat_edit_link = ""
+                $seat_edit_link = "",
+                $seat_title_help_advanced = ""
         ) {
                 $seat_num_l = "b" . $bus_num . "_" . strtolower($seat_num);
                 $seat_val = 0;
@@ -435,6 +442,8 @@ class BusTemplate extends BtbObject
                 $legend_seat_class_show = "legend_seat $hzm_available_seat seat_$type";
                 $legend_seat_class_show = str_replace(' ', '_', $legend_seat_class_show);
                 $legend_seat_class_show = str_replace('hzm_', '', $legend_seat_class_show);
+
+                $seat_title_help .= $seat_title_help_advanced;
 
                 return array($legend_seat_class_show, "<span id='$seat_num_l' alt='$bus_num' class='$hzm_available_seat bus_seat $bus_type seat_$type $seat_ready seat_rotate_$rotate_transform' title='$seat_title_help' style='left: ${left}px; top: ${top}px; width: ${wd}px; height: ${hg}px; line-height: ${lhg}px;'>$seat_num_display
                                                         </span><input type='hidden' name='seat_val_$seat_num_l'  id='seat_val_$seat_num_l' value='$seat_val' />");

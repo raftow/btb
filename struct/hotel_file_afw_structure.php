@@ -2,6 +2,39 @@
 <?php
 class BtbHotelFileAfwStructure
 {
+	// token separator = §
+	public static function initInstance(&$obj)
+	{
+		if ($obj instanceof HotelFile) {
+			$obj->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
+			$obj->DISPLAY_FIELD = "id";
+
+			// $obj->ENABLE_DISPLAY_MODE_IN_QEDIT=true;
+			$obj->ORDER_BY_FIELDS = "hotel_id, workflow_file_id";
+
+
+
+			$obj->UNIQUE_KEY = array('hotel_id', 'workflow_file_id');
+			$obj->editByStep = true;
+			$obj->editNbSteps = 1;
+			$obj->showQeditErrors = true;
+			$obj->showRetrieveErrors = true;
+			$obj->general_check_errors = true;
+			$obj->after_save_edit = array("class" => 'Hotel', "attribute" => 'hotel_id', "currmod" => 'btb', "currstep" => 3);
+			// $obj->after_save_edit = array("mode" => "qsearch", "currmod" => 'btb', "class" => 'HotelFile', "submit" => true);
+
+		} else {
+			HotelFileArTranslator::initData();
+			HotelFileEnTranslator::initData();
+		}
+	}
+
+	/**
+	 * DB_STRUCTURE is the main source of configuration for the class 
+	 *    it is used in all the modules and methods to know how 
+	 *    to handle the class attributes
+	 * @var array
+	 */
 	public static $DB_STRUCTURE = array(
 
 

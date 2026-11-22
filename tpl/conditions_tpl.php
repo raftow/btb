@@ -9,7 +9,7 @@
       </div>
       <br>
       <?php
-      $travelCompany = $travelObj->hetCompany();
+      $travelCompany = $travelObj->het("work_branch_id");
       ?>
       <p class='front_title'>الشروط الخاصة بمؤسسة <?php echo $travelCompany->getWideDisplay($lang) ?></p>
       <div class="front_conditions hzm_data hzm_data_conditions" style="">

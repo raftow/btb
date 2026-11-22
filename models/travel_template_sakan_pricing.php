@@ -189,7 +189,7 @@ class TravelTemplateSakanPricing extends BtbObject
 
         list($data[], $link[]) = $this->displayAttribute("week_period_enum", false, $lang);
         list($data[], $link[]) = $this->displayAttribute("period_type_enum", false, $lang);
-        //list($data[],$link[]) = $this->displayAttribute("yperiod_id",false, $lang);
+        list($data[], $link[]) = $this->displayAttribute("yperiod_id", false, $lang);
         return implode("-", $data);
     }
 

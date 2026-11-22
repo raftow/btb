@@ -120,6 +120,7 @@ class Bus extends BtbObject
 
         public function getPhotoPathList($from_example = true)
         {
+                AfwAutoLoader::addModule("workflow");
                 $busFileList = null;
 
                 if ($from_example) {
@@ -227,27 +228,56 @@ class Bus extends BtbObject
                         if (!$bp) {
                                 $report_arr[] = "البحث عن سعر تكلفة المركبة : $the_bus_id ($the_bus_name)";
                                 $bp = BusPricing::loadByMainIndex($the_bus_id, $travel_program_id, $days_nb, $week_period_enum, $period_type_enum, $yperiod_id, $create_obj_if_not_found = false);
-                                $report_arr[] = "لم يتم العثور على تسعيرة  للفترة المحددة [dn=$days_nb, wp=$week_period_enum,pt=$period_type_enum, yp=$yperiod_id]";
-                                $report_arr[] = "سيتم البحث عن تسعيرة عامة لجميع الفترات";
-                                $bp = BusPricing::loadByMainIndex($the_bus_id, $travel_program_id, $days_nb, $week_period_enum, $period_type_enum, 0, $create_obj_if_not_found = false);
                                 if ($bp and ($bp->getVal("price") <= 0)) {
                                         unset($bp);
                                         $bp = null;
                                 }
-                                if (!$bp) $bp = BusPricing::loadByMainIndex($the_bus_id, $travel_program_id, $days_nb, $week_period_enum, 0, 0, $create_obj_if_not_found = false);
-                                if ($bp and ($bp->getVal("price") <= 0)) {
-                                        unset($bp);
-                                        $bp = null;
+                                if (!$bp) {
+                                        $report_arr[] = "لم يتم العثور على تسعيرة  للفترة المحددة [dn=$days_nb, wp=$week_period_enum,pt=$period_type_enum, yp=$yperiod_id]";
+                                        $report_arr[] = "سيتم البحث عن تسعيرة عامة لجميع المواسم";
+
+                                        $bp = BusPricing::loadByMainIndex($the_bus_id, $travel_program_id, $days_nb, $week_period_enum, $period_type_enum, 0, $create_obj_if_not_found = false);
+                                        if ($bp and ($bp->getVal("price") <= 0)) {
+                                                unset($bp);
+                                                $bp = null;
+                                        }
+                                        if (!$bp) {
+                                                $report_arr[] = "لم يتم العثور على تسعيرة  للفترة المحددة [dn=$days_nb, wp=$week_period_enum,pt=$period_type_enum, yp=0]";
+                                        }
                                 }
-                                if (!$bp) $bp = BusPricing::loadByMainIndex($the_bus_id, $travel_program_id, $days_nb, 0, $period_type_enum, 0, $create_obj_if_not_found = false);
-                                if ($bp and ($bp->getVal("price") <= 0)) {
-                                        unset($bp);
-                                        $bp = null;
+
+                                if (!$bp) {
+                                        $report_arr[] = "سيتم البحث عن تسعيرة عامة لجميع المواسم  بشكل أعم";
+                                        $bp = BusPricing::loadByMainIndex($the_bus_id, $travel_program_id, $days_nb, $week_period_enum, 0, 0, $create_obj_if_not_found = false);
+                                        if ($bp and ($bp->getVal("price") <= 0)) {
+                                                unset($bp);
+                                                $bp = null;
+                                        }
+                                        if (!$bp) {
+                                                $report_arr[] = "لم يتم العثور على تسعيرة  للفترة المحددة [dn=$days_nb, wp=$week_period_enum,pt=0, yp=0]";
+                                        }
                                 }
-                                if (!$bp) $bp = BusPricing::loadByMainIndex($the_bus_id, $travel_program_id, $days_nb, 0, 0, 0, $create_obj_if_not_found = false);
-                                if ($bp and ($bp->getVal("price") <= 0)) {
-                                        unset($bp);
-                                        $bp = null;
+                                if (!$bp) {
+                                        $report_arr[] = "سيتم البحث عن تسعيرة عامة لجميع فترات الاسبوع";
+                                        $bp = BusPricing::loadByMainIndex($the_bus_id, $travel_program_id, $days_nb, 0, $period_type_enum, 0, $create_obj_if_not_found = false);
+                                        if ($bp and ($bp->getVal("price") <= 0)) {
+                                                unset($bp);
+                                                $bp = null;
+                                        }
+                                        if (!$bp) {
+                                                $report_arr[] = "لم يتم العثور على تسعيرة  للفترة المحددة [dn=$days_nb, wp=0,pt=$period_type_enum, yp=0]";
+                                        }
+                                }
+                                if (!$bp) {
+                                        $report_arr[] = "سيتم البحث عن تسعيرة عامة لجميع الحالات";
+                                        $bp = BusPricing::loadByMainIndex($the_bus_id, $travel_program_id, $days_nb, 0, 0, 0, $create_obj_if_not_found = false);
+                                        if ($bp and ($bp->getVal("price") <= 0)) {
+                                                unset($bp);
+                                                $bp = null;
+                                        }
+                                        if (!$bp) {
+                                                $report_arr[] = "لم يتم العثور على تسعيرة  للفترة المحددة [dn=$days_nb, wp=0,pt=0, yp=0]";
+                                        }
                                 }
                         }
                 }
@@ -517,6 +547,19 @@ class Bus extends BtbObject
                                 $title_ar = "تحديث البيانات من المركبة النموذج";
                                 $pbms["xas78B"] = array("METHOD" => "copyDataFromExampleParent", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "");
                         }
+
+
+                        $color = "blue";
+                        $title_ar = "جعل الباص جاهز للاستخدام";
+                        $methodName = "makeBusPublishedReadyForUse";
+                        $pbms[AfwStringHelper::hzmEncode($methodName)] = array(
+                                "METHOD" => $methodName,
+                                "COLOR" => $color,
+                                "LABEL_AR" => $title_ar,
+                                "PUBLIC" => true,
+                                "BF-ID" => "",
+                                'STEP' => 7,
+                        );
                 } elseif (!$this->sureIs("reel")) {
                         /* to see if needed as createFromThisExample is sufficient
                     if($objme->isSuperAdmin())
@@ -679,6 +722,7 @@ class Bus extends BtbObject
 
         public function copyPhotosFrom($busSource)
         {
+                AfwAutoLoader::addModule("workflow");
                 $file_dir_name = dirname(__FILE__);
                 $pf_nb = 0;
                 foreach ($busSource->get("busFileList") as $busFileItem) {
@@ -839,12 +883,12 @@ class Bus extends BtbObject
 
         public function matriculeIsNotReal()
         {
-                return (!$this->getVal("bus_code") or AfwStringHelper::stringStartsWith($this->getVal("bus_code"), "EXM "));
+                return (!$this->getVal("bus_code") or AfwStringHelper::stringStartsWith($this->getVal("bus_code"), "EXM ") or AfwStringHelper::stringStartsWith($this->getVal("bus_code"), "XXX "));
         }
 
         public function matriculeIsReal()
         {
-                return ($this->getVal("bus_code") and !AfwStringHelper::stringStartsWith($this->getVal("bus_code"), "EXM "));
+                return ($this->getVal("bus_code") and !AfwStringHelper::stringStartsWith($this->getVal("bus_code"), "EXM ") and !AfwStringHelper::stringStartsWith($this->getVal("bus_code"), "XXX "));
         }
 
         /**
@@ -1055,13 +1099,14 @@ class Bus extends BtbObject
         {
                 if ($attribute == "booking_infos")  return $this->propertiesCanBeCustomized(); //!$this->sureIs("mine");
                 if ($attribute == "bus_code")       return (($this->sureIs("reel")));
-                if ($attribute == "bus_color")      return (($this->sureIs("reel")));
+
                 if ($attribute == "bus_num")        return false;
                 if ($attribute == "instance_nb")    return ($this->sureIs("example"));
                 if ($attribute == "mine")          return ($this->ownerIsParent());
-                if ($attribute == "publish")       return ($this->ownerIsBranch());
+
                 if ($attribute == "responsible_id") return $this->propertiesCanBeCustomized();
                 if ($attribute == "driver_id")      return ($this->matriculeIsReal());
+                if ($attribute == "bus_color")      return ($this->matriculeIsReal());
                 if ($attribute == "parent_bus_id")  return (!$this->sureIs("example"));
                 if ($attribute == "busList")        return ($this->sureIs("example"));
                 if ($attribute == "travelBusList")        return (!$this->sureIs("example"));
@@ -1169,8 +1214,8 @@ class Bus extends BtbObject
                 if (!$busOwnerId) throw new RunTimeException("bus owner not defined");
                 if (!$travelCompanyId) throw new RunTimeException("travel not defined");
 
-                $busOwnerParent = $busOwner->hetParent();
-                $travelCompanyParent = $travelCompany->hetParent();
+                $busOwnerParent = $busOwner->het("parent_id");
+                $travelCompanyParent = $travelCompany->het("parent_id");
                 if ($busOwnerParent) $busOwnerParentId = $busOwnerParent->getId();
                 else $busOwnerParentId = 0;
                 if ($travelCompanyParent) $travelCompanyParentId = $travelCompanyParent->getId();
@@ -1473,7 +1518,7 @@ class Bus extends BtbObject
                 foreach ($seats_arr as $seat_code) {
                         $bsObj = BusSeat::loadByMainIndex($this->id, $seat_code);
                         if ($bsObj) {
-                                $busTemplate->category_arr[$seat_code] = BusSeat::code_of_seat_category($bsObj->getVal("seat_category"));
+                                $busTemplate->category_arr[$seat_code] = BusSeat::code_of_seat_category($bsObj->getVal("seat_category_enum"));
                         } else {
                                 $busTemplate->category_arr[$seat_code] = "togenerate";
                         }
@@ -1505,7 +1550,7 @@ class Bus extends BtbObject
                         $seats_arr = $template->getSeatCodes();
                         foreach ($seats_arr as $seat_code) {
                                 $bsObj = BusSeat::loadByMainIndex($this->id, $seat_code, true);
-                                $bsObj->set("seat_category", 1); // مقعد عادي
+                                $bsObj->set("seat_category_enum", 1); // مقعد عادي
                                 $bsObj->commit();
                         }
                 }
@@ -1565,7 +1610,7 @@ class Bus extends BtbObject
                                 $tmp_category_arr[$seat_code] = $categ;
                                 if ($reset_generation) {
                                         $bsObj = BusSeat::loadByMainIndex($this->id, $seat_code, true);
-                                        $bsObj->set("seat_category", $categId);
+                                        $bsObj->set("seat_category_enum", $categId);
                                         $bsObj->commit();
                                 }
                         }
@@ -1594,9 +1639,9 @@ class Bus extends BtbObject
 
         public function getTheSeatCategoryCode($seat_code, $return_name = false, $reset_generation = false)
         {
-                $template = $this->genereBusSeatsAndAssignCategories($reset_generation);
+                $busTemplateObj = $this->genereBusSeatsAndAssignCategories($reset_generation);
                 // throw new AfwRuntimeException("template->category_arr = ".var_export($template->category_arr,true));
-                if ($template->category_arr[$seat_code]) $return = $template->category_arr[$seat_code];
+                if ($busTemplateObj->category_arr[$seat_code]) $return = $busTemplateObj->category_arr[$seat_code];
                 else $return = 'normal';
 
                 if (!$return_name) return $return;
@@ -1621,7 +1666,7 @@ class Bus extends BtbObject
                 $busSeatList = $this->get("busSeatList");
                 foreach ($busSeatList as $busSeatItem) {
                         $id = $busSeatItem->id;
-                        $category = BusSeatCategory::code_of_seat_category($busSeatItem->getVal("seat_category"));
+                        $category = BusSeatCategory::code_of_seat_category($busSeatItem->getVal("seat_category_enum"));
                         $seat_num = $busSeatItem->getVal("seat_code");
                         $seat_ready = 'ready';
                         $seat_edit_link = "m.php?mp=ed&cl=BusSeat&cm=btb&id=$id&cs=1&clp=";
@@ -1638,7 +1683,7 @@ class Bus extends BtbObject
                 /**
                  * @var BusTemplate $busTemplateObj
                  */
-                $busTemplateObj = $this->genereBusSeatsAndAssignCategories(true);
+                $busTemplateObj = $this->genereBusSeatsAndAssignCategories();
                 $busReelSeats = $this->busReelSeats();
                 //return var_export($template->category_arr,true);
                 return $busTemplateObj->calcBusDiv("value", false, "", "هذه صورة جاهزية حجز المقاعد على المركبة", null, false, false, false, $busReelSeats);
@@ -1674,7 +1719,7 @@ class Bus extends BtbObject
         public function calcDefinition()
         {
                 if ($this->sureIs("example")) return "نموذج فقط";
-                else return $this->bus_code;
+                else return $this->getVal("bus_code");
         }
 
 
@@ -1801,5 +1846,54 @@ class Bus extends BtbObject
                         }
                 }
                 return true;
+        }
+
+
+        public function checkBusPublishedReadyForUse()
+        {
+                $busSeatListCount = $this->getRelation("busSeatList")->count();
+
+                // how to check prices for bus when it depends on number of days and distance etc...
+                // so depends on program but we can make formula that generes price depending on this
+                // may be later in v 4.0 of bisat application
+
+                if ($busSeatListCount > 0) return [true, ""];
+                return [false, "No seat in this bus, check with administrator"];
+        }
+
+        public function makeBusPublishedReadyForUse($lang = 'ar')
+        {
+                /**
+                 * @var BusTemplate $busTemplateObj
+                 */
+                $busTemplateObj = $this->genereBusSeatsAndAssignCategories(true);
+                list($ready, $reason) = $this->checkBusPublishedReadyForUse();
+                if ($ready) {
+                        $this->set("publish", "Y");
+                        $this->commit();
+                        return ["", "Bus is now ready for use"];
+                } else {
+                        return ["Bus is not ready for use : $reason ! ", ""];
+                }
+        }
+
+        protected function afterSetAttribute($attribute)
+        {
+                if ($attribute == "example") {
+                        if (!$this->sureIs("example")) {
+                                $this->set("reel", "Y");
+                        }
+                }
+        }
+
+        /**
+         * @param string $field_name 
+         * @param string $col_struct
+         */
+        public function isChild($field_name, $col_struct)
+        {
+                if ($col_struct == "readonly") return $this->hasParent();
+
+                return null;
         }
 }

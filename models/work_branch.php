@@ -256,31 +256,34 @@ class WorkBranch extends BtbObject
         if (!$parent_id) $parent_id = $my_id;
         $displ = $this->getDisplay($lang);
 
+        /* we should keep this commented because we can not add buses with otherLink concept as this table has both unique indexes 
+           to avoid duplicate errors we genere bus examples ans reel buses
+
         if ($mode == "mode_busList") {
             unset($link);
             $link = array();
             $title = "إضافة مركبة جديدة";
             $title_detailed = $title . "لـ : " . $displ;
-            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=Bus&currmod=btb&sel_work_branch_id=$my_id&sel_example=N";
+            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=Bus&currmod=btb&sel_work_branch_id=$my_id&sel_example=N&sel_reel=Y";
             $link["TITLE"] = $title;
             $link["UGROUPS"] = array();
             $otherLinksArray[] = $link;
         }
 
 
-        if ($mode == "mode_exbusList") {
+        if ($mode == "mode_exampleBusList") {
             unset($link);
             $link = array();
-            $title = "إضافة نموذج مركبة جديدة";
+            $title = "إضافة نموذج مركبة جديد";
             $title_detailed = $title . "لـ : " . $displ;
             if ($parent_id and ($parent_id != $my_id)) {
                 $title .= " خاص بهذا الفرع";
             }
-            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=Bus&currmod=btb&sel_work_branch_id=$my_id&sel_example=Y";
+            $link["URL"] = "main.php?Main_Page=afw_mode_edit.php&cl=Bus&currmod=btb&sel_work_branch_id=$my_id&sel_example=Y&sel_reel=N";
             $link["TITLE"] = $title;
             $link["UGROUPS"] = array();
             $otherLinksArray[] = $link;
-        }
+        }*/
 
         if ($mode == "mode_workBranchList") {
             unset($link);
@@ -528,6 +531,21 @@ class WorkBranch extends BtbObject
             return array("Please define parent company", "");
         }
     }
+
+
+
+    public function newBusExample($lang = "ar")
+    {
+        $nextBusExampleNum = $this->relExampleBusList()->count() + 1001;
+        $nextBusExampleCode = "XXX " . $nextBusExampleNum;
+        $bus = Bus::loadByBusNum($this->id, 0, $nextBusExampleNum, $nextBusExampleCode, true);
+        $bus->set("example", "Y");
+        $bus->set("reel", "N");
+
+        $action = $bus->is_new ? "إنشاء" : "تحديث";
+        return array("", "تم بحمد الله $action الباص : $nextBusExampleCode ");
+    }
+
 
     public function genereCategorizedSeatsPrices($lang = "ar")
     {
@@ -847,8 +865,19 @@ class WorkBranch extends BtbObject
                     }
                 }
 
-                if (($objme->isAdmin()) or ($objme->hasRole("btb", 333))) {
+                $color = "yellow";
+                $title_ar = "إضافة نموذج مركبة";
+                $pbms["hh1Ob5"] = array(
+                    "METHOD" => "newBusExample",
+                    "COLOR" => $color,
+                    "LABEL_AR" => $title_ar,
+                    "PUBLIC" => true,
+                    "BF-ID" => "",
+                    "HZM-SIZE" => 12,
+                    "STEP" => $this->stepOfAttribute("exampleBusList"),
+                );
 
+                if (($objme->isAdmin()) or ($objme->hasRole("btb", 333))) {
                     $color = "green";
                     $title_ar = "تحديث البرامج وجدول تسعيرات المركبات";
                     $methodName = "genereTravelProgramsAndBusPricings";
@@ -858,7 +887,7 @@ class WorkBranch extends BtbObject
                         "LABEL_AR" => $title_ar,
                         "PUBLIC" => true,
                         "HZM-SIZE" => 12,
-                        "STEP" => 1,
+                        "STEP" => 8,
                         // "STEP" => $this->stepOfAttribute("busPricingList"),
                     );
 

@@ -23,18 +23,7 @@ class Booking extends BtbObject
         public function __construct()
         {
                 parent::__construct("booking", "id", "btb");
-                $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-                $this->DISPLAY_FIELD = "";
-                $this->ORDER_BY_FIELDS = "travel_id, idn_type_id, idn, mobile, traveler_type_id";
-                $this->horizontalTabs = true;
-
-
-                $this->UNIQUE_KEY = array('travel_id', 'idn_type_id', 'idn', 'mobile', 'traveler_type_id');
-                $this->editByStep = true;
-                $this->editNbSteps = 12;
-                $this->showQeditErrors = true;
-                $this->showRetrieveErrors = true;
-                // $this->after_save_edit = array("class"=>Road,"attribute"=>road_id, "currmod"=> 'btb',"currstep"=>9);
+                BtbBookingAfwStructure::initInstance($this);
         }
 
         public static function loadById($id)
@@ -89,16 +78,13 @@ class Booking extends BtbObject
                         if ($create_obj_if_not_found) $obj->activate();
                         return $obj;
                 } elseif ($create_obj_if_not_found) {
-                        /*
-                $obj->set("travel_id",$travel_id);
-                $obj->set("idn_type_id",$idn_type_id);
-                $obj->set("idn",$idn);
-                $obj->set("mobile",$mobile);*/
 
-                        $obj->travel_id = $travel_id;
-                        $obj->idn_type_id = $idn_type_id;
-                        $obj->idn = $idn;
-                        $obj->mobile = $mobile;
+                        $obj->set("travel_id", $travel_id);
+                        $obj->set("idn_type_id", $idn_type_id);
+                        $obj->set("idn", $idn);
+                        $obj->set("mobile", $mobile);
+
+
 
                         $obj->insert();
                         $obj->is_new = true;
@@ -112,15 +98,15 @@ class Booking extends BtbObject
                 if (!$crm_customer_id) throw new RuntimeException("loadByMainIndex : crm_customer_id is mandatory field");
 
                 $customerObj = CrmCustomer::loadById($crm_customer_id);
-                $bookingObj = self::loadByMainIndex($travel_id, $customerObj->valIdn_type_id(), $customerObj->idn, $customerObj->mobile, $traveler_type_id, $create_obj_if_not_found = true);
+                $bookingObj = self::loadByMainIndex($travel_id, $customerObj->valIdn_type_id(), $customerObj->getVal("idn"), $customerObj->getVal("mobile"), $traveler_type_id, $create_obj_if_not_found = true);
                 if (!$bookingObj->is_new) {
                         // return array(null, "this booking already exists for this travel, this customer, this travel type");   
                 }
 
                 $bookingObj->set("customer_gender_id", $customerObj->valGender_id());
                 $bookingObj->set("crm_customer_id", $customerObj->id);
-                $bookingObj->set("full_name", $customerObj->full_name);
-                $bookingObj->set("email", $customerObj->email);
+                $bookingObj->set("full_name", $customerObj->calc("full_name"));
+                $bookingObj->set("email", $customerObj->getVal("email"));
                 $bookingObj->set("capproval", "Y");
                 $bookingObj->set("travelers_nb", $travelers_nb);
                 $bookingObj->set("seats_nb", $travelers_nb);
@@ -404,7 +390,7 @@ class Booking extends BtbObject
 
                 for ($k = 1; $k <= 3; $k++) {
                         if (($attribute == "div_seats_bus$k") or ($attribute == "my_seats_bus$k")) {
-                                //$tbus = $this->het("bus$k");
+                                //$tbus = $this->het("travel_bus$k"."_id");
                                 return "اختيار المقاعد من المركبة "; // .$tbus->getShortDisplay($lang);
                         }
                 }
@@ -531,17 +517,18 @@ class Booking extends BtbObject
                 $updated = 0;
 
                 $travel = $this->het("travel_id");
+                $busNumToUpdate = array();
+                $oldRemovedBuses = array();
+                $finalBuses = array();
                 if ($travel) {
                         $seats_nb = intval($this->getVal("seats_nb"));
                         $nb_to_gether = $seats_nb; //@todo intval($this->getVal("nb_to_gether"));
                         $seats_needed_nb = $seats_nb; // - $this->getSelectedSeatsNb();
 
-                        $busNumToUpdate = array();
-                        $oldRemovedBuses = array();
-                        $finalBuses = array();
+
 
                         for ($bnum = 1; $bnum <= $limit_buses; $bnum++) {
-                                $tbus = $this->het("travel_bus${bnum}_id");
+                                $tbus = $this->het("travel_bus$bnum" . "_id");
                                 if ($tbus and (!$finalBuses[$tbus->getId()])) {
                                         $countSeatsBookedForMe = $tbus->countSeatsBookedForMe($this->getId());
                                         if (!$countSeatsBookedForMe) {
@@ -654,14 +641,15 @@ class Booking extends BtbObject
 
         public function beforeMaj($id, $fields_updated)
         {
+                $toReGenereBilling = false;
                 $lang = AfwLanguageHelper::getGlobalLanguage();
 
                 AfwSession::pullInformation();
                 AfwSession::pullWarning();
                 AfwSession::pullError();
 
-                $file_dir_name = dirname(__FILE__);
-
+                // $file_dir_name = dirname(__FILE__);
+                $crmObj = null;
 
                 if (
                         $fields_updated["idn_type_id"] or
@@ -711,6 +699,8 @@ class Booking extends BtbObject
 
                         if ($crmObj) $crmObj->commit();
                 }
+
+                $traveler_group_id = 0;
 
                 if ($fields_updated["crm_customer_id"] or $fields_updated["traveler_group_type_id"] or $fields_updated["group_num"]) {
                         $this->set("traveler_mfk", ",");
@@ -897,9 +887,9 @@ class Booking extends BtbObject
                 //throw new AfwRuntimeException("debugg rafik : ".var_export($fields_updated,true));
                 if (isset($fields_updated["seats_nb"]) or $fields_updated["nb_to_gether"]) {
                         list($bus_errors, $bus_infos) = $this->updateBuses($lang, false);
-                        if (count($bus_errors) > 0) AfwSession::pushWarning(implode("<br>\n", $bus_errors));
-                        elseif (count($bus_infos) > 0) AfwSession::pushInformation(implode("<br>\n", $bus_infos));
-                        else AfwSession::pushInformation("تم تحديث المركبة بنجاح");
+                        if ($bus_errors) AfwSession::pushWarning($bus_errors);
+                        elseif ($bus_infos) AfwSession::pushInformation($bus_infos);
+                        else AfwSession::pushSuccess("تم تحديث المركبة بنجاح");
 
 
                         $this->set("discount", 0);
@@ -920,7 +910,7 @@ class Booking extends BtbObject
 
                 for ($busNum = 1; $busNum <= 3; $busNum++) {
                         if ($fields_updated["seats_bus$busNum"]) {
-                                $busObj = $this->het("bus$busNum");
+                                $busObj = $this->het("travel_bus$busNum" . "_id");
                                 if ($busObj) {
                                         $seats_bus = $this->getVal("seats_bus$busNum");
 
@@ -1090,12 +1080,12 @@ class Booking extends BtbObject
                         $trips_nb = intval($travelTemp->getVal("trips_nb"));
                         for ($trip = 1; $trip < $trips_nb; $trip++) {
                                 $log_arr[] = "---------------------------------------------------------------------------------";
-                                $hotelObj = $this->het("hotel$trip");
+                                $hotelObj = $this->het("hotel$trip" . "_id");
                                 $trip_desc = "السفرة : $trip الفندق : $hotelObj";
                                 $log_arr[] = $trip_desc;
 
                                 if (!$hotelObj) {
-                                        $cityObj = $this->het("city$trip");
+                                        $cityObj = $this->het("city$trip" . "_id");
                                         if (!$cityObj) {
                                                 return array("لم يتم تحديد المدينة$trip يتعذر حجز الغرف", "");
                                         }
@@ -1198,7 +1188,7 @@ class Booking extends BtbObject
                 // cancel confirm booking of rooms / beds for this booking id
                 $trips_nb = intval($travelTemp->getVal("trips_nb"));
                 for ($trip = 1; $trip < $trips_nb; $trip++) {
-                        $hotelObj = $this->het("hotel$trip");
+                        $hotelObj = $this->het("hotel$trip" . "_id");
                         if ($hotelObj) {
                                 $hotelId = $hotelObj->getId();
 
@@ -1342,7 +1332,7 @@ class Booking extends BtbObject
 
         public function calcDivSeatsBus($bus_num, $can_edit)
         {
-                $tbus = $this->het("bus$bus_num");
+                $tbus = $this->het("travel_bus$bus_num" . "_id");
                 $tbus_seats_booking = "-" . trim($this->getVal("seats_bus$bus_num"), "-") . "-";
 
                 if ($tbus) return $tbus->calcBusDiv($sw = 48, $sh = 48, $iw = 4, $ih = 4, $driver_seat_width = 40, $bus_num, $tbus_seats_booking, $this->getId(), $can_edit);
@@ -1355,7 +1345,7 @@ class Booking extends BtbObject
                 $lang = AfwLanguageHelper::getGlobalLanguage();
                 $arrSeatsCategoriesAndPrices = array();
                 for ($i = 1; $i <= 3; $i++) {
-                        $busObj = $this->het("bus$i");
+                        $busObj = $this->het("travel_bus$i" . "_id");
                         if ($busObj) {
                                 $busObjDesc = $busObj->getNodeDisplay($lang);
                                 $seats_arr = explode("-", $this->getVal("seats_bus${i}"));
@@ -1462,13 +1452,13 @@ class Booking extends BtbObject
                         $infos_arr[] = "تم انشاء سطر حساب المقاعد";
                 }
 
-                if ($this->containResidence()) {
+                if ($travelTemp->containResidence()) {
                         // rooms and beds
                         $trips_nb = intval($travelTemp->getVal("trips_nb"));
                         for ($trip = 1; $trip < $trips_nb; $trip++) {
-                                $hotelObj = $this->het("hotel$trip");
+                                $hotelObj = $this->het("hotel$trip" . "_id");
                                 if (!$hotelObj) {
-                                        $cityObj = $this->het("city$trip");
+                                        $cityObj = $this->het("city$trip" . "_id");
                                         if (!$cityObj) {
                                                 return array("لم يتم تحديد المدينة$trip ", "");
                                         }
@@ -1628,9 +1618,9 @@ class Booking extends BtbObject
 
                 // kaab booking fees
 
-                $nb_beds = $nb_single_beds + $nb_room2_beds + $nb_single_beds + $nb_room3_beds + $nb_room4_beds + $nb_room5_beds + $nb_room6_beds;
-                $travelers_nb = intval($this->getVal("travelers_nb"));
-                $trips_reel_nb = intval($travelTemp->getVal("trips_nb")) - 1;
+                // $nb_beds = $nb_single_beds + $nb_room2_beds + $nb_single_beds + $nb_room3_beds + $nb_room4_beds + $nb_room5_beds + $nb_room6_beds;
+                // $travelers_nb = intval($this->getVal("travelers_nb"));
+                // $trips_reel_nb = intval($travelTemp->getVal("trips_nb")) - 1;
 
                 //($nb_beds*0.8 + 0.4*$travelers_nb + 1.2*$nb_seats)*(2*$trips_reel_nb-1)
                 // $kaab_fees_pct from settings @todo
@@ -1952,7 +1942,7 @@ class Booking extends BtbObject
 
                 $travel = $this->het("travel_id");
                 if (!$travel) return "الرحلة غير معرفة";
-                $hotel = $this->het("hotel$trip");
+                $hotel = $this->het("hotel$trip" . "_id");
                 if (!$hotel) return "الفندق غير معرف";
 
                 $hotelId = $hotel->getId();
@@ -1994,7 +1984,7 @@ class Booking extends BtbObject
 
         public function getTravelerTypeSeat()
         {
-                $seatTypeObj = $this->hetSeattype();
+                $seatTypeObj = $this->het("traveler_type_id");
                 if ($seatTypeObj) return $seatTypeObj->getSeatTypeCode();
                 return "error_unknown_seat_type";
         }
@@ -2022,10 +2012,10 @@ class Booking extends BtbObject
                 if (!$templateObj) throw new RuntimeException("getSakanDescription : travel without template object !!!");
 
                 for ($trip = 1; $trip < $templateObj->trips_nb; $trip++) {
-                        $cityTrip = $this->het("city${trip}");
+                        $cityTrip = $this->het("city${trip}" . "_id");
                         if ($cityTrip) {
                                 $descr .= " &larr; " . $cityTrip->getDisplay($langue) . " : ";
-                                $descr .= TravelHelper::decodeSakanOptionCode($this->getVal("trip${trip}_option"));
+                                $descr .= TravelUtils::decodeSakanOptionCode($this->getVal("trip${trip}_option"));
                         }
                 }
                 return $descr;
@@ -2036,7 +2026,7 @@ class Booking extends BtbObject
         {
                 $descr = "";
                 for ($busNum = 1; $busNum <= 3; $busNum++) {
-                        $busObj = $this->het("bus$busNum");
+                        $busObj = $this->het("travel_bus$busNum" . "_id");
                         if ($busObj) {
                                 $seats_bus = trim(trim(trim($this->getVal("seats_bus$busNum")), "-"));
                                 if ($seats_bus) $descr .= $busObj->getNodeDisplay($langue) . " &larr; [" . $seats_bus . "]";
@@ -2055,7 +2045,7 @@ class Booking extends BtbObject
                 if (!$templateObj) throw new RuntimeException("sakanDefined : travel without template object !!!");
                 if ($templateObj->containResidence()) {
                         for ($trip = 1; $trip < $templateObj->trips_nb; $trip++) {
-                                $cityTrip = $this->het("city${trip}");
+                                $cityTrip = $this->het("city${trip}" . "_id");
                                 if ($cityTrip) {
                                         if (!$this->getVal("trip${trip}_option")) return false;
                                 } else return false;
@@ -2082,7 +2072,7 @@ class Booking extends BtbObject
                 $data["trips_nb"] = $templateObj->trips_nb;
                 $cityList = array();
                 for ($trip = 1; $trip < $data["trips_nb"]; $trip++) {
-                        $cityList[$trip] = $this->het("city${trip}");
+                        $cityList[$trip] = $this->het("city${trip}" . "_id");
                 }
 
                 $data["cityList"] = $cityList;

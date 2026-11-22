@@ -440,7 +440,7 @@ $calendar_tr =
                                                                         list($week_period_enum, $period_type_enum, $yperiod_id, $period_nb_days, $period_nb_nights, $report) = $travelFoundItem->getTravelProps();
                                                         ?>
 
-                                                                        <div class="list go_<?php echo  $travelFoundItem->start_day_part ?> return_<?php echo  $travelFoundItem->end_day_part ?> buscateg_<?php echo  $travelFoundItem->travel_level ?> ">
+                                                                        <div class="list go_<?php echo  $travelFoundItem->start_day_part ?> return_<?php echo  $travelFoundItem->end_day_part ?> buscateg_<?php echo  $travelFoundItem->getVal("travel_level") ?> ">
                                                                                 <div class="list-con">
                                                                                         <div class="right-side">
                                                                                                 <?php echo  $travelFoundItem->showTravelCompanyLogo(); ?>
@@ -463,21 +463,21 @@ $calendar_tr =
                                                                                                                 الإنطلاق من <?php echo  $travelFoundItem->start_place ?>
                                                                                                         </p>
                                                                                                         <span class='btb_time'>
-                                                                                                                <?php echo  $travelFoundItem->planned_start_time ?>
+                                                                                                                <?php echo  $travelFoundItem->printAttribute("planned_start_time"); ?>
                                                                                                         </span>
                                                                                                         <span>
                                                                                                                 <?php echo  $travelFoundItem->tvf("start_day_part", $lang) ?>
                                                                                                         </span>
                                                                                                 </h4>
-                                                                                                <strong class="bus-class-name bus-travel-categ-<?php echo  $travelFoundItem->travel_level ?>"><?php echo  $travelFoundItem->decode("travel_level"); ?></strong>
+                                                                                                <strong class="bus-class-name bus-travel-categ-<?php echo  $travelFoundItem->getVal("travel_level") ?>"><?php echo  $travelFoundItem->decode("travel_level"); ?></strong>
                                                                                                 <div class="bus-icon">
                                                                                                         <i class="material-icons">directions_bus</i>
                                                                                                         <span>
                                                                                                         </span>
                                                                                                 </div>
                                                                                                 <h5>
-                                                                                                        <p> العودة إلى <?php echo  $travelFoundItem->arrival_place ?></p>
-                                                                                                        <span class='btb_time'><?php echo  $travelFoundItem->planned_end_time ?></span>
+                                                                                                        <p> العودة إلى <?php echo $departure_city_name ?></p>
+                                                                                                        <span class='btb_time'><?php echo  $travelFoundItem->printAttribute("planned_end_time"); ?></span>
                                                                                                         <span><?php echo  $travelFoundItem->tvf("end_day_part", $lang) ?></span>
                                                                                                         <span class='tperiod'><?php echo  $period_nb_days ?> يوم</span>
                                                                                                 </h5>
@@ -491,7 +491,7 @@ $calendar_tr =
                                                                                                         </button>
                                                                                                 </div>
                                                                                                 <h4>
-                                                                                                        <span class='btb_price'><? echo $price_std ?>.00</span>
+                                                                                                        <span class='btb_price'><?php echo $price_std ?>.00</span>
                                                                                                         <span>ريال للمقعد</span>
                                                                                                 </h4>
                                                                                         </div>
@@ -503,7 +503,9 @@ $calendar_tr =
                                                                 <div class='booking_info'> عدد الرحلات المتوفرة : <?php echo count($travelFoundList) ?></div>
                                                                 <?php
                                                         } else {
-
+                                                                $allCount = 0;
+                                                                /*
+                                                                $allCount = $foundProgramsListCount + $foundBiggerProgramsListCount + $foundSmallerProgramsListCount;
                                                                 if ($foundProgramsListCount > 0) {
                                                                 ?>
                                                                         <div class='booking_warning'> يوجد <?php echo $foundProgramsListCount ?> برنامج تحت الإعداد موافق للمعايير المدخلة ولكن لا يوجد رحلات مفتوحة حاليا</div>
@@ -520,11 +522,11 @@ $calendar_tr =
                                                                 ?>
                                                                         <div class='booking_warning'>إن شئت عميلنا العزيز هنالك برنامج <?php echo $smaller_period ?> يوم وليس <?php echo $period ?> يوم</div>
                                                                 <?php
-                                                                }
+                                                                }*/
 
                                                                 if (!$allCount) {
                                                                 ?>
-                                                                        <div class='booking_warning'>نأسف، لا يوجد عند عملائنا حاليا برامج تطابق هذه المعايير</div>
+                                                                        <div class='booking_warning'>نأسف، لا يوجد حاليا برامج تطابق هذه المعايير</div>
 
                                                                 <?php
                                                                 }

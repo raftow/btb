@@ -4,7 +4,7 @@ $file_dir_name = dirname(__FILE__);
 
 
 
-class TravelHelper extends AFWRoot
+class TravelUtils extends AFWRoot
 {
 
         public static function decomposeBedOptions($nb_beds, $context = "", $root = true)

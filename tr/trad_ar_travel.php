@@ -39,8 +39,8 @@ $trad["travel"]["end_day_part.morning"] = "صباحا";
 $trad["travel"]["end_day_part.evening"] = "مساءً";
 $trad["travel"]["end_day_part.night"] = "ليلا";
 
-$trad["travel"]["start_place"] = "مكان المغادرة";
-$trad["travel"]["start_location"] = "رابط مكان المغادرة على الخريطة";
+$trad["travel"]["start_place"] = "مكان المغادرة والعودة";
+$trad["travel"]["start_location"] = "رابط مكان المغادرة والعودة على الخريطة";
 
 $trad["travel"]["arrival_place"] = "نقطة اللقاء للعودة";
 $trad["travel"]["arrival_location"] = "رابط موقع نقطة اللقاء للعودة ";

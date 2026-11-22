@@ -11,7 +11,7 @@ $file_dir_name = dirname(__FILE__);
 class Hotel extends BtbObject
 {
 
-    private $my_hotel_pricing_matrix = array();
+    private static $my_hotel_pricing_matrix = array();
 
     public static $MY_ATABLE_ID = 13777;
 
@@ -271,11 +271,26 @@ class Hotel extends BtbObject
 
         $color = "green";
         $title_ar = "إنشاء آلي للغرف حسب المواصفات";
-        $pbms["ah12yU"] = array("METHOD" => "genereRooms", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 4);
+        $pbms["ah12yU"] = array("METHOD" => "genereRooms", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 5);
 
         $color = "green";
         $title_ar = "إعادة تطبيق مواصفات الأدوار";
         $pbms["asd14i"] = array("METHOD" => "applyfloorsSpecs", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 4,);
+
+
+        $color = "blue";
+        $title_ar = "تحديث جدول التسعيرات";
+        $methodName = "genereMyHotelPricings";
+        $pbms[AfwStringHelper::hzmEncode($methodName)] = array(
+            "METHOD" => $methodName,
+            "COLOR" => $color,
+            "LABEL_AR" => $title_ar,
+            "PUBLIC" => true,
+            "BF-ID" => "",
+            'STEP' => 6,
+        );
+
+
 
 
 
@@ -583,6 +598,7 @@ class Hotel extends BtbObject
 
     public function getPhotoPathList()
     {
+        AfwAutoLoader::addModule("workflow");
         $hotelFileList = $this->get("hotelFileList");
         $photo_path_arr = array();
         $title_arr = array();
@@ -709,60 +725,85 @@ class Hotel extends BtbObject
 
     public function loadHotelPricing($room_size, $week_period_enum, $period_type_enum, $yperiod_id)
     {
-        $found_rep = "تسعيرة عثر عليها سايقا";
         $hotel_id = $this->getId();
+        return self::getHotelPrice($hotel_id, $room_size, $week_period_enum, $period_type_enum, $yperiod_id);
+    }
 
-        /* if($this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]=="PRICE_NOT_FOUND")
+    public static function getHotelPrice($hotel_id, $room_size, $week_period_enum, $period_type_enum, $yperiod_id)
+    {
+        /* if(self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]=="PRICE_NOT_FOUND")
               {
                   throw new AfwRuntimeException("case PRICE_NOT_FOUND in my cache");
               }*/
+        $found_case = "";
 
-        if ($this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
-            return array($found_rep, $this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]);
+        if (self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
+            $found_case = "تسعيرة عثر عليها سايقا";
+            return array($found_case, self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]);
         }
 
 
-        $file_dir_name = dirname(__FILE__);
+        // $file_dir_name = dirname(__FILE__);
         // require_once("$file_dir_name/../btb/hotel_pricing.php");
 
 
-        if (!$this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
-            $this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = HotelPricing::loadByMainIndex($hotel_id, $room_size, $week_period_enum, $period_type_enum, $yperiod_id, $create_obj_if_not_found = false);
-            $found_rep = "تم العثور على التسعيرة المناسبة بدون أي تغيير";
+        if (!self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
+            $hpObj = HotelPricing::loadByMainIndex($hotel_id, $room_size, $week_period_enum, $period_type_enum, $yperiod_id, $create_obj_if_not_found = false);
+            if ($hpObj) {
+                self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = $hpObj->getVal("price");
+                $found_case = "تم العثور على التسعيرة المناسبة بدون أي تغيير";
+            }
         }
-        if (!$this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
-            if ($yperiod_id)
-                $this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = HotelPricing::loadByMainIndex($hotel_id, $room_size, 0, $period_type_enum, $yperiod_id, $create_obj_if_not_found = false);
-            $found_rep = "تم العثور على التسعيرة المناسبة مع عدم اعتبار ويكاند أو ليس ويكاند";
+        if (!self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
+            if ($yperiod_id) {
+                $hpObj = HotelPricing::loadByMainIndex($hotel_id, $room_size, 0, $period_type_enum, $yperiod_id, $create_obj_if_not_found = false);
+                if ($hpObj) {
+                    self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = $hpObj->getVal("price");
+                    $found_case = "تم العثور على التسعيرة المناسبة مع عدم اعتبار ويكاند أو ليس ويكاند";
+                }
+            }
         }
-        if (!$this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
-            if ($yperiod_id)
-                $this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = HotelPricing::loadByMainIndex($hotel_id, $room_size, $week_period_enum, $period_type_enum, 0, $create_obj_if_not_found = false);
-            $found_rep = "تم العثور على التسعيرة المناسبة مع عدم اعتبار مسمى الموسم";
+        if (!self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
+            if ($yperiod_id) {
+                $hpObj = HotelPricing::loadByMainIndex($hotel_id, $room_size, $week_period_enum, $period_type_enum, 0, $create_obj_if_not_found = false);
+                if ($hpObj) {
+                    self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = $hpObj->getVal("price");
+                    $found_case = "تم العثور على التسعيرة المناسبة مع عدم اعتبار مسمى الموسم";
+                }
+            }
         }
-        if (!$this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
-            $this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = HotelPricing::loadByMainIndex($hotel_id, $room_size, 0, $period_type_enum, 0, $create_obj_if_not_found = false);
-            $found_rep = "تم العثور على التسعيرة المناسبة مع عدم اعتبارمسمى الموسم وويكاند أو ليس ويكاند";
+        if (!self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
+            $hpObj = HotelPricing::loadByMainIndex($hotel_id, $room_size, 0, $period_type_enum, 0, $create_obj_if_not_found = false);
+            if ($hpObj) {
+                self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = $hpObj->getVal("price");
+                $found_case = "تم العثور على التسعيرة المناسبة مع عدم اعتبار مسمى الموسم وويكاند أو ليس ويكاند";
+            }
         }
 
-        if (!$this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
-            $this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = HotelPricing::loadByMainIndex($hotel_id, $room_size, $week_period_enum, 0, 0, $create_obj_if_not_found = false);
-            $found_rep = "تم العثور على التسعيرة المناسبة مع عدم اعتبار موسم أو ليس موسم";
+        if (!self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
+            $hpObj = HotelPricing::loadByMainIndex($hotel_id, $room_size, $week_period_enum, 0, 0, $create_obj_if_not_found = false);
+            if ($hpObj) {
+                self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = $hpObj->getVal("price");
+                $found_case = "تم العثور على التسعيرة المناسبة مع عدم اعتبار موسم أو ليس موسم";
+            }
         }
 
-        if (!$this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
-            $this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = HotelPricing::loadByMainIndex($hotel_id, $room_size, 0, 0, 0, $create_obj_if_not_found = false);
-            $found_rep = "تم العثور على التسعيرة المناسبة مع عدم اعتبارالفترة الزمنية";
+        if (!self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
+            $hpObj = HotelPricing::loadByMainIndex($hotel_id, $room_size, 0, 0, 0, $create_obj_if_not_found = false);
+            if ($hpObj) {
+                self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = $hpObj->getVal("price");
+                $found_case = "تم العثور على التسعيرة المناسبة مع عدم اعتبارالفترة الزمنية";
+            }
         }
 
-        if (!$this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
-            $found_rep = "لم يتم العثور على التسعيرة";
-            $this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = "PRICE_NOT_FOUND";
+        if (!self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]) {
+            $found_case = "لم يتم العثور على التسعيرة";
+            self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"] = "PRICE_NOT_FOUND";
         }
 
 
 
-        return array($found_rep, $this->my_hotel_pricing_matrix["$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]);
+        return array($found_case, self::$my_hotel_pricing_matrix["$hotel_id-$room_size-$week_period_enum-$period_type_enum-$yperiod_id"]);
     }
 
     // Price for 1 room for the period [$arrival_date, $leave_date[  ($leave_date not included)
@@ -783,18 +824,18 @@ class Hotel extends BtbObject
             $report_arr[] = "التاريخ : $hdate في أي فترة ؟ ";
             $report_arr[] = $report;
 
-            list($found_rep, $myHotelPricingObject) = $this->loadHotelPricing($room_size, $week_period_enum, $period_type_enum, $yperiod_id);
+            list($found_case, $myHotelPrice, $hpId) = $this->loadHotelPricing($room_size, $week_period_enum, $period_type_enum, $yperiod_id);
 
-            if ($myHotelPricingObject and ($myHotelPricingObject != "PRICE_NOT_FOUND")) {
-                if ($myHotelPricingObject->attributeIsApplicable("price")) {
-                    $uprice = round(floatval($myHotelPricingObject->getVal("price")));
+            if ($myHotelPrice and ($myHotelPrice != "PRICE_NOT_FOUND")) {
+                if ($myHotelPrice) {
+                    $uprice = $myHotelPrice;
                     $report_arr[] = "$total_price + $uprice";
                     $total_price += $uprice;
                     $report_arr[] = "$total_price";
                 } else {
                     return array(-22, "لا يوجد تسعيرة لهذا الصنف من الغرف : سعة=$room_size ويكاند=$week_period_enum موسم=$period_type_enum مسمى الموسم = $yperiod_id");
                 }
-                //$report_arr[] = "[$found_rep]";                          
+                //$report_arr[] = "[$found_case]";                          
             } else {
                 $report_arr[] = "لم يتم العثور على تسعيرة لهذا التاريخ : $hdate";
                 return array(-11, "لم يتم العثور على تسعيرة لهذا التاريخ : $hdate في الفندق $this [مسلسل=$hotel_id] غرفة $room_size سرير.");
@@ -808,16 +849,16 @@ class Hotel extends BtbObject
     {
         $report_arr = array();
         $hotel_id = $this->getId();
-        list($found_rep, $myHotelPricingObject) = $this->loadHotelPricing($room_size, $week_period_enum, $period_type_enum, $yperiod_id);
+        list($found_case, $myHotelPrice, $hpId) = $this->loadHotelPricing($room_size, $week_period_enum, $period_type_enum, $yperiod_id);
 
-        if ($myHotelPricingObject and ($myHotelPricingObject != "PRICE_NOT_FOUND")) {
-            $report_arr[] = $found_rep;
+        if ($myHotelPrice and ($myHotelPrice != "PRICE_NOT_FOUND")) {
+            $report_arr[] = $found_case;
         } else {
             $report_arr[] = "لم يتم العثور على تسعيرة عامة لجميع الفترات";
             return array(-1, "can't find prices for this hotel [$hotel_id] and room size [$room_size].");
         }
-        $hpId = $myHotelPricingObject->getId();
-        $total_price = round(floatval($myHotelPricingObject->getVal("price"))) * $days_nb;
+        // $hpId = $myHotelPricingObject->getId();
+        $total_price = $myHotelPrice * $days_nb;
         $report_arr[] = "مرجع التسعيرة المعتمدة : $hpId";
         $report_arr[] = "سعر تكلفة الغرفة ل $days_nb يوم : $total_price";
         // $report_arr[] = "وفقا للخيارات التالية : @todo";
@@ -1025,5 +1066,17 @@ class Hotel extends BtbObject
         if ($attribute == "ul_cl_files") return true;
         if ($attribute == "photo") return true;
         return false;
+    }
+
+
+    public function genereMyHotelPricings($lang = "ar")
+    {
+        /**
+         * @var WorkBranch $workBranchObj
+         */
+        $workBranchObj = $this->het("work_branch_id");
+        if (!$workBranchObj) return ["work Branch is not defined", ""];
+
+        return $workBranchObj->genereHotelPricings($lang, $this);
     }
 }

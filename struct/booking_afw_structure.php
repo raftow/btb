@@ -2,6 +2,39 @@
 <?php
 class BtbBookingAfwStructure
 {
+	// token separator = §
+	public static function initInstance(&$obj)
+	{
+		if ($obj instanceof Booking) {
+			$obj->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 3;
+			$obj->DISPLAY_FIELD = "";
+
+			// $obj->ENABLE_DISPLAY_MODE_IN_QEDIT=true;
+			$obj->ORDER_BY_FIELDS = "travel_id, idn_type_id, idn, mobile, traveler_type_id";
+
+
+
+			$obj->UNIQUE_KEY = array('travel_id', 'idn_type_id', 'idn', 'mobile', 'traveler_type_id');
+			$obj->editByStep = true;
+			$obj->editNbSteps = 12;
+			$obj->showQeditErrors = true;
+			$obj->showRetrieveErrors = true;
+			$obj->general_check_errors = true;
+			$obj->horizontalTabs = true;
+			// $obj->after_save_edit = array("class"=>'Booking',"attribute"=>'xxxx_id', "currmod"=>'btb',"currstep"=>2);
+			$obj->after_save_edit = array("mode" => "qsearch", "currmod" => 'btb', "class" => 'Booking', "submit" => true);
+		} else {
+			BookingArTranslator::initData();
+			BookingEnTranslator::initData();
+		}
+	}
+
+	/**
+	 * DB_STRUCTURE is the main source of configuration for the class 
+	 *    it is used in all the modules and methods to know how 
+	 *    to handle the class attributes
+	 * @var array
+	 */
 	public static $DB_STRUCTURE = array(
 
 
@@ -479,7 +512,6 @@ class BtbBookingAfwStructure
 		'traveler_type_id' => array(
 			'STEP' => 3,
 			'FGROUP' => 'ptravelers',
-			'SHORTNAME' => 'seattype',
 			'SEARCH' => false,
 			'QSEARCH' => false,
 			'SHOW' => true,

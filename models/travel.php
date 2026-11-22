@@ -215,7 +215,7 @@ class Travel extends BtbObject
 
                 $pbms = array();
 
-                //throw new AfwRuntimeException($this->travel_gdate." vs ".date("Y-m-d"));
+                //throw new AfwRuntimeException($this->getVal("travel_gdate")." vs ".date("Y-m-d"));
                 if ($this->getVal("travel_gdate") > date("Y-m-d")) {
                         $color = "green";
                         $title_ar = "تهيئة الرحلة وفتح الحجز";
@@ -440,14 +440,14 @@ class Travel extends BtbObject
 
         public function calcFirst_available_bus()
         {
-                list($travelBus,) = $this->relTbusList()->resetWhere("opened='Y'")->getFirst();
+                list($travelBus,) = $this->relTravelBusList()->resetWhere("opened='Y'")->getFirst();
                 if ($travelBus) return $travelBus->bus;
                 else return null;
         }
 
         public function getOpenBuses($limit = 2)
         {
-                return $this->relTbusList()->resetWhere("opened='Y'")->orderBy("bus_num asc")->limit($limit)->getList();
+                return $this->relTravelBusList()->resetWhere("opened='Y'")->orderBy("bus_num asc")->limit($limit)->getList();
         }
 
         public function getBusSeatsSelector($limit = 2, $travelers, $booking_id = 0, $bookingObj = null)
@@ -522,7 +522,7 @@ class Travel extends BtbObject
                 $eps = 0.1;  // 10 halala
                 $server_db_prefix = AfwSession::currentDBPrefix();
 
-                $travelBusList = $this->relTbusList()->resetWhere("bus_id in (select id from " . $server_db_prefix . "btb.bus where parent_bus_id = $busParentId) and abs(total_price-$total_price) < $eps")->getList();
+                $travelBusList = $this->relTravelBusList()->resetWhere("bus_id in (select id from " . $server_db_prefix . "btb.bus where parent_bus_id = $busParentId) and abs(total_price-$total_price) < $eps")->getList();
                 $count_approved = 0;
                 $errors_arr = array();
                 foreach ($travelBusList as $travelBusItem) {
@@ -574,7 +574,12 @@ class Travel extends BtbObject
                 list($travelers_nb, $nbseats, $estimated_needed_buses) = $this->calcBuses_needed_nb();
                 $current_nb_buses = count($travelBusList);
                 if ($estimated_needed_buses > $current_nb_buses) {
-                        $pbHtml = "<br>عدد المركبات المطلوب بحسب عدد المسافرين المتوقع : $estimated_needed_buses\n <br>عدد المركبات الحالي :$current_nb_buses ";
+                        $this->genereMyBuses($lang);
+                }
+
+                $current_nb_buses = $this->relTravelBusList()->count();
+                if ($estimated_needed_buses > $current_nb_buses) {
+                        $pbHtml = "<br>عدد المسافرين المتوقع $travelers_nb: <br>عدد المركبات المطلوب إذا : $estimated_needed_buses\n <br>عدد المركبات الحالي :$current_nb_buses ";
                         $solutionHtml = "<br>قم بتحديث المركبات";
                         return array("عدد المركبات الحالي لا يكفي لعدد المسافرين المتوقع. $pbHtml.$solutionHtml", "");
                 }
@@ -850,7 +855,7 @@ class Travel extends BtbObject
                 //@todo
                 $previous_created_buses = 0;
 
-                $max_buses_to_create = $previous_created_buses + 3;
+                $max_buses_to_create = $previous_created_buses + 11;
                 if ($estimated_needed_buses <= $max_buses_to_create) $nb_buses_to_create = $estimated_needed_buses;
                 else $nb_buses_to_create = $max_buses_to_create;
 
@@ -1022,16 +1027,16 @@ class Travel extends BtbObject
 
         public function calcStart_day_part()
         {
-                // throw new AfwRuntimeException("planned_start_time = ".$this->planned_start_time);   
-                if (($this->planned_start_time > '05:00') and ($this->planned_start_time <= '12:00')) return "morning";
-                if (($this->planned_start_time > '12:00') and ($this->planned_start_time <= '19:30')) return "evening";
+                // throw new AfwRuntimeException("planned_start_time = ".$this->printAttribute("planned_start_time"););   
+                if (($this->printAttribute("planned_start_time") > '05:00') and ($this->printAttribute("planned_start_time") <= '12:00')) return "morning";
+                if (($this->printAttribute("planned_start_time") > '12:00') and ($this->printAttribute("planned_start_time") <= '19:30')) return "evening";
                 return "night";
         }
 
         public function calcEnd_day_part()
         {
-                if (($this->planned_end_time > '05:00') and ($this->planned_end_time <= '12:00')) return "morning";
-                if (($this->planned_end_time > '12:00') and ($this->planned_end_time <= '19:30')) return "evening";
+                if (($this->printAttribute("planned_end_time") > '05:00') and ($this->printAttribute("planned_end_time") <= '12:00')) return "morning";
+                if (($this->printAttribute("planned_end_time") > '12:00') and ($this->printAttribute("planned_end_time") <= '19:30')) return "evening";
                 return "night";
         }
 
@@ -1205,7 +1210,7 @@ class Travel extends BtbObject
                 if ($templateObj) {
                         $trips_nb = intval($templateObj->getVal("trips_nb"));
                         for ($trip = 1; $trip < $trips_nb; $trip++) {
-                                $tripCityObj = $templateObj->het("city${trip}_id");
+                                $tripCityObj = $templateObj->het("city$trip" . "_id");
                                 list($arrival_date, $arrival_time, $leave_date, $leave_time, $sakan_duration) = $this->getArrivalAndLeaveDateTimesForCity($trip);
                                 //if($sakan_duration == 0) throw new AfwRuntimeException("list($arrival_date, $arrival_time, $leave_date, $leave_time, $sakan_duration) = this->getArrivalAndLeaveDateTimesForCity($trip);");
                                 if ($tripCityObj) $skan_details_arr[$trip] = array(
@@ -1304,9 +1309,12 @@ class Travel extends BtbObject
         public function getPublicSeatsPrices()
         {
                 $templateObj = $this->het("travel_template_id");
+                /**
+                 * @var TravelTemplate $templateObj
+                 */
                 if ($templateObj) {
                         list($week_period_enum, $period_type_enum, $yperiod_id, $nb_days, $nb_nights, $report) = $this->getTravelProps();
-                        // throw new AfwRuntimeException("list(we=$week_period_enum, per=$period_type_enum, yper=$yperiod_id, nbdays=$nb_days, nbnights=$nb_nights, report=$report) = $this -> getTravelProps()");
+                        // throw new AfwRuntimeException("list(we=$week_period_enum, per=$period_type_enum, yper=$yperiod_id, nbdays=$nb_days, nbnights=$nb_nights, report=$report) = $this => getTravelProps()");
                         return $templateObj->getPublicSeatsPrices($week_period_enum, $period_type_enum, $yperiod_id);
                 } elseif (!$templateObj) throw new AfwRuntimeException("can not get prices for travel without defined travel template");
         }
@@ -1334,11 +1342,11 @@ class Travel extends BtbObject
          * @return array
          */
 
-        public function getSakanPriceForOption($option_row, $public_sakan_prices = null, $city_id = null)
+        public function getSakanPriceForOption($option_row, $public_sakan_prices = null, $city_id = null, $sakan_duration = null,)
         {
                 $price = 0.0;
                 $report = "";
-                if (!$public_sakan_prices) list($sakan_duration, $public_sakan_prices) = $this->retrieveTravelPublicSakanPrices($city_id);
+                if (!$public_sakan_prices or !$sakan_duration) list($sakan_duration, $public_sakan_prices) = $this->retrieveTravelPublicSakanPrices($city_id);
                 for ($rs = 1; $rs <= 6; $rs++) {
                         $price_rs = $public_sakan_prices[$rs];
                         $nb_rs = $option_row["rs$rs"];
@@ -1358,7 +1366,10 @@ class Travel extends BtbObject
         public function getSeatPriceByCateg($categ)
         {
                 $public_seats_prices = $this->getPublicSeatsPrices();
-                return $public_seats_prices[$categ];
+                // throw new AfwRuntimeException("rafik 17/11 416 categ=[$categ] $this => getPublicSeatsPrices() : " . var_export($public_seats_prices, true));
+                $return = $public_seats_prices[$categ];
+                if (!trim($return)) throw new AfwRuntimeException("rafik 17/11 417 categ=[$categ] return=[$return] $this => getPublicSeatsPrices() : " . var_export($public_seats_prices, true));
+                return $return;
         }
 
         public function getSeatsPricesMatrix()
@@ -1368,7 +1379,7 @@ class Travel extends BtbObject
                 foreach ($public_seats_prices as $cat => $price) {
                         $row = array();
                         $row["price"] = $price;
-                        $row["name"] = TravelHelper::decodeSeatCategory($cat);
+                        $row["name"] = TravelUtils::decodeSeatCategory($cat);
                         $prices_matrix[] = $row;
                 }
                 return $prices_matrix;
@@ -1382,7 +1393,7 @@ class Travel extends BtbObject
                         $row = array();
                         $row["price"] = $price;
                         $row["duration"] = $sakan_duration;
-                        $row["name"] = TravelHelper::decodeSakanRoomSize($rs);
+                        $row["name"] = TravelUtils::decodeSakanRoomSize($rs);
                         $prices_matrix[] = $row;
                 }
                 return $prices_matrix;
@@ -1399,8 +1410,8 @@ class Travel extends BtbObject
                 // العوائل لهم فقط اقل شيء غرفة سريرين
                 if (($traveler_type != 1) and ($nb_beds < 2)) $nb_beds = 2;
 
-                $options_arr = TravelHelper::decomposeBedOptions($nb_beds);
-                // echo("before pricing : TravelHelper::decomposeBedOptions($nb_beds) => ".var_export($options_arr,true));
+                $options_arr = TravelUtils::decomposeBedOptions($nb_beds);
+                // echo("before pricing : TravelUtils::decomposeBedOptions($nb_beds) => ".var_export($options_arr,true));
 
                 list($sakan_duration, $public_sakan_prices) = $this->retrieveTravelPublicSakanPrices($city_id);
                 // throw new AfwRuntimeException("public_sakan_prices : Travel($this->id)::retrieveTravelPublicSakanPrices() => ".var_export($public_sakan_prices,true));
@@ -1410,7 +1421,7 @@ class Travel extends BtbObject
                         if ($skip_option) {
                                 unset($options_arr[$or]);
                         } else {
-                                list($price_for_option, $price_report_for_option) = $this->getSakanPriceForOption($option_row, $public_sakan_prices);
+                                list($price_for_option, $price_report_for_option) = $this->getSakanPriceForOption($option_row, $public_sakan_prices, $city_id, $sakan_duration);
                                 $options_arr[$or]["price"] = $price_for_option;
                                 $options_arr[$or]["duration"] = $sakan_duration;
                                 $options_arr[$or]["price_report"] = $price_report_for_option;
@@ -1447,7 +1458,7 @@ class Travel extends BtbObject
                 $trips_nb = $templateObj->trips_nb;
                 $cityList = array();
                 for ($trip = 1; $trip < $trips_nb; $trip++) {
-                        $cityList[$trip] = $this->het("city${trip}_id");
+                        $cityList[$trip] = $this->het("city$trip" . "_id");
                 }
 
                 $html = "";
@@ -1565,7 +1576,7 @@ class Travel extends BtbObject
 
         public function calcDays_remain()
         {
-                return AfwDateHelper::diff_date($this->travel_gdate, date("Y-m-d"));
+                return AfwDateHelper::diff_date($this->getVal("travel_gdate"), date("Y-m-d"));
         }
 
 
@@ -1576,6 +1587,14 @@ class Travel extends BtbObject
                 $wars_arr = [];
                 $travelBusList = $this->get("travelBusList");
                 foreach ($travelBusList as $travelBusItem) {
+                        /**
+                         * @var Bus $busItem
+                         */
+                        $busItem = $travelBusItem->het("bus_id");
+                        list($err, $info, $war) = $busItem->makeBusPublishedReadyForUse($lang);
+                        if ($err) $errors_arr[] = $err;
+                        if ($info) $infos_arr[] = $info;
+                        if ($war) $wars_arr[] = $war;
                         /**
                          * @var TravelBus $travelBusItem
                          */
@@ -2095,6 +2114,7 @@ class Travel extends BtbObject
 
         public function notGeneratedHotels()
         {
+                $all_gen_h_id_arr = [];
                 $travelHotelList = $this->get("travelHotelList");
                 foreach ($travelHotelList as $travelHotelItem) {
                         $all_gen_h_id_arr[$travelHotelItem->getVal("hotel_id")] = true;
@@ -2289,7 +2309,7 @@ class Travel extends BtbObject
                         if ($error_app) $errors_arr[] = $error_app;
                         if ($info_app) $infos_arr[] = $info_app;
                 } elseif ($this->getVal("travel_status_id") != self::$TRAVEL_STATUS_ORGANIZE) {
-                        $infos_arr[] = "approve hotels skipped : status=" . $this->decode("status");
+                        $infos_arr[] = "approve hotels skipped : status=" . $this->decode("travel_status_id");
                 } else {
                         if ($this->containResidence()) $infos_arr[] = $this->tm("not yet time to approve hotels", $lang) . " : " . $this->tm("remain", $lang) . " = " . $this->days_remain . $this->tm(" vs limit = ", $lang) . $nb_days_before_booking;
                         else $infos_arr[] = "approve hotels ignored : no sakan for this travel";
@@ -2443,7 +2463,7 @@ class Travel extends BtbObject
         public function calcTravel_dow()
         {
                 $lang = AfwLanguageHelper::getGlobalLanguage();
-                return AfwDateHelper::dayNameForDate(AfwDateHelper::hijriToGreg($this->travel_date), $lang);
+                return AfwDateHelper::dayNameForDate(AfwDateHelper::hijriToGreg($this->getVal("travel_date")), $lang);
         }
 
 
@@ -2451,20 +2471,21 @@ class Travel extends BtbObject
         public function calcReturn_dow()
         {
                 $lang = AfwLanguageHelper::getGlobalLanguage();
-                return AfwDateHelper::dayNameForDate(AfwDateHelper::hijriToGreg($this->return_date), $lang);
+                return AfwDateHelper::dayNameForDate(AfwDateHelper::hijriToGreg($this->getVal("return_date")), $lang);
         }
 
 
 
-        public function calcTravel_company_full_name()
+        public function calcTravel_company_full_name($what = 'value')
         {
+                $lang = AfwLanguageHelper::getGlobalLanguage();
                 $branchObj = $this->het("work_branch_id");
                 if (!$branchObj) return "شركة غير معروفة";
 
-                $full_name = $branchObj->name;
+                $full_name = $branchObj->getVal("name_$lang");
                 if (!$full_name) $full_name = "TB-id-" . $branchObj->id;
-                $companyObj = $branchObj->hetParent();
-                if ($companyObj) $full_name = $companyObj->name . "-" . $full_name;
+                /* $companyObj = $branchObj->het("parent_id");
+                if ($companyObj) $full_name = $companyObj->name . "-" . $full_name;*/
                 return $full_name;
         }
 
@@ -2482,17 +2503,17 @@ class Travel extends BtbObject
                         //@todo we need here a short name
                         $branch_name = $companyObj->name;
                         $work_branch_id = $companyObj->id;
-                        if ($companyObj->isBranch()) $companyObj = $companyObj->hetParent();
+                        if ($companyObj->isBranch()) $companyObj = $companyObj->het("parent_id");
                         if ($companyObj) $orgunitObj = $companyObj->het("orgunit_id");
                 }
 
                 if (!$orgunitObj) {
-                        $return = "<img src=\"../btb/pic/logo-company-none.png\" alt=\"\" style=\"margin-top:5px;height: ${height}px;border-radius: 40%;\">";
+                        $return = "<img src=\"../btb/pic/logo-company-none.png\" alt=\"\" style=\"margin-top:5px;height: ${height}px;\">"; // border-radius: 40%;
                 } else {
                         $crm_code = $orgunitObj->getVal("crm_code");
                         if (!$crm_code) $crm_code = $orgunitObj->getVal("hrm_code");
                         if (!$crm_code) "choose_crm_code_for_your_company";
-                        $return = "<img src=\"../btb/pic/logo-company-$crm_code.png\" alt=\"\" style=\"margin-top:5px;height: ${height}px;border-radius: 40%;\">";
+                        $return = "<img src=\"../btb/pic/logo-company-$crm_code.png\" alt=\"\" style=\"margin-top:5px;height: ${height}px;\">"; // border-radius: 40%;
                 }
 
                 if ($branch_name and $showBranchName) $return .= "<div class=\"travel_company_name company-$crm_code branch-$work_branch_id\">$branch_name</div>";
@@ -2500,7 +2521,10 @@ class Travel extends BtbObject
                 return $return;
         }
 
-        public function showTravelInfos() {}
+        public function showTravelInfos()
+        {
+                return ""; // "@todo:showTravelInfos";
+        }
 
         public function calcTrip01_title()
         {

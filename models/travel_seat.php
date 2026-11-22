@@ -22,17 +22,7 @@ class TravelSeat extends BtbObject
     public function __construct()
     {
         parent::__construct("travel_seat", "id", "btb");
-        $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-        $this->DISPLAY_FIELD = array('travel_bus_id', 'seat_code');
-        $this->ORDER_BY_FIELDS = "travel_bus_id, seat_code";
-        $this->horizontalTabs = true;
-
-
-        $this->UNIQUE_KEY = array('travel_bus_id', 'seat_code');
-
-        $this->showQeditErrors = true;
-        $this->showRetrieveErrors = true;
-        // $this->after_save_edit = array("class"=>Road,"attribute"=>road_id, "currmod"=> 'btb',"currstep"=>9);
+        BtbTravelSeatAfwStructure::initInstance($this);
     }
 
     public function getBookedTypeSeat()
@@ -298,7 +288,7 @@ class TravelSeat extends BtbObject
 
     public function getSeatCategoryCode()
     {
-        $seat_category = intval($this->getVal("seat_category"));
+        $seat_category = intval($this->getVal("seat_category_enum"));
         return self::code_of_seat_category($seat_category);
     }
 

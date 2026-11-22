@@ -543,7 +543,7 @@ class TravelHotel extends BtbObject
              // require_once "$file_dir_name/../btb/hroom.php";
              
              $hrObj = HRoom::loadByMainIndex($hotel_id, ...., $create_obj_if_not_found=false);
-             if((!$hrObj) or (!$hrObj->getId())) return array('STATUS' =>'SEAT_NOT_FOUND', 'MESSAGE' =>"booking error : room $room_num not defined in hotel $hotel_id !");
+             if((!$hrObj) or (!$hrObj->getId())) return array('STATUS' =>'SEAT _NOT_FOUND', 'MESSAGE' =>"booking error : room $room_num not defined in hotel $hotel_id !");
              */
         // ...
         throw new AfwRuntimeException("to implement");
@@ -820,7 +820,7 @@ class TravelHotel extends BtbObject
 
         $travel = $this->het("travel_id");
         if (!$travel) $sp_errors["travel_id"] = "خطأ حرج : رحلة غير محددة: رجاء التواصل مع مدير التطبيق";
-        $tcompany = $travel->hetCompany();
+        $tcompany = $travel->het("work_branch_id");
         if (!$tcompany) $sp_errors["travel_id"] = "خطأ حرج : شركة الرحلة غير محددة: رجاء التواصل مع مدير التطبيق";
 
         $hotel = $this->het("hotel_id");

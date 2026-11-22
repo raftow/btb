@@ -46,8 +46,8 @@ class TravelTemplateArTranslator
                 $trad["travel_template"]["city2_id"] = "المدينة المقصودة 2";
                 $trad["travel_template"]["city3_id"] = "المدينة المقصودة 3";
 
-                $trad["travel_template"]["start_place"] = "مكان المغادرة";
-                $trad["travel_template"]["start_location"] = "رابط مكان المغادرة على الخريطة";
+                $trad["travel_template"]["start_place"] = "مكان المغادرة والعودة";
+                $trad["travel_template"]["start_location"] = "رابط مكان المغادرة والعودة على الخريطة";
 
                 $trad["travel_template"]["arrival_place"] = "نقطة اللقاء للعودة";
                 $trad["travel_template"]["arrival_location"] = "رابط موقع نقطة اللقاء للعودة ";

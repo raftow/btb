@@ -372,11 +372,11 @@ class TravelService
 
         // ALTER TABLE `travel_seat` ADD week_period_enum,period_type_enum,yperiod_id;
         $sql_bloc_insert = "insert into " . $server_db_prefix . "btb.travel_seat(created_by,created_at,updated_by,updated_at,
-                    travel_bus_id, seat_code, seat_category, 
+                    travel_bus_id, seat_code, seat_category_enum, 
                     travel_template_id, week_period_enum, period_type_enum, yperiod_id, 
                     manuel, apply_for_all, active, version, booked, booking_id )
         select $me,now(),$me,now(),
-            tb.id,bs.seat_code,bs.seat_category,
+            tb.id,bs.seat_code,bs.seat_category_enum,
             t.travel_template_id, t.week_period_enum, t.period_type_enum, t.yperiod_id,
             'N','N','Y',0,'N',0
         from " . $server_db_prefix . "btb.travel t 
@@ -428,7 +428,7 @@ class TravelService
                 if ($travel_bus_id) {
                     $tsObj->select("travel_bus_id", $travel_bus_id);
                 }
-                $tsObj->select("seat_category", $sp_seat_category);
+                $tsObj->select("seat_category_enum", $sp_seat_category);
 
                 if (!$update_price_also_for_manuel_prices) {
                     $tsObj->select("manuel", "N");

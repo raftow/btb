@@ -214,7 +214,7 @@ class BusSeat extends BtbObject
 
     public function getSeatCategoryCode()
     {
-        $seat_category = intval($this->getVal('seat_category'));
+        $seat_category = intval($this->getVal('seat_category_enum'));
         return self::code_of_seat_category($seat_category);
     }
 

@@ -1264,6 +1264,7 @@ class BtbTravelTemplateAfwStructure
 			'TYPE' => 'FK',
 			'ANSWER' => 'bus',
 			'ANSMODULE' => 'btb',
+			'RELATION' => 'OneToMany',
 			'WHERE' => "work_branch_id in (0§list_bus_company_mfk§0) and bus_template_id=§bus_template_id§ and example='Y' and bus_level = §travel_level§",
 
 			'DEPENDENCIES' => array(
@@ -1271,6 +1272,7 @@ class BtbTravelTemplateAfwStructure
 				/* 1 => 'list_bus_company_mfk', as it is not in the same step, it will not be taken into account in the dependency, it will only cause a bug */
 			),
 			'SEARCH-BY-ONE' => false,
+
 			'DISPLAY' => true,
 			'DISPLAY-UGROUPS' => '',
 			'EDIT-UGROUPS' => '',

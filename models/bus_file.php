@@ -29,6 +29,7 @@ class BusFile extends BtbObject
 
         $this->showQeditErrors = true;
         $this->showRetrieveErrors = true;
+        $this->after_save_edit = array("class" => 'Bus', "attribute" => 'bus_id', "currmod" => 'btb', "currstep" => 3);
     }
 
     public static function loadById($id)

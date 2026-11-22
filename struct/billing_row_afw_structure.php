@@ -1,114 +1,432 @@
 
-<?php 
-        class BtbBillingRowAfwStructure
-        {
-                public static $DB_STRUCTURE = array(
+<?php
+class BtbBillingRowAfwStructure
+{
+	// token separator = §
+	public static function initInstance(&$obj)
+	{
+		if ($obj instanceof BillingRow) {
+			$obj->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 10;
+			$obj->DISPLAY_FIELD = "";
 
-                        
-			'id' => array('SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  
-				'TYPE' => 'PK',  'SEARCH-BY-ONE' => '',  'DISPLAY' => true,  'STEP' => 1,  
-				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
-				'CSS' => 'width_pct_100',),
+			// $obj->ENABLE_DISPLAY_MODE_IN_QEDIT=true;
+			$obj->ORDER_BY_FIELDS = "billing_id, row_num";
 
-			'billing_id' => array('SHORTNAME' => 'billing',  'SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 32,  'MAXLENGTH' => 32,  'REQUIRED' => true,  'UTF8' => false,  
-				'TYPE' => 'FK',  'ANSWER' => 'billing',  'ANSMODULE' => 'btb',  'AUTOCOMPLETE' => true,  
-				'RELATION' => 'OneToMany',  'READONLY' => true,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  'STEP' => 1,  
-				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'MANDATORY' => true,  'ERROR-CHECK' => true, 
-				'CSS' => 'width_pct_100',),
 
-			'unit_code' => array('SEARCH' => true,  'QSEARCH' => true,  'SHOW' => true,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 16,  'MAXLENGTH' => 16,  'MIN-SIZE' => 3,  'CHAR_TEMPLATE' => 'ALPHABETIC,NUMERIC,UNDERSCORE',  'REQUIRED' => true,  'UTF8' => true,  
-				'TYPE' => 'TEXT',  'READONLY' => true,  'SEARCH-BY-ONE' => true,  'DISPLAY' => true,  'STEP' => 1,  
-				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'MANDATORY' => true,  'ERROR-CHECK' => true, 
-				'CSS' => 'width_pct_100',),
 
-			'row_num' => array('SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 32,  'MAXLENGTH' => 32,  'REQUIRED' => true,  'UTF8' => false,  
-				'TYPE' => 'INT',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  'STEP' => 1,  
-				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'MANDATORY' => true,  'ERROR-CHECK' => true, 
-				'CSS' => 'width_pct_100',),
+			$obj->UNIQUE_KEY = array('billing_id', 'unit_code');
+			$obj->editByStep = true;
+			$obj->editNbSteps = 1;
+			$obj->showQeditErrors = true;
+			$obj->showRetrieveErrors = true;
+			$obj->general_check_errors = true;
+			$obj->horizontalTabs = true;
+			$obj->rowCategoryAttribute = "unit_code";
+			$obj->after_save_edit = array("class" => 'Billing', "attribute" => 'billing_id', "currmod" => 'btb', "currstep" => 2);
+			// $obj->after_save_edit = array("mode" => "qsearch", "currmod" => 'btb', "class" => 'BillingRow', "submit" => true);
+		} else {
+			BillingRowArTranslator::initData();
+			BillingRowEnTranslator::initData();
+		}
+	}
 
-			'description' => array('SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => false,  'SIZE' => 96,  'MAXLENGTH' => 196,  'MIN-SIZE' => 5,  'CHAR_TEMPLATE' => '',  'REQUIRED' => true,  'UTF8' => true,  
-				'TYPE' => 'TEXT',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  'STEP' => 1,  
-				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '',  'MANDATORY' => true,  'ERROR-CHECK' => true, 
-				'CSS' => 'width_pct_100',),
+	/**
+	 * DB_STRUCTURE is the main source of configuration for the class 
+	 *    it is used in all the modules and methods to know how 
+	 *    to handle the class attributes
+	 * @var array
+	 */
+	public static $DB_STRUCTURE = array(
 
-			'unit_amount' => array('SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => false,  'SIZE' => 32,  'MAXLENGTH' => 32,  'UTF8' => false,  
-				'TYPE' => 'FLOAT',  'FORMAT' => '*.2',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  'STEP' => 1,  
-				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
-				'CSS' => 'width_pct_100',),
 
-			'unit_nb' => array('SEARCH' => true,  'QSEARCH' => false,  'SHOW' => true,  'RETRIEVE' => true,  'EDIT' => true,  'QEDIT' => true,  'SIZE' => 32,  'MAXLENGTH' => 32,  'UTF8' => false,  
-				'TYPE' => 'INT',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => true,  'STEP' => 1,  
-				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
-				'CSS' => 'width_pct_100',),
+		'id' => array(
+			'SHOW' => true,
+			'RETRIEVE' => true,
+			'EDIT' => true,
+			'TYPE' => 'PK',
+			'SEARCH-BY-ONE' => '',
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'CSS' => 'width_pct_100',
+		),
 
-			'row_amount' => array('SEARCH' => true,  'QSEARCH' => false,  'SHOW' => false,  'RETRIEVE' => false,  'EDIT' => true,  'QEDIT' => false,  'SIZE' => 32,  'MAXLENGTH' => 32,  'UTF8' => false,  
-				'TYPE' => 'FLOAT',  'FORMAT' => '*.2',  'READONLY' => false,  'SEARCH-BY-ONE' => false,  'DISPLAY' => false,  'STEP' => 1,  
-				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
-				'CSS' => 'width_pct_100',),
+		'billing_id' => array(
+			'SHORTNAME' => 'billing',
+			'SEARCH' => true,
+			'QSEARCH' => false,
+			'SHOW' => true,
+			'RETRIEVE' => false,
+			'EDIT' => true,
+			'QEDIT' => true,
+			'SIZE' => 32,
+			'MAXLENGTH' => 32,
+			'REQUIRED' => true,
+			'UTF8' => false,
+			'TYPE' => 'FK',
+			'ANSWER' => 'billing',
+			'ANSMODULE' => 'btb',
+			'AUTOCOMPLETE' => true,
+			'RELATION' => 'OneToMany',
+			'READONLY' => true,
+			'SEARCH-BY-ONE' => false,
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'MANDATORY' => true,
+			'ERROR-CHECK' => true,
+			'CSS' => 'width_pct_100',
+		),
 
-		'credit' => array('SHOW' => true,  'RETRIEVE' => true,  'SIZE' => 16,  
-				'TYPE' => 'FLOAT',  'FORMAT' => '*.2',  
-				'CATEGORY' => 'FORMULA',  'SEARCH-BY-ONE' => '',  'DISPLAY' => true,  'STEP' => 1,  
-				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
-				'CSS' => 'width_pct_100',),
+		'unit_code' => array(
+			'SEARCH' => true,
+			'QSEARCH' => true,
+			'SHOW' => true,
+			'RETRIEVE' => false,
+			'EDIT' => true,
+			'QEDIT' => true,
+			'SIZE' => 16,
+			'MAXLENGTH' => 16,
+			'MIN-SIZE' => 3,
+			'CHAR_TEMPLATE' => 'ALPHABETIC,NUMERIC,UNDERSCORE',
+			'REQUIRED' => true,
+			'UTF8' => true,
+			'TYPE' => 'TEXT',
+			'READONLY' => true,
+			'SEARCH-BY-ONE' => true,
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'MANDATORY' => true,
+			'ERROR-CHECK' => true,
+			'CSS' => 'width_pct_100',
+		),
 
-		'debit' => array('SHOW' => true,  'RETRIEVE' => true,  'SIZE' => 16,  
-				'TYPE' => 'FLOAT',  'FORMAT' => '*.2',  
-				'CATEGORY' => 'FORMULA',  'SEARCH-BY-ONE' => '',  'DISPLAY' => true,  'STEP' => 1,  
-				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
-				'CSS' => 'width_pct_100',),
+		'row_num' => array(
+			'SEARCH' => true,
+			'QSEARCH' => false,
+			'SHOW' => true,
+			'RETRIEVE' => false,
+			'EDIT' => true,
+			'QEDIT' => true,
+			'SIZE' => 32,
+			'MAXLENGTH' => 32,
+			'REQUIRED' => true,
+			'UTF8' => false,
+			'TYPE' => 'INT',
+			'READONLY' => false,
+			'SEARCH-BY-ONE' => false,
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'MANDATORY' => true,
+			'ERROR-CHECK' => true,
+			'CSS' => 'width_pct_100',
+		),
 
-			'active' => array('SHOW-ADMIN' => true,  'RETRIEVE' => false,  'EDIT' => false,  'QEDIT' => false,  'DEFAUT' => 'Y',  
-				'TYPE' => 'YN',  'SEARCH-BY-ONE' => '',  'DISPLAY' => '',  'STEP' => 1,  
-				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
-				'CSS' => 'width_pct_100',),
+		'description' => array(
+			'SEARCH' => true,
+			'QSEARCH' => false,
+			'SHOW' => true,
+			'RETRIEVE' => true,
+			'EDIT' => true,
+			'QEDIT' => false,
+			'SIZE' => 96,
+			'MAXLENGTH' => 196,
+			'MIN-SIZE' => 5,
+			'CHAR_TEMPLATE' => '',
+			'REQUIRED' => true,
+			'UTF8' => true,
+			'TYPE' => 'TEXT',
+			'READONLY' => false,
+			'SEARCH-BY-ONE' => false,
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'MANDATORY' => true,
+			'ERROR-CHECK' => true,
+			'CSS' => 'width_pct_100',
+		),
 
-			'draft' => array('SHOW-ADMIN' => true,  'RETRIEVE' => false,  'EDIT' => false,  'QEDIT' => false,  'DEFAUT' => 'Y',  
-				'TYPE' => 'YN',  'SEARCH-BY-ONE' => '',  'DISPLAY' => '',  'STEP' => 1,  
-				'DISPLAY-UGROUPS' => '',  'EDIT-UGROUPS' => '', 
-				'CSS' => 'width_pct_100',),
+		'unit_amount' => array(
+			'SEARCH' => true,
+			'QSEARCH' => false,
+			'SHOW' => true,
+			'RETRIEVE' => true,
+			'EDIT' => true,
+			'QEDIT' => false,
+			'SIZE' => 32,
+			'MAXLENGTH' => 32,
+			'UTF8' => false,
+			'TYPE' => 'FLOAT',
+			'FORMAT' => '*.2',
+			'READONLY' => false,
+			'SEARCH-BY-ONE' => false,
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'CSS' => 'width_pct_100',
+		),
 
-                        'created_by'         => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'TECH_FIELDS-RETRIEVE' => true, 'RETRIEVE' => false, 
-                                                                'QEDIT' => false, 'TYPE' => 'FK', 'ANSWER' => 'auser', 'ANSMODULE' => 'ums', 'FGROUP' => 'tech_fields'),
+		'unit_nb' => array(
+			'SEARCH' => true,
+			'QSEARCH' => false,
+			'SHOW' => true,
+			'RETRIEVE' => true,
+			'EDIT' => true,
+			'QEDIT' => true,
+			'SIZE' => 32,
+			'MAXLENGTH' => 32,
+			'UTF8' => false,
+			'TYPE' => 'INT',
+			'READONLY' => false,
+			'SEARCH-BY-ONE' => false,
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'CSS' => 'width_pct_100',
+		),
 
-                        'created_at'            => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'TECH_FIELDS-RETRIEVE' => true, 'RETRIEVE' => false, 
-                                                                'QEDIT' => false, 'TYPE' => 'DATETIME', 'FGROUP' => 'tech_fields'),
+		'row_amount' => array(
+			'SEARCH' => true,
+			'QSEARCH' => false,
+			'SHOW' => false,
+			'RETRIEVE' => false,
+			'EDIT' => true,
+			'QEDIT' => false,
+			'SIZE' => 32,
+			'MAXLENGTH' => 32,
+			'UTF8' => false,
+			'TYPE' => 'FLOAT',
+			'FORMAT' => '*.2',
+			'READONLY' => false,
+			'SEARCH-BY-ONE' => false,
+			'DISPLAY' => false,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'CSS' => 'width_pct_100',
+		),
 
-                        'updated_by'           => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'TECH_FIELDS-RETRIEVE' => true, 'RETRIEVE' => false, 
-                                                                'QEDIT' => false, 'TYPE' => 'FK', 'ANSWER' => 'auser', 'ANSMODULE' => 'ums', 'FGROUP' => 'tech_fields'),
+		'credit' => array(
+			'SHOW' => true,
+			'RETRIEVE' => true,
+			'SIZE' => 16,
+			'TYPE' => 'FLOAT',
+			'FORMAT' => '*.2',
+			'CATEGORY' => 'FORMULA',
+			'SEARCH-BY-ONE' => '',
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'CSS' => 'width_pct_100',
+		),
 
-                        'updated_at'              => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'TECH_FIELDS-RETRIEVE' => true, 'RETRIEVE' => false, 
-                                                                'QEDIT' => false, 'TYPE' => 'DATETIME', 'FGROUP' => 'tech_fields'),
+		'debit' => array(
+			'SHOW' => true,
+			'RETRIEVE' => true,
+			'SIZE' => 16,
+			'TYPE' => 'FLOAT',
+			'FORMAT' => '*.2',
+			'CATEGORY' => 'FORMULA',
+			'SEARCH-BY-ONE' => '',
+			'DISPLAY' => true,
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'CSS' => 'width_pct_100',
+		),
 
-                        'validated_by'       => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 
-                                                                'QEDIT' => false, 'TYPE' => 'FK', 'ANSWER' => 'auser', 'ANSMODULE' => 'ums', 'FGROUP' => 'tech_fields'),
+		'active' => array(
+			'SHOW-ADMIN' => true,
+			'RETRIEVE' => false,
+			'EDIT' => false,
+			'QEDIT' => false,
+			'DEFAUT' => 'Y',
+			'TYPE' => 'YN',
+			'SEARCH-BY-ONE' => '',
+			'DISPLAY' => '',
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'CSS' => 'width_pct_100',
+		),
 
-                        'validated_at'          => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 'QEDIT' => false, 
-                                                                'TYPE' => 'DATETIME', 'FGROUP' => 'tech_fields'),
+		'draft' => array(
+			'SHOW-ADMIN' => true,
+			'RETRIEVE' => false,
+			'EDIT' => false,
+			'QEDIT' => false,
+			'DEFAUT' => 'Y',
+			'TYPE' => 'YN',
+			'SEARCH-BY-ONE' => '',
+			'DISPLAY' => '',
+			'STEP' => 1,
+			'DISPLAY-UGROUPS' => '',
+			'EDIT-UGROUPS' => '',
+			'CSS' => 'width_pct_100',
+		),
 
-                        /* 'active'                   => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 'EDIT' => false, 
+		'created_by'         => array(
+			'STEP' => 99,
+			'HIDE_IF_NEW' => true,
+			'SHOW' => true,
+			'TECH_FIELDS-RETRIEVE' => true,
+			'RETRIEVE' => false,
+			'QEDIT' => false,
+			'TYPE' => 'FK',
+			'ANSWER' => 'auser',
+			'ANSMODULE' => 'ums',
+			'FGROUP' => 'tech_fields'
+		),
+
+		'created_at'            => array(
+			'STEP' => 99,
+			'HIDE_IF_NEW' => true,
+			'SHOW' => true,
+			'TECH_FIELDS-RETRIEVE' => true,
+			'RETRIEVE' => false,
+			'QEDIT' => false,
+			'TYPE' => 'DATETIME',
+			'FGROUP' => 'tech_fields'
+		),
+
+		'updated_by'           => array(
+			'STEP' => 99,
+			'HIDE_IF_NEW' => true,
+			'SHOW' => true,
+			'TECH_FIELDS-RETRIEVE' => true,
+			'RETRIEVE' => false,
+			'QEDIT' => false,
+			'TYPE' => 'FK',
+			'ANSWER' => 'auser',
+			'ANSMODULE' => 'ums',
+			'FGROUP' => 'tech_fields'
+		),
+
+		'updated_at'              => array(
+			'STEP' => 99,
+			'HIDE_IF_NEW' => true,
+			'SHOW' => true,
+			'TECH_FIELDS-RETRIEVE' => true,
+			'RETRIEVE' => false,
+			'QEDIT' => false,
+			'TYPE' => 'DATETIME',
+			'FGROUP' => 'tech_fields'
+		),
+
+		'validated_by'       => array(
+			'STEP' => 99,
+			'HIDE_IF_NEW' => true,
+			'SHOW' => true,
+			'RETRIEVE' => false,
+			'QEDIT' => false,
+			'TYPE' => 'FK',
+			'ANSWER' => 'auser',
+			'ANSMODULE' => 'ums',
+			'FGROUP' => 'tech_fields'
+		),
+
+		'validated_at'          => array(
+			'STEP' => 99,
+			'HIDE_IF_NEW' => true,
+			'SHOW' => true,
+			'RETRIEVE' => false,
+			'QEDIT' => false,
+			'TYPE' => 'DATETIME',
+			'FGROUP' => 'tech_fields'
+		),
+
+		/* 'active'                   => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 'EDIT' => false, 
                                                                 'QEDIT' => false, "DEFAULT" => 'Y', 'TYPE' => 'YN', 'FGROUP' => 'tech_fields'),*/
 
-                        'version'                  => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 
-                                                                'QEDIT' => false, 'TYPE' => 'INT', 'FGROUP' => 'tech_fields'),
+		'version'                  => array(
+			'STEP' => 99,
+			'HIDE_IF_NEW' => true,
+			'SHOW' => true,
+			'RETRIEVE' => false,
+			'QEDIT' => false,
+			'TYPE' => 'INT',
+			'FGROUP' => 'tech_fields'
+		),
 
-                         'draft'                         => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 'EDIT' => false, 
-                                                                'QEDIT' => false, "DEFAULT" => 'Y', 'TYPE' => 'YN', 'FGROUP' => 'tech_fields'),
+		'draft'                         => array(
+			'STEP' => 99,
+			'HIDE_IF_NEW' => true,
+			'SHOW' => true,
+			'RETRIEVE' => false,
+			'EDIT' => false,
+			'QEDIT' => false,
+			"DEFAULT" => 'Y',
+			'TYPE' => 'YN',
+			'FGROUP' => 'tech_fields'
+		),
 
-                        'update_groups_mfk'             => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 
-                                                                'QEDIT' => false, 'ANSWER' => 'ugroup', 'ANSMODULE' => 'ums', 'TYPE' => 'MFK', 'FGROUP' => 'tech_fields'),
+		'update_groups_mfk'             => array(
+			'STEP' => 99,
+			'HIDE_IF_NEW' => true,
+			'SHOW' => true,
+			'RETRIEVE' => false,
+			'QEDIT' => false,
+			'ANSWER' => 'ugroup',
+			'ANSMODULE' => 'ums',
+			'TYPE' => 'MFK',
+			'FGROUP' => 'tech_fields'
+		),
 
-                        'delete_groups_mfk'             => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 
-                                                                'QEDIT' => false, 'ANSWER' => 'ugroup', 'ANSMODULE' => 'ums', 'TYPE' => 'MFK', 'FGROUP' => 'tech_fields'),
+		'delete_groups_mfk'             => array(
+			'STEP' => 99,
+			'HIDE_IF_NEW' => true,
+			'SHOW' => true,
+			'RETRIEVE' => false,
+			'QEDIT' => false,
+			'ANSWER' => 'ugroup',
+			'ANSMODULE' => 'ums',
+			'TYPE' => 'MFK',
+			'FGROUP' => 'tech_fields'
+		),
 
-                        'display_groups_mfk'            => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 
-                                                                'QEDIT' => false, 'ANSWER' => 'ugroup', 'ANSMODULE' => 'ums', 'TYPE' => 'MFK', 'FGROUP' => 'tech_fields'),
+		'display_groups_mfk'            => array(
+			'STEP' => 99,
+			'HIDE_IF_NEW' => true,
+			'SHOW' => true,
+			'RETRIEVE' => false,
+			'QEDIT' => false,
+			'ANSWER' => 'ugroup',
+			'ANSMODULE' => 'ums',
+			'TYPE' => 'MFK',
+			'FGROUP' => 'tech_fields'
+		),
 
-                        'sci_id'                        => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'SHOW' => true, 'RETRIEVE' => false, 'QEDIT' => false, 
-                                                                'TYPE' => 'INT', /*stepnum-not-the-object*/ 'FGROUP' => 'tech_fields'),
+		'sci_id'                        => array(
+			'STEP' => 99,
+			'HIDE_IF_NEW' => true,
+			'SHOW' => true,
+			'RETRIEVE' => false,
+			'QEDIT' => false,
+			'TYPE' => 'INT', /*stepnum-not-the-object*/
+			'FGROUP' => 'tech_fields'
+		),
 
-                        'tech_notes' 	                => array('STEP' => 99, 'HIDE_IF_NEW' => true, 'TYPE' => 'TEXT', 'CATEGORY' => 'FORMULA', "SHOW-ADMIN" => true, 
-                                                                'TOKEN_SEP'=>"§", 'READONLY'=>true, "NO-ERROR-CHECK"=>true, 'FGROUP' => 'tech_fields'),
-                ); 
-        } 
+		'tech_notes' 	                => array(
+			'STEP' => 99,
+			'HIDE_IF_NEW' => true,
+			'TYPE' => 'TEXT',
+			'CATEGORY' => 'FORMULA',
+			"SHOW-ADMIN" => true,
+			'TOKEN_SEP' => "§",
+			'READONLY' => true,
+			"NO-ERROR-CHECK" => true,
+			'FGROUP' => 'tech_fields'
+		),
+	);
+}
 ?>

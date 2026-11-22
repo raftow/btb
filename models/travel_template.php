@@ -267,41 +267,95 @@ class TravelTemplate extends BtbObject
 
         $color = "green";
         $title_ar = "إنشاء آلي للسفرات القصيرة";
-        $pbms["ah12yU"] = array("METHOD" => "genereTrips", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'MODE' => array("mode_travelTemplateTripList" => true), 'STEP' => 6);
+        $pbms["ah12yU"] = array(
+            "METHOD" => "genereTrips",
+            "COLOR" => $color,
+            "LABEL_AR" => $title_ar,
+            "PUBLIC" => true,
+            "BF-ID" => "",
+            'MODE' => array("mode_travelTemplateTripList" => true),
+            'STEP' => 6
+        );
 
 
         $color = "green";
         $title_ar = "تحديث مركبات البرنامج";
-        $pbms["As458Y"] = array("METHOD" => "genereBusList", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => $this->stepOfAttribute("travelTemplateBusList"),);
+        $pbms["As458Y"] = array(
+            "METHOD" => "genereBusList",
+            "COLOR" => $color,
+            "LABEL_AR" => $title_ar,
+            "PUBLIC" => true,
+            "BF-ID" => "",
+            'STEP' => $this->stepOfAttribute("travelTemplateBusList"),
+        );
 
         $color = "red";
         $title_ar = "إعادة حساب أسعار المقاعد";
         $methodName = "updateSeatPricing";
-        $pbms[AfwStringHelper::hzmEncode($methodName)] = array("METHOD" => $methodName, "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 8);
+        $pbms[AfwStringHelper::hzmEncode($methodName)] = array(
+            "METHOD" => $methodName,
+            "COLOR" => $color,
+            "LABEL_AR" => $title_ar,
+            "PUBLIC" => true,
+            "BF-ID" => "",
+            'STEP' => 8
+        );
 
         $color = "red";
         $title_ar = "تعميم أسعار المقاعد على الرحلات القادمة";
         $methodName = "publishSeatPricing";
-        $pbms[AfwStringHelper::hzmEncode($methodName)] = array("METHOD" => $methodName, "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 8);
+        $pbms[AfwStringHelper::hzmEncode($methodName)] = array(
+            "METHOD" => $methodName,
+            "COLOR" => $color,
+            "LABEL_AR" => $title_ar,
+            "PUBLIC" => true,
+            "BF-ID" => "",
+            'STEP' => 8
+        );
 
         $color = "green";
         $title_ar = "تحديث  جدول أسعار السكن";
         $methodName = "updateSakanPricing";
-        $pbms[AfwStringHelper::hzmEncode($methodName)] = array("METHOD" => $methodName, "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 9);
-
-        $color = "green";
-        $title_ar = "إعادة أسعار السكن إلى قيمها الافتراضية";
-        $methodName = "resetSakanPricing";
-        $pbms[AfwStringHelper::hzmEncode($methodName)] = array("METHOD" => $methodName, "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 9);
-
+        $pbms[AfwStringHelper::hzmEncode($methodName)] = array(
+            "METHOD" => $methodName,
+            "COLOR" => $color,
+            "LABEL_AR" => $title_ar,
+            "PUBLIC" => true,
+            "BF-ID" => "",
+            'CONFIRMATION_NEEDED' => true,
+            'CONFIRMATION_QUESTION' => array(
+                'ar' => "هل تريد فعلا تحديث  جدول أسعار السكن؟",
+                'en' => "....."
+            ),
+            'CONFIRMATION_WARNING' => array(
+                'ar' => "سوف يتم إعادة حساب السعر بحسب الفترة والبرنامج ويتم مسح أي تسعير يدوي تم إدخاله سابقا",
+                'en' => "....."
+            ),
+            'STEP' => 9
+        );
 
         $color = "green";
         $title_ar = "تحديث الرحلات المقبلة";
-        $pbms["xc123B"] = array("METHOD" => "genereNextTravels", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'MODE' => array("mode_travelList" => true), 'STEP' => 10);
+        $pbms["xc123B"] = array(
+            "METHOD" => "genereNextTravels",
+            "COLOR" => $color,
+            "LABEL_AR" => $title_ar,
+            "PUBLIC" => true,
+            "BF-ID" => "",
+            'MODE' => array("mode_travelList" => true),
+            'STEP' => 10
+        );
 
         $color = "green";
         $title_ar = "تهيئة الرحلات وفتح الحجز";
-        $pbms["hwe87o"] = array("METHOD" => "bootstrapTravelsToNewStatus", "COLOR" => $color, "LABEL_AR" => $title_ar, "PUBLIC" => true, "BF-ID" => "", 'STEP' => 10);
+        $pbms["hwe87o"] = array(
+            "METHOD" => "bootstrapTravelsToNewStatus",
+            "COLOR" => $color,
+            "LABEL_AR" => $title_ar,
+            "PUBLIC" => true,
+            "BF-ID" => "",
+            'STEP' => 10
+        );
 
 
         return $pbms;
@@ -376,7 +430,7 @@ class TravelTemplate extends BtbObject
                         $price_report_arr[] = "-----------------------------------------------------------------------";
                         // calculer le prix de base d un seat selon les params
                         list($seatBasePrice, $seatBasePriceReport) = $this->calcSeatBasePrice('value', $weekPeriod, $typePeriod, $yperiodItemId, true);
-                        $price_report_arr[] = "  سعر تكلفة المقعد : $seatBasePrice ريال for settings[$weekPeriod, $typePeriod, $yperiodItemId]";
+                        $price_report_arr[] = "  سعر تكلفة المقعد : $seatBasePrice ريال for settings[wp=$weekPeriod, tp=$typePeriod, yp=$yperiodItemId]";
                         $price_report_arr[] = $seatBasePriceReport;
                         $ttsprObj = TravelTemplateSeatPricing::loadByMainIndex($this->id, $seat_categ, $weekPeriod, $typePeriod, $yperiodItemId, $create_obj_if_not_found = true);
                         $price_report_arr[] = "حساب سعر المقعد للسياق التالي : " . $ttsprObj->getDisplay($lang);
@@ -420,37 +474,49 @@ class TravelTemplate extends BtbObject
         الرجاء مراجعة السعر واعتماده للرحلات القادمة");
     }
 
-
-    public function resetSakanPricing($lang = "ar")
+    public function updateSakanPricing($lang = "ar")
     {
-        return $this->updateSakanPricing($lang, $reset_prices = true);
-    }
+        $workBranchObj = $this->het("work_branch_id");
+        $wbYperiodList = $workBranchObj->get("yperiodList");
 
-    public function updateSakanPricing($lang = "ar", $reset_prices = false)
-    {
+        $errors_arr = [];
+        $infos_arr = [];
+
         $ttsprCount = 0;
         $ttsprCountUpdate = 0;
         list($wp_min, $wp_max) = $this->myWeekPeriod();
         for ($roombed_enum = 1; $roombed_enum <= 6; $roombed_enum++) {
             for ($weekPeriod = $wp_min; $weekPeriod <= $wp_max; $weekPeriod++) {
                 for ($typePeriod = 1; $typePeriod <= 2; $typePeriod++) {
-                    $ttsprObj = TravelTemplateSakanPricing::loadByMainIndex($this->id, $roombed_enum, $weekPeriod, $typePeriod, 0, $create_obj_if_not_found = true);
-                    if ($ttsprObj->is_new) $ttsprCount++;
-                    else $ttsprCountUpdate++;
-                    // @todo get params from settings
-                    // depending on travel level and others ...
-                    $params_arr = array();
-                    $params_arr["base_prices"] = [1 => 40, 2 => 75, 3 => 105, 4 => 130, 5 => 150, 6 => 170];
-                    $params_arr["normal_to_we"] = 10.0;
-                    $params_arr["work_to_holidays"] = 20.0;
+                    if ($typePeriod == 2) {
+                        $yperiodList = $wbYperiodList;
+                    } else {
+                        $yperiodList = [0 => null];
+                    }
+                    foreach ($yperiodList as $yperiodItemId => $yperiodItem) {
+                        $ttsprObj = TravelTemplateSakanPricing::loadByMainIndex($this->id, $roombed_enum, $weekPeriod, $typePeriod, $yperiodItemId, $create_obj_if_not_found = true);
+                        if ($ttsprObj->is_new) $ttsprCount++;
+                        else $ttsprCountUpdate++;
+                        if (true) {
+                            list($price_avg, $price_avg_error, $price_avg_info) = $this->calcPriceOf($roombed_enum, $weekPeriod, $typePeriod, $yperiodItemId, $round_base = 1);
+                            if (!$price_avg_error) {
+                                $ttsprObj->set("price", $price_avg);
+                                $ttsprObj->commit();
+                            } else $errors_arr[] = $price_avg_error;
 
-                    // @todo calculer le prix selon les params
-                    if ($reset_prices) $ttsprObj->resetPrice($params_arr);
+                            if ($price_avg_info) $infos_arr[] = $price_avg_info;
+                        }
+                    }
                 }
             }
         }
 
-        return array("", "$ttsprCount تسعيرة جديدة تم انشاؤها بحمد الله. الرجاء مراجعة السعر واعتماده للرحلات القادمة");
+        $infos_arr[] = "بحمد الله : ";
+        $infos_arr[] = "$ttsprCountUpdate تسعيرة سابقة تم العثور عليها";
+        $infos_arr[] = "$ttsprCount تسعيرة جديدة تم انشاؤها";
+        $infos_arr[] = "الرجاء مراجعة السعر واعتماده للرحلات القادمة";
+
+        return AfwFormatHelper::pbm_result($errors_arr, $infos_arr);
     }
 
     public function reorderTrips($lang = "ar")
@@ -941,6 +1007,54 @@ class TravelTemplate extends BtbObject
         return $this->sureIs("full_residence");
     }
 
+
+    public function calcPriceOf($room_size, $week_period_enum, $period_type_enum, $yperiod_id, $round_base = 1)
+    {
+        if (!$this->containResidence()) return 0.0;
+        $taux_diff_acceptable = 0.15;
+        $min_price_acceptable = 10.0 * $room_size;
+        $total_avg_prices = 0;
+        $price_by_trip_arr = [];
+        $nb_hotels = intval($this->getVal("trips_nb")) - 1;
+        for ($i = 1; $i <= $nb_hotels; $i++) {
+            $max_price = 0;
+            $min_price = 9999999;
+            $total_prices = 0;
+            $nb_prices = 0;
+            $price = 0.0;
+            $hotel_ids = trim($this->getVal("city${i}_hotel_mfk"), ",");
+            $hotel_arr = explode(",", $hotel_ids);
+            foreach ($hotel_arr as $hotel_id) {
+                list($found_case, $price) = Hotel::getHotelPrice($hotel_id, $room_size, $week_period_enum, $period_type_enum, $yperiod_id);
+                if ($price and ($price != "PRICE_NOT_FOUND") and ($price > $min_price_acceptable)) {
+                    $total_prices += $price;
+                    $nb_prices++;
+                    if ($price > $max_price) $max_price = $price;
+                    if ($price < $min_price) $min_price = $price;
+                }
+            }
+
+            $price_avg = $nb_prices ? $total_prices / $nb_prices : 0.0;
+
+            $city_name = $this->printAttribute("city${i}_id", "en");
+
+            if ($max_price > 0) {
+                $diff_pct = abs($max_price - $price_avg) / $max_price;
+                if ($diff_pct > $taux_diff_acceptable) {
+                    return [0.0, "For This travel template, context[beds=$room_size, we=$week_period_enum, pt=$period_type_enum, yp=$yperiod_id] prices of hotels ($hotel_ids) for trip $i in city $city_name are not homogenious, too much difference [$min_price SAR, $max_price SAR] for same program", ""];
+                } else {
+                    $price_by_trip_arr[$i] = $price_avg;
+                    $total_avg_prices += $price_avg;
+                }
+            } else return [0.0, "For This travel template, context[beds=$room_size, we=$week_period_enum, pt=$period_type_enum, yp=$yperiod_id] no pricing of hotels ($hotel_ids) for trip $i in city $city_name", ""];
+        }
+
+        $the_price = round($round_base * $total_avg_prices / $nb_hotels) / $round_base;
+
+        $the_report = "$the_price = round($round_base * $total_avg_prices / $nb_hotels) / $round_base : price_by_trip_arr = " . var_export($price_by_trip_arr, true);
+
+        return [$the_price, "", $the_report];
+    }
 
 
     public function attributeIsApplicable($attribute)
@@ -1917,8 +2031,8 @@ class TravelTemplate extends BtbObject
         $min_travel_date = "1777-12-27";
         $min_return_date = "1777-12-29";
         foreach ($travelList as $travelItem) {
-            $tmp_min_travel_date = $travelItem->travel_date;
-            $tmp_min_return_date = $travelItem->return_date;
+            $tmp_min_travel_date = $travelItem->getVal("travel_date");
+            $tmp_min_return_date = $travelItem->getVal("return_date");
             if ($tmp_min_travel_date < $min_travel_date) {
                 $min_travel_date = $tmp_min_travel_date;
                 $min_return_date = $tmp_min_return_date;
@@ -2001,11 +2115,11 @@ class TravelTemplate extends BtbObject
         $seatPriceList = $this->relSeatPricingList()->resetWhere("week_period_enum=$week_period_enum and period_type_enum=$period_type_enum and yperiod_id = $yperiod_id")->getList();
         $seat_price_arr = array();
         // @todo from settings, to avoid errors
-        $price_min = 45.00;
+        $price_min = 15.00;
         $price_max = 1000.00;
         foreach ($seatPriceList as $seatPriceItem) {
-            if (($seatPriceItem->price >= $price_min) and ($seatPriceItem->price <= $price_max)) {
-                $seat_price_arr[$seatPriceItem->category]  = $seatPriceItem->price;
+            if (($seatPriceItem->getVal("price") >= $price_min) and ($seatPriceItem->getVal("price") <= $price_max)) {
+                $seat_price_arr[$seatPriceItem->getVal("seat_category_enum")]  = $seatPriceItem->getVal("price");
             }
         }
 

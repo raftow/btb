@@ -1,6 +1,11 @@
 <div class="booker_bg_pic">
         <div class="booker_bg">
                 <?
+                /**
+                 * @var array $dataxv
+                 * @var Booking $ticketObj
+                 */
+                foreach ($dataxv as $vard => $vald) $$vard = $vald;
                 foreach ($ticketList as $ticketObj) {
                         $my_status = $ticketObj->calcStatus($lang, $translate = false);
                         $travelObj = $ticketObj->het("travel_id");
@@ -16,7 +21,7 @@
                                         <div class='front_bloc hzm_travel_bloc ticket status_<?php echo $my_status; ?>'>
                                                 <div class='mb_long_title my_booking'>
                                                         <div class='btb_my_ticket'>
-                                                                حجز رقم <?php echo $ticketObj->getCode(); ?> مع <?php echo $travelObj->travel_company_full_name; ?>
+                                                                حجز رقم <?php echo $ticketObj->getCode(); ?> مع <?php echo $travelObj->calcTravel_company_full_name(); ?>
                                                         </div>
                                                         <div class='btb_my_ticket fleft'>
                                                                 حالة الحجز <div class='booking_status status_<?php echo $my_status; ?>'><?php echo $ticketObj->status; ?> </div>
@@ -25,35 +30,35 @@
                                                 <div class='my_booking_dates'>
                                                         <div class='mb_med_title my_booking'>
                                                                 <div class='btb_calendar'>
-                                                                        المغادرة <span class="btb_date"><?php echo $full_travel_date; ?></span> س <span class="btb_time"><?php echo $travelObj->planned_start_time; ?> </span> <?php echo $travelObj->translateValue("start_day_part"); ?>
+                                                                        المغادرة <span class="btb_date"><?php echo $full_travel_date; ?></span> س <span class="btb_time"><?php echo $travelObj->printAttribute("planned_start_time");; ?> </span> <?php echo $travelObj->translateValue("start_day_part"); ?>
                                                                 </div>
                                                         </div>
                                                         <div class='fleft mb_med_title my_booking'>
                                                                 <div class='btb_calendar calendar_left'>
-                                                                        العودة <span class="btb_date"><?php echo $full_return_date; ?></span> س <span class="btb_time"><?php echo $travelObj->planned_end_time; ?> </span> <?php echo $travelObj->translateValue("end_day_part"); ?>
+                                                                        العودة <span class="btb_date"><?php echo $full_return_date; ?></span> س <span class="btb_time"><?php echo $travelObj->printAttribute("planned_end_time");; ?> </span> <?php echo $travelObj->translateValue("end_day_part"); ?>
                                                                 </div>
                                                         </div>
                                                 </div>
 
                                                 <div class='mb_big_title my_booking'>
                                                         <div class='btb_minibox_big_title rightbloc'>
-                                                                <?php echo $travelObj->travel_company_logo; ?>
+                                                                <?php echo $travelObj->calcTravel_company_logo(); ?>
                                                         </div>
                                                         <div class='btb_minibox_big_title mediumbloc'>
                                                                 <div class="list-head">
-                                                                        <h4><span><?php echo $travelObj->trip01_title; ?></span> <?php echo $travelObj->depart_city_id; ?> </h4>
+                                                                        <h4><span><?php echo $travelObj->calc("trip01_title");; ?></span> <?php echo $travelObj->printAttribute("depart_city_id");; ?> </h4>
                                                                         <div class="travel_trip">
                                                                                 <i class="fas fa-bus"></i>
                                                                                 <i class="fas fa-long-arrow-alt-left"></i>
                                                                         </div>
-                                                                        <h4><span><?php echo $travelObj->trip12_title; ?></span><?php echo $travelObj->city1_id; ?> </h4>
-                                                                        <?php echo $travelObj->city2_disabled_s; ?>
+                                                                        <h4><span><?php echo $travelObj->calc("trip12_title");; ?></span><?php echo $travelObj->printAttribute("city1_id");; ?> </h4>
+                                                                        <?php echo $travelObj->calc("city2_disabled_s");; ?>
                                                                         <div class="travel_trip">
                                                                                 <i class="fas fa-bus"></i>
                                                                                 <i class="fas fa-long-arrow-alt-left"></i>
                                                                         </div>
-                                                                        <h4><span><?php echo $travelObj->trip23_title; ?></span><?php echo $travelObj->city2_id; ?> </h4>
-                                                                        <?php echo $travelObj->city2_disabled_e; ?>
+                                                                        <h4><span><?php echo $travelObj->calc("trip23_title");; ?></span><?php echo $travelObj->printAttribute("city2_id");; ?> </h4>
+                                                                        <?php echo $travelObj->calc("city2_disabled_e");; ?>
                                                                 </div>
                                                         </div>
                                                         <div class='btb_level<?php echo $travelObj->getVal("travel_level"); ?> btb_level_bloc leftbloc'>
@@ -109,7 +114,7 @@
                                                                 <div class="row booking_data">
                                                                         <label>عدد المقاعد </label>
                                                                         <div class='btb_data_prop'>
-                                                                                <?php echo $ticketObj->travelers_nb; ?> مقعد <i class="material-icons">people</i>
+                                                                                <?php echo $ticketObj->getVal("travelers_nb"); ?> مقعد <i class="material-icons">people</i>
                                                                                 <?php echo $ticketObj->getSeatsDescription(); ?>
                                                                         </div>
                                                                 </div>
@@ -135,7 +140,7 @@
                                                                 </div>
                                                                 <div class="row booking_data booking_btns">
                                                                         <div class='btb_data_prop'>
-                                                                                <a href='i.php?cn=booker&mt=preview&tid=<?php echo $travelObj->id ?>&beds=<?php echo $ticketObj->nb_beds ?>&travelers=<?php echo $ticketObj->travelers_nb ?>&bkid=<?php echo $ticketObj->id ?>'>
+                                                                                <a href='i.php?cn=booker&mt=preview&tid=<?php echo $travelObj->id ?>&beds=<?php echo $ticketObj->nb_beds ?>&travelers=<?php echo $ticketObj->getVal("travelers_nb") ?>&bkid=<?php echo $ticketObj->id ?>'>
                                                                                         <div class='btb_blue btb_print'>معاينة تفاصيل الرحلة</div>
                                                                                 </a>
                                                                         </div>
@@ -156,7 +161,7 @@
                                                                         } elseif ($ticketObj->readyForPayment()) {
                                                                         ?>
                                                                                 <div class='btb_data_prop'>
-                                                                                        <a href='i.php?cn=booking&tid=<?php echo $travelObj->id ?>&beds=<?php echo $ticketObj->nb_beds ?>&travelers=<?php echo $ticketObj->travelers_nb ?>&bkid=<?php echo $ticketObj->id ?>'>
+                                                                                        <a href='i.php?cn=booking&tid=<?php echo $travelObj->id ?>&beds=<?php echo $ticketObj->nb_beds ?>&travelers=<?php echo $ticketObj->getVal("travelers_nb") ?>&bkid=<?php echo $ticketObj->id ?>'>
                                                                                                 <div class='btb_green btb_print'>السداد</div>
                                                                                         </a>
                                                                                 </div>
@@ -164,7 +169,7 @@
                                                                         } else {
                                                                         ?>
                                                                                 <div class='btb_data_prop'>
-                                                                                        <a href='i.php?cn=booking&tid=<?php echo $travelObj->id ?>&beds=<?php echo $ticketObj->nb_beds ?>&travelers=<?php echo $ticketObj->travelers_nb ?>&bkid=<?php echo $ticketObj->id ?>'>
+                                                                                        <a href='i.php?cn=booking&tid=<?php echo $travelObj->id ?>&beds=<?php echo $ticketObj->nb_beds ?>&travelers=<?php echo $ticketObj->getVal("travelers_nb") ?>&bkid=<?php echo $ticketObj->id ?>'>
                                                                                                 <div class='btb_green btb_print'>استكمال الحجز</div>
                                                                                         </a>
                                                                                 </div>
