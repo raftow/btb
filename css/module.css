@@ -1,4 +1,425 @@
 /* CSS Document */
+
+.modal-header {
+    background-color: transparent;
+    border: none;
+    max-width: none !important;
+    /* for mobile screen mode */
+}
+
+.modal-header.logo-company {
+    overflow: hidden;
+}
+
+.popup-login-customer>.modal-header {
+    background-color: transparent;
+    overflow: hidden;
+    text-align: center;
+    padding-top: 6px;
+    min-width: 32px;
+}
+
+.popup-login-customer>.modal-content>.modal-header {
+    background-color: #b2cfdd !important;
+    padding: 0 !important;
+}
+
+div.home_banner>.modal-dialog.popup-login {
+    margin-right: 30%;
+    max-width: 950px !important;
+}
+
+
+div.modal-dialog>.modal-content {
+    border: none !important;
+    animation: none !important;
+}
+
+div.modal-dialog.verify>.modal-content {
+    background-color: #9bddf7e0 !important;
+
+    width: 80%;
+    margin-right: 10%;
+    margin-left: 10%;
+    margin-top: 25px;
+    padding-bottom: 0px !important;
+    border-radius: 0;
+    border-top: 4px solid #0f4f6d !important;
+}
+
+div.modal-dialog>.modal-content.otp-popup {
+    width: 500px;
+    margin-right: calc(50% - 250px);
+    display: block;
+    float: right;
+    background-color: #c5e5f075 !important;
+    padding: 2px 20px;
+    margin-top: 20px;
+    border-radius: 0;
+    border-top: 6px solid #0e76a9 !important;
+}
+
+h1.modal-title {
+    background-color: #3d99c2 !important;
+}
+
+.home_banner {
+    background-image: none !important;
+    background-color: #def4ff !important;
+    width: 100%;
+    min-height: 1150px !important;
+    float: right;
+    border: none !important;
+}
+
+.modal-body {
+    position: relative;
+    padding: 0 0 10px;
+    background-color: transparent !important;
+    /* border-top: 6px solid #0096ff; */
+}
+
+.container.crm {
+    background-color: #768c99;
+    max-width: 2000px;
+}
+
+li.hzm_login {
+    float: left !important;
+    background-color: #0778c8 !important;
+    border: 1px solid #067fd5;
+}
+
+.modal_login.modal-content {
+    max-width: 450px;
+    min-width: 250px;
+    width: 50%;
+    margin-left: 25%;
+    margin-right: 25%;
+    top: 45px;
+    left: 40px;
+    float: left;
+    background-color: #ffffff1a;
+}
+
+@media (max-width: 640px) {
+    .modal_login.modal-content {
+        width: 80%;
+        margin-left: 4%;
+        margin-right: 10%;
+    }
+}
+
+
+div.modal-dialog {
+    margin-top: 0 !important;
+}
+
+div.modal-dialog {
+    margin-top: 0 !important;
+    pointer-events: auto;
+}
+
+.modal-dialog.popup-login-customer {
+    background: #c2ecff;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    padding-bottom: 30px;
+    float: right;
+    min-height: 970px;
+    min-width: 300px !important;
+    max-width: 500px !important;
+    width: 500px !important;
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+    margin-top: 0px !important;
+    border-left: 1px solid #71abbe7a;
+    margin-bottom: 0px !important;
+}
+
+.modal-dialog.popup-login {
+    background: transparent;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    padding-bottom: 30px;
+    float: right;
+    min-height: 700px;
+    min-width: 300px !important;
+    max-width: 350px;
+}
+
+.modal-dialog.popup-register {
+    background: transparent;
+    padding-top: 15px;
+    padding-left: 280px;
+    padding-right: 50px;
+    padding-bottom: 180px;
+    float: right;
+    min-height: 1190px;
+    margin-right: 10px !important;
+    margin-left: 10px !important;
+    width: 480px !important;
+    min-width: 480px !important;
+    max-width: 480px !important;
+}
+
+.modal-dialog.popup-login-customer.popup-register {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.modal-dialog.verify.popup-company {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.modal-dialog.popup-company {
+    float: right;
+    min-height: 970px;
+    min-width: 300px !important;
+    width: calc(100% - 500px) !important;
+    max-width: calc(100% - 500px);
+    background-size: cover;
+    background-position: right bottom;
+    background-repeat: no-repeat;
+    margin: 0px !important;
+}
+
+.modal-dialog.popup-company.banner1 {
+    background-image: url(../pic/home-welcome-banner-1.jpg);
+}
+
+.modal-dialog.popup-company.banner2 {
+    background-image: url(../pic/home-welcome-banner-2.jpg);
+}
+
+.modal-dialog.popup-company.banner3 {
+    background-image: url(../pic/home-welcome-banner-3.jpg);
+}
+
+.modal-dialog.popup-company.banner4 {
+    background-image: url(../pic/home-welcome-banner-4.jpg);
+}
+
+@media (min-width: 840px) {
+    .modal-dialog.popup-register {
+        padding-left: 80px;
+        padding-right: 50px;
+    }
+}
+
+@media (min-width: 570px) {
+    .modal-dialog.popup-register {
+        padding-left: 50px;
+        padding-right: 30px;
+    }
+}
+
+.popup-sms-verify .modal-header {
+    background-color: transparent;
+    padding: 5px;
+    border: none !important;
+    margin: 0;
+}
+
+/*
+.popup-sms-verify .modal-header > div {
+    width: 100%;
+}*/
+
+@media (min-width: 740px) {
+    .modal-dialog.popup-register.popup-sms-verify {
+        margin-right: 150px !important;
+    }
+}
+
+@media (min-width: 580px) {
+    .modal-dialog.popup-register.popup-sms-verify {
+        margin-right: 70px !important;
+    }
+}
+
+div.popup-sms-verify>.modal-content {
+    box-shadow: 10px 20px 20px rgb(128 204 241 / 51%);
+    -webkit-box-shadow: 10px 20px 20px rgb(128 204 241 / 51%);
+}
+
+.modal-dialog.popup-register.popup-sms-verify {
+    background: transparent;
+    padding-top: 15px;
+    padding-left: 80px;
+    padding-right: 50px;
+    padding-bottom: 10px;
+    min-width: 400px !important;
+    max-width: 500px !important;
+    float: right;
+    min-height: 350px;
+    margin-top: 250px !important;
+}
+
+.modal-dialog.popup-content {
+    background-color: #e7d7a9de !important;
+    border-top: 6px solid #42525b;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    padding-bottom: 10px;
+    float: right;
+    min-height: 370px;
+    min-width: 360px !important;
+    width: 84% !important;
+    max-width: 500px !important;
+    margin-right: 50px !important;
+    margin-left: 50px !important;
+    margin-top: 20px !important;
+    /* font-size: 10px !important; */
+}
+
+@media (max-width: 1042px) {
+    .modal-dialog.popup-register.popup-sms-verify {
+        float: right;
+        min-height: 210px;
+        min-width: 0 !important;
+        max-width: none !important;
+        width: 60% !important;
+        margin-right: 20% !important;
+        margin-left: 20% !important;
+        margin-top: 130px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .modal-dialog.popup-login-customer {
+        min-width: 400px !important;
+        max-width: 400px !important;
+        width: 400px !important;
+        margin: 0px !important;
+    }
+
+    .modal-dialog.popup-company {
+        min-width: 200px !important;
+        width: calc(98% - 400px) !important;
+        max-width: calc(98% - 400px);
+    }
+
+    .modal-dialog.verify.popup-company {
+        width: 100% !important;
+    }
+
+    /* .modal-dialog.popup-login-customer{
+        float: right;
+        min-height: 350px;
+        min-width: 0 !important;
+        max-width: none !important;
+        width: 60% !important;
+        margin-right: 20% !important;
+        margin-left: 20% !important;
+        margin-top: 20px !important;
+
+    }*/
+
+    .modal-dialog.popup-content {
+        float: right;
+        min-height: 350px;
+        min-width: 0 !important;
+        max-width: none !important;
+        width: 90% !important;
+        margin-right: 5% !important;
+        margin-left: 5% !important;
+        margin-top: 20px !important;
+    }
+}
+
+@media (max-width: 742px) {
+    .modal-dialog.popup-register.popup-sms-verify {
+        float: right;
+        min-height: 210px;
+        min-width: 0 !important;
+        max-width: none !important;
+        width: 80% !important;
+        margin-right: 10% !important;
+        margin-left: 10% !important;
+        margin-top: 130px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .modal-dialog.popup-company {
+        min-width: 200px !important;
+        max-width: 1000px !important;
+        width: 100% !important;
+    }
+
+    .modal-dialog.verify.popup-company {
+        width: 100% !important;
+        background-position: top;
+    }
+
+    .modal-dialog.popup-login-customer {
+        float: right;
+        min-height: 350px;
+        /* min-width: 0 !important; */
+        max-width: 1000px !important;
+        margin-right: 3% !important;
+        margin-left: 3% !important;
+        width: 94% !important;
+        margin-top: 15px !important;
+        margin-bottom: 15px !important;
+    }
+
+    .modal-dialog.popup-content {
+        float: right;
+        min-height: 350px;
+        min-width: 0 !important;
+        max-width: none !important;
+        width: 98% !important;
+        margin-right: 1% !important;
+        margin-left: 1% !important;
+        margin-top: 120px !important;
+    }
+}
+
+@media (max-width: 512px) {
+
+
+    .modal-dialog.popup-content {
+        float: right;
+        min-height: 350px;
+        min-width: 0 !important;
+        max-width: none !important;
+        width: 98% !important;
+        margin-right: 1% !important;
+        margin-left: 1% !important;
+        margin-top: 460px !important;
+    }
+
+    .modal-dialog.popup-company.banner1 {
+        background-image: url(../pic/home-welcome-banner-mobile-1.jpg);
+    }
+
+    .modal-dialog.popup-company.banner2 {
+        background-image: url(../pic/home-welcome-banner-mobile-2.jpg);
+    }
+
+    .modal-dialog.popup-company.banner3 {
+        background-image: url(../pic/home-welcome-banner-mobile-3.jpg);
+    }
+
+    .modal-dialog.popup-login-customer {
+        border-left: none;
+    }
+
+    .modal-dialog.verify.popup-company.banner1 {
+        background-image: url(../pic/home-welcome-banner-mobile-verify-1.jpg);
+    }
+
+    .modal-dialog.verify.popup-company.banner2 {
+        background-image: url(../pic/home-welcome-banner-mobile-verify-2.jpg);
+    }
+
+    .modal-dialog.verify.popup-company.banner3 {
+        background-image: url(../pic/home-welcome-banner-mobile-verify-3.jpg);
+    }
+}
+
+
 [class*='travel-icon-'] {
     font-family: FontAwesome;
     display: inline-block;
@@ -1354,10 +1775,7 @@ span.dday {
     color: #8f3409 !important;
 }
 
-div.modal-dialog {
-    margin-top: 0 !important;
-    pointer-events: auto;
-}
+
 
 /***     login/home/header nice can be published for all   */
 
@@ -1393,64 +1811,6 @@ div.modal-dialog {
     background-position-x: center;
     background-position-y: 200px;
     /* important for page login design */
-}
-
-.modal-header {
-    min-width: 250px !important;
-}
-
-.modal-content {
-    position: relative;
-    background-color: #fff;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    border: 1px solid rgba(0, 0, 0, .2);
-    border-radius: 6px;
-    outline: 0;
-    -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
-    box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
-    min-width: 280px !important;
-}
-
-
-.modal-dialog.popup-login {
-    background: transparent;
-    /* padding-left: 280px; */
-    /* padding-right: 150px; */
-    padding-bottom: 180px;
-    float: right;
-    min-height: 790px;
-    width: 300px;
-    margin-top: 30px !important;
-    margin-right: 80px !important;
-}
-
-.modal-dialog.popup-register {
-    background: transparent;
-    /* padding-left: 280px; */
-    /* padding-right: 150px; */
-    padding-bottom: 180px;
-    float: right;
-    min-height: 790px;
-    max-width: 500px;
-    width: 95% !important;
-    margin-top: 50px !important;
-    margin-right: 20px !important;
-}
-
-
-@media screen and (max-width: 484px) {
-    .modal-dialog.popup-login {
-        margin-right: 2% !important;
-    }
-
-    .modal-dialog.popup-register {
-        margin-right: 2% !important;
-    }
-
-    .home_banner.login_banner {
-        background-image: none !important;
-    }
 }
 
 form#form_register>div.form-group {
@@ -1504,15 +1864,6 @@ li.hzm_login {
     background-color: #0f82d2 !important;
 }
 
-.modal_login.modal-content {
-    max-width: 450px;
-    min-width: 250px;
-    width: 50%;
-    top: 45px;
-    left: 40px;
-    float: left;
-}
-
 div.hzm_captcha>img {
     padding: 0;
     margin: 0;
@@ -1545,9 +1896,7 @@ textarea {
     color: #8f3409 !important;
 }
 
-div.modal-dialog {
-    margin-top: 100px !important;
-}
+
 
 .section nav.navbar {
     margin-bottom: 0px !important;

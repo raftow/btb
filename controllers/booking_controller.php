@@ -287,7 +287,7 @@ class BookingController extends AfwStepsController
                         }
 
                         if (((!$bookingObj) and intval($request["beds"]) > 0) or
-                                (intval($bookingObj->nb_beds) > 0)
+                                (intval($bookingObj->getVal("nb_beds")) > 0)
                         ) {
                                 $this->addStep("sakan");
                         }
