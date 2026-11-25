@@ -455,12 +455,13 @@ class ContentController extends AfwController
                                 $customer_idn = $theCustomer->getVal("idn");
                                 $your_full_name = $theCustomer->getVal("full_name");
                         }
-
-                        if (!$customer_idn) $customer_idn = "ANONYM-" . date("YmdHis");
+                        // ex 20222317
+                        $dd = rand(20, 30);
+                        if (!$customer_idn) $customer_idn = $dd . date("His");
                 }
                 if (!$trade_idn) $trade_idn = "NIN-" . $customer_idn . "-" . $customer_mobile;
                 $mobile = trim($mobile);
-                $crmObj = CrmCustomer::loadByMainIndex($mobile, 70, $customer_idn, $create_obj_if_not_found = true);
+                $crmObj = CrmCustomer::loadByMainIndex($mobile, 5, $customer_idn, $create_obj_if_not_found = true);
                 if ($crmObj->getVal("customer_orgunit_id") > 0) {
                         $data["all_error"] = "هذا السجل التجاري تم تسجيله سابقا";
                 } else {
@@ -481,7 +482,7 @@ class ContentController extends AfwController
                         $crmObj->set("other_city", $web_site);
 
                         $crmObj->set("customer_type_id", 5);  // travel company
-                        $crmObj->set("ref_num", trim($trade_idn));
+                        $crmObj->set("ref_num", $ref_num);
                         $crmObj->set("city_id", $city_id);
                         $crmObj->set("email", trim($email));
                         $crmObj->set("gender_id", 1);

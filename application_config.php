@@ -20,48 +20,11 @@ $config_arr = [
                 'en' => "Turism Travel Management",
         ),
 
-        'cust_type_list' => array(
-                1 => ['ar' => "مسافر",     'en' => "Traveler",    'code' => "Traveler",   'canBecome' => [3, 4, 5]],
 
-                3 => ['ar' => "مالك مركبات",   'en' => "Vehicle Owner",    'code' => "vehcl-owner",   'canBecome' => [1, 4, 5]],
-
-                4 => ['ar' => "مالك فنادق",   'en' => "Hotel Owner",    'code' => "hotel-owner",   'canBecome' => [1, 3, 5]],
-                5 => ['ar' => "مكتب رحلات",   'en' => "Travel Agency",    'code' => "travel-agency",   'canBecome' => [1, 3, 4]],
-        ),
 
         'btb-application-name' => ['ar' => "تنظيم وتسويق الرحلات السياحية", 'en' => "Turism Travel Management",],
 
-        'cust_type_logic' => array(
-                3 => [
-                        'ref_num' => ['title_ar' => 'الرقم الأكاديمي',    'title_en' => 'Academic number',],
-                        'org_name' => ['title_ar' => 'الوحدة التدريبية', 'title_en' => 'Training unit',]
-                ],
 
-                7 => [
-                        'ref_num' => ['title_ar' => 'الرقم الأكاديمي',     'title_en' => 'Academic number',],
-                        'org_name' => ['title_ar' => 'اسم الكلية',         'title_en' => 'College name',]
-                ],
-
-                8 => [
-                        'ref_num' => ['title_ar' => 'الرقم الأكاديمي',     'title_en' => 'Academic number',],
-                        'org_name' => ['title_ar' => 'اسم المعهد أو الأكاديمية', 'title_en' => 'Name of the institute or academy',]
-                ],
-
-                2 => [
-                        'ref_num' => ['title_ar' => 'الرقم الوظيفي',       'title_en' => 'Employee number',],
-                        'org_name' => ['title_ar' => 'جهة العمل / الإدارة', 'title_en' => 'Employer / Department',]
-                ],
-
-                4 => [
-                        'ref_num' => ['title_ar' => 'رقم الحاسب',          'title_en' => 'Computer number',],
-                        'org_name' => ['title_ar' => 'الوحدة التدريبية',  'title_en' => 'Training unit',]
-                ],
-
-                5 => [
-                        'ref_num' => ['title_ar' => 'رقم الحاسب',          'title_en' => 'Computer number',],
-                        'org_name' => ['title_ar' => 'جهة العمل / الإدارة', 'title_en' => 'Employer / Department',]
-                ],
-        ),
 
         'enable_language_switch' => false,
         //  classes params

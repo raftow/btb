@@ -651,18 +651,24 @@ class Booking extends BtbObject
                 // $file_dir_name = dirname(__FILE__);
                 $crmObj = null;
 
+                /*
                 if (
-                        $fields_updated["idn_type_id"] or
+                        // $fields_updated["idn_type_id"] or
                         $fields_updated["idn"] or
                         $fields_updated["mobile"]
                 ) {
-
+                        
+                        $dd = rand(10, 20);
+                        $traveller_idn = $dd . date("His");
 
                         $crm_mobile = $this->getVal("mobile");
                         $crm_mobile = AfwFormatHelper::formatMobile($crm_mobile);
-                        if ($crm_mobile and $this->getVal("idn_type_id") and $this->getVal("idn")) {
-                                $this->set("mobile", $crm_mobile);
-                                $crmObj = CrmCustomer::loadByMainIndex($crm_mobile, $this->getVal("idn_type_id"), $this->getVal("idn"), $create_obj_if_not_found = true);
+                        $this->set("mobile", $crm_mobile);
+                        $birth_date = $this->getVal("birth_date");
+
+                        if ($crm_mobile and $birth_date) {
+
+                                $crmObj = CrmCustomer::createOrUpdateCustomerByBirthDate($crm_mobile, $birth_date, $traveller_idn, $create_obj_if_not_found = true);
                                 if ($crmObj->is_new) {
                                         $crmObj->set("customer_type_id", 1);  //  Traveler
                                 }
@@ -673,7 +679,7 @@ class Booking extends BtbObject
                                         $this->set("status_date", date("Y-m-d H:i:s"));
                                 }
                         }
-                }
+                }*/
 
                 if (!$crmObj) $crmObj = $this->het("crm_customer_id");
                 if ($crmObj) {
