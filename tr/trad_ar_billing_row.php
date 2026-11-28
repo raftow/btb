@@ -1,6 +1,6 @@
 <?php
 
-class BillingArTranslator
+class BillingRowArTranslator
 {
 	public static function initData()
 	{
@@ -25,7 +25,7 @@ class BillingArTranslator
 
 	public static function getInstance()
 	{
-		if (false) return new BillingEnTranslator();
-		return new Billing();
+		if (false) return new BillingRowEnTranslator();
+		return new BillingRow();
 	}
 }

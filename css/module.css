@@ -459,6 +459,10 @@ input.footer-input-group-field {
     width: 100% !important;
 }
 
+.hzm_label {
+    text-shadow: none !important;
+}
+
 .btb_label {
     font-size: 22px;
     line-height: 22px;
@@ -6007,10 +6011,10 @@ img.new_gallery {
 }
 
 .hzm_travel_bloc {
-    min-width: 70%;
+    min-width: 100%;
     /* display: block; */
-    margin-right: 15% !important;
-    margin-left: 15% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
     margin-top: 40px;
     float: right;
 }
@@ -6529,8 +6533,8 @@ tr.altitem.hzm_row_to_regenerate {
 
 .booker_bg {
     width: 100%;
-    background-color: #ffffffeb;
-    min-height: 850px;
+    background-color: #ffffff63;
+    min-height: 1850px;
     float: right;
     padding-bottom: 80px;
 }
@@ -6872,6 +6876,7 @@ screen and (max-width: 1450px) {
 
 .front_conditions.hzm_data.hzm_data_conditions {
     padding-right: 30px;
+    font-size: 14px;
 }
 
 .front_conditions.hzm_data.hzm_data_conditions>div.bulle01 {
@@ -6898,10 +6903,9 @@ p.front_title {
 
 .front_step {
     float: right;
-    width: 60%;
-    margin-right: 20%;
-    margin-left: 20%;
-    /* background-color: white; */
+    width: 100%;
+    margin-right: 0;
+    margin-left: 0;
     padding: 8px;
     color: #080808;
     font-size: 20px;
@@ -7151,7 +7155,7 @@ label {
     font-weight: bold;
     font-size: 15px;
     color: #313030;
-    max-height: 23px;
+    max-height: 33px;
     overflow: hidden;
 }
 
@@ -7382,4 +7386,10 @@ div#div_data_busDiv {
 
 .seat-erroned>a.edit-seat {
     color: red;
+}
+
+.travel_minibox.authenticate.hzm_minibox_body {
+    width: 350px;
+    margin-right: calc(50% - 175px);
+    margin-left: calc(50% - 175px);
 }

@@ -21,6 +21,7 @@ class BtbBillingRowAfwStructure
 			$obj->showRetrieveErrors = true;
 			$obj->general_check_errors = true;
 			$obj->horizontalTabs = true;
+			$obj->public_display = true;
 			$obj->rowCategoryAttribute = "unit_code";
 			$obj->after_save_edit = array("class" => 'Billing', "attribute" => 'billing_id', "currmod" => 'btb', "currstep" => 2);
 			// $obj->after_save_edit = array("mode" => "qsearch", "currmod" => 'btb', "class" => 'BillingRow', "submit" => true);

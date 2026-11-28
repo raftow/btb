@@ -538,7 +538,12 @@ class Hotel extends BtbObject
 
     public function calcPhoto()
     {
-        return $this->getAttachedFileWithType(self::$doc_type_small_photo);
+        $return = $this->getAttachedFileWithType(self::$doc_type_small_photo);
+        if (!$return) {
+            $return = $this->getAttachedFileWithType(self::$doc_type_internal_photo);
+        }
+
+        return $return;
     }
 
     public function getMainPhoto()
@@ -583,7 +588,7 @@ class Hotel extends BtbObject
         else return array($galHtml, $already_photos_arr);
     }
 
-    public function getAttachedFileWithType($type)
+    public function getAttachedFileWithType(int $type)
     {
         $file_dir_name = dirname(__FILE__);
         // require_once("$file_dir_name/../btb/hotel_file.php");
@@ -591,9 +596,9 @@ class Hotel extends BtbObject
         $pfObj->select("hotel_id", $this->getId());
         $pfObj->select("doc_type_id", $type);
 
-        $pfObj->load();
+        if ($pfObj->load()) return $pfObj;
 
-        return $pfObj;
+        return null;
     }
 
     public function getPhotoPathList()

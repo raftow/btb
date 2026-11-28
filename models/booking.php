@@ -35,7 +35,7 @@ class Booking extends BtbObject
                 } else return null;
         }
 
-        public static function loadMyTickets($customer_id)
+        public static function loadMyTickets(int $customer_id)
         {
                 $obj = new Booking();
                 if (!$customer_id) throw new RuntimeException("loadMyTickets : customer_id is mandatory field");
@@ -1351,11 +1351,14 @@ class Booking extends BtbObject
                 $lang = AfwLanguageHelper::getGlobalLanguage();
                 $arrSeatsCategoriesAndPrices = array();
                 for ($i = 1; $i <= 3; $i++) {
-                        $busObj = $this->het("travel_bus$i" . "_id");
-                        if ($busObj) {
-                                $busObjDesc = $busObj->getNodeDisplay($lang);
+                        /**
+                         * @var TravelBus $travelBusObj
+                         */
+                        $travelBusObj = $this->het("travel_bus$i" . "_id");
+                        if ($travelBusObj) {
+                                $busObjDesc = $travelBusObj->getNodeDisplay($lang);
                                 $seats_arr = explode("-", $this->getVal("seats_bus${i}"));
-                                $currentSeatsList = $busObj->getMyCurrentSeats($this->getId());
+                                $currentSeatsList = $travelBusObj->getMyCurrentSeats($this->getId());
 
 
                                 foreach ($currentSeatsList as $seatItem) {
@@ -1423,7 +1426,7 @@ class Booking extends BtbObject
                         // @todo alert the admin to check log file
                         return array("حدث خطأ أثناء إنشاء الفاتورة الرجاء المحاولة لاحقا<br>\n", "");
                 }
-                $bill->set("billing_name", "فاتورة الحجز : " . $this->getId()); //$this->getShortDisplay($lang));
+                $bill->set("billing_name", "فاتورة لرقم الحجز : " . $this->getId()); //$this->getShortDisplay($lang));
                 $bill->commit();
 
                 $bill->resetBilling();
@@ -1443,7 +1446,7 @@ class Booking extends BtbObject
                         $row_num += 10;
                         $cat_seats_name = $rowSeatsCategoriesAndPrices["name"];
                         $nb_seats = $rowSeatsCategoriesAndPrices["nb"];
-                        if (($nb_seats <= 1) or ($nb_seats > 10)) $name_seats = "مقعد";
+                        if (($nb_seats <= 2) or ($nb_seats > 10)) $name_seats = "مقعد";
                         else $name_seats = "مقاعد";
                         $billSeatsObj = BillingRow::loadByMainIndex($bill->getId(), $rowSeatsCat, $create_obj_if_not_found = true);
                         $billSeatsObj->set("row_num", $row_num);
@@ -1796,8 +1799,11 @@ class Booking extends BtbObject
                 if (!$nb_max_bed_or_seat) return array(0, 0.0);
 
                 // discount_max = 1/3 du benifit standard
-                $travel = $this->het("travel_id");
-                if ($travel) $discount_max = $travel->calcStandard_benifit_pct() / 3.0;
+                /**
+                 * @var Travel $travelObj
+                 */
+                $travelObj = $this->het("travel_id");
+                if ($travelObj) $discount_max = $travelObj->calcStandard_benifit_pct() / 3.0;
                 else $discount_max = -100;
 
                 //throw new AfwRuntimeException("fidelity_level = $fidelity_level");
@@ -1821,14 +1827,15 @@ class Booking extends BtbObject
                 else return $this->translate("status.$status");
         }
 
-        public function calcDiv_billing($create_obj_if_not_found = false)
+        public function calcDiv_billing($what = 'value', $create_obj_if_not_found = false)
         {
                 $lang = AfwLanguageHelper::getGlobalLanguage();
                 $objme = AfwSession::getUserConnected();
 
                 $bill = $this->myBilling($create_billing_if_not_found = false);
                 if (!$bill) return "لم يتم انشاء الفاتورة بعد";
-                $liste_rows = $bill->get("rows");
+                $liste_rows = $bill->get("rowList");
+                // die("rafik dbg calcDiv_billing bill->get(rowList) = " . var_export($liste_rows, true));
                 $obj = reset($liste_rows);
                 list($html_rows,,) = AfwShowHelper::showManyObj($liste_rows, $obj, $objme, $lang);
                 $html = "<div class='bill'>";

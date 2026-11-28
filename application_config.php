@@ -30,7 +30,7 @@ $config_arr = [
         //  classes params
         'TravelTemplate_showId' => true,
 
-        'default_controller_name' => "btbd",
+        // 'default_controller_name' => "btbd",
 
         /*'simulate_sms_to_mobile' => "0598988330",*/
 

@@ -1029,9 +1029,17 @@ class TravelBus extends BtbObject
                                                         $attribute_length_val = $btr->getVal($attribute_length);
                                                         if ($attribute_width_val) {
                                                                 $top = $stop + (4 - $icol) * ($sh + $ih);
-                                                                $top_help = "top = $top = stop:$stop + (4 - $icol:icol) * (sh:$sh + ih:$ih);";
                                                                 $left = $sleft - ($row - 1 + $attribute_length_val) * ($sw + $iw);
-                                                                $left_help = "left = $left = sleft:$sleft - (row:$row - 1 + cell_length:$attribute_length_val) * (sw:$sw + iw:$iw);";
+                                                                if (AfwSession::hasOption("CHECK_ERRORS")) {
+                                                                        $top_help = "top = $top = stop:$stop + (4 - $icol:icol) * (sh:$sh + ih:$ih);";
+                                                                        $left_help = "left = $left = sleft:$sleft - (row:$row - 1 + cell_length:$attribute_length_val) * (sw:$sw + iw:$iw);";
+                                                                } else {
+                                                                        $top_help = "";
+                                                                        $left_help = "";
+                                                                }
+
+
+
                                                                 $wd = intval($attribute_length_val) * ($sw + $iw) - $iw;
                                                                 $hg = intval($attribute_width_val) * ($sh + $ih) - $ih;
                                                                 $lhg = $sh;
@@ -1238,18 +1246,29 @@ class TravelBus extends BtbObject
                 else return "no bus";
         }
 
-        public function calcFrontBusDiv($what = 'value', $seats_bus = "-", $booking_id = 0, $can_edit = true, $nb_seats = 1, $booking_ongoing = true)
-        {
+        public function calcFrontBusDiv(
+                $what = 'value',
+                $seats_bus = "-",
+                $booking_id = 0,
+                $can_edit = true,
+                $nb_seats = 1,
+                $booking_ongoing = true,
+                $sw = 37,
+                $sh = 37,
+                $iw = 3,
+                $ih = 3,
+                $driver_seat_width = 45,
+        ) {
                 // rafik-dbg position of seats for vertical align
-                $vertical_turn = array('sens' => "inv-watch", 'translate_x' => -10, 'translate_y' => 455); // null;//
+                $vertical_turn = array('sens' => "inv-watch", 'translate_x' => -10, 'translate_y' => 500); // null;//
                 $bus_num = $this->getVal("bus_num");
                 return $this->calcBusDiv(
                         $what,
-                        $sw = 37,
-                        $sh = 37,
-                        $iw = 3,
-                        $ih = 3,
-                        $driver_seat_width = 45,
+                        $sw,
+                        $sh,
+                        $iw,
+                        $ih,
+                        $driver_seat_width,
                         $bus_num,
                         $seats_bus,
                         $booking_id,
@@ -1762,7 +1781,7 @@ class TravelBus extends BtbObject
                 return $tsObj->loadMany();
         }
 
-        public function countSeatsBookedForMe($booking_id, $traveler_id = 0)
+        public function countSeatsBookedForMe(int $booking_id, $traveler_id = 0)
         {
                 $travel_bus_id = $this->getId();
 

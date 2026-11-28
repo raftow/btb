@@ -221,7 +221,7 @@ class ContentController extends AfwController
 
         /******************************** home action ********************************************** */
 
-        public function defaultMethod($request)
+        public function defaultMethod(array $request)
         {
                 return "home2";
         }

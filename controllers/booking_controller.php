@@ -320,7 +320,7 @@ class BookingController extends AfwStepsController
                 );
                 $this->addStep(
                         "authenticate",
-                        "بيانات العميل",
+                        "بيانات صاحب الحجز",
                         "تالي",
                         "قم بادخال بيانات صحيحة لصاحب الحجز علما وأنه سيتم استخدامها في إدارة الحجز",
                         false
@@ -330,7 +330,7 @@ class BookingController extends AfwStepsController
                         "استكمال بيانات العميل",
                         "تالي",
                         "قم بادخال بيانات صحيحة لصاحب الحجز علما وأنه سيتم استخدام رقم الجوال في جميع عمليات التأكيد أو الالغاء أو التعديل للحجز",
-                        true
+                        false
                 );
                 $this->addStep(
                         "seats",
@@ -356,7 +356,7 @@ class BookingController extends AfwStepsController
                 $this->addStep("ticket", "معاينة / طباعة التذكرة والعقد", "انتهى", "", true);
         }
 
-        public function prepareStandard($request)
+        public function prepareStandard(string $method)
         {
                 $custom_scripts = array();
                 $custom_scripts[] = array('type' => 'css', 'path' => "./css/booker.css");
@@ -365,6 +365,7 @@ class BookingController extends AfwStepsController
         }
 
         /**
+         * -----------------------------------------
          * @return array
          */
         protected function getSpecialDataFromRequest(array $request, string $step_name)
@@ -375,13 +376,21 @@ class BookingController extends AfwStepsController
                         $data["tid"] = $travelObj->id;
                 }
 
+
+
                 $data["can_edit_seats_and_beds"] = in_array(
                         $step_name,
                         ["conditions", "authenticate", "customer"]
                 );
 
-                $data["div_step"] = $this->renderInternal("btb", $step_name, $data);
-                $data["div_navigation"] = $this->renderInternal("lib", "steps_navigate", $data);
+
+                $data["limit_birth_gdate"] = AfwDateHelper::addDatetimeToGregDatetime('', -14);
+                $data["limit_birth_date"] = AfwDateHelper::gregToHijri($data["limit_birth_gdate"]);
+
+
+                /**
+                 * @var Booking $bookingObj
+                 */
 
                 $bookingObj = $data["obj"];
 
@@ -389,7 +398,7 @@ class BookingController extends AfwStepsController
 
                 $customerObj = null;
                 if ($bookingObj) {
-                        $customerObj = $bookingObj->getCustomer();
+                        $customerObj = $bookingObj->het("crm_customer_id");
                         if ($customerObj) $data["customer_origin"] = "صاحب الحجز";
                         else $data["customer_origin"] = "حجز بدون عميل ؟؟";
                         $data["traveler_type_id"] = $bookingObj->getVal("traveler_type_id");
@@ -409,32 +418,44 @@ class BookingController extends AfwStepsController
 
                 $data["customerObj"] = $customerObj;
 
+                if (!$travelObj) $this->renderError("this request can not provide the travel object => " . var_export($request, true));
+                if (!$data["city_id"]) $data["city_id"] = $travelObj->getVal("depart_city_id");
+                $data["customer_origin"] = "الجديد";
+                if ($data["date_system"] == "greg") {
+                        $data["entered_birth_gdate"] = $request["birth_gdate"];
+                } else {
+                        if ($request["birth_date"]) {
+                                $data["entered_birth_gdate"] = AfwDateHelper::hijriToGreg($request["birth_date"]);
+                        } else {
+                                $data["entered_birth_gdate"] = $request["birth_gdate"];
+                                $request["birth_date"] = AfwDateHelper::gregToHijri($request["birth_gdate"]);
+                        }
+                }
+                $data["birth_gdate"] = $data["entered_birth_gdate"];
+                $data["birth_date"] = AfwDateHelper::gregToHijri($request["birth_gdate"]);
+                if (!$data["birth_date"] or !$data["birth_gdate"]) {
+                        list($default_birth_date,) = explode(" ", AfwDateHelper::addDatetimeToGregDatetime('', -40));
+                        $data["birth_gdate"] = AfwDateHelper::inputFormatDate($default_birth_date);
+                        $data["birth_date"] = AfwDateHelper::gregToHijri($default_birth_date);
+                }
 
                 if ($customerObj) {
-                        $data["city_id"] = $customerObj->getVal("city_id");
-                        $data["customer_gender_id"] = $customerObj->getVal("gender_id");
-                        $data["mobile"] = $customerObj->getVal("mobile");
-                        $data["idn"] = $customerObj->getVal("idn");
-                        $data["first_name_ar"] = $customerObj->getVal("first_name_ar");
-                        $data["last_name_ar"] = $customerObj->getVal("last_name_ar");
-                        $data["customer_id"] = $customerObj->id;
                         $data["mobile_readonly"] = "readonly";
-                        $data["idn_readonly"] = "readonly";
+                        $data["birth_gdate_readonly"] = "readonly";
+
+                        if (!$data["city_id"]) $data["city_id"] = $customerObj->getVal("city_id");
+                        if (!$data["customer_gender_id"]) $data["customer_gender_id"] = $customerObj->getVal("gender_id");
+                        if (!$data["mobile"]) $data["mobile"] = $customerObj->getVal("mobile");
+                        if (!$data["idn"]) $data["idn"] = $customerObj->getVal("idn");
+                        if (!$data["first_name_ar"]) $data["first_name_ar"] = $customerObj->getVal("first_name_ar");
+                        if (!$data["last_name_ar"]) $data["last_name_ar"] = $customerObj->getVal("last_name_ar");
+                        if (!$data["ref_num"]) $data["ref_num"] = $customerObj->getVal("ref_num");
+                        if (!$data["customer_id"]) $data["customer_id"] = $customerObj->id;
+                        list($birth_gdate,) = explode(" ", $customerObj->getVal("birth_date"));
+                        $data["birth_gdate"] = AfwDateHelper::inputFormatDate($birth_gdate);
+                        $data["birth_date"] = AfwDateHelper::gregToHijri($birth_gdate);
                 }
-                // else use default data
-                else {
-                        if (!$travelObj) $this->renderError("this request can not provide the travel object => " . var_export($request, true));
-                        $data["city_id"] = $travelObj->getVal("depart_city_id");
-                        $data["customer_gender_id"] = 1;
-                        $data["customer_id"] = "";
-                        $data["idn"] = "";
-                        $data["first_name_ar"] = "";
-                        $data["last_name_ar"] = "";
-                        $data["mobile"] = "";
-                        $data["mobile_readonly"] = "";
-                        $data["idn_readonly"] = "";
-                        $data["customer_origin"] = "الجديد";
-                }
+
 
                 if (in_array($step_name, ["customer"])) {
                         $data["cityList"] = City::loadAll();
@@ -452,12 +473,22 @@ class BookingController extends AfwStepsController
                 }
 
                 if ($this->stepEnteringRequireObject($step_name)) {
-                        if (!$data["customer_id"]) $this->renderError("initSakanData-customer id lost : is mandatory for the current step : 'select sakan'");
-                        if (!$data["tid"]) $this->renderError("initSakanData-travel id lost : is mandatory for the current step : 'select sakan'");
-                        if (!$data["travelers"]) $this->renderError("initSakanData-travelers nb lost : is mandatory for the current step : 'select sakan'");
-                        if (!$data["booking_id"]) $this->renderError("initSakanData-booking_id nb lost : is mandatory for the current step : 'select sakan'");
+                        if (!$data["customer_id"]) $this->renderError("getSpecialDataFromRequest : stepEnteringRequireObject($step_name) and customer_id lost : is mandatory for the current step : 'select sakan'");
+                        if (!$data["tid"]) $this->renderError("getSpecialDataFromRequest : stepEnteringRequireObject($step_name) and travel_id lost : is mandatory for the current step : 'select sakan'");
+                        if (!$data["travelers"]) $this->renderError("getSpecialDataFromRequest : stepEnteringRequireObject($step_name) and travelers_nb lost : is mandatory for the current step : 'select sakan'");
+                        if (!$data["booking_id"]) $this->renderError("getSpecialDataFromRequest : stepEnteringRequireObject($step_name) and booking_id lost : is mandatory for the current step : 'select sakan'");
                 }
 
+                return $data;
+        }
+
+        /**
+         * @return array
+         */
+        protected function finalizeDataFromRequest(array $data, string $step_name)
+        {
+                $data["div_step"] = $this->renderInternal("btb", $step_name, $data);
+                $data["div_navigation"] = $this->renderInternal("lib", "steps_navigate", $data);
                 return $data;
         }
 
@@ -470,6 +501,7 @@ class BookingController extends AfwStepsController
         public function initConditionsData($request)
         {
                 $data = $this->getDataFromRequest($request, "conditions");
+                // die("initConditionsData returned " . var_export($data, true));
                 return $data;
         }
 
@@ -499,6 +531,7 @@ class BookingController extends AfwStepsController
         {
                 $data = $this->initConditionsData($request);
                 // call the view
+                // die("initConditionsData returned " . var_export($data, true));
                 $this->render("btb", "book", $data);
         }
 
@@ -531,10 +564,12 @@ class BookingController extends AfwStepsController
                         $request["all_error"] .= $request["mobile_error"] . "<br>";
                 }
 
-                if ((!$request["birth_date"]) or (!AfwDateHelper::isCorrectGDate($request["birth_date"], 10, 150))) {
+                if ((!$request["birth_gdate"]) or (!AfwDateHelper::isCorrectGDate($request["birth_gdate"], 10, 150))) {
                         $request["customer_ok"] = false;
-                        $request["birth_date_error"] = "الرجاء التثبت من تاريخ الميلاد";
-                        $request["all_error"] .= $request["idn_error"] . "<br>";
+                        $request["birth_date_error"] = $request["birth_gdate_error"] = "الرجاء التثبت من تاريخ الميلاد : <br>\n
+                                                      G:" . $request["birth_gdate"] . "<br>\n
+                                                      H:" . $request["birth_date"];
+                        $request["all_error"] .= $request["birth_date_error"] . "<br>";
                 }
 
                 return array($request, $request["customer_ok"]);
@@ -549,16 +584,21 @@ class BookingController extends AfwStepsController
                 foreach ($request as $key => $value) $$key = $value;
 
                 if (!$customerObj) {
+
                         // create or update this customer
-                        $idn = CrmCustomer::suggestCustomerIdn($birth_date);
-                        $cutomerObj = CrmCustomer::loadByMobileAndBirthDate($mobile, $birth_date, true, $idn, 5);
+                        $idn = CrmCustomer::suggestCustomerIdn($birth_gdate);
+                        $customerObj = CrmCustomer::loadByMobileAndBirthDate($mobile, $birth_gdate, true, $idn, 5);
+                        if ($travelObj and $travelObj->id and $customerObj and !$customerObj->getVal("city_id")) {
+                                $customerObj->set("city_id", $travelObj->getVal("depart_city_id"));
+                        }
+                        $customerObj->commit();
                 }
 
-                $request["cutomerObj"] = $cutomerObj;
+                $request["customerObj"] = $customerObj;
                 // set him as connected customer
                 AfwSession::logoutCustomer();
-                AfwSession::setCustomer($cutomerObj->id);
-                $request["customer_id"] = $cutomerObj->id;
+                AfwSession::setCustomer($customerObj->id);
+                $request["customer_id"] = $customerObj->id;
 
                 return $request;
         }
@@ -571,8 +611,6 @@ class BookingController extends AfwStepsController
         {
                 // echo("request = ".var_export($request,true)."<br><br>");
                 $data = $this->initAuthenticateData($request);
-                $data["div_step"] = $this->renderInternal("btb", "authenticate", $data);
-                $data["div_navigation"] = $this->renderInternal("lib", "steps_navigate", $data);
 
                 // call the view
                 $this->render("btb", "book", $data);
@@ -599,10 +637,34 @@ class BookingController extends AfwStepsController
                 // by default ok
                 $request["customer_ok"] = true;
 
-                if (!$request["cutomerObj"]) {
+                if (!$request["customerObj"]) {
                         $request["customer_ok"] = false;
                         $request["customer_id_error"] = "لم يتم تسجيل الدخول أو لم يتم تسجيل العميل";
-                        $request["all_error"] .= $request["idn_error"] . "<br>";
+                        $request["all_error"] .= $request["customer_id_error"] . "<br>";
+                }
+
+                if (!$request["first_name_ar"]) {
+                        $request["customer_ok"] = false;
+                        $request["first_name_ar_error_0"] = "الاسم الأول للعميل الزامي";
+                        $request["all_error"] .= $request["first_name_ar_error_0"] . "<br>";
+                }
+
+                if (!$request["last_name_ar"]) {
+                        $request["customer_ok"] = false;
+                        $request["last_name_ar_error_0"] = "إسم العائلة للعميل الزامي";
+                        $request["all_error"] .= $request["last_name_ar_error_0"] . "<br>";
+                }
+
+                if (!$request["customer_gender_id"]) {
+                        $request["customer_ok"] = false;
+                        $request["customer_gender_id_error_0"] = "جنس العميل حقل الزامي";
+                        $request["all_error"] .= $request["customer_gender_id_error_0"] . "<br>";
+                }
+
+                if (!$request["traveler_type_id"]) {
+                        $request["customer_ok"] = false;
+                        $request["traveler_type_id_error_0"] = "نوع المسافرين حقل الزامي";
+                        $request["all_error"] .= $request["traveler_type_id_error_0"] . "<br>";
                 }
 
                 return array($request, $request["customer_ok"]);
@@ -616,52 +678,38 @@ class BookingController extends AfwStepsController
         {
                 foreach ($request as $key => $value) $$key = $value;
                 // create or update this customer
-                $cutomerObj->saveInfos($first_name_ar, $last_name_ar, $customer_gender_id, $city_id);
+                /**
+                 * @var CrmCustomer $customerObj
+                 */
+                $customerObj->saveInfos($first_name_ar, $last_name_ar, $customer_gender_id, $city_id, 1, $ref_num);
                 $cutomerConnected = AfwSession::getCustomerConnected();
-                if ($cutomerConnected->id != $cutomerObj->id) {
-                        AfwSession::setCustomer($cutomerObj->id);
+                if ($cutomerConnected->id != $customerObj->id) {
+                        AfwSession::setCustomer($customerObj->id);
                 }
 
-                $request["customer_id"] = $cutomerObj->id;
+                $request["customer_id"] = $customerObj->id;
+                $this->saveBookingObject($request);
 
                 return $request;
         }
 
-
-        /**
-         * @param array $request
-         * 
-         */
-        public function customer($request)
-        {
-                // echo("request = ".var_export($request,true)."<br><br>");
-                $data = $this->initCustomerData($request);
-                $data["div_step"] = $this->renderInternal("btb", "select_customer", $data);
-                $data["div_navigation"] = $this->renderInternal("lib", "steps_navigate", $data);
-
-                // call the view
-                $this->render("btb", "book", $data);
-        }
-
-        /******************************** seats step ********************************************** */
-        public function initSeatsData($request)
+        public function saveBookingObject(array $request)
         {
                 $lang = AfwLanguageHelper::getGlobalLanguage();
-                $data = $this->getDataFromRequest($request, "seats");
-                // if the customer is not authenticated raise error
                 foreach ($request as $key => $value) $$key = $value;
                 $bookingObj = $this->getObject($request, false);
                 if (!$bookingObj) {
-                        if (!$customer_id) $this->renderError("initSeatsData-customer id lost : is mandatory for the current step : 'select seats'");
-                        if (!$tid) $this->renderError("initSeatsData-travel id lost : is mandatory for the current step : 'select seats'");
-                        if (!$travelers) $this->renderError("initSeatsData-travelers nb lost : is mandatory for the current step : 'select seats'");
-                        if (!$traveler_type_id) $this->renderError("initSeatsData-traveler_type_id lost : is mandatory for the current step : 'select seats'");
+                        if (!$customer_id) $this->renderError("saveBookingObject -customer id lost");
+                        if (!$tid) $this->renderError("saveBookingObject -travel id lost");
+                        if (!$travelers) $this->renderError("saveBookingObject -travelers nb lost");
+                        if (!$travelers) $this->renderError("saveBookingObject -beds nb lost");
+                        if (!$traveler_type_id) $this->renderError("saveBookingObject -traveler_type_id lost");
 
                         // create a booking for this travel and this customer 
                         //throw new AfwRuntimeException("traveler_type_id = $traveler_type_id");
                         list($bookingObj, $message) = Booking::createOrUpdateBooking($tid, $customer_id, $traveler_type_id, $travelers, $beds);
                         //throw new AfwRuntimeException("traveler_type_id = $traveler_type_id, booking->ttid = ".$bookingObj->getVal("traveler_type_id")."");
-                        if ($message or (!$bookingObj)) $this->renderError("initSeatsData-createNewBooking : $message ");
+                        if ($message or (!$bookingObj)) $this->renderError("saveBookingObject : $message ");
                         $this->setObject($bookingObj);
                 } else {
                         $bookingObj->set("travelers_nb", $travelers);
@@ -673,10 +721,33 @@ class BookingController extends AfwStepsController
                         $data["traveler_type_id"] = $bookingObj->getVal("traveler_type_id");
                 }
 
-
-
                 // suggest for him the convenient seats depending on type of travel group
                 $bookingObj->suggestSeats($lang);
+        }
+
+
+        /**
+         * @param array $request
+         * 
+         */
+        public function customer($request)
+        {
+                // echo("request = ".var_export($request,true)."<br><br>");
+                $data = $this->initCustomerData($request);
+
+                // call the view
+                $this->render("btb", "book", $data);
+        }
+
+
+
+        /******************************** seats step ********************************************** */
+        public function initSeatsData(array $request)
+        {
+                $lang = AfwLanguageHelper::getGlobalLanguage();
+                $data = $this->getDataFromRequest($request, "seats");
+                // if the customer is not authenticated raise error
+
                 return $data;
         }
 
@@ -685,7 +756,20 @@ class BookingController extends AfwStepsController
                 return 2;
         }
 
-        public function saveSeats($request)
+        public function validateSeats(array $request)
+        {
+                // by default ok
+                $request["seats_ok"] = true;
+
+                // check and validate that seats number is ok
+
+                // check and validate that seats selected still available 
+
+
+                return array($request, $request["seats_ok"]);
+        }
+
+        public function saveSeats(array $request)
         {
                 $bookingObj = $this->getObject($request);
                 if (!$bookingObj) $this->renderError("saveSeats fail no booking object : how to save without booking object");
@@ -719,59 +803,62 @@ class BookingController extends AfwStepsController
                 return $request;
         }
 
-        public function validateSeats($request)
-        {
-                // by default ok
-                $request["seats_ok"] = true;
-
-                // check and validate that seats number is ok
-
-                // check and validate that seats selected still available 
 
 
-                return array($request, $request["seats_ok"]);
-        }
 
-
-        public function seats_info($data)
+        public function global_info(array $data)
         {
                 $lang = AfwLanguageHelper::getGlobalLanguage();
                 $data["step_infos"] = array();
                 $bookingObj = $this->getObject($data);
+                /**
+                 * @var CrmCustomer $custObj
+                 */
                 $custObj = $bookingObj->het("crm_customer_id");
                 if ($bookingObj) {
-                        $data["step_infos"]["رقم الحجز التسلسلي"] = $bookingObj->id;
+                        $data["step_infos"]["رقم الحجز"] = $bookingObj->id;
                         $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("traveler_type_id");
+                        $total_amount = $bookingObj->myTotalAmount();
+                        if ($total_amount) {
+                                $data["step_infos"]["قيمة التذكرة"] = $total_amount . " ريال";
+                        }
                 }
-                if ($custObj) $data["step_infos"]["العميل"] = $custObj->getDisplay($lang);
+                if ($custObj) $data["step_infos"]["العميل"] = $custObj->getShortDisplay($lang);
 
                 return $data;
         }
 
-        public function seats_help($data)
+        public function seats_help(array $data)
         {
-                $data["step_help"] = "<strong>طريقة إستخدام الإستمارة السابقة :</strong>
+                $data["step_help"] = AfwFormatHelper::toHtml("<strong>طريقة إستخدام الإستمارة السابقة :</strong>
 +1+ يمكنك تعديل عدد المقاعد أو عدد السراير من الزر الأزرق اعلاه
 +2+ لا يمكن تحديد أكثر من عدد المقاعد المطلوبة
 +3+ في حال تغيير مقعد بآخر انقر عليه لإزالة التظليل ثم ظلل على المقعد الجديد
-+4+ يمكنك تقسيم المسافرين على أكثر من مركبة ويجب في هذه الحالة مشاركة اصدار التذكرة مع المجموعة الثانية للاستظهار بها عند الركوب";
+");
+
+                // +4+ يمكنك تقسيم المسافرين على أكثر من مركبة ويجب في هذه الحالة مشاركة اصدار التذكرة مع المجموعة الثانية للاستظهار بها عند الركوب
 
                 if ($data["travelObj"]) {
-                        $data["bus_seats_select"] = $data["travelObj"]->getBusSeatsSelector($limit = 1, $data["travelers"], $data["booking_id"]);
+                        $bookingObj = $this->getObject($data);
+                        /**
+                         * @var Travel $travelObj
+                         * @var Booking $bookingObj
+                         */
+
+                        $travelObj = $data["travelObj"];
+                        $data["bus_seats_select"] = $travelObj->getBusSeatsSelector(1, $data["travelers"], $bookingObj->id, $bookingObj);
                 }
 
                 return $data;
         }
 
-        public function seats($request)
+        public function seats(array $request)
         {
                 $lang = AfwLanguageHelper::getGlobalLanguage();
-                $data = $this->initSeatsData($request);
-                $data = $this->seats_info($data);
+                $data = $this->global_info($request);
                 $data = $this->seats_help($data);
+                $data = $this->initSeatsData($data);
 
-                $data["div_step"] = $this->renderInternal("btb", "select_seat", $data);
-                $data["div_navigation"] = $this->renderInternal("lib", "steps_navigate", $data);
 
                 // call the view
                 $this->render("btb", "book", $data);
@@ -840,42 +927,28 @@ class BookingController extends AfwStepsController
                         $arr_notes[] = "جميع هذه الأسعار في الأسفل بعد الخصم الذي ستظهر تفاصيله في الفاتورة قبيل السداد";
                 }
 
-                $request["step_help"] = "<div><strong>قواعد مهمة نرجوا الإطلاع عليها :</strong></div>" . AfwHtmlHelper::genereBulles($arr_notes);
+                $request["step_help"] = "<div><strong>قواعد مهمة نرجوا الإطلاع عليها :</strong></div>" . AfwFormatHelper::toHtml(AfwHtmlHelper::genereBulles($arr_notes));
                 return $request;
         }
 
         public function sakan_info($data)
         {
-                $lang = AfwLanguageHelper::getGlobalLanguage();
                 $bookingObj = $this->getObject($data);
-                if (!$bookingObj) $this->renderError("action sakan fail, no booking object : how to save without booking object");
-
-                $data["step_infos"] = array();
-                $custObj = $bookingObj->het("crm_customer_id");
                 if ($bookingObj) {
-                        $data["step_infos"]["رقم الحجز التسلسلي"] = $bookingObj->id;
-                        $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("traveler_type_id");
+                        $data_sakan = $bookingObj->getSakanSelect();
+                        $data_sakan["bookingObj"] = $bookingObj;
+                        $data["sakan_select"] = $this->renderInternal("btb", "sakan_divs", $data_sakan);
                 }
-                if ($custObj) $data["step_infos"]["العميل"] = $custObj->getDisplay($lang);
-
-                $data_sakan = $bookingObj->getSakanSelect();
-                $data_sakan["bookingObj"] = $bookingObj;
-
-                $data["sakan_select"] = $this->renderInternal("btb", "sakan_divs", $data_sakan);
 
                 return $data;
         }
 
         public function sakan($request)
         {
-
-                $data = $this->initSakanData($request);
+                $data = $this->global_info($request);
                 $data = $this->sakan_help($data);
                 $data = $this->sakan_info($data);
-
-                //  
-                $data["div_step"] = $this->renderInternal("btb", "select_sakan", $data);
-                $data["div_navigation"] = $this->renderInternal("lib", "steps_navigate", $data);
+                $data = $this->initSakanData($data);
 
                 // call the view
                 $this->render("btb", "book", $data);
@@ -915,22 +988,10 @@ class BookingController extends AfwStepsController
                 return array($request, $request["billing_ok"]);
         }
 
-        public function billing($request)
+        public function billing_help(array $data)
         {
-                $lang = AfwLanguageHelper::getGlobalLanguage();
-                foreach ($request as $key => $value) $$key = $value;
-                $data = $this->initBillingData($request);
-
-
-                $total_amount = $bookingObj->myTotalAmount();
-                // throw new AfwRuntimeException("$total_amount = $bookingObj ->myTotalAmount()");
-                // if(!$total_amount) list($errors, $infos, $total_amount) = 
-                $bookingObj->genereBilling($lang);
-
-
-                $div_billing = $bookingObj->getVal("div_billing");
+                foreach ($data as $key => $value) $$key = $value;
                 list($days_limit, $days_bus_sa_limit, $bus_sa_fees, $days_cancel_limit, $cancel_fees, $hours_no_cancel_limit) = $data["travelObj"]->getCancelPolicy($beds, $travelers, $total_amount);
-
                 $arr_notes = array();
                 $arr_notes[] = "يمكنك الإطلاع على تفاصيل الفاتورة قبل السداد كما هو مفصل أدناه";
                 $arr_notes[] = "قمنا بحفظ حجزك وفي حال عدم السداد خلال  $days_limit يوم سيتم الغاء حجز المقاعد والغرف ولكن بامكانك تحديث حجزك واختيار المقاعد والغرف من جديد حسب المتوفر حينئذ";
@@ -941,30 +1002,39 @@ class BookingController extends AfwStepsController
                 $arr_notes[] = "عند إلغاء الحجز قبل أقل من $days_bus_sa_limit أيام من تاريخ الرحلة، لا يتم استرجاع رسوم الحجز لصالح منصة بساط بقيمة $bus_sa_fees ريال";
                 $arr_notes[] = "اطلع على مزيد من التفاصيل حول سياسة الالغاء<a href='#'> من هنا</a>";
 
-                $data["step_help"] = "<div><strong>ما يجب معرفته قبل السداد :</strong></div>" . AfwHtmlHelper::genereBulles($arr_notes);
+                $data["step_help"] = "<div><strong>ما يجب معرفته قبل الدفع :</strong></div>" . AfwFormatHelper::toHtml(AfwHtmlHelper::genereBulles($arr_notes));
 
+                return $data;
+        }
 
-                $data["step_infos"] = array();
-                $custObj = $bookingObj->het("crm_customer_id");
-                if ($bookingObj) {
-                        $data["step_infos"]["رقم الحجز التسلسلي"] = $bookingObj->id;
-                        $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("traveler_type_id");
-                        $data["step_infos"]["قيمة التذكرة"] = $total_amount . " ريال";
-                }
-
-                if ($custObj) $data["step_infos"]["العميل"] = $custObj->getDisplay($lang);
-
+        public function billing_info(array $request)
+        {
+                $lang = AfwLanguageHelper::getGlobalLanguage();
+                /**
+                 * @var Booking $bookingObj
+                 */
+                $bookingObj = $this->getObject($request);
+                // throw new AfwRuntimeException("$total_amount = $bookingObj ->myTotalAmount()");
+                // if(!$total_amount) list($errors, $infos, $total_amount) = 
+                $bookingObj->genereBilling($lang);
+                $div_billing = $bookingObj->calcDiv_billing();
                 $data["bookingObj"] = $bookingObj;
-
                 $data["div_billing"] = $div_billing;
-                $data["div_step"] = $this->renderInternal("btb", "confirm_billing", $data);
-                $data["div_navigation"] = $this->renderInternal("lib", "steps_navigate", $data);
+                return $data;
+        }
+
+        public function billing(array $request)
+        {
+                $data = $this->global_info($request);
+                $data = $this->billing_help($data);
+                $data = $this->billing_info($data);
+                $data = $this->initBillingData($data);
 
                 // call the view
                 $this->render("btb", "book", $data);
         }
 
-        public function saveBilling($request)
+        public function saveBilling(array $request)
         {
                 foreach ($request as $key => $value) $$key = $value;
                 $bookingObj = $this->getObject($request);
@@ -1009,52 +1079,46 @@ class BookingController extends AfwStepsController
                 return array($request, $request["paymode_ok"]);
         }
 
-        public function paymode($request)
+        public function paymode_help(array $data)
         {
-                $lang = AfwLanguageHelper::getGlobalLanguage();
-                foreach ($request as $key => $value) $$key = $value;
-                $data = $this->initPaymodeData($request);
-                $bookingObj = $this->getObject($request);
-                if (!$bookingObj) $this->renderError("action paymode fail no booking object : how to work without booking object");
-                // echo("request = ".var_export($request,true)."<br><br>");
-                $travelObj = self::getTravelObject($request);
-                if (!$travelObj) $this->renderError("action paymode fail no travel object : how to work without travel object");
-
-                $companyObj = $travelObj->het("work_branch_id");
-                if (!$companyObj) $this->renderError("action paymode fail no company object : how to work without company object");
-
-
-
-                $total_amount = $bookingObj->myTotalAmount();
-
-
                 $arr_notes = array();
                 $arr_notes[] = "قم أولا باختيار المبلغ الذي ترغب في سداده الآن";
                 $arr_notes[] = "اختيارك هو المظلل عليه باللون الأزرق";
                 $arr_notes[] = "سداد كامل المبلغ الآن يكسبك نقاط عميل وفي";
                 $arr_notes[] = "ثم اختر أحد طرق السداد المتاحة والمناسبة لك";
-                $data["step_help"] = "<div><strong>طريقة السداد :</strong></div>" . AfwHtmlHelper::genereBulles($arr_notes);
+                $data["step_help"] = "<div><strong>طريقة السداد :</strong></div>" . AfwFormatHelper::toHtml(AfwHtmlHelper::genereBulles($arr_notes));
 
-                $data["step_infos"] = array();
-                $custObj = $bookingObj->het("crm_customer_id");
-                if ($bookingObj) {
-                        $data["step_infos"]["رقم الحجز التسلسلي"] = $bookingObj->id;
-                        $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("traveler_type_id");
-                        $data["step_infos"]["قيمة التذكرة"] = $total_amount . " ريال";
-                }
+                return $data;
+        }
 
-                if ($custObj) $data["step_infos"]["العميل"] = $custObj->getDisplay($lang);
+        public function paymode_info(array $data)
+        {
+                $bookingObj = $this->getObject($data);
+                if (!$bookingObj) $this->renderError("action paymode fail no booking object : how to work without booking object");
+                // echo("request = ".var_export($request,true)."<br><br>");
+                $travelObj = self::getTravelObject($data);
+                if (!$travelObj) $this->renderError("action paymode fail no travel object : how to work without travel object");
+
+                $companyObj = $travelObj->het("work_branch_id");
+                if (!$companyObj) $this->renderError("action paymode fail no company object : how to work without company object");
+
+                $total_amount = $bookingObj->myTotalAmount();
 
                 $data["bookingObj"] = $bookingObj;
+                $data["payment_mode_id"] = $bookingObj->getVal("payment_mode_id");
+                $data["total_amount"] = $total_amount;
+                $data["amount_part"] = $companyObj->getPartialAmountCanBePaid($total_amount);
+                $data["points"] = $companyObj->getPointsForCompletePayment($total_amount);
 
-                $data_paymode = $data;
-                $data_paymode["payment_mode_id"] = $bookingObj->getVal("payment_mode_id");
-                $data_paymode["total_amount"] = $total_amount;
-                $data_paymode["amount_part"] = $companyObj->getPartialAmountCanBePaid($total_amount);
-                $data_paymode["points"] = $companyObj->getPointsForCompletePayment($total_amount);
+                return $data;
+        }
 
-                $data["div_step"] = $this->renderInternal("btb", "select_paymode", $data_paymode);
-                $data["div_navigation"] = $this->renderInternal("lib", "steps_navigate", $data);
+        public function paymode(array $request)
+        {
+                $data = $this->global_info($request);
+                $data = $this->paymode_info($data);
+                $data = $this->paymode_help($data);
+                $data = $this->initPaymodeData($data);
 
                 // call the view
                 $this->render("btb", "book", $data);
@@ -1111,32 +1175,22 @@ class BookingController extends AfwStepsController
 
                 $paymentModeObj = $bookingObj->het("payment_mode_id");
                 if (!$paymentModeObj) $this->renderError("action payment fail no valid paiement mode selected");
-                $pm_code = $paymentModeObj->lookup_code;
+                $pm_code = $paymentModeObj->getVal("lookup_code");
 
                 $data["travelObj"] = $travelObj;
 
                 $data["current_step"] = $this->getStepNumByName("payment");
                 $data["current_option"] = $pm_code;
-                $data["max_steps"] = $this->maxSteps();
+
 
                 $total_amount = $bookingObj->myTotalAmount();
-                $paid_amount = $bookingObj->paid_amount;
+                $paid_amount = $bookingObj->getVal("paid_amount");
                 $arr_notes = array();
-                $arr_notes[] = "المبلغ المستحق / التسبقة<div class='payment_price'>$paid_amount</div> ريال";
+                $arr_notes[] = "المبلغ المستحق<div class='payment_price'>$paid_amount</div> ريال";
                 $arr_notes[] = "أدخل رقم البطاقة";
                 $arr_notes[] = "أدخل الاسم الأول لصاحب البطاقة";
                 $arr_notes[] = "أدخل كلمة السر";
-                $data["step_help"] = "<div><strong>طريقة السداد :</strong></div>" . AfwHtmlHelper::genereBulles($arr_notes);
-
-                $data["step_infos"] = array();
-                $custObj = $bookingObj->het("crm_customer_id");
-                if ($bookingObj) {
-                        $data["step_infos"]["رقم الحجز التسلسلي"] = $bookingObj->id;
-                        $data["step_infos"]["نوع المسافر"] = $bookingObj->decode("traveler_type_id");
-                        $data["step_infos"]["قيمة التذكرة"] = $total_amount . " ريال";
-                }
-
-                if ($custObj) $data["step_infos"]["العميل"] = $custObj->getDisplay($lang);
+                $data["step_help"] = "<div><strong>طريقة السداد :</strong></div>" . AfwFormatHelper::toHtml(AfwHtmlHelper::genereBulles($arr_notes));
 
                 $data["bookingObj"] = $bookingObj;
 
@@ -1146,7 +1200,7 @@ class BookingController extends AfwStepsController
                 $data_payment["paid_amount"] = $paid_amount;
                 //$data_paymode["points"] = $companyObj->getPointsForCompletePayment($total_amount);
 
-                $data["div_step"] = $this->renderInternal("btb", "${pm_code}_payment_form", $data_payment);
+                $data["div_step"] = $this->renderInternal("btb", $pm_code . "_payment_form", $data_payment);
                 $data["div_navigation"] = $this->renderInternal("lib", "steps_navigate", $data);
 
                 // call the view
@@ -1201,7 +1255,7 @@ class BookingController extends AfwStepsController
 
 
                 $data["current_step"] = $this->getStepNumByName("ticket");
-                $data["max_steps"] = $this->maxSteps();
+
                 $travelObj = self::getTravelObject($request);
                 if (!$travelObj) $this->renderError("action ticket failed no travel object : how to primt ticket without travel object");
 
@@ -1211,7 +1265,7 @@ class BookingController extends AfwStepsController
                 $arr_notes[] = "";
                 $arr_notes[] = "";
                 $arr_notes[] = "";
-                $data["step_help"] = "<div><strong>طريقة السداد :</strong></div>".AfwHtmlHelper::genereBulles($arr_notes);
+                $data["step_help"] = "<div><strong>طريقة السداد :</strong></div>".AfwFormatHelper::toHtml(AfwHtmlHelper::genereBulles($arr_notes));
                 */
 
                 $data["div_step"] = $this->renderInternal("btb", "my_bookings", $data);

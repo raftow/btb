@@ -36,20 +36,7 @@ $ziara_destination_selector_hide = ($omtype == "ziara") ? "" : "hide";
 $message_destination_city_id_title = "توضيح";
 $message_destination_city_id_content = "إذا كنت تريد تعديل مدينة الوصول فعليك بتعديل اختيارك لنوع الرحلة عمرة إلى مكة أو زيارة للمدينة أو كلاهما في أول معايير البحث";
 
-$calendar_tr =
-        '["January","February","March","April","May","June", "July","August","September","October","November","December"],
-        monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
-        dayNamesShort: [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ],
-        dayNamesMin: [ "Su","Mo","Tu","We","Th","Fr","Sa" ]';
-
-
-$calendar_tr =
-        '["يناير","فبراير","مارس","أبريل","ماي","يونيو", "يوليو","أغسطس","سبتمير","أكتوبر","نوفمبر","ديسمبر"],
-        monthNamesShort: ["يناير","فبراير","مارس","أبريل","ماي","يونيو", "يوليو","أغسطس","سبتمير","أكتوبر","نوفمبر","ديسمبر"],
-        dayNames: ["الأحد", "الأثنين", "الثلاثاء", "الاربعاء", "الخميس", "الجمعة", "السبت" ],
-        dayNamesShort: ["أحد", "أثنين", "ثلاثاء", "اربعاء", "خميس", "جمعة", "سبت" ],
-        dayNamesMin: [ "أحد","اثن","ثلث","ربع","خمس","جمع","سبت" ]';
+$calendar_tr = AfwEditMotor::calendar_translations($lang, '', '');
 
 
 

@@ -450,7 +450,7 @@ class Travel extends BtbObject
                 return $this->relTravelBusList()->resetWhere("opened='Y'")->orderBy("bus_num asc")->limit($limit)->getList();
         }
 
-        public function getBusSeatsSelector($limit = 2, $travelers, $booking_id = 0, $bookingObj = null)
+        public function getBusSeatsSelector(int $limit, int $travelers, int $booking_id = 0, Booking $bookingObj = null)
         {
                 $lang = AfwLanguageHelper::getGlobalLanguage();
                 $html_bus_list = "";
@@ -473,8 +473,11 @@ class Travel extends BtbObject
                 elseif (count($tbList) == 3) $pct = 33;
                 else $pct = 25;
                 $nb_seats_all = 0;
-                foreach ($tbList as $tbItem) {
-                        $bus_num = $tbItem->bus_num;
+                foreach ($tbList as $travelBusItem) {
+                        /**
+                         * @var TravelBus $travelBusItem
+                         */
+                        $bus_num = $travelBusItem->getVal("bus_num");
                         if ($bookingObj) {
                                 $seats_bus = trim($bookingObj->getVal("seats_bus$bus_num"), "-");
 
@@ -483,9 +486,9 @@ class Travel extends BtbObject
                                         $seats_bus = "-" . $seats_bus . "-";
                                 } else $seats_bus = "-";
                         } else $seats_bus = "-";
-                        $bus_name = $tbItem->getNodeDisplay($lang);
+                        $bus_name = $travelBusItem->getNodeDisplay($lang);
                         $html_bus_sel = "    <div class='bus_sel bus_sel_$bus_num $active'>$bus_name</div>";
-                        $bus_div = $tbItem->calcFrontBusDiv($seats_bus, $booking_id, $can_edit, $travelers);
+                        $bus_div = $travelBusItem->calcFrontBusDiv('value', $seats_bus, $booking_id, $can_edit, $travelers);
                         $html_bus_div_list .= "    <div class='cssgroup_pct_$pct bus_sel_div bus_div_$bus_num $hidden_bus'>$html_bus_sel $bus_div</div>";
                         // $hidden_bus = "hidden_bus";
                         // $active = "";
@@ -1018,9 +1021,12 @@ class Travel extends BtbObject
 
         public function calcTravelProgram()
         {
-                $templateObj = $this->het("travel_template_id");
-                if ($templateObj) {
-                        list($err, $info, $travelProgramObj, $travel_duration) = $templateObj->genereMyBusProgram();
+                /**
+                 * @var TravelTemplate $travelTemplateObj
+                 */
+                $travelTemplateObj = $this->het("travel_template_id");
+                if ($travelTemplateObj) {
+                        list($err, $info, $travelProgramObj, $travel_duration) = $travelTemplateObj->genereMyTravelProgram();
                         return $travelProgramObj;
                 } else return null;
         }
@@ -1723,10 +1729,13 @@ class Travel extends BtbObject
                 $companyObj = $this->het("work_branch_id");
                 if (!$companyObj)  return -1;
 
+                /**
+                 * @var TravelTemplate $travelTemplateObj
+                 */
                 $travelTemplateObj = $this->het("travel_template_id");
                 if (!$travelTemplateObj) return -1;
 
-                list($err, $info, $travelProgramObj, $travel_duration) = $travelTemplateObj->genereMyBusProgram();
+                list($err, $info, $travelProgramObj, $travel_duration) = $travelTemplateObj->genereMyTravelProgram();
 
                 $travel_level_enum = $travelTemplateObj->getVal("travel_level");
 

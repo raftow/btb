@@ -213,7 +213,6 @@ class BtbBillingAfwStructure
 		),
 
 		'rowList' => array(
-			'SHORTNAME' => 'rows',
 			'SHOW' => true,
 			'FORMAT' => 'retrieve',
 			'ICONS' => true,

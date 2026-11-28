@@ -30,7 +30,7 @@ $ttid = $travelObj->getVal("travel_template_id");
 
                                         if (!$hide_travel_header) {
                                         ?>
-                                                <div class='front_bloc hzm_travel_bloc'>
+                                                <div class='whitebg front_bloc hzm_travel_bloc'>
                                                         <div class='mb_med_title tt-<?php echo $ttid ?>'> رحلة رقم <?php echo "P" . $ttid . "-T" . $tid; ?> مع <br> <?php echo $travelObj->calcTravel_company_full_name(); ?> <br>
                                                                 <div class='btb_calendar'>المغادرة <span class="btb_date"><?php echo $full_travel_date ?></span> س <span class="btb_time"><?php echo $travelObj->printAttribute("planned_start_time");; ?> </span> <?php echo $travelObj->translateValue("start_day_part"); ?></div>
                                                         </div>
@@ -72,7 +72,7 @@ $ttid = $travelObj->getVal("travel_template_id");
                                                 <?php
                                                 if ($can_edit_seats_and_beds) {
                                                 ?>
-                                                        <div class='seats_beds_form'>
+                                                        <div class='whitebg seats_beds_form'>
                                                                 <div class="col big people small seats-count-component search">
                                                                         <div class="col date small">
                                                                                 <div class="input-field">
@@ -115,7 +115,7 @@ $ttid = $travelObj->getVal("travel_template_id");
                                                 } else {
                                                 ?>
 
-                                                        <div class='front_bloc btb_trevelers_beds'>
+                                                        <div class='whitebg front_bloc btb_trevelers_beds'>
                                                                 <div class="col">
                                                                         <h5>
                                                                                 <i class="material-icons">people</i><?php echo $travelers; ?> مقعد
@@ -136,22 +136,22 @@ $ttid = $travelObj->getVal("travel_template_id");
                                                 }
                                         }
                                         ?>
-                                        <div class='front_bloc front_step'>
-                                                <div class='front_step_text front_step_name step<?php echo $current_step; ?> option<?php echo $current_option; ?>'><?php echo $step_name ?></div>
-                                                <div class='front_step_text front_step_help step<?php echo $current_step; ?> option<?php echo $current_option; ?> hzm_data'><?php echo $step_placeholder; // Travel::toHtml() 
+                                        <div class='whitebg front_bloc front_step'>
+                                                <div class='front_step_text front_step_name step<?php echo $current_step; ?> option<?php echo $current_option; ?>'><?php echo $step_title ?></div>
+                                                <div class='front_step_text front_step_help step<?php echo $current_step; ?> option<?php echo $current_option; ?> hzm_data'><?php echo $step_help; // Travel::toHtml() 
                                                                                                                                                                                 ?></div>
                                         </div>
-                                        <div class='front_bloc travel_minibox travel<?php echo $travelObj->id; ?> step<?php echo $current_step; ?> hzm_wd4 hzm_minibox_body' id='travel<?php echo $travelObj->id; ?>_minibox' aria-expanded='true' style=''>
+                                        <div class='whitebg front_bloc travel_minibox travel<?php echo $travelObj->id; ?> step<?php echo $current_step; ?> <?php echo $step_name; ?> hzm_wd4 hzm_minibox_body' id='travel<?php echo $travelObj->id; ?>_minibox' aria-expanded='true' style=''>
                                                 <?php echo AfwInputHelper::inputErrorsInRequest("all", $data); ?>
                                                 <?php echo $div_step ?>
                                         </div>
                                         <?php echo $div_navigation ?>
 
-                                        <div class='front_bloc front_step'>
+                                        <div class='whitebg front_bloc front_step'>
                                                 <?php
 
                                                 if ($step_infos) {
-                                                        $div_infos = "<br><br><strong>بيانات الحجز للإطلاع :</strong>";
+                                                        $div_infos = "<br><br><br><p>بيانات الحجز للإطلاع :</p>";
 
                                                         $div_infos .= "<div class='front_step_text front_step_infos hzm_data'>";
                                                         $div_infos .= "<table float='right' dir='rtl' class='front_grid grid' cellpadding='4' cellspacing='3' style=''>";

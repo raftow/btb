@@ -18,17 +18,15 @@ AfwAutoLoader::addModule("hrm");
 AfwAutoLoader::addModule("crm");
 AfwAutoLoader::addModule("workflow");
 
-include_once ("$file_dir_name/../btb/ini.php");
-include_once ("$file_dir_name/../btb/module_config.php");
-include_once ("$file_dir_name/../btb/application_config.php");
+AfwSession::loadContextConfig("system", true, true);
+include_once("$file_dir_name/../btb/ini.php");
+include_once("$file_dir_name/../btb/module_config.php");
+include_once("$file_dir_name/../btb/application_config.php");
 /**
  * @var array $config_arr
  */
-include_once ("$file_dir_name/../lib/afw/utilities/ufw_error_handler.php");
+include_once("$file_dir_name/../lib/afw/utilities/ufw_error_handler.php");
 
 AfwSession::initConfig($config_arr, "system", "$file_dir_name/../btb/application_config.php", true);
 
 AfwSession::startSession();
-
-
-

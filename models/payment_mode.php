@@ -20,50 +20,7 @@ class PaymentMode extends BtbObject
     public static $DATABASE        = "";
     public static $MODULE            = "btb";
     public static $TABLE            = "";
-    public static $DB_STRUCTURE = null; /* = array(
-                id => array(SHOW => true, RETRIEVE => true, EDIT => true, TYPE => PK),
-
-		
-		lookup_code => array("TYPE" => "TEXT", "SHOW" => true, "RETRIEVE"=>true, "EDIT" => true, "SIZE" => 64, "QEDIT" => true, SHORTNAME=>code),
-
-		name_ar => array(SEARCH => true,  QSEARCH => true,  SHOW => true,  AUDIT => false,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => true,  
-				SIZE => 128,  MAXLENGTH => 128,  "MIN-SIZE" => 3,  CHAR_TEMPLATE => "ARABIC-CHARS,SPACE",  MANDATORY => true,  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
-
-		desc_ar => array(SEARCH => true,  QSEARCH => true,  SHOW => true,  AUDIT => false,  RETRIEVE => false,  
-				EDIT => true,  QEDIT => false,  
-				SIZE => "AREA",  MAXLENGTH => 32,  UTF8 => true,  
-				TYPE => "TEXT",  READONLY => false, ),
-
-		name_en => array(SEARCH => true,  QSEARCH => true,  SHOW => true,  AUDIT => false,  RETRIEVE => false,  
-				EDIT => false,  QEDIT => true,  
-				SIZE => 128,  MAXLENGTH => 128,  "MIN-SIZE" => 3,  CHAR_TEMPLATE => "ALPHABETIC,SPACE",  MANDATORY => true,  UTF8 => false,  
-				TYPE => "TEXT",  READONLY => false, ),
-
-		desc_en => array(SEARCH => true,  QSEARCH => true,  SHOW => true,  AUDIT => false,  RETRIEVE => false,  
-				EDIT => false,  QEDIT => false,  
-				SIZE => "AREA",  MAXLENGTH => 32,  UTF8 => false,  
-				TYPE => "TEXT",  READONLY => false, ),
-
-                
-                created_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                created_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                updated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                updated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                validated_by => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => auser, ANSMODULE => ums),
-                validated_at => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => DATETIME),
-                active => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => true, QEDIT => true, "DEFAULT" => Y, TYPE => YN),
-                draft => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => true, QEDIT => true, "DEFAULT" => Y, TYPE => YN),
-                version => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => INT),
-                update_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                delete_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                display_groups_mfk => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, ANSWER => ugroup, ANSMODULE => ums, TYPE => MFK),
-                sci_id => array("SHOW-ADMIN" => true, RETRIEVE => false, EDIT => false, TYPE => FK, ANSWER => scenario_item, ANSMODULE => pag),
-                tech_notes 	    => array(TYPE => TEXT, CATEGORY => FORMULA, "SHOW-ADMIN" => true, 'STEP' =>"all", TOKEN_SEP=>"§", READONLY=>true, "NO-ERROR-CHECK"=>true),
-	);  
-	
-	*/
+    public static $DB_STRUCTURE = null;
     public function __construct()
     {
         parent::__construct("payment_mode", "id", "btb");
@@ -98,6 +55,7 @@ class PaymentMode extends BtbObject
     {
         $obj = new PaymentMode();
         $obj->select_visibilite_horizontale();
+
         if ($obj->load($id)) {
             return $obj;
         } else return null;

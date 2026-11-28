@@ -3,6 +3,7 @@
 // ----             auto generated php class of table hotel_file : hotel_file - مرفقات المبادرات / التجارب 
 // ------------------------------------------------------------------------------------
 
+use Complex\Autoloader;
 
 $file_dir_name = dirname(__FILE__);
 
@@ -168,9 +169,12 @@ class HotelFile extends BtbObject
 
     public function preview()
     {
+        AfwAutoLoader::addModule("workflow");
+        $id = $this->id;
         $fle = $this->het("workflow_file_id");
+        $wfid = $this->getVal("workflow_file_id");
         if ($fle) return $fle->pictureView();
-        else return "[no-photo]";
+        else return "no-photo : (hfid:$id) [wfid:$wfid]";
     }
 
     public function shouldBeCalculatedField($attribute)

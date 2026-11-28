@@ -23,7 +23,7 @@ class Traveler extends BtbObject
      {
           parent::__construct("traveler", "id", "btb");
           $this->QEDIT_MODE_NEW_OBJECTS_DEFAULT_NUMBER = 15;
-          $this->DISPLAY_FIELD = "";
+          $this->DISPLAY_FIELD = "first_name";
           $this->ORDER_BY_FIELDS = "traveler_group_id, idn_type_id, idn";
           $this->horizontalTabs = true;
 

@@ -26,23 +26,7 @@ else $morouna_label = "";
 if ($departure_gdate_formatted <= date("Y-m-d")) $shift_remove_disabled = "-disabled";
 else $shift_remove_disabled = "";
 
-$calendar_tr =
-        '["January","February","March","April","May","June", "July","August","September","October","November","December"],
-        monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
-        dayNamesShort: [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ],
-        dayNamesMin: [ "Su","Mo","Tu","We","Th","Fr","Sa" ]';
-
-
-$calendar_tr =
-        '["يناير","فبراير","مارس","أبريل","ماي","يونيو", "يوليو","أغسطس","سبتمير","أكتوبر","نوفمبر","ديسمبر"],
-        monthNamesShort: ["يناير","فبراير","مارس","أبريل","ماي","يونيو", "يوليو","أغسطس","سبتمير","أكتوبر","نوفمبر","ديسمبر"],
-        dayNames: ["الأحد", "الأثنين", "الثلاثاء", "الاربعاء", "الخميس", "الجمعة", "السبت" ],
-        dayNamesShort: ["أحد", "أثنين", "ثلاثاء", "اربعاء", "خميس", "جمعة", "سبت" ],
-        dayNamesMin: [ "أحد","اثن","ثلث","ربع","خمس","جمع","سبت" ]';
-
-
-
+$calendar_tr = AfwEditMotor::calendar_translations($lang, '', '');
 ?>
 <div class="booker_bg_pic">
         <div class="booker_bg">
@@ -224,7 +208,7 @@ $calendar_tr =
                                                                                         </div>
                                                                                         <div id='bloc_search_greg' class="<?php echo $hide_greg ?>">
                                                                                                 <label for="departure_date">تاريخ الرحلة
-                                                                                                        <span id='switch_to_hijri' class='sysswitch switch_to_hijri'>ميلادي </span>
+                                                                                                        <span id='switch_to_hijri' class='sysswitch switch_to_hijri'>هجري </span>
                                                                                                 </label>
                                                                                                 <input type="text" id="departure_gdate" name="departure_gdate" class="hasCalendarsPicker" value="<?php echo $departure_gdate_formatted ?>" autocomplete="off" <?php echo $required_greg ?>>
                                                                                                 <script>
